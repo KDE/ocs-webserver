@@ -596,9 +596,16 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             <li><a href="#likes-panel" data-toggle="tab">Fans <?php echo '('.count($this->likes).')';  ?></a></li>
                         <?php } ?>
 
-                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName || $isowner){  ?>
-                        <li><a href="#related-panel" data-toggle="tab" style="font-style: italic;">Relationship<?=' ('.$this->cntRelatedProducts.')'?></a></li>
+                       
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName){  ?>
+                        <li><a href="#related-panel" data-toggle="tab" style="font-style: italic;">Relationship<?=' ('.$this->cntRelatedProducts.')'?></a></li>                                                
+                       <?php } ?>
 
+
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName 
+                            || $isowner
+                            || Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName
+                        ){  ?>                       
                         <li><a href="#tab-moderation" data-toggle="tab" style="font-style: italic;">Moderation<?=' ('.$cntModeration.')'?></a></li>
                         
                        <?php } ?>
@@ -777,6 +784,10 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                             </div>
                         </div>
 
+                        <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName 
+                            || $isowner
+                            || Default_Model_DbTable_MemberRole::ROLE_NAME_MODERATOR == $userRoleName
+                        ){  ?>    
                         <div class="tab-pane" id="tab-moderation">
                             <div class="col-lg-12">                            
                              <!-- comments -->
@@ -794,7 +805,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <!-- /comments -->
                             </div>
                         </div>
-
+                        <?php }?>
 
                         <!-- likes panel -->
                         <?php  if (count($this->likes) > 0) { ?>
