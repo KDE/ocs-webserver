@@ -87,30 +87,37 @@ class Default_Model_ProjectComments
         return $rowset;
     }
 
- /**
+     /**
      * @param $project_id
      *
      * @return Zend_Paginator
      */
     public function getCommentTreeForProjectList($project_id,$type=null)
-    {
-
-        $sql = "
-                SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
-                    ,(  select count(distinct c.name) sections from 
-                        section_support s, support t , section c
-                        where s.support_id = t.id and s.section_id = c.section_id
-                        and  t.member_id = comments.comment_member_id   and t.status_id=2
-                        and s.is_active = 1
-                    ) as issupporter
-                    ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating     
-                    ,(select score from project_rating r where r.project_id =:project_id and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member          
-                    ,member.roleid
-                    FROM comments 
-                    STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                                 
-                WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
+    {   
+        $sql ="
+                SELECT comments.comment_id
+                , comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, 
+                member.member_id, username, profile_image_url 
+                ,(  select count(distinct c.name) sections from 
+                    section_support s, support t , section c
+                    where s.support_id = t.id and s.section_id = c.section_id
+                    and  t.member_id = comments.comment_member_id   and t.status_id=2
+                    and s.is_active = 1
+                ) as issupporter
+                ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating     
+                ,(select score from project_rating r where r.project_id =:project_id  and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member          
+                ,member.roleid
+                ,tr.vote as tag_vote
+                ,tag.tag_fullname 
+                FROM comments 
+                inner join member ON comments.comment_member_id = member.member_id                                 
+                left join tag_rating tr on tr.comment_id = comments.comment_id and tr.is_deleted = 0
+                left join tag on tag.tag_id = tr.tag_id
+                WHERE comment_active =  :status_active AND comment_type =:type_id AND comment_target_id = :project_id  AND comment_parent_id = 0 
                 ORDER BY comment_created_at DESC
-                ";
+        ";
+
+
         if($type==null) $type=Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT;
         $rowset = $this->_dataTable->getAdapter()->fetchAll($sql, array(
                 'status_active' => 1,
@@ -119,7 +126,8 @@ class Default_Model_ProjectComments
             ))
         ;
         $sql = "
-               SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
+               SELECT comments.comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active
+                , comment_type, member.member_id, username, profile_image_url 
                 ,( select count(distinct c.name) sections from 
                         section_support s, support t , section c
                         where s.support_id = t.id and s.section_id = c.section_id
@@ -128,9 +136,13 @@ class Default_Model_ProjectComments
                     ) as issupporter
                ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating  
                ,(select score from project_rating r where r.project_id =:project_id and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member    
-               ,member.roleid     
+               ,member.roleid 
+               ,tr.vote as tag_vote
+                ,tag.tag_fullname    
                 FROM comments 
-                STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                 
+                inner join member ON comments.comment_member_id = member.member_id                 
+                left join tag_rating tr on tr.comment_id = comments.comment_id and tr.is_deleted = 0
+                left join tag on tag.tag_id = tr.tag_id
                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
                 ORDER BY comment_created_at DESC
                 ";
@@ -159,6 +171,80 @@ class Default_Model_ProjectComments
 
         return $list;
     }
+
+
+//  /**
+//      * @param $project_id
+//      *
+//      * @return Zend_Paginator
+//      */
+//     public function getCommentTreeForProjectList($project_id,$type=null)
+//     {
+
+//         $sql = "
+//                 SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
+//                     ,(  select count(distinct c.name) sections from 
+//                         section_support s, support t , section c
+//                         where s.support_id = t.id and s.section_id = c.section_id
+//                         and  t.member_id = comments.comment_member_id   and t.status_id=2
+//                         and s.is_active = 1
+//                     ) as issupporter
+//                     ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating     
+//                     ,(select score from project_rating r where r.project_id =:project_id and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member          
+//                     ,member.roleid
+//                     FROM comments 
+//                     STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                                 
+//                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id = 0 
+//                 ORDER BY comment_created_at DESC
+//                 ";
+//         if($type==null) $type=Default_Model_DbTable_Comments::COMMENT_TYPE_PRODUCT;
+//         $rowset = $this->_dataTable->getAdapter()->fetchAll($sql, array(
+//                 'status_active' => 1,
+//                 'type_id'       => $type,
+//                 'project_id'    => $project_id
+//             ))
+//         ;
+//         $sql = "
+//                SELECT comment_id, comment_target_id, comment_parent_id, comment_text, comment_created_at, comment_active, comment_type, member_id, username, profile_image_url 
+//                 ,( select count(distinct c.name) sections from 
+//                         section_support s, support t , section c
+//                         where s.support_id = t.id and s.section_id = c.section_id
+//                         and  t.member_id = comments.comment_member_id   and t.status_id=2
+//                         and s.is_active = 1
+//                     ) as issupporter
+//                ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating  
+//                ,(select score from project_rating r where r.project_id =:project_id and rating_active = 1 and r.member_id = comments.comment_member_id) as rating_member    
+//                ,member.roleid     
+//                 FROM comments 
+//                 STRAIGHT_JOIN member ON comments.comment_member_id = member.member_id                 
+//                 WHERE comment_active = :status_active AND comment_type = :type_id AND comment_target_id = :project_id AND comment_parent_id <> 0 
+//                 ORDER BY comment_created_at DESC
+//                 ";
+//         $rowset2 = $this->_dataTable->getAdapter()->fetchAll($sql, array(
+//                 'status_active' => 1,
+//                 'type_id'       => $type,
+//                 'project_id'    => $project_id
+//             ))
+//         ;
+
+
+
+//         $rowset = array_merge($rowset, $rowset2);
+
+//         /* create array with comment_id as key */
+//         foreach ($rowset as $item) {                     
+//             $this->data[$item['comment_id']] = $item;
+//         }
+//         /* create an array with all parent_id's and their immediate children */
+//         foreach ($rowset as $item) {           
+//             $this->index[$item['comment_parent_id']][] = $item['comment_id'];
+//         }
+//         /* create the final sorted array */
+//         $list = array();
+//         $this->sort_child_nodes(0, 1, $list);
+
+//         return $list;
+//     }
 
     /**
      * @param $project_id

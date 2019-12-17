@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 
 function BookReaderWrapper(props){
-  
+
+  const [ loading, setLoading ] = useState(true);
   const [ renditionState , setRenditionState ] = useState()
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
+  const [ showBookMenu, setShowBookMenu ] = useState(false);
+  const [ showPrevButton, setShowPrevButton ] = useState(false);
+  const [ showNextButton, setShowNextButton ] = useState(false);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -15,13 +19,15 @@ function BookReaderWrapper(props){
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
+    
     window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
         manager: 'default',
         spread: 'always',
-        width: (props.width - 134),
-        height: (props.height - 31)
+        width: (props.width - 20),
+        height: (props.height - 35)
     });
+
     setRenditionState(rendition)
 
     // Display the book
@@ -32,7 +38,6 @@ function BookReaderWrapper(props){
 
     // Generate location and pagination
     window.book.ready.then(function() {
-
         const stored = localStorage.getItem(book.key() + '-locations');
         // console.log('metadata:', book.package.metadata);
         if (stored) {
@@ -40,15 +45,28 @@ function BookReaderWrapper(props){
         } else {
             return window.book.locations.generate(1024); // Generates CFI for every X characters (Characters per/page)
         }
+
     }).then(function(location) { // This promise will take a little while to return (About 20 seconds or so for Moby Dick)
         localStorage.setItem(book.key() + '-locations', book.locations.save());
     });
 
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
+
+        console.log('rendition.currentLocation():', rendition.currentLocation());
+        
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         setTotalPages(book.locations.total)
-    })
+        
+        if (loading === true) setLoading(false);
+
+        if (rendition.currentLocation().atStart === true) setShowPrevButton(false)
+        else setShowPrevButton(true)
+
+        if (rendition.currentLocation().atEnd === true) setShowNextButton(false)
+        else setShowNextButton(true)
+
+      })
   }
 
   function goPrev(){
@@ -59,34 +77,114 @@ function BookReaderWrapper(props){
     renditionState.next();
   }
 
-  function goToStart(){
-    renditionState.moveTo(0);    
+  function onStartClick(){
+    const lastPageCfi = renditionState.book.locations._locations[0];
+    renditionState.display(lastPageCfi);
   }
 
-  function goToEnd(){
-    console.log(renditionState);
-    renditionState.moveTo(-1);
+  function onEndClick(){
+    const lastPageCfi = renditionState.book.locations._locations[renditionState.book.locations._locations.length - 1];
+    renditionState.display(lastPageCfi);
+  } 
+  
+  function onPageNumberInput(val){
+    const cfiFromNumber = renditionState.book.locations._locations[val];
+    renditionState.display(cfiFromNumber);
   }
 
-  let pageCountDisplay;
-  if (totalPages) pageCountDisplay = <span>{currentPage + "/" + totalPages}</span>
+  function toggleMenu(){
+    const newShowBookMenu = showBookMenu === true ? false : true;
+    setShowBookMenu(newShowBookMenu)
+  }
+
+  function goToTocItem(item){
+    renditionState.display(item.href);
+    toggleMenu();
+  }
+
+
+  let loadingDisplay = <div id="ajax-loader"></div>
+  let bookNavigation;
+  if (loading === false){
+    loadingDisplay = "";
+    bookNavigation = (
+      <div id="book-pager">
+        <div>
+          <span><a onClick={() => onStartClick()}>First Page</a></span>
+          <span>
+            <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
+            {" / " + totalPages}
+          </span>
+          <span><a onClick={() => onEndClick()}>Last Page</a></span>
+        </div>
+      </div>
+    )
+  }
+
+  let bookMenuDisplay, tocMenuToggleDisplay, prevButtonDisplay, nextButtonDisplay;
+  if (renditionState){
+    if (showPrevButton === true){
+      prevButtonDisplay = (
+        <div id="prev" className="arrow" onClick={goPrev}>
+          <span className="glyphicon glyphicon-chevron-left"></span>  
+        </div>
+      )
+    }
+    if (showNextButton === true){
+      nextButtonDisplay = (
+        <div id="next" className="arrow" onClick={goNext}>
+          <span className="glyphicon glyphicon-chevron-right"></span>  
+        </div>
+      )
+    }
+    if (renditionState.book.navigation){
+      tocMenuToggleDisplay = (
+        <div id="toc-menu-toggle" onClick={toggleMenu}>
+          <span className="glyphicon glyphicon-menu-hamburger"></span>
+        </div>
+      )
+    }    
+    if (showBookMenu === true){
+      const items = renditionState.book.navigation.toc.map((item,index) => (
+        <BookMenuItem key={index} goToTocItem={goToTocItem} item={item}/>
+      ));
+      bookMenuDisplay = <ul id="book-menu">{items}</ul>
+    }
+  }
 
   return (
     <div id="book-reader-wrapper">
-      <div id="prev" className="arrow" onClick={goPrev}>
-        <span className="glyphicon glyphicon-chevron-left"></span>  
-      </div>
+      {loadingDisplay}
+      {tocMenuToggleDisplay}
+      {prevButtonDisplay}
+      {nextButtonDisplay}
       <div id="viewer" className="spreads">
       </div>
-      <div id="book-pager">
-        <a onClick={goToStart}>START</a>
-        <a onClick={goToEnd}>END</a>
-        <span>{pageCountDisplay}</span>
-      </div>
-      <div id="next" className="arrow" onClick={goNext}>
-        <span className="glyphicon glyphicon-chevron-right"></span>  
-      </div>
+      {bookNavigation}
+      {bookMenuDisplay}
     </div>
+  )
+}
+
+function BookMenuItem(props){
+
+  function onGoToTocItem(){
+    props.goToTocItem(props.item);
+  }
+
+  let subItemsDisplay;
+  if (props.item.subitems && props.item.subitems.length > 0){
+    const items = props.item.subitems.map((subitem,index) => (
+      <BookMenuItem goToTocItem={props.goToTocItem} key={index} item={subitem}/>
+    ));
+    subItemsDisplay = <ul> {items} </ul>
+  }
+
+  return (
+    <li>
+      <a onClick={() => onGoToTocItem()}>{props.item.label}</a>
+      {subItemsDisplay}
+    </li>
   )
 }
 

@@ -336,6 +336,10 @@ video:focus {
                 max-height: 100%;
             }
 
+            &.book {
+
+            }
+
             > div { 
                 text-align: center;
                 height:100%;
@@ -518,12 +522,59 @@ video:focus {
         } 
       }
     }
+
+    &.is-full-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 11;
+      background: rgba(0,0,0,0.5);
+
+
+      #comics-reader-wrapper {
+
+        .nav-container {
+          height: 95px;
+        }
+        .comic-book-reader {
+          padding-bottom: 100px;
+          padding-top: 34px;
+
+          .bb-bookblock {
+            width: 93%;
+            height: 95%;
+            margin-top: 2%;
+          }
+        }
+
+      }
+
+      .swiper-pagination {
+        margin-top: -50px;
+        position: fixed;
+      }
+    }
 }
 
 
 #book-reader-wrapper {
   position: relative;
   height: inherit;
+  padding: 10px 10px 0 10px;
+
+    #ajax-loader {
+      width: 24px;
+      height: 24px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -12px;
+      margin-top: -12px;
+      background-image: url('../../assets/img/ajax-loader.gif');
+      background-color: white;
+    }
 
     #book-container {
       border: 1px solid #ccc;
@@ -550,22 +601,47 @@ video:focus {
       left: 0;
       width: 100%;  
       font-size:14px;
+      margin-bottom: 5px;
+
+      div {
+        display: inline;
+        input[type="number"]{
+          width: 30px;
+          display: inline-block;
+          padding: 2px;
+          margin: 0 5px 0 0;
+          height: 30px;
+        }
+        span {margin-right: 5px;}
+        a {
+          cursor: pointer;
+        }
+      }
     }
 
     .arrow {
-      position: fixed;
+      outline: none;
+      border: none;
+      background: none;
+      position: absolute;
       top: 50%;
-      margin-top: -13px !important;
-      font-size: 32px;
-      color: #E2E2E2;
+      margin-top: -10px !important;
+      font-size: 30px;
+      padding: 0px 10px;
+      color: rgb(226, 226, 226);
       font-family: arial, sans-serif;
-      font-weight: bold;
       cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
       user-select: none;
-      text-decoration: none;
-      z-index: 1000;
+      z-index: 100;
+      font-weight: normal;
+
+      &#prev {
+        left:10px !important;
+      }
+
+      &#next {
+        right:10px !important;
+      }
     }
     
     .arrow:hover, .navlink:hover {
@@ -576,12 +652,50 @@ video:focus {
       color: #000;
     }
 
-    #prev {
-      left: 50px;
+    #toc-menu-toggle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 300;
+      font-size: 22px;
+      color: #e2e2e2;
+      cursor: pointer;
     }
-    
-    #next {
-      right: 50px;
+
+    #book-menu {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      list-style-type: none;
+      margin: 0;
+      padding: 27px;
+      background-color: #f7f7f7;
+      z-index: 199;
+      max-width: 400px;
+      height: calc(100% - 10px);
+      /* border-radius: 5px 0 0 5px; */
+      overflow-y: scroll;
+      text-align: left;
+
+      li {
+        a {
+          padding: 5px;
+          cursor: pointer;
+          display: block;
+          font-size: 12px;
+
+          &:hover {
+            background: rgba(0,0,0,0.1);
+          }
+        }
+
+        > ul {
+          padding: 0 0 0 10px;
+          list-style-type: none;
+          margin: 5px 0 0 0;
+        }
+
+      }
     }
 
     #title {
@@ -599,16 +713,16 @@ video:focus {
     }
     
     #viewer.spreads {
-      width: 94%;
+      width: 100%;
       height: 100%;
       box-shadow: 0 0 4px #ccc;
       border-radius: 5px;
       padding: 0;
       position: relative;
-      margin: 10px auto;
-      background: white url(ajax-loader.gif) center center no-repeat;
+      margin: 0;
+      background: white url('img/ajax-loader.gif') center center no-repeat;
       top: 0;
-      padding: 15px 30px;
+      padding: 0px;
     }
     
     #viewer.spreads .epub-view > iframe {

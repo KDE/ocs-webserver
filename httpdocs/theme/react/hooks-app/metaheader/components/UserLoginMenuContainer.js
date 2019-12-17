@@ -1,6 +1,5 @@
 import React , {useEffect, useState, useRef, useContext} from 'react'
 import SwitchItem from './function/SwitchItem';
-import Axios from 'axios';
 import {MetaheaderContext} from '../contexts/MetaheaderContext';
 
 const UserLoginMenuContainer = (props) => {
@@ -17,14 +16,23 @@ const UserLoginMenuContainer = (props) => {
         document.removeEventListener('mousedown',handleClick, false);
     };
   },[dropdownClass])
-
+  
   useEffect(() => {   
     //componentDidMount     
+    /*
     Axios.get(state.gitlabUrl+"/api/v4/users?username="+state.user.username)
       .then(result => {       
         setGitlabLink(gitlabLink+result.data[0].id);
       })
+      */
+     loadData();
   },[])
+
+  const loadData = async () => {
+    const data = await fetch(`${state.gitlabUrl}/api/v4/users?username=${state.user.username}`);
+    const items = await data.json();
+    setGitlabLink(gitlabLink+items[0].id);
+  }
 
   const handleClick= e => {          
         let cls = "";

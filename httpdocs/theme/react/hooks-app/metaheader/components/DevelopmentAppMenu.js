@@ -2,40 +2,43 @@ import React , {useEffect, useState, useRef,useContext} from 'react'
 import MyButton from './function/MyButton';
 import {MetaheaderContext} from '../contexts/MetaheaderContext';
 
+
 const DevelopmentAppMenu = () => {
   const {state} = useContext(MetaheaderContext);
   const [dropdownClass, setDropdownClass] = useState('');  
   const [notification, setNotification] = useState(false);  
   const [notification_count, setNotification_count] = useState(0);
   const toggleEl = useRef(null);  
-
-  useEffect(() => {        
+  
+  useEffect(() => {     
     document.addEventListener('mousedown',handleClick, false);
     return () => {        
         document.removeEventListener('mousedown',handleClick, false);
     };
   },[dropdownClass])
 
+  
   useEffect(() => {
     if(state.user){
-      let url = state.baseUrl+'/membersetting/notification';
-      fetch(url,{
-                 mode: 'cors',
-                 credentials: 'include'
-                 })
-      .then(response => response.json())
-      .then(data => {
-          if(data.notifications){
-            const nots = data.notifications.filter(note => note.read==false);
-            if(nots.length>0 && notification_count !== nots.length)
-            {
-                setNotification(true);
-                setNotification_count(nots.length);                
+        let url = state.baseUrl+'/membersetting/notification';
+        fetch(url,{
+                  mode: 'cors',
+                  credentials: 'include'
+                  })
+        .then(response => response.json())
+        .then(data => {            
+            if(data.notifications){
+              const nots = data.notifications.filter(note => note.read==false);
+              if(nots.length>0 && notification_count !== nots.length)
+              {
+                  setNotification(true);
+                  setNotification_count(nots.length);                
+              }
             }
-          }
-       });
-     }
+        });
+     }     
   }, [])
+  
 
   const handleClick= e => {          
     let cls = "";
@@ -89,7 +92,7 @@ const DevelopmentAppMenu = () => {
                               label="Music" />
              
           </ul>
-
+          
         </div>
       </li>
   )

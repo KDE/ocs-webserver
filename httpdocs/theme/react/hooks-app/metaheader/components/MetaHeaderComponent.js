@@ -11,7 +11,7 @@ import {MetaheaderContext} from '../contexts/MetaheaderContext';
 const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
-  const [device, setDevice] = useState();
+  const [device, setDevice] = useState('large');
   const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
 
   useEffect(() => {   

@@ -109,6 +109,11 @@ function ProductMediaSlider(){
   //handle full screen toggle
   function hanleFullScreenToggle(val){
     setIsFullScreen(val);
+    const newSliderHeight = val === true ? window.innerHeight : 360;
+    setSliderHeight(newSliderHeight);
+    const parentContainerElement = document.getElementById('product-title-div');
+    const newContainerWidth = val === true ? window.offsetWidth : parentContainerElement;
+    setContainerWidth(newContainerWidth);
   }
 
   // on finish slides render
@@ -182,7 +187,8 @@ function ProductMediaSlider(){
   if (showPlaylist === false) mediaSliderCssClass += "hide-playlist ";
   if (sliderFadeControlsMode === true) mediaSliderCssClass += "fade-controls ";
   if (isMobile === true) mediaSliderCssClass += "is-mobile ";
-  if (showSliderArrows === false) mediaSliderCssClass += "hide-controls";
+  if (showSliderArrows === false) mediaSliderCssClass += "hide-controls ";
+  if (isFullScreen === true) mediaSliderCssClass += "is-full-screen"
 
   // slides display
   const slidesDisplay = gallery.map((s,index) => (
@@ -202,6 +208,7 @@ function ProductMediaSlider(){
       onSetSliderHeight={height => setSliderHeight(height)}
       onUpdateDimensions={updateDimensions}
       onFullScreenToggle={hanleFullScreenToggle}
+      isFullScreen={isFullScreen}
       onNextSlideClick={goNext}
     />
   ));
@@ -274,45 +281,51 @@ function SlideItem(props){
     if (props.gallery && props.gallery.length === props.slideIndex + 1) props.onFinishedSlidesRender();
   }, [props.gallery])
   React.useEffect(() => { getSlideContentHeight(props.cinemaMode) },[props.currentSlide, props.cinemaMode]);
+  React.useEffect(() => {
+    const newItemSetHeight = props.sliderHeight;
+    setItemSetHeight(newItemSetHeight);
+  },[props.isFullScreen,props.sliderHeight]);
 
   function getSlideContentHeight(cinemaMode){
     if (props.currentSlide === props.slideIndex){    
-      if (props.slide.type === "image"){
-        const imageEl = document.getElementById('slide-img-'+props.slideIndex);
-        if ( cinemaMode === true ){
-          let imageHeight = imageEl.naturalHeight;
-          if (imageEl.naturalWidth > window.innerWidth){
-            let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
-            imageHeight = imageEl.naturalHeight * dimensionsPercentage;
-          }
-          setMediaStyle({height:imageHeight})
-          props.onSetSliderHeight(imageHeight);
-        } else {
-          if (imageEl.offsetHeight > 0) {
-            if (props.disableGallery){
-              let imageHeight = itemSetHeight;
-              if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
-              setMediaStyle({maxHeight:itemSetHeight})
-              props.onSetSliderHeight(itemSetHeight)
-            } else {
-              setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
-              props.onSetSliderHeight(360)
-            }          
+      if (props.isFullScreen === false){
+        if (props.slide.type === "image"){
+          const imageEl = document.getElementById('slide-img-'+props.slideIndex);
+          if ( cinemaMode === true ){
+            let imageHeight = imageEl.naturalHeight;
+            if (imageEl.naturalWidth > window.innerWidth){
+              let dimensionsPercentage = window.innerWidth / imageEl.naturalWidth;
+              imageHeight = imageEl.naturalHeight * dimensionsPercentage;
+            }
+            setMediaStyle({height:imageHeight})
+            props.onSetSliderHeight(imageHeight);
           } else {
-            if (props.disableGallery) setMediaStyle({maxHeight:360})
+            if (imageEl.offsetHeight > 0) {
+              if (props.disableGallery){
+                let imageHeight = itemSetHeight;
+                if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
+                setMediaStyle({maxHeight:itemSetHeight})
+                props.onSetSliderHeight(itemSetHeight)
+              } else {
+                setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
+                props.onSetSliderHeight(360)
+              }          
+            } else {
+              if (props.disableGallery) setMediaStyle({maxHeight:360})
+            }
           }
         }
-      }
-      else if (props.slide.type === "embed"){ 
-        if (cinemaMode === true) props.onSetSliderHeight(315)
-      }
-      else if (props.slide.type === "video"){
-        if (cinemaMode === true) props.onSetSliderHeight(screen.height * 0.7); 
-        else props.onSetSliderHeight(360)
-      } else if (props.slide.type === "book" || "comics"){
-        props.onSetSliderHeight(360)
-      } else if ( props.slide.type === "audio"){
-        props.onSetSliderHeight(360)
+        else if (props.slide.type === "embed"){ 
+          if (cinemaMode === true) props.onSetSliderHeight(315)
+        }
+        else if (props.slide.type === "video"){
+          if (cinemaMode === true) props.onSetSliderHeight(screen.height * 0.7); 
+          else props.onSetSliderHeight(360)
+        } else if (props.slide.type === "book" || "comics"){
+          props.onSetSliderHeight(360)
+        } else if ( props.slide.type === "audio"){
+          props.onSetSliderHeight(360)
+        }
       }
     }
   }
@@ -402,6 +415,7 @@ function SlideItem(props){
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
+        isFullScreen={props.isFullScreen}
       />
     )    
   }
