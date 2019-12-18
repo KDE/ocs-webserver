@@ -94,7 +94,7 @@ if($isExternal) {
         }
         
         .supporter-section .user figure img {
-            width: 60px;
+            width: 40px;
             border: 1px solid #dbdbdb;
             -webkit-border-radius: 999px;
             -moz-border-radius: 999px;
@@ -104,6 +104,10 @@ if($isExternal) {
             background-clip: padding-box;
         }
         
+        section.empty{
+            padding:0;
+            padding-top:8rem;
+        }
     </style>
     
     <script type="text/javascript">
@@ -119,8 +123,7 @@ if($isExternal) {
             return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
         }
     </script>   
-    
-    
+        
     <?php if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName && $hasTorrent == true) { ?>
     
     <script src="/theme/flatui/js/lib/webtorrent.min.js"></script>
@@ -332,10 +335,7 @@ if($isExternal) {
             }
             
             
-            function log (str) {
-                //var p = document.createElement('p')
-                //p.innerHTML = str
-                //document.querySelector('.log').appendChild(p)
+            function log (str) {                
                 $('.log').innerHTML = str;
                 console.log(str);
             }
@@ -346,7 +346,7 @@ if($isExternal) {
     
 </head>
 
-<body style="height: 370px; background-color: #f8f9fa;">
+<body style="height: 450px; background-color: #f8f9fa;">
     <main id="ads-page">
         
         <div class="columns" style="background-color: #f8f9fa;">
@@ -361,17 +361,7 @@ if($isExternal) {
                     <?php } ?>
                     
                 </div>
-                <section class="empty">
-                    <?php /*
-                        if($isExternal == true) {
-                    ?>
-                    <div class="empty-icon">
-                        <i class="fa fa-external-link"></i>
-                    </div>
-                    <?php
-                        }*/
-                    ?>
-                    
+                <section class="empty" >                                       
                     <h1 class="empty-title"><?= $this->project_title ?></h1>
                     
                     
@@ -454,7 +444,7 @@ if($isExternal) {
                         
                     </div>
 
-                    <div class="supporter-section" style="<?= ($isExternal?'margin-top: 100px;':'margin-top: 70px') ?>"> 
+                    <div class="supporter-section" style="<?= ($isExternal?'margin-top: 100px;':'margin-top: 70px;') ?> font-size:small"> 
                         <span>
                             This download is made possible by supporters like
                             <div class="user">
@@ -469,17 +459,8 @@ if($isExternal) {
                     </div>
                     
                     
-                    <div class="empty-action" style="height: 100px;">
-                        <!--
-                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="MYAVVME9CMX28">
-                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" border="0">
-                        <img alt="" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1" border="0">
-                        </form>
-                        -->
-                        <br>
-                        
+                    <div class="empty-action" style="height: 100px;">                        
+                                               
                             <?php 
                                     $config = Zend_Registry::get('config')->settings->client->default;
                                     $baseurlStore = $config->baseurl_store;
