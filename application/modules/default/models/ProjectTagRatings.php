@@ -60,6 +60,7 @@ class Default_Model_ProjectTagRatings
                 inner join tag t on t.tag_id = i.tag_id
                 inner join tag_group tg on g.tag_rating = tg.group_id
                 where g.project_category_id =:category_id
+                order by t.tag_fullname
             ";
         $result = Zend_Db_Table::getDefaultAdapter()->query($sql, array('category_id' => $category_id))->fetchAll();
         return $result;
