@@ -345,8 +345,8 @@ class Default_Form_Product extends Zend_Form
 
     private function getTagElement()
     {
-        //$element = new Zend_Form_Element_Multiselect('tags', array('registerInArrayValidator' => false));
-        $element = new Zend_Form_Element_Select('tags', array('multiple' => false));
+        $element = new Zend_Form_Element_Multiselect('tags', array('registerInArrayValidator' => false));
+        //$element = new Zend_Form_Element_Select('tags', array('multiple' => false));
         return $element->setFilters(array('StringTrim'))->setDecorators(array(
                 array(
                     'ViewScript',
@@ -361,8 +361,8 @@ class Default_Form_Product extends Zend_Form
 
     private function getTagUserElement()
     {
-        //$element = new Zend_Form_Element_Multiselect('tagsuser', array('registerInArrayValidator' => false));
-        $element = new Zend_Form_Element_Select('tagsuser', array('multiple' => false));
+        $element = new Zend_Form_Element_Multiselect('tagsuser', array('registerInArrayValidator' => false));
+        //$element = new Zend_Form_Element_Select('tagsuser', array('multiple' => false));
         return $element->setFilters(array('StringTrim'))->setDecorators(array(
                 array(
                     'ViewScript',
