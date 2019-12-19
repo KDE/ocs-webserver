@@ -397,7 +397,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function aboutAction()
     {
-        $this->aboutmeAction();
+        $this->forward('aboutme');
     }
 
     public function showmoreproductsajaxAction()
