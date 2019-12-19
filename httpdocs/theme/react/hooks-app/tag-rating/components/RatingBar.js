@@ -16,15 +16,16 @@ const RatingBar = (props) => {
         let content;
         if (vote == 1) {
             content =
-                <span style={{display:'inline-block',width:'25px',marginLeft:'5px'}}>
+                <span style={{display:'inline-block',width:'35px',marginLeft:'5px'}}>
                 <i className={iconCls} style={l.length > 0 ? { color: '#4CAF50' } : {}}></i>
-                {l.length > 0 ? l.length : ''}
+                <span style={{paddingLeft:'10px'}}>{l.length > 0 ? l.length : ''}</span>
                 </span>
         } else {
             content =
-             <span style={{display:'inline-block',width:'25px',marginLeft:'5px'}}>
+             <span style={{display:'inline-block',width:'35px',marginRight:'5px',textAlign:'right'}}>
+                <span style={{paddingRight:'10px'}}>{l.length > 0 ? l.length : ''}</span>
                 <i className={iconCls} style={l.length > 0 ? { color: '#FF0000' } : {}}></i>
-                {l.length > 0 ? l.length : ''}
+                
                 </span>
             
         }
