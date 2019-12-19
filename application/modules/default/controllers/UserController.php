@@ -397,9 +397,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function aboutAction()
     {
-        $modelMember = new Default_Model_Member();
-        $this->view->member = $modelMember->fetchMember($this->_memberId)->toArray();
-        $this->view->currentPageOffset = (int)$this->getParam('page');
+        $this->forward('aboutme');
     }
 
     public function showmoreproductsajaxAction()

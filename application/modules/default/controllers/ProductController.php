@@ -1899,6 +1899,28 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json($ratings);
     }
 
+    public function loadcommentAction()
+    {
+        $this->_helper->layout->disableLayout();        
+        $this->view->comments = $this->loadComments(1, $this->_projectId,0);
+        $tableProject = new Default_Model_Project();
+        $project = $tableProject->fetchProductInfo($this->_projectId);       
+        $this->view->product = $project;
+        $this->view->member_id = (int)$this->_authMember->member_id;
+        $requestResult = $this->view->render('product/partials/productCommentsUX1.phtml');
+        $this->_helper->json(array('status' =>'ok', 'data' => $requestResult));
+
+    }
+
+    private function loadComments($page_offset, $project_id,$comment_type)
+    {
+        $modelComments = new Default_Model_ProjectComments();
+        $paginationComments = $modelComments->getCommentTreeForProject($project_id,$comment_type);
+        $paginationComments->setItemCountPerPage(25);
+        $paginationComments->setCurrentPageNumber($page_offset);
+        return $paginationComments;
+    }
+
     public function loadtagratingAction()
     {
         $this->_helper->layout->disableLayout();

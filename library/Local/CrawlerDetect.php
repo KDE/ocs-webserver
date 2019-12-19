@@ -75,7 +75,8 @@ function crawlerDetect($USER_AGENT)
         array('nagios-plugins','check_http/v2.2.1 (nagios-plugins 2.2.1)'),
         array('urlwatch','urlwatch/2.17 (+https://thp.io/2008/urlwatch/info.html)'),
         array('Buck','Buck/2.2; (+https://app.hypefactors.com/media-monitoring/about.html)'),
-        array('Anitya','Anitya 0.17.2 at release-monitoring.org')
+        array('Anitya','Anitya 0.17.2 at release-monitoring.org'),
+        array('MauiBot','MauiBot (crawler.feedback+dc@gmail.com)')
     );
 
     foreach ($crawlers as $c)
