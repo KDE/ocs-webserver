@@ -41,13 +41,14 @@ $this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
             <option value=""></option>
             <?php
             $element_value = $this->element->getValue();
-            $value = empty($element_value) ? array() : explode(',',$element_value);
-            if(is_array($value))
+            if(is_array($element_value))
             {
-                foreach ($value as $v) {
-                    echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';                
-                }
+                $element_value = array_shift($element_value);
             }
+            $value = empty($element_value) ? array() : explode(',',$element_value);            
+            foreach ($value as $v) {
+                echo '<option value="'.$v.'" selected="selected">'.$v.'</option>';                
+            }            
             ?>         
         </select>
         <?php if ($this->element->getMessages()) {

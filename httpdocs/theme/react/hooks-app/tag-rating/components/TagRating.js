@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
-import Rate from './Rate';
-import Bar from './Bar';
 import ModalComment from './ModalComment';
-import RateComment from './RateComment';
+import RatingBar from './RatingBar';
 const TagRating = () => {
     const [labels, setLabels] = useState([]);
     const [values, setValues] = useState([]);   
@@ -53,11 +51,22 @@ const TagRating = () => {
         .then(function (response) {
             setComment('');
             $('#tag-voting-comment-modal').modal('hide');      
-            loadTagRatings();            
+            loadTagRatings();   
+            loadProjectComments();         
         })
         .catch(function (error) {
           console.log(error);
         });
+    }
+
+    const loadProjectComments = event =>{        
+        const url = window.config.baseUrlStore + '/p/' + window.product.project_id+'/loadcomment';
+        jQuery.ajax({            
+            url: url,
+            success: function (results) {               
+                $('#product-discussion').empty().html(results.data);                             
+            }
+        });                
     }
 
     
@@ -69,48 +78,52 @@ const TagRating = () => {
         }
       }
 
+    let content = null;
+    if(labels && labels.length>0)
+    {
+        content = <div className="tag-rating-container">
+                    {labels && labels.length>0 &&
+                        <h4 style={{marginTop:'20px',borderBottom:'1px solid #ccc',fontWeight:'bold'}}>
+                            {labels[0].group_display_name}
+                        </h4>
+                    }            
+                    <div style={{display:'flex'}}>
+                    <ul style={{listStyle:'none',paddingLeft:'0px',marginTop:'20px'}}>{
+                        labels.map((l, index) => 
+                            <li key={index} style={{margin:'3px'}}>     
+                                <RatingBar handleVote={handleVote}
+                                        values={values}
+                                        vote={vote}
+                                        label={l}
+                                        user={user}
+                                    >
+                                </RatingBar>                                           
+                            </li>    
+
+                        )
+                    }
+                    </ul>
+                  
+                    </div>
+
+                    <ModalComment handleSubmit={handleSubmitVote} 
+                                comment={comment} 
+                                handleChangeComment={handleChangeComment}
+                                vote={vote}
+                                tid ={tid}
+                                labels={labels}
+                                values = {values}
+                                errmsg ={errmsg}
+                                user={user}
+                                key='modal-comment'
+                    ></ModalComment>
+                </div>
+    }
    
     return (
-        <div className="tag-rating-container">
-            {labels && labels.length>0 &&
-                <h4 style={{marginTop:'20px',borderBottom:'1px solid #ccc',fontWeight:'bold'}}>
-                    {labels[0].group_display_name}
-                </h4>
-            }            
-            <div style={{display:'flex'}}>
-            <ul style={{listStyle:'none',paddingLeft:'0px',marginTop:'20px'}}>{
-                labels.map((l, index) => 
-                    <li key={index} style={{margin:'3px'}}>                        
-                        <a onClick={()=>handleVote(-1,l.id)} style={{color:'#4e4e4e'}}>                            
-                            <Rate values={values} vote="-1" label={l} user={user}/>
-                            </a> 
-                        <Bar title={l.name}></Bar>                     
-                        <a onClick={()=>handleVote(1,l.id)} style={{color:'#4e4e4e'}}>                            
-                            <Rate values={values} vote="1" label={l} user={user}/>
-                             </a> 
-                    </li>                                     
-                )
-            }
-            </ul>
-            <div style={{borderLeft:'1px solid #ccc', maxHeight:'300px', overflow:'auto', marginLeft:'20px',paddingLeft:'20px'}}>
-            <ul style={{listStyle:'none',paddingLeft:'0px',marginTop:'20px'}}>
-            {   
-                    values.map((v, index) => 
-                    <li key={index} style={{margin:'3px'}}>                                                
-                        <RateComment labels={labels} vote={v} user={user}/>
-                    </li>                                     
-                    )
-            }
-            </ul>
-            </div>
-            </div>
-
-            <ModalComment handleSubmit={handleSubmitVote} 
-                        comment={comment} 
-                        handleChangeComment={handleChangeComment}
-                        errmsg ={errmsg}
-                        ></ModalComment>
-        </div>
+     <>
+     {content}
+     </>   
     )
 }
 export default TagRating;
