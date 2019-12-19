@@ -13,6 +13,11 @@ const DomainsMenu = (props) => {
     )
   }
 
+  let opendesktopLabel = 'openDesktop.org';
+  if(state.baseUrl.endsWith('cc'))
+  {
+    opendesktopLabel = 'openDesktop.cc';
+  }
     
   let cls =(props.onSwitchStyleChecked?'dark':'active');
   if(state.target && state.target.target=='gitlab')
@@ -29,7 +34,7 @@ const DomainsMenu = (props) => {
             <li className={cls}>              
               <a id="opendesktop-logo-single" href={state.baseUrl} >
                 <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                openDesktop.org  
+                {opendesktopLabel} 
               </a>            
                        
             </li>            
@@ -51,7 +56,7 @@ const DomainsMenu = (props) => {
                                       storeConfig ={state.storeConfig}
                                       />                   
               </li>
-              <li><a href={state.baseUrl}>openDesktop.org</a></li>
+              <li><a href={state.baseUrl}>{opendesktopLabel} </a></li>
               <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
             </>
           );
@@ -66,7 +71,7 @@ const DomainsMenu = (props) => {
                 </a>
               </li>
               <li><a href={state.baseUrlStore}>Pling</a></li>
-              <li><a href={state.baseUrl}>openDesktop.org</a></li>
+              <li><a href={state.baseUrl}>{opendesktopLabel} </a></li>
               <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
             </>
           );
@@ -82,7 +87,7 @@ const DomainsMenu = (props) => {
               </li>
               
               <li><a href={state.baseUrlStore}>Pling</a></li>
-              <li><a href={state.baseUrl}>openDesktop.org</a></li>
+              <li><a href={state.baseUrl}>{opendesktopLabel} </a></li>
               
             </>
           );
@@ -96,7 +101,7 @@ const DomainsMenu = (props) => {
                 <li className={cls}>                 
                     <a id="opendesktop-logo" href={state.baseUrl} >
                       <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                      openDesktop.org : 
+                      {opendesktopLabel} : 
                     </a>
                     <a href={state.target.link} style={{paddingLeft:'0px',marginLeft:'0px'}} >
                       <span className="target">{logoLabel}</span>
@@ -113,7 +118,7 @@ const DomainsMenu = (props) => {
               <li className={cls}>                 
                   <a id="opendesktop-logo" href={state.baseUrl} >
                     <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                    openDesktop.org : 
+                    {opendesktopLabel} : 
                   </a>
                   <a href={state.target.link} style={{paddingLeft:'0px',marginLeft:'0px'}}>
                     <span className="target">{ state.target.logoLabel }</span>
@@ -131,7 +136,7 @@ const DomainsMenu = (props) => {
         <li className={cls}>
           <a id="opendesktop-logo" href={state.baseUrl}>
             <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-            openDesktop.org 
+            {opendesktopLabel} 
           </a>
         </li>
         <li><a href={state.baseUrlStore}>Pling</a></li>
