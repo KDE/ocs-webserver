@@ -40,7 +40,7 @@ class Default_Model_Views
     {
         $sql = ("INSERT IGNORE INTO `stat_page_impression` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
         $session = new Zend_Session_Namespace();
-        $view_member_id = Zend_Auth::getInstance()->getIdentity()->member_id ? Zend_Auth::getInstance()->getIdentity()->member_id : null;
+        $view_member_id = Zend_Auth::getInstance()->hasIdentity() ? Zend_Auth::getInstance()->getIdentity()->member_id : null;
         $ipClient = Zend_Controller_Front::getInstance()->getRequest()->getClientIp();
         $remoteAddress = self::getRemoteAddress($ipClient);
         $ipClientv6 = filter_var($remoteAddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? $remoteAddress : null;
