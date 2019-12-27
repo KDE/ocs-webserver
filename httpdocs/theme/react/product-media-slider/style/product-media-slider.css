@@ -441,6 +441,9 @@ video:focus {
   height: inherit;
   padding: 10px 10px 0 10px;
 }
+#book-reader-wrapper.is-mobile #book-menu {
+  width: 100%;
+}
 #book-reader-wrapper #ajax-loader {
   width: 24px;
   height: 24px;

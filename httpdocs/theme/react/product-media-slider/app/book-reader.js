@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {isMobile} from 'react-device-detect';
 
 function BookReaderWrapper(props){
 
@@ -152,8 +153,10 @@ function BookReaderWrapper(props){
     }
   }
 
+  let bookReaderWrapperCssClass = isMobile === true ? "is-mobile" : "is-desktop";
+
   return (
-    <div id="book-reader-wrapper">
+    <div id="book-reader-wrapper" className={bookReaderWrapperCssClass}>
       {loadingDisplay}
       {tocMenuToggleDisplay}
       {prevButtonDisplay}
