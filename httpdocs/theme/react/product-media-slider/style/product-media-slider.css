@@ -591,6 +591,9 @@ video:focus {
 #book-reader-wrapper #viewer.spreads .epub-view > iframe {
   background: white;
 }
+#book-reader-wrapper #viewer.spreads .epub-view > iframe a:hover {
+  color: black !important;
+}
 @media (min-width: 969px) {
   #book-reader-wrapper {
     /*#viewer.spreads:after {
