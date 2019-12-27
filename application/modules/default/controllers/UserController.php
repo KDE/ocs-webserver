@@ -356,9 +356,11 @@ class UserController extends Local_Controller_Action_DomainSwitch
         {
             $lastproject = $tableProject->getOriginalProjectsForMember($this->_memberId, 1,
                     (($projectpage - 1) * $pageLimit - 1));
-
-            foreach ($lastproject as $value) {
-                $this->view->lastcatid = $value['project_category_id'];
+            if($lastproject && is_array($lastproject))
+            {
+                foreach ($lastproject as $value) {
+                    $this->view->lastcatid = $value['project_category_id'];
+                }
             }
         }
 
@@ -395,9 +397,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
     public function aboutAction()
     {
-        $modelMember = new Default_Model_Member();
-        $this->view->member = $modelMember->fetchMember($this->_memberId)->toArray();
-        $this->view->currentPageOffset = (int)$this->getParam('page');
+        $this->forward('aboutme');
     }
 
     public function showmoreproductsajaxAction()
