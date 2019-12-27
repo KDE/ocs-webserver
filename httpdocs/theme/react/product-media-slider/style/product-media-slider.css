@@ -525,7 +525,7 @@ video:focus {
 }
 #book-reader-wrapper #toc-menu-toggle {
   position: absolute;
-  top: 20px;
+  bottom: 8px;
   left: 20px;
   z-index: 300;
   font-size: 22px;
@@ -538,10 +538,10 @@ video:focus {
   left: 10px;
   list-style-type: none;
   margin: 0;
-  padding: 27px;
+  padding: 0 20px 0 40px;
   background-color: #f7f7f7;
   z-index: 199;
-  max-width: 400px;
+  max-width: 100%;
   height: calc(100% - 10px);
   /* border-radius: 5px 0 0 5px; */
   overflow-y: scroll;
