@@ -530,6 +530,7 @@ video:focus {
   #book-reader-wrapper .arrow {
     top: auto;
     bottom: 0;
+    z-index: 10000;
   }
   #book-reader-wrapper .arrow#prev {
     left: 50px !important;
