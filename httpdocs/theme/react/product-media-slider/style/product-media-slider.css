@@ -526,7 +526,7 @@ video:focus {
 #book-reader-wrapper .navlink:hover {
   color: #000;
 }
-@media (max-width: 600px) {
+@media (max-width: 769px) {
   #book-reader-wrapper .arrow {
     top: auto;
     bottom: 0;
