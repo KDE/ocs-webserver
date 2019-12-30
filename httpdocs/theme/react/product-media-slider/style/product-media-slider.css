@@ -526,6 +526,18 @@ video:focus {
 #book-reader-wrapper .navlink:hover {
   color: #000;
 }
+@media (max-width: 600px) {
+  #book-reader-wrapper .arrow {
+    top: auto;
+    bottom: 15px;
+  }
+  #book-reader-wrapper .arrow#prev {
+    left: 50px !important;
+  }
+  #book-reader-wrapper .arrow#next {
+    right: 50px !important;
+  }
+}
 #book-reader-wrapper #toc-menu-toggle {
   position: absolute;
   bottom: 8px;
