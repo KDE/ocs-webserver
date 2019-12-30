@@ -529,7 +529,7 @@ video:focus {
 @media (max-width: 600px) {
   #book-reader-wrapper .arrow {
     top: auto;
-    bottom: 15px;
+    bottom: 0;
   }
   #book-reader-wrapper .arrow#prev {
     left: 50px !important;
