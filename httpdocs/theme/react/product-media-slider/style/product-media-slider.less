@@ -641,13 +641,16 @@ video:focus {
       user-select: none;
       z-index: 100;
       font-weight: normal;
+      top:auto;
+      bottom: 0;
+      z-index: 10000;
 
       &#prev {
-        left:10px !important;
+        left:30px !important;
       }
 
       &#next {
-        right:10px !important;
+        right:30px !important;
       }
     }
     
@@ -659,23 +662,6 @@ video:focus {
       color: #000;
     }
 
-    @media (max-width:769px){
-    
-      .arrow {
-       top:auto;
-       bottom: 0;
-       z-index: 10000;
-       
-       &#prev {
-         left:50px !important;
-       }
-
-       &#next {
-         right:50px !important;
-       }
-      }
-
-    }
     #toc-menu-toggle {
       position: absolute;
       bottom: 8px;

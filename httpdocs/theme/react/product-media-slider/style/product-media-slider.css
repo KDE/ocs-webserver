@@ -511,12 +511,15 @@ video:focus {
   user-select: none;
   z-index: 100;
   font-weight: normal;
+  top: auto;
+  bottom: 0;
+  z-index: 10000;
 }
 #book-reader-wrapper .arrow#prev {
-  left: 10px !important;
+  left: 30px !important;
 }
 #book-reader-wrapper .arrow#next {
-  right: 10px !important;
+  right: 30px !important;
 }
 #book-reader-wrapper .arrow:hover,
 #book-reader-wrapper .navlink:hover {
@@ -525,19 +528,6 @@ video:focus {
 #book-reader-wrapper .arrow:active,
 #book-reader-wrapper .navlink:hover {
   color: #000;
-}
-@media (max-width: 769px) {
-  #book-reader-wrapper .arrow {
-    top: auto;
-    bottom: 0;
-    z-index: 10000;
-  }
-  #book-reader-wrapper .arrow#prev {
-    left: 50px !important;
-  }
-  #book-reader-wrapper .arrow#next {
-    right: 50px !important;
-  }
 }
 #book-reader-wrapper #toc-menu-toggle {
   position: absolute;
