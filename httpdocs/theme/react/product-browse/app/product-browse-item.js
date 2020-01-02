@@ -231,6 +231,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     React.useEffect(() => {
         if (productBrowseState.current === props.projectId){
+            console.log('product files:');
+            console.log(productFiles);
             if (productBrowseState.isPlaying === true){
                 playTrack();
             } else {
