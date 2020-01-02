@@ -24,6 +24,7 @@ function MusicPlayerWrapper(props){
 
   React.useEffect(() => {
     getRandomMusicsupporter();
+    $('#music-player-wrapper').find('.player-content').prepend('.music-player-controls');
   },[])
 
   function onPlayClick(){
@@ -112,9 +113,9 @@ function onNextTrackPlayClick(){
     }    
   }
 
-  function onReportAudioStop(audioInfo){
-    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+  function onReportAudioStop(musicSrc){
+    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
       ...audioItem,
       stopped:audioItem.stopped + 1

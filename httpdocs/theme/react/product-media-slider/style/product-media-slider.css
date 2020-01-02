@@ -951,6 +951,14 @@ video:focus {
   margin-top: 3px;
   cursor: pointer;
 }
+#music-player-wrapper .music-player-controls {
+  position: absolute;
+  left: 37px;
+  top: 325px;
+  font-size: 27px;
+  z-index: 100;
+  color: white;
+}
 #comics-reader-wrapper {
   height: 100%;
   position: relative;
