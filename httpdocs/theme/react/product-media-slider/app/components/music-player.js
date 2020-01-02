@@ -22,6 +22,8 @@ function MusicPlayerWrapper(props){
   const [ isPaused, setIsPaused ] = useState(false);
   const [ playIndex, setPlayIndex ] = useState(0);
 
+  console.log(playedAudioArray);
+
   React.useEffect(() => {
     getRandomMusicsupporter();
     $('#music-player-wrapper').find('.player-content').prepend($('.music-player-controls'));
