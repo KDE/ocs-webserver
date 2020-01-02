@@ -954,6 +954,9 @@ video:focus {
 #music-player-wrapper .player-content span.group:first-of-type {
   display: none;
 }
+#music-player-wrapper .player-content .music-player-control span svg {
+  margin-top: 5px;
+}
 #comics-reader-wrapper {
   height: 100%;
   position: relative;
