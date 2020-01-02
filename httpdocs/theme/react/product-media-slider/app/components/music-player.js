@@ -54,7 +54,7 @@ function onPauseClick(){
 function onPrevTrackPlayClick(){
     let prevTrackIndex;
     if (playIndex === 0){
-        prevTrackIndex = productFiles.length - 1;
+        prevTrackIndex = props.slide.items.length - 1;
     } else {
         prevTrackIndex = playIndex - 1;
     }
@@ -64,7 +64,7 @@ function onPrevTrackPlayClick(){
 
 function onNextTrackPlayClick(){
     let nextTrackIndex;
-    if (playIndex + 1 === productFiles.length){
+    if (playIndex + 1 === props.slide.items.length){
         nextTrackIndex = 0;
     } else {
         nextTrackIndex = playIndex + 1;
