@@ -362,11 +362,11 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         console.log('new played audio array - ');
         console.log(newPLayedAudioArray);
         setPlayedAudioArray(newPLayedAudioArray);
-        // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
+
         if  (playedAudioArray[audioItemIndex].stopped === 0){
             let audioStopPrefixUrl = window.location.href;
             if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
-            const audioStopUrl = audioStopPrefixUrl + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+            const audioStopUrl = audioStopPrefixUrl + "p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             console.log(audioStopUrl);
             $.ajax({url: audioStopUrl}).done(function(res) { 
                 console.log(res);
