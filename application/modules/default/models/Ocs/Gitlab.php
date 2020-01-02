@@ -343,7 +343,7 @@ class Default_Model_Ocs_Gitlab
             return array();
         }
 
-        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . $body);
+        Zend_Registry::get('logger')->debug(__METHOD__ . " - body: " . print_r($body,true));
 
         return $body[0];
     }
