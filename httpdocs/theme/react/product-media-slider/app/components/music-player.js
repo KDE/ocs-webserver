@@ -8,7 +8,6 @@ function MusicPlayerWrapper(props){
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
     let pl = 0;
-    if (index === 0) pl = -1;
     const pa = {
       ...i,
       played:pl,
@@ -21,6 +20,8 @@ function MusicPlayerWrapper(props){
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ isPaused, setIsPaused ] = useState(false);
   const [ playIndex, setPlayIndex ] = useState(0);
+
+  console.log(playedAudioArray);
 
   React.useEffect(() => {
     getRandomMusicsupporter();
@@ -81,9 +82,7 @@ function onNextTrackPlayClick(){
   }
 
   function onReportAudioPlay(musicSrc){
-    console.log(musicSrc);
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
-    console.log(audioItem)
     const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
       ...audioItem,
@@ -97,7 +96,10 @@ function onNextTrackPlayClick(){
     setPlayedAudioArray(newPLayedAudioArray);
 
     if (playedAudioArray[audioItemIndex].played === 0){
-      const audioStartUrl = window.location.href + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      let audioStartUrlPrefix = window.location.href;
+      console.log(audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/")
+      if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
+      const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       console.log(audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
         console.log(res);
@@ -131,7 +133,10 @@ function onNextTrackPlayClick(){
     setPlayedAudioArray(newPLayedAudioArray);
     // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
     if  (playedAudioArray[audioItemIndex].stopped === 0){
-      const audioStopUrl =  window.location.href + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      let audioStopPrefixUrl = window.location.href;
+      console.log(audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/")
+      if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
+      const audioStopUrl =  audioStopPrefixUrl + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
       console.log(audioStopUrl);
       $.ajax({url: audioStopUrl}).done(function(res) { 
         console.log(res);
