@@ -24,7 +24,7 @@ function MusicPlayerWrapper(props){
 
   React.useEffect(() => {
     getRandomMusicsupporter();
-    $('#music-player-wrapper').find('.player-content').prepend('.music-player-controls');
+    $('#music-player-wrapper').find('.player-content').prepend($('.music-player-controls'));
   },[])
 
   function onPlayClick(){
