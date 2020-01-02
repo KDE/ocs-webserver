@@ -58,11 +58,12 @@ class Default_Form_Register extends Zend_Form
                       ->setAttrib('placeholder', 'Username (4 chars minimum)')
                       ->setAttrib('class', 'form-control');
 
+        /*
         $opencode = Zend_Registry::get('config')->settings->server->opencode;
         if ($opencode->host) {
             $groupNameExists = new Local_Validate_GroupnameExistsInOpenCode();
             $fname->addValidator($groupNameExists, true);
-        }
+        }*/
 
         $mailValidCheck = new Zend_Validate_EmailAddress();
         $mailValidCheck->setMessage('RegisterFormEmailErrNotValid', Zend_Validate_EmailAddress::INVALID)
