@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import StoreContextProvider,{Context} from './context-provider.js';
 import { isMobile   } from 'react-device-detect';
 import { getImageUrl } from './product-browse-helpers';
 
@@ -207,9 +208,10 @@ export function ProductBrowseItem(props){
 
 function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
+    const {productBrowseState, productBrowseDispatch} = React.useContext(Context);
+
     const [ productFiles, setProductFiles ] = useState(props.productFiles)
-    console.log('files:');
-    console.log(productFiles);
+
     const [ showAudioControls, setShowAudioControls ] = useState(false);
     const [ playIndex, setPlayIndex ] = useState(0);
     let initialPLayedAudioArray = [];
@@ -227,11 +229,34 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     const [ isPlaying, setIsPlaying ] = useState(false);
     const [ isPaused, setIsPaused ] = useState(false);
 
+    React.useEffect(() => {
+        if (productBrowseState.current === props.projectId){
+            if (productBrowseState.isPlaying === true){
+                playTrack();
+            } else {
+                pauseTrack()
+            }
+        } else {
+            if (isPlaying === true){
+                pauseTrack();
+            }
+        }
+    },[productBrowseState.current,productBrowseState.isPlaying])
+
     function onPlayClick(pIndex){
+        productBrowseDispatch({type:'SET_CURRENT_ITEM',itemId:props.projectId,pIndex:pIndex});
+    }
+
+    function onPauseClick(){
+        productBrowseDispatch({type:'PAUSE'});
+    }
+
+    function playTrack(){
+        console.log('play track');
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
         let currentSrc;
         if (isPaused === false) {
-            currentSrc = productFiles[pIndex].musicSrc;
+            currentSrc = productFiles[productBrowseState.currentPlayIndex].musicSrc;
             playerElement[0].src = currentSrc;
         }
         playerElement[0].play();
@@ -241,7 +266,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         onReportAudioPlay(currentSrc);
     }
 
-    function onPauseClick(){
+    function pauseTrack(){
+        console.log('pause track');
         const playerElement = document.getElementById("product-browse-music-player-"+props.projectId).getElementsByTagName('audio');
         playerElement[0].pause();
         setShowAudioControls(false);

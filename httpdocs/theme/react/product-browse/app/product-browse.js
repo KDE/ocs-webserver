@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
+import StoreContextProvider,{Context} from './context-provider.js';
 import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth, ConvertObjectToArray} from './product-browse-helpers';
 
 function ProductBrowse(){
     return (
-        <div id="product-browse">
-            <ProductTagGroupFilterContainer/>
-            <ProductBrowseFilterContainer/>
-            <ProductBrowseItemList />
-        </div>
+        <StoreContextProvider>
+            <div id="product-browse">
+                <ProductTagGroupFilterContainer/>
+                <ProductBrowseFilterContainer/>
+                <ProductBrowseItemList />
+            </div>
+        </StoreContextProvider>
     )
 }
 
@@ -93,8 +96,6 @@ function ProductTagGroupFilterContainer(){
 
 function TagGroupDropDownMenu(props){
 
-    console.log(props);
-
     function onSelectTag(e){
         const serverUrl = json_serverUrl.split('://')[1];
         const ajaxUrl = "https://"+ serverUrl + "/explore/savetaggroupfilter?group_id="+props.tagGroupId+"&tag_id="+e.target.value;
@@ -118,7 +119,6 @@ function TagGroupDropDownMenu(props){
 }
 
 function ProductBrowseItemList(props){
-
 
     if (window.location.search === "?index=7") {
         window.browseListType === "favorites";

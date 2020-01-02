@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {isMobile} from 'react-device-detect';
-import VideoPlayerWrapper from './video-player';
-import BookReaderWrapper from './book-reader';
-import MusicPlayerWrapper from './music-player';
-import ComicsReaderWrapper from './comics-reader';
+import VideoPlayerWrapper from './components/video-player';
+import BookReaderWrapper from './components/book-reader';
+import MusicPlayerWrapper from './components/music-player';
+import ComicsReaderWrapper from './components/comics-reader';
 
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 

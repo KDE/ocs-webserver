@@ -472,7 +472,7 @@ video:focus {
 }
 #book-reader-wrapper #book-pager {
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   z-index: 100;
   font-weight: bold;
   left: 0;
