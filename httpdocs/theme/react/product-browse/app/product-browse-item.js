@@ -322,7 +322,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             let audioStartUrlPrefix = window.location.href;
             if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
 
-            const audioStartUrl = audioStartUrlPrefix + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
+            const audioStartUrl = audioStartUrlPrefix + "p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
             console.log('audio start url')
             console.log(audioStartUrl);
             
