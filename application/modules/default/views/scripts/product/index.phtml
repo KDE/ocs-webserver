@@ -966,8 +966,11 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         
                         <!-- Support Box -->
                         <?php
+                            /* 20200102 ronald: show allways the support box, see ticket #1553
                             if($this->product->paypal_mail)
                             {
+                             * 
+                             */
                                 echo $this->partial(
                                     '/product/partials/support_box.phtml',
                                     array(
@@ -980,7 +983,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                         "isAdmin" => $isAdmin
                                     )
                                 );
-                            }
+                            /*}*/
                         ?>
 
                         <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
