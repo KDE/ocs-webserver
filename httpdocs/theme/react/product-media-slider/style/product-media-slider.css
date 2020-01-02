@@ -441,6 +441,9 @@ video:focus {
   height: inherit;
   padding: 10px 10px 0 10px;
 }
+#book-reader-wrapper.is-mobile #book-menu {
+  width: 100%;
+}
 #book-reader-wrapper #ajax-loader {
   width: 24px;
   height: 24px;
@@ -469,7 +472,7 @@ video:focus {
 }
 #book-reader-wrapper #book-pager {
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   z-index: 100;
   font-weight: bold;
   left: 0;
@@ -500,7 +503,7 @@ video:focus {
   position: absolute;
   top: 50%;
   margin-top: -10px !important;
-  font-size: 30px;
+  font-size: 25px;
   padding: 0px 10px;
   color: #e2e2e2;
   font-family: arial, sans-serif;
@@ -508,12 +511,15 @@ video:focus {
   user-select: none;
   z-index: 100;
   font-weight: normal;
+  top: auto;
+  bottom: 6px;
+  z-index: 10000;
 }
 #book-reader-wrapper .arrow#prev {
-  left: 10px !important;
+  left: 40px !important;
 }
 #book-reader-wrapper .arrow#next {
-  right: 10px !important;
+  right: 40px !important;
 }
 #book-reader-wrapper .arrow:hover,
 #book-reader-wrapper .navlink:hover {
@@ -525,7 +531,7 @@ video:focus {
 }
 #book-reader-wrapper #toc-menu-toggle {
   position: absolute;
-  top: 20px;
+  bottom: 8px;
   left: 20px;
   z-index: 300;
   font-size: 22px;
@@ -538,10 +544,10 @@ video:focus {
   left: 10px;
   list-style-type: none;
   margin: 0;
-  padding: 27px;
+  padding: 0 20px 0 40px;
   background-color: #f7f7f7;
   z-index: 199;
-  max-width: 400px;
+  max-width: 100%;
   height: calc(100% - 10px);
   /* border-radius: 5px 0 0 5px; */
   overflow-y: scroll;
@@ -587,6 +593,9 @@ video:focus {
 }
 #book-reader-wrapper #viewer.spreads .epub-view > iframe {
   background: white;
+}
+#book-reader-wrapper #viewer.spreads .epub-view > iframe a:hover {
+  color: black !important;
 }
 @media (min-width: 969px) {
   #book-reader-wrapper {
@@ -941,6 +950,12 @@ video:focus {
   height: 30px;
   margin-top: 3px;
   cursor: pointer;
+}
+#music-player-wrapper .player-content span.group:first-of-type {
+  display: none;
+}
+#music-player-wrapper .player-content .music-player-controls span svg {
+  margin-top: 5px;
 }
 #comics-reader-wrapper {
   height: 100%;
