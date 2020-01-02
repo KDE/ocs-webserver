@@ -8,6 +8,7 @@ function MusicPlayerWrapper(props){
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
     let pl = 0;
+    if (index === 0) pl = -1;
     const pa = {
       ...i,
       played:pl,
@@ -25,7 +26,7 @@ function MusicPlayerWrapper(props){
 
   React.useEffect(() => {
     getRandomMusicsupporter();
-    $('#music-player-wrapper').find('.player-content').prepend($('.music-player-controls'));
+    // $('#music-player-wrapper').find('.player-content').prepend($('.music-player-controls'));
   },[])
 
   function onPlayClick(){
@@ -41,38 +42,38 @@ function MusicPlayerWrapper(props){
     setIsPaused(false);
     console.log(currentSrc);
     onReportAudioPlay(currentSrc);
-}
+  }
 
-function onPauseClick(){
+  function onPauseClick(){
     console.log('pause track');
     const playerElement = document.getElementById("music-player-wrapper").getElementsByTagName('audio');
     playerElement[0].pause();
     setIsPlaying(false);
     setIsPaused(true);
     onReportAudioStop(props.slide.items[playIndex].musicSrc)
-}
+  }
 
-function onPrevTrackPlayClick(){
-    let prevTrackIndex;
-    if (playIndex === 0){
-        prevTrackIndex = props.slide.items.length - 1;
-    } else {
-        prevTrackIndex = playIndex - 1;
-    }
-    setPlayIndex(prevTrackIndex);
-    onPlayClick(prevTrackIndex);
-}
+  function onPrevTrackPlayClick(){
+      let prevTrackIndex;
+      if (playIndex === 0){
+          prevTrackIndex = props.slide.items.length - 1;
+      } else {
+          prevTrackIndex = playIndex - 1;
+      }
+      setPlayIndex(prevTrackIndex);
+      onPlayClick(prevTrackIndex);
+  }
 
-function onNextTrackPlayClick(){
-    let nextTrackIndex;
-    if (playIndex + 1 === props.slide.items.length){
-        nextTrackIndex = 0;
-    } else {
-        nextTrackIndex = playIndex + 1;
-    }
-    setPlayIndex(nextTrackIndex);
-    onPlayClick(nextTrackIndex);
-}
+  function onNextTrackPlayClick(){
+      let nextTrackIndex;
+      if (playIndex + 1 === props.slide.items.length){
+          nextTrackIndex = 0;
+      } else {
+          nextTrackIndex = playIndex + 1;
+      }
+      setPlayIndex(nextTrackIndex);
+      onPlayClick(nextTrackIndex);
+  }
 
   function getRandomMusicsupporter(){
     const suffix = window.location.host.endsWith('cc') ? 'cc' :  window.location.host.endsWith('com') ||  window.location.host.endsWith('org') ? 'com' : 'cc';
@@ -81,9 +82,9 @@ function onNextTrackPlayClick(){
     });    
   }
 
-  function onReportAudioPlay(musicSrc){
-    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+  function onReportAudioPlay(audioInfo){
+    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
     const newAudioItem = {
       ...audioItem,
       played:audioItem.played + 1
@@ -119,9 +120,9 @@ function onNextTrackPlayClick(){
     }    
   }
 
-  function onReportAudioStop(musicSrc){
-    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+  function onReportAudioStop(audioInfo){
+    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
     const newAudioItem = {
       ...audioItem,
       stopped:audioItem.stopped + 1
@@ -245,12 +246,12 @@ function onNextTrackPlayClick(){
       //audio play handle
       onAudioPlay(audioInfo) {
           $('.play-btn[title="Click to play"]').trigger("click");
-          // onReportAudioPlay(audioInfo);
+          onReportAudioPlay(audioInfo);
       },
       //audio pause handle
       onAudioPause(audioInfo) { 
         console.log("audio pause", audioInfo); 
-        //onReportAudioStop(audioInfo)
+        onReportAudioStop(audioInfo)
       },
       //When the user has moved/jumped to a new location in audio
       onAudioSeeked(audioInfo) { console.log("audio seeked", audioInfo); },
@@ -343,11 +344,6 @@ function onNextTrackPlayClick(){
   return (
       <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
         <ReactJkMusicPlayer {...options} />
-        <div className="music-player-controls">
-          <span  onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</span>
-          {playButtonDisplay}
-          <span   onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</span>
-        </div>
         {sponsorDetailsDisplay}
       </div>
   )
