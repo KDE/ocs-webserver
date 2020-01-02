@@ -259,6 +259,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             currentSrc = productFiles[productBrowseState.currentPlayIndex].musicSrc;
             playerElement[0].src = currentSrc;
         }
+        console.log('current src');
+        console.log(currentSrc);
         playerElement[0].play();
         setShowAudioControls(true);
         setIsPlaying(true);
@@ -299,6 +301,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
 
     function onReportAudioPlay(src){
+        console.log('on report audio play, src: ' + src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -314,30 +317,35 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
         if (playedAudioArray[audioItemIndex].played === 0){
         
-          let audioStartUrlPrefix = window.location.href;
-          if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
+            let audioStartUrlPrefix = window.location.href;
+            if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
 
-          const audioStartUrl = audioStartUrlPrefix + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
-
-          $.ajax({url: audioStartUrl}).done(function(res) { 
-
-            const newAudioItem = {
-              ...audioItem,
-              mediaViewId:res.MediaViewId,
-              played:audioItem.played + 1
-            }
-            const newPLayedAudioArray = [
-              ...playedAudioArray.slice(0,audioItemIndex),
-              newAudioItem,
-              ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
-            ];
-            setPlayedAudioArray(newPLayedAudioArray);
-          });
+            const audioStartUrl = audioStartUrlPrefix + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
+            console.log('audio start url')
+            console.log(audioStartUrl);
+            
+            $.ajax({url: audioStartUrl}).done(function(res) { 
+                console.log('ajax res');
+                console.log(res);
+                const newAudioItem = {
+                    ...audioItem,
+                    mediaViewId:res.MediaViewId,
+                    played:audioItem.played + 1
+                }
+                const newPLayedAudioArray = [
+                    ...playedAudioArray.slice(0,audioItemIndex),
+                    newAudioItem,
+                    ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+                ];
+                console.log('new played audio array - ');
+                console.log(newPLayedAudioArray);
+                setPlayedAudioArray(newPLayedAudioArray);
+            });
         }    
     }
     
     function onReportAudioStop(src){
-
+        console.log('on report audio stop, src: ' + src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -349,14 +357,15 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             newAudioItem,
             ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
         ];
+        console.log('new played audio array - ');
+        console.log(newPLayedAudioArray);
         setPlayedAudioArray(newPLayedAudioArray);
         // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
         if  (playedAudioArray[audioItemIndex].stopped === 0){
-
             let audioStopPrefixUrl = window.location.href;
             if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
-      
             const audioStopUrl = audioStopPrefixUrl + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+            console.log(audioStopUrl);
             $.ajax({url: audioStopUrl}).done(function(res) { 
                 console.log(res);
             });
