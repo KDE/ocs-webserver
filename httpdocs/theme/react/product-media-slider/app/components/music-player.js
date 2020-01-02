@@ -8,7 +8,6 @@ function MusicPlayerWrapper(props){
   let initialPLayedAudioArray = []
   props.slide.items.forEach(function(i,index){
     let pl = 0;
-    if (index === 0) pl = -1;
     const pa = {
       ...i,
       played:pl,
