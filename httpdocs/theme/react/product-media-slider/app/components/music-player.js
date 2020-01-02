@@ -38,6 +38,7 @@ function MusicPlayerWrapper(props){
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
+    console.log(currentSrc);
     onReportAudioPlay(currentSrc);
 }
 
@@ -80,7 +81,9 @@ function onNextTrackPlayClick(){
   }
 
   function onReportAudioPlay(musicSrc){
+    console.log(musicSrc);
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    console.log(audioItem)
     const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
       ...audioItem,
