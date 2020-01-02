@@ -100,8 +100,8 @@ function onNextTrackPlayClick(){
 
     if (playedAudioArray[audioItemIndex].played === 0){
       let audioStartUrlPrefix = window.location.href;
-      console.log(audioStartUrlPrefix.slice(-1));
-      if (audioStartUrlPrefix.slice(-1) !== "/") audioStartUrlPrefix + "/";
+      console.log(audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1))
+      if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) === "/" ) audioStartUrlPrefix + "/";
       const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       console.log(audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
@@ -137,8 +137,8 @@ function onNextTrackPlayClick(){
     // console.log('stppped - ' + playedAudioArray[audioItemIndex].stopped)
     if  (playedAudioArray[audioItemIndex].stopped === 0){
       let audioStopPrefixUrl = window.location.href;
-      console.log(audioStopPrefixUrl.slice(-1));
-      if (audioStopPrefixUrl.slice(-1) !== "/") audioStopPrefixUrl + "/";
+      console.log(audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1))
+      if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) === "/" ) audioStopPrefixUrl + "/";
       const audioStopUrl =  audioStopPrefixUrl + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
       console.log(audioStopUrl);
       $.ajax({url: audioStopUrl}).done(function(res) { 
