@@ -319,7 +319,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
         if (playedAudioArray[audioItemIndex].played === 0){
         
-            const audioStartUrl = "https://" + window.location.hostname + "p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
+            const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
             console.log(audioStartUrl);
             $.ajax({url: audioStartUrl}).done(function(res) { 
                 console.log('ajax res');
