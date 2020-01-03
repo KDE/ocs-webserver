@@ -354,10 +354,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             newAudioItem,
             ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
         ];
-        console.log('new played audio array - ');
-        console.log(newPLayedAudioArray);
         setPlayedAudioArray(newPLayedAudioArray);
-
+        
         if  (playedAudioArray[audioItemIndex].stopped === 0){
             const audioStopUrl =  "https://" + window.location.hostname + "p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
             console.log(audioStopUrl);
