@@ -303,7 +303,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
 
     function onReportAudioPlay(src){
-        // console.log('on report audio play, src: ' + src);
+        console.log('on report audio play, src: ' + src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -323,12 +323,12 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
 
             const audioStartUrl = audioStartUrlPrefix + "p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
-            // console.log('audio start url')
-            // console.log(audioStartUrl);
+            console.log('audio start url')
+            console.log(audioStartUrl);
             
             $.ajax({url: audioStartUrl}).done(function(res) { 
-                // console.log('ajax res');
-                // console.log(res);
+                console.log('ajax res');
+                console.log(res);
                 const newAudioItem = {
                     ...audioItem,
                     mediaViewId:res.MediaViewId,
@@ -347,7 +347,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
     
     function onReportAudioStop(src){
-        // console.log('on report audio stop, src: ' + src);
+        console.log('on report audio stop, src: ' + src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -359,17 +359,17 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             newAudioItem,
             ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
         ];
-        // console.log('new played audio array - ');
-        // console.log(newPLayedAudioArray);
+        console.log('new played audio array - ');
+        console.log(newPLayedAudioArray);
         setPlayedAudioArray(newPLayedAudioArray);
 
         if  (playedAudioArray[audioItemIndex].stopped === 0){
             let audioStopPrefixUrl = window.location.href;
             if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
             const audioStopUrl = audioStopPrefixUrl + "p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
-            // console.log(audioStopUrl);
+            console.log(audioStopUrl);
             $.ajax({url: audioStopUrl}).done(function(res) { 
-                // console.log(res);
+                console.log(res);
             });
         }
     }
