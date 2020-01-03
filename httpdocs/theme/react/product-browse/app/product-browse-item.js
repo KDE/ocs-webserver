@@ -231,8 +231,6 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     React.useEffect(() => {
         if (productBrowseState.current === props.projectId){
-            // console.log('product files:');
-            // console.log(productFiles);
             if (productBrowseState.isPlaying === true){
                 playTrack();
             } else {
@@ -303,7 +301,6 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
 
     function onReportAudioPlay(src){
-        console.log('on report audio play, src: ' + src);
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -320,9 +317,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         if (playedAudioArray[audioItemIndex].played === 0){
         
             const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.projectId + "/" + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
-            console.log(audioStartUrl);
+
             $.ajax({url: audioStartUrl}).done(function(res) { 
-                console.log('ajax res');
                 console.log(res);
                 const newAudioItem = {
                     ...audioItem,
@@ -342,7 +338,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
     }
     
     function onReportAudioStop(src){
-        console.log('on report audio stop, src: ' + src);
+
         const audioItem = playedAudioArray.find((i => i.musicSrc === src));
         const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === src));
         const newAudioItem = {
@@ -358,8 +354,6 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         
         if  (playedAudioArray[audioItemIndex].stopped === 0){
             const audioStopUrl =  "https://" + window.location.hostname + "/p/" + props.projectId + "/" + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
-            console.log('wtf')
-            console.log(audioStopUrl);
 
             $.ajax({url: audioStopUrl}).done(function(res) { 
                 console.log(res);
