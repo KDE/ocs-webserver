@@ -784,6 +784,21 @@ video:focus {
 }
 #music-player-wrapper {
   position: relative;
+  /*.player-content {
+
+    span.group:first-of-type {
+      display: none;
+    }
+
+    .music-player-controls {
+      width: 72px;
+      span {
+        svg {
+          margin-top: 5px;
+        }
+      }
+    }
+  }*/
 }
 #music-player-wrapper.mobile .audio-lists-panel {
   height: 100%;
@@ -950,15 +965,6 @@ video:focus {
   height: 30px;
   margin-top: 3px;
   cursor: pointer;
-}
-#music-player-wrapper .player-content span.group:first-of-type {
-  display: none;
-}
-#music-player-wrapper .player-content .music-player-controls {
-  width: 72px;
-}
-#music-player-wrapper .player-content .music-player-controls span svg {
-  margin-top: 5px;
 }
 #comics-reader-wrapper {
   height: 100%;
