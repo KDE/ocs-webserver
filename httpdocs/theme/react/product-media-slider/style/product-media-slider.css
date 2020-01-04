@@ -966,6 +966,9 @@ video:focus {
   margin-top: 3px;
   cursor: pointer;
 }
+#music-player-container {
+  display: none;
+}
 #comics-reader-wrapper {
   height: 100%;
   position: relative;
