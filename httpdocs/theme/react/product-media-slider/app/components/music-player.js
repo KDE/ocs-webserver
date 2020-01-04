@@ -324,7 +324,7 @@ function MusicPlayerWrapper(props){
   )
 }
 
-function MusicPlayer(){
+function MusicPlayer(props){
 
   /* COMPONENT */
 
