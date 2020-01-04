@@ -355,7 +355,6 @@ function MusicPlayer(props){
   function onPlayClick(){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    console.log(pi);
     const currentSrc = props.slide.items[playIndex].musicSrc;
     console.log('currentSrc');
     playerElement[0].src = currentSrc;
