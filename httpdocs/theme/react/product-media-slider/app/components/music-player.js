@@ -313,6 +313,176 @@ function MusicPlayerWrapper(props){
     }
   }
 
+  return (
+    <div>
+      <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
+        <ReactJkMusicPlayer {...options} />
+        {sponsorDetailsDisplay}
+      </div>
+      <MusicPlayer items={props.slide.items} />
+    </div>
+  )
+}
+
+function MusicPlayer(){
+
+  /* COMPONENT */
+
+  const [ playIndex, setPlayIndex ] = useState(0);
+  const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ showPlaylist, setShowPlaylist ] = useState(true);
+  const [ theme, setTheme ] = useState('dark');
+  const [ randomSupporter, setRandomSupporter ] = useState();
+
+  React.useEffect(() => {
+    console.log('init music player');
+    getRandomMusicsupporter();
+  },[])
+
+  React.useEffect(() => {
+    console.log('on play index change');
+    onPlayClick();
+  },[playIndex]);
+
+  function getRandomMusicsupporter(){
+    $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
+      setRandomSupporter(res.supporter)
+    });    
+  }
+
+  // audio player
+
+  function onPlayClick(){
+    console.log('play track');
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    console.log(pi);
+    const currentSrc = props.slide.items[playIndex].musicSrc;
+    console.log('currentSrc');
+    playerElement[0].src = currentSrc;
+    playerElement[0].play();
+    setIsPlaying(true);
+    onReportAudioPlay(currentSrc);
+  }
+
+  function onPauseClick(){
+    console.log('pause track');
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    playerElement[0].pause();
+    setIsPlaying(false);
+    onReportAudioStop(props.slide.items[playIndex].musicSrc)
+  }
+
+  function onPrevTrackPlayClick(){
+      console.log('on prev track play click');
+      let prevTrackIndex;
+      if (playIndex === 0){
+          prevTrackIndex = props.slide.items.length - 1;
+      } else {
+          prevTrackIndex = playIndex - 1;
+      }
+      console.log('new playIndex - ' + prevTrackIndex)
+      setPlayIndex(prevTrackIndex);
+  }
+
+  function onNextTrackPlayClick(){
+      console.log('on next track play click');
+      let nextTrackIndex;
+      if (playIndex + 1 === props.slide.items.length){
+          nextTrackIndex = 0;
+      } else {
+          nextTrackIndex = playIndex + 1;
+      }
+      console.log('new playIndex - ' + nextTrackIndex);
+      setPlayIndex(nextTrackIndex);
+  }
+
+  function onReportAudioPlay(musicSrc){
+    console.log('on report audio play');
+    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+    const newAudioItem = {
+      ...audioItem,
+      played:audioItem.played + 1
+    }
+    const newPLayedAudioArray = [
+      ...playedAudioArray.slice(0,audioItemIndex),
+      newAudioItem,
+      ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+    ];
+    setPlayedAudioArray(newPLayedAudioArray);
+
+    if (playedAudioArray[audioItemIndex].played === 0){
+
+      let audioStartUrlPrefix = window.location.href;
+      if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
+
+      const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+
+      $.ajax({url: audioStartUrl}).done(function(res) { 
+        console.log(res);
+        const newAudioItem = {
+          ...audioItem,
+          mediaViewId:res.MediaViewId,
+          played:audioItem.played + 1
+        }
+        const newPLayedAudioArray = [
+          ...playedAudioArray.slice(0,audioItemIndex),
+          newAudioItem,
+          ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+      });
+    }    
+  }
+
+  function onReportAudioStop(musicSrc){
+    console.log('on report audio stop');
+    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+    const newAudioItem = {
+      ...audioItem,
+      stopped:audioItem.stopped + 1
+    }
+    const newPLayedAudioArray = [
+      ...playedAudioArray.slice(0,audioItemIndex),
+      newAudioItem,
+      ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+    ];
+    setPlayedAudioArray(newPLayedAudioArray);
+
+    if  (playedAudioArray[audioItemIndex].stopped === 0){
+
+      let audioStopPrefixUrl = window.location.href;
+      if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
+
+      const audioStopUrl =  audioStopPrefixUrl + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+
+      console.log(audioStopUrl);
+
+      $.ajax({url: audioStopUrl}).done(function(res) { 
+        console.log(res);
+      });
+    }
+  }
+
+  // playlist
+
+  function togglePlaylistDisplay(){
+    const newShowPlaylistValue = showPlaylist === true ? false : true;
+    setShowPlaylist(newShowPlaylistValue);
+  }
+
+  // theme
+
+  function toggleThemes(){
+    const newThemeValue = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newThemeValue);
+  }
+
+  /* DISPLAY */
+
+  // audio controls display
+
   const playButtonElement = (
     <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="play-icon">
         <g><path d="m20.1 2.9q4.7 0 8.6 2.3t6.3 6.2 2.3 8.6-2.3 8.6-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3z m8.6 18.3q0.7-0.4 0.7-1.2t-0.7-1.2l-12.1-7.2q-0.7-0.4-1.5 0-0.7 0.4-0.7 1.3v14.2q0 0.9 0.7 1.3 0.4 0.2 0.8 0.2 0.3 0 0.7-0.2z"></path></g>
@@ -338,14 +508,65 @@ function MusicPlayerWrapper(props){
   )
 
   let playButtonDisplay;
-  if (isPlaying === true) playButtonDisplay = <span  onClick={() => onPauseClick()}>{pauseButtonElement}</span>
-  else playButtonDisplay = <span  onClick={() => onPlayClick(playIndex)}>{playButtonElement}</span>
+  if (isPlaying === true) playButtonDisplay = <span onClick={() => onPauseClick()}>{pauseButtonElement}</span>
+  else playButtonDisplay = <span onClick={() => onPlayClick()}>{playButtonElement}</span>
+
+  const audioControlsDisplay = (
+    <div className="music-player-audio-control">
+      <span onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</span>
+      {playButtonDisplay}
+      <span onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</span>
+    </div>
+  )
+
+  // volume control
+
+  const volumeIcon = (
+      <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;">
+        <g><path d="m23.4 5.4c6.7 1.5 11.6 7.5 11.6 14.6s-4.9 13.1-11.6 14.6v-3.4c4.8-1.4 8.2-5.9 8.2-11.2s-3.4-9.8-8.2-11.2v-3.4z m4.1 14.6c0 3-1.6 5.5-4.1 6.7v-13.4c2.5 1.2 4.1 3.7 4.1 6.7z m-22.5-5h6.6l8.4-8.4v26.8l-8.4-8.4h-6.6v-10z"></path></g>
+      </svg>
+  )
+
+  const volumeControlDisplay = (
+    <div className="music-player-volume-control">
+      <span className="volume-icon">
+        {volumeIcon}
+      </span>
+      <span className="volume-bar-container">
+
+      </span>
+    </div>
+  )
+
+  /* RENDER */
 
   return (
-      <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
-        <ReactJkMusicPlayer {...options} />
-        {sponsorDetailsDisplay}
+    <div id="music-player-container">
+      <audio id="music-player-audio"></audio>
+      <div className="music-player-control-panel">
+        
+        <div className="music-player-cover">
+          <figure><img src={props.items[playIndex].cover}/></figure>
+        </div>
+
+        <div className="music-player-track-title">
+          <h2>{props.items[playIndex].title}</h2>
+        </div>
+        
+        <div className="music-player-progress-bar"></div>
+
+        <div className="middle-bar">
+          {audioControlsDisplay}
+          {volumeControlDisplay}
+          <span className="playlist-toggle-button" onClick={() => togglePlaylistDisplay()}>PL</span>
+          <span className="theme-switch">
+            theme switch
+          </span>
+        </div>
+
       </div>
+      <div className="music-player-playlist"></div>
+    </div>
   )
 }
 
