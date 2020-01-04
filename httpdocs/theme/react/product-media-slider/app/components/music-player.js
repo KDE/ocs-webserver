@@ -351,11 +351,6 @@ function MusicPlayer(props){
     getRandomMusicsupporter();
   },[])
 
-  React.useEffect(() => {
-    console.log('on play index change');
-    onPlayClick();
-  },[playIndex]);
-
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
       setRandomSupporter(res.supporter)
@@ -364,7 +359,7 @@ function MusicPlayer(props){
 
   // audio player
 
-  function onPlayClick(){
+  function onPlayClick(index){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
@@ -393,6 +388,7 @@ function MusicPlayer(props){
       }
       console.log('new playIndex - ' + prevTrackIndex)
       setPlayIndex(prevTrackIndex);
+      onPlayClick(prevTrackIndex);
   }
 
   function onNextTrackPlayClick(){
@@ -405,6 +401,7 @@ function MusicPlayer(props){
       }
       console.log('new playIndex - ' + nextTrackIndex);
       setPlayIndex(nextTrackIndex);
+      onPlayClick(nextTrackIndex);
   }
 
   function onReportAudioPlay(musicSrc){
@@ -520,7 +517,7 @@ function MusicPlayer(props){
 
   let playButtonDisplay;
   if (isPlaying === true) playButtonDisplay = <span onClick={() => onPauseClick()}>{pauseButtonElement}</span>
-  else playButtonDisplay = <span onClick={() => onPlayClick()}>{playButtonElement}</span>
+  else playButtonDisplay = <span onClick={() => onPlayClick(playIndex)}>{playButtonElement}</span>
 
   const audioControlsDisplay = (
     <div className="music-player-audio-control">

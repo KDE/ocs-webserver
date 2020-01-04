@@ -923,6 +923,7 @@ video:focus {
 }
 #music-player-wrapper.desktop.show-playlist .audio-lists-panel {
   display: block !important;
+  height: 360px;
 }
 #music-player-wrapper .react-jinke-music-player-mobile {
   height: inherit;
