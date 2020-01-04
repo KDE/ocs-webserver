@@ -333,6 +333,18 @@ function MusicPlayer(props){
   const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ theme, setTheme ] = useState('dark');
   const [ randomSupporter, setRandomSupporter ] = useState();
+  let initialPLayedAudioArray = []
+  props.items.forEach(function(i,index){
+    let pl = 0;
+    if (index === 0) pl = -1;
+    const pa = {
+      ...i,
+      played:pl,
+      stopped:0
+    }
+    initialPLayedAudioArray.push(pa);
+  })
+  const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
   React.useEffect(() => {
     console.log('init music player');
@@ -355,7 +367,7 @@ function MusicPlayer(props){
   function onPlayClick(){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const currentSrc = props.slide.items[playIndex].musicSrc;
+    const currentSrc = props.items[playIndex].musicSrc;
     console.log('currentSrc');
     playerElement[0].src = currentSrc;
     playerElement[0].play();
@@ -368,14 +380,14 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].pause();
     setIsPlaying(false);
-    onReportAudioStop(props.slide.items[playIndex].musicSrc)
+    onReportAudioStop(props.items[playIndex].musicSrc)
   }
 
   function onPrevTrackPlayClick(){
       console.log('on prev track play click');
       let prevTrackIndex;
       if (playIndex === 0){
-          prevTrackIndex = props.slide.items.length - 1;
+          prevTrackIndex = props.items.length - 1;
       } else {
           prevTrackIndex = playIndex - 1;
       }
@@ -386,7 +398,7 @@ function MusicPlayer(props){
   function onNextTrackPlayClick(){
       console.log('on next track play click');
       let nextTrackIndex;
-      if (playIndex + 1 === props.slide.items.length){
+      if (playIndex + 1 === props.items.length){
           nextTrackIndex = 0;
       } else {
           nextTrackIndex = playIndex + 1;
