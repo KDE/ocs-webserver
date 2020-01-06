@@ -373,7 +373,10 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    setCurrentTrackTotalTime(newCurrentTrackTotalTime);
+    playerElement[0].ontimeupdate = function(){  
+      onPlayerTimeUpdate(playerElement[0]) 
+    }
     playerElement[0].play();
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
@@ -434,7 +437,7 @@ function MusicPlayer(props){
       if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
 
       const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-      console.log(audioStartUrl);
+
       $.ajax({url: audioStartUrl}).done(function(res) { 
         console.log(res);
         const newAudioItem = {
@@ -485,12 +488,11 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
-    const newCurrentTrackTime = playerElement.currentTime;
+    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
     setCurrentTrackTime(newCurrentTrackTime);
     let newCurrentTrackTotalTime = playerElement.duration;
-    if (isNaN(newCurrentTrackTotalTime)){
-      newCurrentTrackTotalTime = 0;
-    }
+    if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
+    newCurrentTrackTime = millisToMinutesAndSeconds(currentTrackTotalTime);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime);
   }
 
@@ -575,7 +577,7 @@ function MusicPlayer(props){
 
   /* RENDER */
 
-  const currentTimeMinutes = millisToMinutesAndSeconds(currentTrackTime);
+  const currentTimeMinutes = (currentTrackTime);
   const totalTimeMinutes = millisToMinutesAndSeconds(currentTrackTotalTime);
 
   return (
@@ -592,7 +594,7 @@ function MusicPlayer(props){
         </div>
         
         <div className="music-player-progress-bar">
-          {currentTimeMinutes + " / " + totalTimeMinutes}
+          {currentTrackTime + " / " + currentTrackTotalTime}
         </div>
 
         <div className="middle-bar">
