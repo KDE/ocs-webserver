@@ -506,7 +506,9 @@ function MusicPlayer(props){
     let minutes = Math.floor(time / 60);
     let seconds = time - minutes * 60;
     if (minutes < 10) minutes = "0" +  Math.round(minutes);
+    else minutes = Math.round(minutes);
     if (seconds < 10) seconds = "0" +  Math.round(seconds);
+    else seconds = Math.round(minutes);
     const timestamp = minutes + ":" + seconds;
     return timestamp;
   }

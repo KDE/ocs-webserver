@@ -975,27 +975,42 @@ video:focus {
 }
 #music-player-container #music-player-control-panel {
   width: 50%;
+  float: left;
+  padding: 10px;
 }
-#music-player-container #music-player-control-panel #music-player-time-display {
+#music-player-container #music-player-control-panel .music-player-cover figure {
+  padding: 10px;
+  text-align: center;
+  height: 240px;
+}
+#music-player-container #music-player-control-panel .music-player-track-title h2 {
+  margin: 10px 0;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+}
+#music-player-container #music-player-control-panel .music-player-time-display {
   width: 100%;
   padding: 15px 5px;
+  font-size: 12px;
 }
-#music-player-container #music-player-control-panel #music-player-time-display > span {
+#music-player-container #music-player-control-panel .music-player-time-display > span {
   display: block;
   float: left;
   height: 20px;
 }
-#music-player-container #music-player-control-panel #music-player-time-display > span.current-track-time {
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-time {
   width: 20%;
 }
-#music-player-container #music-player-control-panel #music-player-time-display > span.current-track-progress {
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress {
   width: 60%;
 }
-#music-player-container #music-player-control-panel #music-player-time-display > span.current-track-duration {
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
   width: 20%;
 }
 #music-player-container #music-player-playlist-panel {
   width: 50%;
+  float: left;
 }
 #music-player-container #music-player-playlist-panel #music-player-header {
   width: 100%;
