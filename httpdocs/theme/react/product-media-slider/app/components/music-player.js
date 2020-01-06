@@ -350,10 +350,15 @@ function MusicPlayer(props){
 
   React.useEffect(() => {
     console.log('init music player');
+
+    /*const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const currentSrc = props.items[playIndex].musicSrc;
+    playerElement[0].src = currentSrc;
+    const newCurrentTrackTotalTime = playerElement[0].duration;
+    setCurrentTrackTotalTime(newCurrentTrackTotalTime);*/
+
     getRandomMusicsupporter();
   },[])
-
-  // random supporter
 
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
@@ -482,21 +487,16 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
-
-    const ctMinutes = Math.floor(playerElement.currentTime / 60000);
-    const ctSeconds = ((playerElement.currentTime % 60000) / 1000).toFixed(0);
-    const newCurrentTrackTime  = ctMinutes + ":" + (ctSeconds < 10 ? '0' : '') + ctSeconds;
-    console.log(newCurrentTrackTime);
+    const newCurrentTrackTime = playerElement.currentTime;
+    console.log('current time - ' + playerElement.currentTime );
+    console.log(millisToMinutesAndSeconds(newCurrentTrackTime));
     setCurrentTrackTime(newCurrentTrackTime);
-
     let newCurrentTrackTotalTime = playerElement.duration;
     if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
-    const dMinutes = Math.floor(newCurrentTrackTotalTime / 60000);
-    const dSeconds = ((newCurrentTrackTotalTime % 60000) / 1000).toFixed(0);
-    newCurrentTrackTotalTime  = dMinutes + ":" + (dSeconds < 10 ? '0' : '') + dSeconds;
-    console.log(newCurrentTrackTotalTime);
+    newCurrentTrackTotalTime = newCurrentTrackTotalTime;
+    console.log('duration ' + newCurrentTrackTotalTime)
+    console.log(millisToMinutesAndSeconds(newCurrentTrackTotalTime));
     setCurrentTrackTotalTime(newCurrentTrackTotalTime );
-
   }
 
   function millisToMinutesAndSeconds(millis) {
