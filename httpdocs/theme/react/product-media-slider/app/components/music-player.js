@@ -604,7 +604,6 @@ function MusicPlayerControlPanel(props){
     </div>
   )
 
-
   // volume control
 
   const volumeIcon = (
@@ -671,6 +670,7 @@ function MusicPlayerPlaylist(props){
   const musicPlayerPlaylistItems = props.items.map((item,index) => (
     <MusicPlayerPlaylistItem 
       key={index}
+      index={index}
       item={item}
       playIndex={props.playIndex}
       isPlaying={props.isPlaying}
