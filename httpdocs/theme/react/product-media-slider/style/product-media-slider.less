@@ -1201,9 +1201,34 @@ video:focus {
 #music-player-container {
   display: none;
   width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
 
   #music-player-control-panel {
     width:50%;
+
+    #music-player-time-display {
+      width: 100%;
+      padding:15px 5px;
+
+      > span {
+        display: block;
+        float: left;
+        height: 20px;
+
+        &.current-track-time {
+          width:20%;
+        }
+
+        &.current-track-progress {
+          width: 60%;
+        }
+
+        &.current-track-duration {
+          width:20%;
+        }
+      }
+    }
   }
 
   #music-player-playlist-panel {

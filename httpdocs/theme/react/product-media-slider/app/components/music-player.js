@@ -592,8 +592,8 @@ function MusicPlayerControlPanel(props){
 
   let playButtonDisplay;
   if (props.isPlaying === true) playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
-  else playButtonDisplay = <span onClick={() => props.onPlayClick(playIndex)}>{playButtonElement}</span>
-
+  else playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
+  console.log('props is playing - ' + props.isPlaying);
   const audioControlsDisplay = (
     <div className="music-player-audio-control">
       <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
@@ -616,7 +616,7 @@ function MusicPlayerControlPanel(props){
       <span className="volume-icon">
         {volumeIcon}
       </span>
-      <span className="volume-bar-container progress-bar">
+      <span className="volume-bar-container progress_bar">
 
       </span>
     </div>
@@ -639,10 +639,12 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-track-title">
         <h2>{props.items[playIndex].title}</h2>
       </div>
-      <div className="music-player-progress-bar progress-bar">
-        {props.currentTrackTime} 
-        <span className="progress-bar-complete" style={progressBarStyle}></span>
-        {props.currentTrackDuration}
+      <div className="music-player-time-display">
+        <span className="current-track-time">{props.currentTrackTime} </span>
+        <span className="current-track-progress">
+          <span className="progress-bar-complete" style={progressBarStyle}></span>
+        </span>
+        <span className="current-track-duration">{props.currentTrackDuration}</span>
       </div>
       <div className="music-player-controls-bar">
         {audioControlsDisplay}
@@ -698,8 +700,7 @@ function MusicPlayerPlaylistItem(props){
       </svg>
   )
 
- const playlistItemPlayButtonDisplay = props.isPlaying === true && props.playIndex === props.index ? playButtonElement : pauseButtonElement;
-
+ const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
   return (
     <li className="music-player-playlist-item">
       {playlistItemPlayButtonDisplay}

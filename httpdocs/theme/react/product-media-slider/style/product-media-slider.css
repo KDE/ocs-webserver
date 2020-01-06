@@ -970,9 +970,29 @@ video:focus {
 #music-player-container {
   display: none;
   width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 #music-player-container #music-player-control-panel {
   width: 50%;
+}
+#music-player-container #music-player-control-panel #music-player-time-display {
+  width: 100%;
+  padding: 15px 5px;
+}
+#music-player-container #music-player-control-panel #music-player-time-display > span {
+  display: block;
+  float: left;
+  height: 20px;
+}
+#music-player-container #music-player-control-panel #music-player-time-display > span.current-track-time {
+  width: 20%;
+}
+#music-player-container #music-player-control-panel #music-player-time-display > span.current-track-progress {
+  width: 60%;
+}
+#music-player-container #music-player-control-panel #music-player-time-display > span.current-track-duration {
+  width: 20%;
 }
 #music-player-container #music-player-playlist-panel {
   width: 50%;
