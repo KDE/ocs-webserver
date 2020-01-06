@@ -544,9 +544,19 @@ function MusicPlayer(props){
         onNextTrackPlayClick={onNextTrackPlayClick}
         togglePlaylistDisplay={togglePlaylistDisplay}
       />
-      <div className="music-player-playlist">
-
-      </div>
+      <MusicPlayerPlaylist 
+        items={props.items}
+        playIndex={playIndex}
+        isPlaying={isPlaying}
+        isPaused={isPaused}
+        currentTrackTime={currentTrackTime}
+        currentTrackDuration={currentTrackDuration}
+        currentTrackProgress={currentTrackProgress}
+        togglePlaylistDisplay={togglePlaylistDisplay}
+        setPlayIndex={setPlayIndex}
+        onPlayClick={onPlayClick}
+        onPauseClick={onPauseClick}
+      />
     </div>
   )
 }
@@ -622,7 +632,7 @@ function MusicPlayerControlPanel(props){
   }
 
   return (
-    <div className="music-player-control-panel">
+    <div id="music-player-control-panel">
       <div className="music-player-cover">
         <figure><img src={props.items[playIndex].cover}/></figure>
       </div>
@@ -643,6 +653,58 @@ function MusicPlayerControlPanel(props){
         </span>
       </div>
     </div>
+  )
+}
+
+function MusicPlayerPlaylist(props){
+
+  const musicPlayerPlaylistItems = props.items.map((item,index) => (
+    <MusicPlayerPlaylistItem 
+      key={index}
+      item={item}
+      playIndex={props.playIndex}
+      isPlaying={props.isPlaying}
+      isPaused={props.isPaused}
+    />
+  ));
+
+  const musicPlayerPlaylistDisplay = <ul>{musicPlayerPlaylistItems}</ul>
+
+  return (
+    <div id="music-player-playlist-panel">
+      <div id="music-player-playlist-header">
+        PLAYLIST TITLE
+        <a onClick={props.togglePlaylistDisplay}>close</a>
+      </div>
+      <div id="music-player-playlist">
+        {musicPlayerPlaylistDisplay}
+      </div>
+      <div id="music-player-playlist-footer"></div>
+    </div>
+  )
+}
+
+function MusicPlayerPlaylistItem(props){
+
+  const playButtonElement = (
+    <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="play-icon">
+        <g><path d="m20.1 2.9q4.7 0 8.6 2.3t6.3 6.2 2.3 8.6-2.3 8.6-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3z m8.6 18.3q0.7-0.4 0.7-1.2t-0.7-1.2l-12.1-7.2q-0.7-0.4-1.5 0-0.7 0.4-0.7 1.3v14.2q0 0.9 0.7 1.3 0.4 0.2 0.8 0.2 0.3 0 0.7-0.2z"></path></g>
+    </svg>
+  )
+
+  const pauseButtonElement = (
+      <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="pause-icon">
+          <g><path d="m18.7 26.4v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m10 0v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m8.6-6.4q0 4.7-2.3 8.6t-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3 8.6 2.3 6.3 6.2 2.3 8.6z"></path></g>
+      </svg>
+  )
+
+ const playlistItemPlayButtonDisplay = props.isPlaying === true && props.playIndex === props.index ? playButtonElement : pauseButtonElement;
+
+  return (
+    <li className="music-player-playlist-item">
+      {playlistItemPlayButtonDisplay}
+      {props.item.title}
+    </li>
   )
 }
 

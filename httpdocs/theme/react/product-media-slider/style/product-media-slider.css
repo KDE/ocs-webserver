@@ -969,6 +969,28 @@ video:focus {
 }
 #music-player-container {
   display: none;
+  width: 100%;
+}
+#music-player-container #music-player-control-panel {
+  width: 50%;
+}
+#music-player-container #music-player-playlist-panel {
+  width: 50%;
+}
+#music-player-container #music-player-playlist-panel #music-player-header {
+  width: 100%;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist {
+  width: 100%;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li {
+  width: 100%;
+  float: left;
 }
 #comics-reader-wrapper {
   height: 100%;
