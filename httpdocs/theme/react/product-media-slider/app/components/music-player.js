@@ -497,7 +497,7 @@ function MusicPlayer(props){
     if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
     newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
     setcurrentTrackDuration(newcurrentTrackDuration );
-    const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 10000;
+    const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
     console.log(newCurrentTrackProgress);
     setCurrentTrackProgress(newCurrentTrackProgress);
   }
@@ -527,6 +527,35 @@ function MusicPlayer(props){
 
   /* DISPLAY */
 
+  /* RENDER */
+
+  return (
+    <div id="music-player-container">
+      <audio id="music-player-audio"></audio>
+      <MusicPlayerControlPanel 
+        playIndex={playIndex}
+        isPlaying={isPlaying}
+        isPaused={isPaused}
+        currentTrackTime={currentTrackTime}
+        currentTrackDuration={currentTrackDuration}
+        currentTrackProgress={currentTrackProgress}
+        items={props.items}
+        onPlayClick={onPlayClick}
+        onPauseClick={onPauseClick}
+        onPrevTrackPlayClick={onPrevTrackPlayClick}
+        onNextTrackPlayClick={onNextTrackPlayClick}
+        togglePlaylistDisplay={togglePlaylistDisplay}
+      />
+      <div className="music-player-playlist">
+
+      </div>
+    </div>
+  )
+}
+
+function MusicPlayerControlPanel(props){
+
+
   // audio controls display
 
   const playButtonElement = (
@@ -554,23 +583,24 @@ function MusicPlayer(props){
   )
 
   let playButtonDisplay;
-  if (isPlaying === true) playButtonDisplay = <span onClick={() => onPauseClick()}>{pauseButtonElement}</span>
-  else playButtonDisplay = <span onClick={() => onPlayClick(playIndex)}>{playButtonElement}</span>
+  if (props.isPlaying === true) playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
+  else playButtonDisplay = <span onClick={() => props.onPlayClick(playIndex)}>{playButtonElement}</span>
 
   const audioControlsDisplay = (
     <div className="music-player-audio-control">
-      <span onClick={() => onPrevTrackPlayClick()}>{prevButtonElement}</span>
+      <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
       {playButtonDisplay}
-      <span onClick={() => onNextTrackPlayClick()}>{nextButtonElement}</span>
+      <span onClick={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
     </div>
   )
+
 
   // volume control
 
   const volumeIcon = (
-      <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"verticalAlign":"middle"}}>
-        <g><path d="m23.4 5.4c6.7 1.5 11.6 7.5 11.6 14.6s-4.9 13.1-11.6 14.6v-3.4c4.8-1.4 8.2-5.9 8.2-11.2s-3.4-9.8-8.2-11.2v-3.4z m4.1 14.6c0 3-1.6 5.5-4.1 6.7v-13.4c2.5 1.2 4.1 3.7 4.1 6.7z m-22.5-5h6.6l8.4-8.4v26.8l-8.4-8.4h-6.6v-10z"></path></g>
-      </svg>
+    <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"verticalAlign":"middle"}}>
+      <g><path d="m23.4 5.4c6.7 1.5 11.6 7.5 11.6 14.6s-4.9 13.1-11.6 14.6v-3.4c4.8-1.4 8.2-5.9 8.2-11.2s-3.4-9.8-8.2-11.2v-3.4z m4.1 14.6c0 3-1.6 5.5-4.1 6.7v-13.4c2.5 1.2 4.1 3.7 4.1 6.7z m-22.5-5h6.6l8.4-8.4v26.8l-8.4-8.4h-6.6v-10z"></path></g>
+    </svg>
   )
 
   const volumeControlDisplay = (
@@ -584,36 +614,28 @@ function MusicPlayer(props){
     </div>
   )
 
-  /* RENDER */
-
+  const playIndex = props.playIndex;
   return (
-    <div id="music-player-container">
-      <audio id="music-player-audio"></audio>
-      <div className="music-player-control-panel">
-        
-        <div className="music-player-cover">
-          <figure><img src={props.items[playIndex].cover}/></figure>
-        </div>
-
-        <div className="music-player-track-title">
-          <h2>{props.items[playIndex].title}</h2>
-        </div>
-        
-        <div className="music-player-progress-bar">
-          {currentTrackTime + " " + currentTrackProgress + "%" + " " + currentTrackDuration}
-        </div>
-
-        <div className="middle-bar">
-          {audioControlsDisplay}
-          {volumeControlDisplay}
-          <span className="playlist-toggle-button" onClick={() => togglePlaylistDisplay()}>PL</span>
-          <span className="theme-switch">
-            theme switch
-          </span>
-        </div>
-
+    <div className="music-player-control-panel">
+      <div className="music-player-cover">
+        <figure><img src={props.items[playIndex].cover}/></figure>
       </div>
-      <div className="music-player-playlist"></div>
+      <div className="music-player-track-title">
+        <h2>{props.items[playIndex].title}</h2>
+      </div>
+      <div className="music-player-progress-bar">
+        {props.currentTrackTime} 
+        <span className="progress-bar-complete" style={{height:"10px",width:props.currentTrackProgress+"%",backgroundColor:"green"}}></span>
+        {props.currentTrackDuration}
+      </div>
+      <div className="music-player-controls-bar">
+        {audioControlsDisplay}
+        {volumeControlDisplay}
+        <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+        <span className="theme-switch">
+          theme switch
+        </span>
+      </div>
     </div>
   )
 }
