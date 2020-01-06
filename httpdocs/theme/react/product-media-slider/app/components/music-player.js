@@ -525,8 +525,6 @@ function MusicPlayer(props){
     setTheme(newThemeValue);
   }
 
-  /* DISPLAY */
-
   /* RENDER */
 
   return (
@@ -608,13 +606,21 @@ function MusicPlayerControlPanel(props){
       <span className="volume-icon">
         {volumeIcon}
       </span>
-      <span className="volume-bar-container">
+      <span className="volume-bar-container progress-bar">
 
       </span>
     </div>
   )
 
   const playIndex = props.playIndex;
+  
+  const progressBarStyle = {
+    height:"10px",
+    width:props.currentTrackProgress+"%",
+    backgroundColor:"green",
+    display:"block"
+  }
+
   return (
     <div className="music-player-control-panel">
       <div className="music-player-cover">
@@ -623,9 +629,9 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-track-title">
         <h2>{props.items[playIndex].title}</h2>
       </div>
-      <div className="music-player-progress-bar">
+      <div className="music-player-progress-bar progress-bar">
         {props.currentTrackTime} 
-        <span className="progress-bar-complete" style={{height:"10px",width:props.currentTrackProgress+"%",backgroundColor:"green"}}></span>
+        <span className="progress-bar-complete" style={progressBarStyle}></span>
         {props.currentTrackDuration}
       </div>
       <div className="music-player-controls-bar">
