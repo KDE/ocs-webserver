@@ -365,9 +365,13 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    console.log('currentSrc');
+    console.log(playerElement);
     playerElement[0].src = currentSrc;
-    playerElement.addEventListener("timeupdate", onPlayerTimeUpdate(playerElement));
+    const newCurrentTrackTotalTime = playerElement[0].duration;
+    setCurrentTrackTotalTime(newCurrentTrackTotalTime);
+    playerElement[0].ontimeupdate = function(){  
+      onPlayerTimeUpdate(playerElement[0]) 
+    }
     playerElement[0].play();
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
@@ -480,9 +484,7 @@ function MusicPlayer(props){
 
   function onPlayerTimeUpdate(playerElement){
     const newCurrentTrackTime = playerElement.currentTime;
-    const newCurrentTrackTotalTime = playerElement.duration;
     setCurrentTrackTime(newCurrentTrackTime);
-    setCurrentTrackTotalTime(newCurrentTrackTotalTime);
   }
 
   // playlist
