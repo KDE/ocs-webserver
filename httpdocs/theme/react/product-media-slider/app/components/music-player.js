@@ -331,7 +331,7 @@ function MusicPlayer(props){
   const [ playIndex, setPlayIndex ] = useState(0);
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
-  const [ currentTrackTotalTime, setCurrentTrackTotalTime ] = useState();
+  const [ currentTrackTotalTime, setCurrentTrackTotalTime ] = useState(0);
   const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ theme, setTheme ] = useState('dark');
   const [ randomSupporter, setRandomSupporter ] = useState();
@@ -368,6 +368,7 @@ function MusicPlayer(props){
     console.log(playerElement);
     playerElement[0].src = currentSrc;
     const newCurrentTrackTotalTime = playerElement[0].duration;
+    console.log(newCurrentTrackTotalTime);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime);
     playerElement[0].ontimeupdate = function(){  
       onPlayerTimeUpdate(playerElement[0]) 
