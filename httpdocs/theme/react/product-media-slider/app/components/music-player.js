@@ -491,7 +491,7 @@ function MusicPlayer(props){
     setCurrentTrackTime(newCurrentTrackTime);
     let newCurrentTrackTotalTime = playerElement.duration;
     if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
-    newCurrentTrackTime = millisToMinutesAndSeconds(currentTrackTotalTime);
+    newCurrentTrackTotalTime = millisToMinutesAndSeconds(newCurrentTrackTotalTime);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime);
   }
 
