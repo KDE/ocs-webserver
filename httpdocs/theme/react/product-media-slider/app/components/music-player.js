@@ -353,11 +353,12 @@ function MusicPlayer(props){
   React.useEffect(() => {
     console.log('init music player');
 
-    /*const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    const newcurrentTrackDuration = playerElement[0].duration;
-    setcurrentTrackDuration(newcurrentTrackDuration);*/
+    playerElement[0].play();
+    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    playerElement[0].pause();
 
     getRandomMusicsupporter();
   },[])
@@ -370,7 +371,7 @@ function MusicPlayer(props){
 
   // audio player
 
-  function onPlayClick(index){
+  function onPlayClick(){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
