@@ -210,6 +210,32 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
+    public function newsAction()
+    {        
+        $this->_initResponseHeader();
+
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+        if (false !== ($news = $cache->load($cacheName))) {
+            $results=$news;
+        }else{
+            $url = 'https://blog.opendesktop.org/?json=1';        
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $data = curl_exec($ch);
+            curl_close($ch);
+            $results = json_decode($data);  
+            $results->posts = array_slice($results->posts,0,3);
+            $cache->save($results, $cacheName, array(), 60*60);
+        }                
+        $this->_sendResponse($results, $this->_format);
+    }
+
+
     public function cattagsAction()
     {
 
@@ -223,55 +249,6 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
-    // public function searchAction()
-    // {  
-    //     $this->_initResponseHeader();
-    //     $projectSearchText = $this->getParam('p');
-    //     $param = array('q' => $projectSearchText,'store'=>null,'page' => 1
-    //         , 'count' => 10);
-    //     $viewHelperImage = new Default_View_Helper_Image();
-    //     $modelSearch = new Default_Model_Solr();   
-    //     try {
-    //         $result = $modelSearch->search($param);
-    //         $products = $result['hits'];                      
-    //         $ps=array();
-    //         foreach ($products as $p) {
-    //             $img = $viewHelperImage->Image($p->image_small, array(
-    //                 'width'  => 50,
-    //                 'height' => 50
-    //             ));
-    //             $ps[] =array('type'=>'project'                    
-    //                 ,'title' =>$p->title
-    //                 ,'project_id' =>$p->project_id
-    //                 ,'member_id'=>$p->member_id
-    //                 ,'username' => $p->username
-    //                 ,'laplace_score' =>$p->laplace_score
-    //                 ,'score' =>$p->score
-    //                 ,'image_small' =>$img);
-    //         }
-
-    //         $model = new Default_Model_Member();
-    //         $results = $model->findActiveMemberByName($projectSearchText);
-    //         $helperImage = new Default_View_Helper_Image();
-    //         foreach ($results as $value) {
-    //             $avatar = $helperImage->image($value['profile_image_url'],
-    //                 array('width' => 100, 'height' => 100, 'crop' => 2));
-                
-    //             $ps[] =array('type'=>'user'
-    //             ,'username'=>$value['username']
-    //             ,'member_id'=>$value['member_id']
-    //             ,'image_small' =>$avatar
-    //             );
-    //         }
-
-    //         $this->_sendResponse($ps, $this->_format);
-            
-    //     } catch (Exception $e) {
-    //         $this->_sendResponse(null, $this->_format);
-    //     }    
-
-        
-    // }
 
     public function searchAction()
     {  
