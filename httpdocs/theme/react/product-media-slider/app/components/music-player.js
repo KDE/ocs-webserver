@@ -332,7 +332,8 @@ function MusicPlayer(props){
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ isPaused, setIsPaused ] = useState(false);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
-  const [ currentTrackTotalTime, setCurrentTrackTotalTime ] = useState(0);
+  const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
+  const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
   const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ theme, setTheme ] = useState('dark');
   const [ randomSupporter, setRandomSupporter ] = useState();
@@ -355,8 +356,8 @@ function MusicPlayer(props){
     /*const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    const newCurrentTrackTotalTime = playerElement[0].duration;
-    setCurrentTrackTotalTime(newCurrentTrackTotalTime);*/
+    const newcurrentTrackDuration = playerElement[0].duration;
+    setcurrentTrackDuration(newcurrentTrackDuration);*/
 
     getRandomMusicsupporter();
   },[])
@@ -496,16 +497,19 @@ function MusicPlayer(props){
   function onPlayerTimeUpdate(playerElement){
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
     setCurrentTrackTime(newCurrentTrackTime);
-    let newCurrentTrackTotalTime = playerElement.duration;
-    if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
-    newCurrentTrackTotalTime = millisToMinutesAndSeconds(newCurrentTrackTotalTime);
-    setCurrentTrackTotalTime(newCurrentTrackTotalTime );
+    let newcurrentTrackDuration = playerElement.duration;
+    if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
+    newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
+    setcurrentTrackDuration(newcurrentTrackDuration );
+    const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 10000;
+    console.log(newCurrentTrackProgress);
+    setCurrentTrackProgress(newCurrentTrackProgress);
   }
 
   function millisToMinutesAndSeconds(time) {
     let minutes = Math.floor(time / 60);
     if (minutes < 10) minutes = "0" + minutes;
-    const seconds = time - minutes * 60;
+    let seconds = time - minutes * 60;
     if (seconds < 10) seconds = "0" + seconds;
     const timestamp = Math.round(minutes) + ":" + Math.round(seconds);
     return timestamp;
@@ -600,7 +604,7 @@ function MusicPlayer(props){
         </div>
         
         <div className="music-player-progress-bar">
-          {currentTrackTime + " / " + currentTrackTotalTime}
+          {currentTrackTime + " " + currentTrackProgress + "%" + " " + currentTrackDuration}
         </div>
 
         <div className="middle-bar">
