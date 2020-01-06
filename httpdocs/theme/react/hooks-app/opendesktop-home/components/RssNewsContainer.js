@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import TimeAgo from 'react-timeago';
+
+let decodeHTML = function (html) {
+	var txt = document.createElement('textarea');
+	txt.innerHTML = html;
+	return txt.value;
+};
+
 class RssNewsContainer extends Component {
   constructor(props){
   	super(props);
@@ -7,9 +14,11 @@ class RssNewsContainer extends Component {
   }
 
   componentDidMount() {
-    const self = this;
-    //$.getJSON("https://blog.opendesktop.org/?json=1&callback=?", function (res) {
+    const self = this;    
     $.getJSON(`/json/news`, function (res) {
+      for (var i in res.posts) {
+        res.posts[i].title = decodeHTML(res.posts[i].title);        
+      }      
       self.setState({items:res.posts});
     });
   }
