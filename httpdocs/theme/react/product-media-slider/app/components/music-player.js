@@ -373,10 +373,7 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    setCurrentTrackTotalTime(newCurrentTrackTotalTime);
-    playerElement[0].ontimeupdate = function(){  
-      onPlayerTimeUpdate(playerElement[0]) 
-    }
+    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
@@ -437,7 +434,7 @@ function MusicPlayer(props){
       if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
 
       const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-
+      console.log(audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
         console.log(res);
         const newAudioItem = {
