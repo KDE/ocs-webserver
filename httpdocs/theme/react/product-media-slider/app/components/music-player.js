@@ -373,9 +373,6 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    const newCurrentTrackTotalTime = playerElement[0].duration;
-    console.log(playerElement.duration);
-    console.log(playerElement[0].duration);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime);
     playerElement[0].ontimeupdate = function(){  
       onPlayerTimeUpdate(playerElement[0]) 
@@ -493,6 +490,17 @@ function MusicPlayer(props){
   function onPlayerTimeUpdate(playerElement){
     const newCurrentTrackTime = playerElement.currentTime;
     setCurrentTrackTime(newCurrentTrackTime);
+    let newCurrentTrackTotalTime = playerElement.duration;
+    if (isNaN(newCurrentTrackTotalTime)){
+      newCurrentTrackTotalTime = 0;
+    }
+    setCurrentTrackTotalTime(newCurrentTrackTotalTime);
+  }
+
+  function millisToMinutesAndSeconds(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
   }
 
   // playlist
@@ -570,6 +578,9 @@ function MusicPlayer(props){
 
   /* RENDER */
 
+  const currentTimeMinutes = millisToMinutesAndSeconds(currentTrackTime);
+  const totalTimeMinutes = millisToMinutesAndSeconds(currentTrackTotalTime);
+
   return (
     <div id="music-player-container">
       <audio id="music-player-audio"></audio>
@@ -584,7 +595,7 @@ function MusicPlayer(props){
         </div>
         
         <div className="music-player-progress-bar">
-          {currentTrackTime + " / " + currentTrackTotalTime}
+          {currentTimeMinutes + " / " + totalTimeMinutes}
         </div>
 
         <div className="middle-bar">
