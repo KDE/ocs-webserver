@@ -372,10 +372,10 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    console.log(playerElement);
     playerElement[0].src = currentSrc;
     const newCurrentTrackTotalTime = playerElement[0].duration;
-    console.log(newCurrentTrackTotalTime);
+    console.log(playerElement.duration);
+    console.log(playerElement[0].duration);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime);
     playerElement[0].ontimeupdate = function(){  
       onPlayerTimeUpdate(playerElement[0]) 
@@ -491,8 +491,6 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
-    console.log(playerElement);
-    console.log(playerElement.duration);
     const newCurrentTrackTime = playerElement.currentTime;
     setCurrentTrackTime(newCurrentTrackTime);
   }
