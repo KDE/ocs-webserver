@@ -482,14 +482,21 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
-    console.log('track current time - ' + playerElement.currentTime );
-    const newCurrentTrackTime = playerElement.currentTime;
+
+    const ctMinutes = Math.floor(playerElement.currentTime / 60000);
+    const ctSeconds = ((playerElement.currentTime % 60000) / 1000).toFixed(0);
+    const newCurrentTrackTime  = ctMinutes + ":" + (ctSeconds < 10 ? '0' : '') + ctSeconds;
+    console.log(newCurrentTrackTime);
     setCurrentTrackTime(newCurrentTrackTime);
+
     let newCurrentTrackTotalTime = playerElement.duration;
     if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
-    newCurrentTrackTotalTime = newCurrentTrackTotalTime;
-    console.log('track duration - ' + newCurrentTrackTotalTime);
+    const dMinutes = Math.floor(newCurrentTrackTotalTime / 60000);
+    const dSeconds = ((newCurrentTrackTotalTime % 60000) / 1000).toFixed(0);
+    newCurrentTrackTotalTime  = dMinutes + ":" + (dSeconds < 10 ? '0' : '') + dSeconds;
+    console.log(newCurrentTrackTotalTime);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime );
+
   }
 
   function millisToMinutesAndSeconds(millis) {
