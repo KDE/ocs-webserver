@@ -377,8 +377,8 @@ function MusicPlayer(props){
     playerElement[0].src = currentSrc;
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
-    setIsPaused(false);
     setIsPlaying(true);
+    setIsPaused(false);
     onReportAudioPlay(currentSrc);
   }
 
@@ -504,10 +504,10 @@ function MusicPlayer(props){
 
   function millisToMinutesAndSeconds(time) {
     let minutes = Math.floor(time / 60);
-    if (minutes < 10) minutes = "0" + minutes;
     let seconds = time - minutes * 60;
-    if (seconds < 10) seconds = "0" + seconds;
-    const timestamp = Math.round(minutes) + ":" + Math.round(seconds);
+    if (minutes < 10) minutes = "0" +  Math.round(minutes);
+    if (seconds < 10) seconds = "0" +  Math.round(seconds);
+    const timestamp = minutes + ":" + seconds;
     return timestamp;
   }
 
