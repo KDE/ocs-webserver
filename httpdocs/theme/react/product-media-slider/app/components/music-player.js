@@ -498,7 +498,7 @@ function MusicPlayer(props){
   function millisToMinutesAndSeconds(time) {
     const minutes = Math.floor(time / 60);
     const seconds = time - minutes * 60;
-    const timestamp = minutes + ":" + seconds;
+    const timestamp = Math.round(minutes) + ":" + Math.round(seconds);
     return timestamp;
   }
 
