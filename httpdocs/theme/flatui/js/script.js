@@ -1726,8 +1726,8 @@ var RssNews = (function () {
             if($("#rss-feeds").length==0)
             {
                 return false;
-            }
-            var json_url = "https://blog.opendesktop.org/?json=1&callback=?";
+            }            
+            var json_url = "/json/news";
             $.getJSON(json_url, function (res) {
                 var crss = '';
                 $.each(res.posts, function (i, item) {
