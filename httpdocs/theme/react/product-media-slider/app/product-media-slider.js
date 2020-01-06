@@ -214,7 +214,7 @@ function ProductMediaSlider(){
   ));
 
   let thumbnailNavigationDisplay;
-  if (showPlaylist){
+  if (showPlaylist && gallery.length > 1){
   // thumbnail navigation
     const slidesThumbnailNavigationDisplay = gallery.map((g, index) => (
       <ThumbNavigationItem 
