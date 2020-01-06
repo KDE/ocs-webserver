@@ -1008,6 +1008,16 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
   width: 20%;
 }
+#music-player-container #music-player-control-panel .music-player-controls-bar {
+  width: 100%;
+  text-align: center;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper {
+  margin: 0 auto;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div {
+  float: left;
+}
 #music-player-container #music-player-playlist-panel {
   width: 50%;
   float: left;

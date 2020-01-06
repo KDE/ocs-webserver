@@ -649,12 +649,18 @@ function MusicPlayerControlPanel(props){
         <span className="current-track-duration">{props.currentTrackDuration}</span>
       </div>
       <div className="music-player-controls-bar">
-        {audioControlsDisplay}
-        {volumeControlDisplay}
-        <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
-        <span className="theme-switch">
-          theme switch
-        </span>
+        <div className="music-player-controls-wrapper">
+          {audioControlsDisplay}
+          {volumeControlDisplay}
+          <div className="playlist-toggle-container">
+            <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+          </div>
+          <div className="theme-switch-container">
+            <span className="theme-switch">
+              theme switch
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )
