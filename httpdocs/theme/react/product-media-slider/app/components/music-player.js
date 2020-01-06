@@ -330,6 +330,7 @@ function MusicPlayer(props){
 
   const [ playIndex, setPlayIndex ] = useState(0);
   const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ isPaused, setIsPaused ] = useState(false);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
   const [ currentTrackTotalTime, setCurrentTrackTotalTime ] = useState(0);
   const [ showPlaylist, setShowPlaylist ] = useState(true);
@@ -372,9 +373,14 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    playerElement[0].src = currentSrc;
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-    playerElement[0].play();
+    if (isPaused === true){
+      playerElement[0].src = currentSrc;
+      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+      playerElement[0].play();
+    } else {
+      playerElement[0].resume();
+    }
+    setIsPaused(false);
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
   }
@@ -384,6 +390,7 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].pause();
     setIsPlaying(false);
+    setIsPaused(true);
     onReportAudioStop(props.items[playIndex].musicSrc)
   }
 
