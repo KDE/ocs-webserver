@@ -330,6 +330,8 @@ function MusicPlayer(props){
 
   const [ playIndex, setPlayIndex ] = useState(0);
   const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
+  const [ currentTrackTotalTime, setCurrentTrackTotalTime ] = useState();
   const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ theme, setTheme ] = useState('dark');
   const [ randomSupporter, setRandomSupporter ] = useState();
@@ -365,6 +367,7 @@ function MusicPlayer(props){
     const currentSrc = props.items[playIndex].musicSrc;
     console.log('currentSrc');
     playerElement[0].src = currentSrc;
+    playerElement[0].addEventListener("timeupdate", onPlayerTimeUpdate(playerElement[0]));
     playerElement[0].play();
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
@@ -473,6 +476,15 @@ function MusicPlayer(props){
     }
   }
 
+  // time progress bar
+
+  function onPlayerTimeUpdate(playerElement){
+    const newCurrentTrackTime = playerElement.currentTime;
+    const newCurrentTrackTotalTime = playerElement.duration;
+    setCurrentTrackTime(newCurrentTrackTime);
+    setCurrentTrackTotalTime(newCurrentTrackTotalTime);
+  }
+
   // playlist
 
   function togglePlaylistDisplay(){
@@ -561,7 +573,9 @@ function MusicPlayer(props){
           <h2>{props.items[playIndex].title}</h2>
         </div>
         
-        <div className="music-player-progress-bar"></div>
+        <div className="music-player-progress-bar">
+          {currentTrackTime + " / " + currentTrackTotalTime}
+        </div>
 
         <div className="middle-bar">
           {audioControlsDisplay}
