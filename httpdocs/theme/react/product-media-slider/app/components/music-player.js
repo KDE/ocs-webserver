@@ -376,10 +376,10 @@ function MusicPlayer(props){
     if (isPaused === true){
       playerElement[0].src = currentSrc;
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-      playerElement[0].play();
     } else {
-      playerElement[0].resume();
+      playerElement.currentTime = currentTrackTime;
     }
+    playerElement[0].play();
     setIsPaused(false);
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
