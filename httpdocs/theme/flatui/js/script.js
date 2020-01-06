@@ -1723,7 +1723,10 @@ var LoginContainer = (function () {
 var RssNews = (function () {
     return {
         setup: function () {
-
+            if($("#rss-feeds").length==0)
+            {
+                return false;
+            }
             var json_url = "https://blog.opendesktop.org/?json=1&callback=?";
             $.getJSON(json_url, function (res) {
                 var crss = '';
