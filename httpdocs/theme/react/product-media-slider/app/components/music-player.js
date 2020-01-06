@@ -350,6 +350,13 @@ function MusicPlayer(props){
 
   React.useEffect(() => {
     console.log('init music player');
+
+    /*const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const currentSrc = props.items[playIndex].musicSrc;
+    playerElement[0].src = currentSrc;
+    const newCurrentTrackTotalTime = playerElement[0].duration;
+    setCurrentTrackTotalTime(newCurrentTrackTotalTime);*/
+
     getRandomMusicsupporter();
   },[])
 
@@ -484,6 +491,8 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
+    console.log(playerElement);
+    console.log(playerElement.duration);
     const newCurrentTrackTime = playerElement.currentTime;
     setCurrentTrackTime(newCurrentTrackTime);
   }
