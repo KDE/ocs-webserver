@@ -8,7 +8,8 @@ class RssNewsContainer extends Component {
 
   componentDidMount() {
     const self = this;
-    $.getJSON("https://blog.opendesktop.org/?json=1&callback=?", function (res) {
+    //$.getJSON("https://blog.opendesktop.org/?json=1&callback=?", function (res) {
+    $.getJSON(`/json/news`, function (res) {
       self.setState({items:res.posts});
     });
   }
