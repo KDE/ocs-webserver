@@ -487,25 +487,18 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
-    const newCurrentTrackTime = playerElement.currentTime;
-    console.log('current time - ' + playerElement.currentTime );
-    console.log(millisToMinutesAndSeconds(newCurrentTrackTime));
+    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
     setCurrentTrackTime(newCurrentTrackTime);
     let newCurrentTrackTotalTime = playerElement.duration;
     if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
-    newCurrentTrackTotalTime = newCurrentTrackTotalTime;
-    console.log('duration ' + newCurrentTrackTotalTime)
+    newCurrentTrackTotalTime = millisToMinutesAndSeconds(newCurrentTrackTotalTime);
     setCurrentTrackTotalTime(newCurrentTrackTotalTime );
   }
 
-  function millisToMinutesAndSeconds(millis) {
-    console.log('millis - ' + millis)
-    var minutes = Math.floor(millis / 60000);
-    console.log('minutes - ' + minutes);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
-    console.log('ections - ' + seconds);
-    const timestamp = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-    console.log(timestamp);
+  function millisToMinutesAndSeconds(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = time - minutes * 60;
+    const timestamp = minutes + ":" + seconds;
     return timestamp;
   }
 
