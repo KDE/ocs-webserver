@@ -367,7 +367,7 @@ function MusicPlayer(props){
     const currentSrc = props.items[playIndex].musicSrc;
     console.log('currentSrc');
     playerElement[0].src = currentSrc;
-    playerElement[0].addEventListener("timeupdate", onPlayerTimeUpdate(playerElement[0]));
+    playerElement.addEventListener("timeupdate", onPlayerTimeUpdate(playerElement));
     playerElement[0].play();
     setIsPlaying(true);
     onReportAudioPlay(currentSrc);
