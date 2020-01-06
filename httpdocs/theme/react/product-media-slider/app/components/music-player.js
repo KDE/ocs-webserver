@@ -374,12 +374,8 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    if (isPaused === true){
-      playerElement[0].src = currentSrc;
-      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-    } else {
-      playerElement.currentTime = currentTrackTime;
-    }
+    playerElement[0].src = currentSrc;
+    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
     setIsPaused(false);
     setIsPlaying(true);
