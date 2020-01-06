@@ -350,15 +350,10 @@ function MusicPlayer(props){
 
   React.useEffect(() => {
     console.log('init music player');
-
-    /*const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const currentSrc = props.items[playIndex].musicSrc;
-    playerElement[0].src = currentSrc;
-    const newCurrentTrackTotalTime = playerElement[0].duration;
-    setCurrentTrackTotalTime(newCurrentTrackTotalTime);*/
-
     getRandomMusicsupporter();
   },[])
+
+  // random supporter
 
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
