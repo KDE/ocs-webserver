@@ -495,14 +495,18 @@ function MusicPlayer(props){
     if (isNaN(newCurrentTrackTotalTime)){ newCurrentTrackTotalTime = 0; }
     newCurrentTrackTotalTime = newCurrentTrackTotalTime;
     console.log('duration ' + newCurrentTrackTotalTime)
-    console.log(millisToMinutesAndSeconds(newCurrentTrackTotalTime));
     setCurrentTrackTotalTime(newCurrentTrackTotalTime );
   }
 
   function millisToMinutesAndSeconds(millis) {
+    console.log('millis - ' + millis)
     var minutes = Math.floor(millis / 60000);
+    console.log('minutes - ' + minutes);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    console.log('ections - ' + seconds);
+    const timestamp = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    console.log(timestamp);
+    return timestamp;
   }
 
   // playlist
