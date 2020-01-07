@@ -1150,9 +1150,10 @@ video:focus {
   background-color: #454951;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li svg {
+  font-size: 22px;
   left: 10px;
   position: absolute;
-  top: 12px;
+  top: 14px;
 }
 #music-player-container.show-playlist #music-player-control-panel {
   width: 50%;
