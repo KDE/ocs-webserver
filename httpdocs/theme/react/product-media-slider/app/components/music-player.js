@@ -355,7 +355,11 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    onPlayerTimeUpdate(playerElement[0])
+    let newcurrentTrackDuration = playerElement[0].duration;
+    console.log(playerElement[0].duration);
+    if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
+    newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
+    setcurrentTrackDuration(newcurrentTrackDuration );
     getRandomMusicsupporter();
   },[])
 
