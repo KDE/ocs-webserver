@@ -595,8 +595,18 @@ function MusicPlayerControlPanel(props){
 
   /* COMPONENT */
 
-  function setSliderValue(e){
+  function onChangeSliderPosition(e){
+    console.log('on change slider position')
     console.log(e);
+  }
+
+  function onAfterChangeSliderPosition(e){
+    console.log('on after change slider position')
+    console.log(e);
+  }
+
+  function setSliderValue(e){
+    // console.log(e);
     // setTrackProgress(e);
     // props.onUpdateCurrentTrackProgress(e);
   }
@@ -677,8 +687,8 @@ function MusicPlayerControlPanel(props){
             min={0}
             max={100}
             value={props.currentTrackProgress}
-            onChange={setSliderValue}
-            onAfterChange={setSliderValue}
+            onChange={onChangeSliderPosition}
+            onAfterChange={onAfterChangeSliderPosition}
           />
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
