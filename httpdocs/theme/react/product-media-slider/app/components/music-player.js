@@ -375,9 +375,10 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    playerElement[0].src = currentSrc;
-    console.log(playerElement[0]);
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    if (isPaused === false){
+      playerElement[0].src = currentSrc;
+      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    }
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
@@ -508,8 +509,7 @@ function MusicPlayer(props){
     let minutes = Math.floor(time / 60);
     let seconds = time - minutes * 60;
     if (minutes < 10) minutes = "0" + minutes;
-    if (seconds < 10) seconds = "0" +  Math.floor(seconds);
-    else seconds = Math.floor(minutes);
+    if (seconds < 10) seconds = "0" +  seconds;
     const timestamp = minutes + ":" + seconds;
     return timestamp;
   }
