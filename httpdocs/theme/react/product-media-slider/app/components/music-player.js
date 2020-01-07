@@ -336,6 +336,7 @@ function MusicPlayer(props){
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ isPaused, setIsPaused ] = useState(false);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
+  const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
   const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
   const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
   const [ showPlaylist, setShowPlaylist ] = useState(true);
@@ -498,22 +499,31 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
+
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
     setCurrentTrackTime(newCurrentTrackTime);
+
+    setCurrentTrackTimeSeconds(playerElement.currentTime);
+
     let newcurrentTrackDuration = playerElement.duration;
     if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
     newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
     setcurrentTrackDuration(newcurrentTrackDuration );
+
     const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
-    console.log(newCurrentTrackProgress);
     setCurrentTrackProgress(newCurrentTrackProgress);
+
   }
 
   function millisToMinutesAndSeconds(time) {
     let minutes = Math.floor(time / 60);
+    console.log('initital minutes - ' + minutes);
     let seconds = time - minutes * 60;
+    console.log('initial seconds - ' + seconds);
     if (minutes < 10) minutes = "0" + minutes;
     if (seconds < 10) seconds = "0" +  seconds;
+    console.log('final minutes - ' + minutes);
+    console.log('final seconds - ' + seconds);
     const timestamp = minutes + ":" + seconds;
     return timestamp;
   }
@@ -643,12 +653,12 @@ function MusicPlayerControlPanel(props){
         <h2>{props.items[playIndex].title}</h2>
       </div>
       <div className="music-player-time-display">
-        <span className="current-track-time">{props.currentTrackTime.split('.')[0]} </span>
+        <span className="current-track-time">{props.currentTrackTime} </span>
         <span className="current-track-progress">
           <Slider value={props.currentTrackProgress} />
           <Range />
         </span>
-        <span className="current-track-duration">{props.currentTrackDuration.split('.')[0]}</span>
+        <span className="current-track-duration">{props.currentTrackDuration}</span>
       </div>
       <div className="music-player-controls-bar">
         <div className="music-player-controls-wrapper">
@@ -713,7 +723,6 @@ function MusicPlayerPlaylistItem(props){
 
   const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
 
-  console.log(props.randomSupporter);
 
   return (
     <li className="music-player-playlist-item">
