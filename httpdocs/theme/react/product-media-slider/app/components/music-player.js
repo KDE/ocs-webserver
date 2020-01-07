@@ -517,12 +517,11 @@ function MusicPlayer(props){
 
   function millisToMinutesAndSeconds(time) {
     let minutes = Math.floor(time / 60);
-    console.log('initital minutes - ' + minutes);
     let seconds = time - minutes * 60;
+    seconds = Math.floor(seconds);
     console.log('initial seconds - ' + seconds);
     if (minutes < 10) minutes = "0" + minutes;
     if (seconds < 10) seconds = "0" +  seconds;
-    console.log('final minutes - ' + minutes);
     console.log('final seconds - ' + seconds);
     const timestamp = minutes + ":" + seconds;
     return timestamp;
@@ -655,8 +654,11 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-time-display">
         <span className="current-track-time">{props.currentTrackTime} </span>
         <span className="current-track-progress">
-          <Slider value={props.currentTrackProgress} />
-          <Range />
+          <Slider 
+            min={0}
+            max={100}
+            value={props.currentTrackProgress} 
+          />
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
       </div>
