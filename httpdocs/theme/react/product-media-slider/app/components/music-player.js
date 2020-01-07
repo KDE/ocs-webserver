@@ -703,6 +703,11 @@ function MusicPlayerControlPanel(props){
 
 function MusicPlayerPlaylist(props){
 
+  function onMusicPlayerPlaylistItemClick(val){
+    props.setPlayIndex(val);
+    props.onPlayClick();
+  }
+
   const musicPlayerPlaylistItems = props.items.map((item,index) => (
     <MusicPlayerPlaylistItem 
       key={index}
@@ -711,6 +716,7 @@ function MusicPlayerPlaylist(props){
       playIndex={props.playIndex}
       isPlaying={props.isPlaying}
       isPaused={props.isPaused}
+      onMusicPlayerPlaylistItemClick={(val) => onMusicPlayerPlaylistItemClick(val)}
     />
   ));
 
@@ -720,7 +726,7 @@ function MusicPlayerPlaylist(props){
     <div id="music-player-playlist-panel">
       <div id="music-player-playlist-header">
         PLAYLIST TITLE
-        <a onClick={props.togglePlaylistDisplay}>close</a>
+        <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>close</a>
       </div>
       <div id="music-player-playlist">
         {musicPlayerPlaylistDisplay}
@@ -745,10 +751,10 @@ function MusicPlayerPlaylistItem(props){
   )
 
   const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
-
+  const playlistItemCssClass =  props.playIndex === props.index ? props.isPlaying === true ? 'is-playing' : 'is-paused' : '';
 
   return (
-    <li className="music-player-playlist-item">
+    <li className={"music-player-playlist-item " + playlistItemCssClass} onClick={() => props.onMusicPlayerPlaylistItemClick(props.index)}>
       {playlistItemPlayButtonDisplay}
       {props.item.title}
     </li>

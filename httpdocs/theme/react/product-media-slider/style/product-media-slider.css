@@ -990,6 +990,9 @@ video:focus {
   width: 100%;
   float: left;
   padding: 10px;
+  box-shadow: 0 0 3px #080808;
+  position: absolute;
+  z-index: 1111;
 }
 #music-player-container #music-player-control-panel .music-player-cover figure {
   padding: 10px;
@@ -1076,13 +1079,34 @@ video:focus {
 }
 #music-player-container #music-player-playlist-panel {
   width: 0%;
-  float: left;
+  height: 100%;
+  float: right;
 }
 #music-player-container #music-player-playlist-panel #music-player-header {
+  height: 50px;
+  padding: 0 75px 0 10px;
   width: 100%;
+  line-height: 50px;
+  text-align: left;
+}
+#music-player-container #music-player-playlist-panel #music-player-header .toggle-playlist {
+  position: absolute;
+  right: 50px;
+  top: 15px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  height: 19px;
+  line-height: 10px;
+  padding: 5px;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 12px;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist {
   width: 100%;
+  height: auto;
+  float: left;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul {
   padding: 0;
@@ -1093,9 +1117,30 @@ video:focus {
   width: 100%;
   float: left;
   text-align: left;
+  height: 50px;
+  padding: 0 20px 0 40px;
+  position: relative;
+  background-color: #40444b;
+  border-bottom: #40444b;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li.playing,
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li.hover,
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li.active {
+  background-color: #454951;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li svg {
+  left: 10px;
+  position: absolute;
+  top: 12px;
 }
 #music-player-container.show-playlist #music-player-control-panel {
   width: 50%;
+  height: 100%;
 }
 #music-player-container.show-playlist #music-player-playlist-panel {
   width: 50%;
