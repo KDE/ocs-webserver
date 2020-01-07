@@ -1021,6 +1021,7 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress {
   width: 70%;
   position: relative;
+  padding: 0 10px;
   /*> span {
             display: block;
             position: absolute;
@@ -1043,6 +1044,10 @@ video:focus {
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress .rc-slider-track {
   background-color: #31c27c !important;
+}
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress .rc-slider-handle {
+  border-color: white;
+  background-color: #31c27c;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
   width: 15%;

@@ -492,7 +492,7 @@ function MusicPlayer(props){
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
     console.log('on update current track progress change - ' + newTrackProgress);
-    const newCurrentTrackTime = (currentTrackTimeSeconds / newTrackProgress) * 100;
+    const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
     console.log(currentTrackTimeSeconds)
     console.log(' new current track time - ' + newCurrentTrackTime);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
@@ -604,11 +604,6 @@ function MusicPlayerControlPanel(props){
     console.log(e);
   }
 
-  function setSliderValue(e){
-    // console.log(e);
-    // setTrackProgress(e);
-  }
-
   /* DISPLAY */
 
   // audio controls display
@@ -713,7 +708,8 @@ function MusicPlayerPlaylist(props){
 
   function onMusicPlayerPlaylistItemClick(val){
     props.setPlayIndex(val);
-    props.onPlayClick();
+    if (props.isPlaying === true) props.onPlayClick();
+    else props.onPauseClick();
   }
 
   const musicPlayerPlaylistItems = props.items.map((item,index) => (
@@ -733,7 +729,7 @@ function MusicPlayerPlaylist(props){
   return (
     <div id="music-player-playlist-panel">
       <div id="music-player-playlist-header">
-        PLAYLIST TITLE
+        <h2>PLAYLIST TITLE PLAYLIST TITLE PLAYLIST TITLE PLAYLIST TITLE PLAYLIST TITLE</h2>
         <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
       </div>
       <div id="music-player-playlist">
