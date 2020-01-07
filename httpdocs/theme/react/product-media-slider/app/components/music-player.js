@@ -491,9 +491,9 @@ function MusicPlayer(props){
   }
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
-    console.log('on update current track progress change');
+    console.log('on update current track progress change - ' + newTrackProgress);
     const newCurrentTrackTime = (currentTrackTimeSeconds / newTrackProgress) * 100;
-    console.log(' new current track time - ' + currentTrackTime);
+    console.log(' new current track time - ' + newCurrentTrackTime);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].currentTime = newCurrentTrackTime;
@@ -588,12 +588,7 @@ function MusicPlayer(props){
 
 function MusicPlayerControlPanel(props){
 
-  const [ trackProgress, setTrackProgress ] = useState(0);
-
-  React.useEffect(() => {
-    const newCurrentTrackProgress = props.currentTrackProgress;
-    setTrackProgress(newCurrentTrackProgress);
-  },[props.currentTrackProgress])
+  console.log('props current track progress - ' + props.currentTrackProgress)
 
   /* COMPONENT */
 
