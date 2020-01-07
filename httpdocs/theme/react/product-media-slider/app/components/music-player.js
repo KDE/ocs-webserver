@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
-import Slider, { Range } from 'rc-slider';
-// We can just import Slider or Range to reduce bundle size
-// import Slider from 'rc-slider/lib/Slider';
-// import Range from 'rc-slider/lib/Range';
-import 'rc-slider/assets/index.css';
- 
+import Slider from 'rc-slider'; 
 
 function MusicPlayerWrapper(props){
 
