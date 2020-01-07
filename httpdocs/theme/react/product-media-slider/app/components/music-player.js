@@ -22,8 +22,6 @@ function MusicPlayerWrapper(props){
   const [ isPaused, setIsPaused ] = useState(false);
   const [ playIndex, setPlayIndex ] = useState(0);
 
-  console.log(playedAudioArray);
-
   React.useEffect(() => {
     getRandomMusicsupporter();
     // $('#music-player-wrapper').find('.player-content').prepend($('.music-player-controls'));
@@ -600,7 +598,7 @@ function MusicPlayerControlPanel(props){
   let playButtonDisplay;
   if (props.isPlaying === true) playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
   else playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
-  console.log('props is playing - ' + props.isPlaying);
+
   const audioControlsDisplay = (
     <div className="music-player-audio-control">
       <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
@@ -641,7 +639,7 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-time-display">
         <span className="current-track-time">{props.currentTrackTime} </span>
         <span className="current-track-progress">
-          <span className="complete"></span>
+          <span className="complete" style={{width:props.currentTrackProgress+"%"}}></span>
           <span className="empty"></span>
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
@@ -707,7 +705,7 @@ function MusicPlayerPlaylistItem(props){
       </svg>
   )
 
- const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
+  const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
 
   console.log(props.randomSupporter);
 
