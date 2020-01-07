@@ -359,6 +359,12 @@ function MusicPlayer(props){
     getRandomMusicsupporter();
   },[])
 
+  React.useEffect(() => {
+    const currentSrc = props.items[playIndex].musicSrc;
+    playerElement[0].src = currentSrc;
+    playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
+  },[playIndex]);
+
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
       console.log(res);
@@ -505,7 +511,7 @@ function MusicPlayer(props){
     playerElement[0].play();
 
     setIsPlaying(true);
-    setIsPlaused(false);
+    setIsPaused(false);
     const currentSrc = props.items[playIndex].musicSrc;
     onReportAudioPlay(currentSrc);
 
