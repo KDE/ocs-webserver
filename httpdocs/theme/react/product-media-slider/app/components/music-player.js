@@ -355,9 +355,7 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    playerElement[0].play();
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-    playerElement[0].pause();
+    onPlayerTimeUpdate(playerElement[0])
     getRandomMusicsupporter();
   },[])
 
@@ -374,7 +372,7 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    if (isPaused === false){
+    if (isPaused === false || playerElement[0].currentTime !== 0){
       playerElement[0].src = currentSrc;
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     }
@@ -708,7 +706,7 @@ function MusicPlayerPlaylist(props){
 
   function onMusicPlayerPlaylistItemClick(val){
     props.setPlayIndex(val);
-    if (props.isPlaying === true) props.onPlayClick();
+    if (props.isPlaying === false) props.onPlayClick();
     else props.onPauseClick();
   }
 

@@ -1094,6 +1094,16 @@ video:focus {
   line-height: 50px;
   text-align: left;
 }
+#music-player-container #music-player-playlist-panel #music-player-playlist-header h2 {
+  margin: 0;
+  line-height: 50px;
+  font-size: 18px;
+  overflow: auto;
+  text-overflow: ellipsis;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre;
+}
 #music-player-container #music-player-playlist-panel #music-player-playlist-header .toggle-playlist {
   position: absolute;
   right: 50px;
