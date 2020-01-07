@@ -493,6 +493,7 @@ function MusicPlayer(props){
   function onUpdateCurrentTrackProgress(newTrackProgress){
     console.log('on update current track progress change - ' + newTrackProgress);
     const newCurrentTrackTime = (currentTrackTimeSeconds / newTrackProgress) * 100;
+    console.log(currentTrackTimeSeconds)
     console.log(' new current track time - ' + newCurrentTrackTime);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
@@ -507,7 +508,7 @@ function MusicPlayer(props){
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
     setCurrentTrackTime(newCurrentTrackTime);
 
-    setCurrentTrackTimeSeconds(playerElement.currentTime);
+    setCurrentTrackTimeSeconds(playerElement.duration);
 
     let newcurrentTrackDuration = playerElement.duration;
     if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
