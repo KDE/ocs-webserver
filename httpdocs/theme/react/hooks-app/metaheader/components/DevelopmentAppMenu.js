@@ -80,7 +80,7 @@ const DevelopmentAppMenu = () => {
                 <li id="messages-link-item">
                     <a href={state.forumUrl+"/u/"+state.user.username+"/messages"}>
                       <div className="icon"></div>
-                      <span>PM</span>
+                      <span>DM</span>
                       {notification && 
                           <span className="badge-notification">{notification_count}</span>
                         } 
