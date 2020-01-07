@@ -94,7 +94,7 @@ const DomainsMenu = (props) => {
           break;
         case 'forum':
             
-            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'PM' : state.target.logoLabel;
+            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'DM' : state.target.logoLabel;
             
             dT =(
               <>
