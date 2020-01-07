@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
+import Slider, { Range } from 'rc-slider';
+// We can just import Slider or Range to reduce bundle size
+// import Slider from 'rc-slider/lib/Slider';
+// import Range from 'rc-slider/lib/Range';
+import 'rc-slider/assets/index.css';
+ 
 
 function MusicPlayerWrapper(props){
 
@@ -637,12 +643,12 @@ function MusicPlayerControlPanel(props){
         <h2>{props.items[playIndex].title}</h2>
       </div>
       <div className="music-player-time-display">
-        <span className="current-track-time">{props.currentTrackTime} </span>
+        <span className="current-track-time">{props.currentTrackTime.split('.')[0]} </span>
         <span className="current-track-progress">
-          <span className="complete" style={{width:props.currentTrackProgress+"%"}}></span>
-          <span className="empty"></span>
+          <Slider value={props.currentTrackProgress} />
+          <Range />
         </span>
-        <span className="current-track-duration">{props.currentTrackDuration}</span>
+        <span className="current-track-duration">{props.currentTrackDuration.split('.')[0]}</span>
       </div>
       <div className="music-player-controls-bar">
         <div className="music-player-controls-wrapper">
