@@ -506,10 +506,10 @@ function MusicPlayer(props){
   function millisToMinutesAndSeconds(time) {
     let minutes = Math.floor(time / 60);
     let seconds = time - minutes * 60;
-    if (minutes < 10) minutes = "0" +  Math.round(minutes);
-    else minutes = Math.round(minutes);
-    if (seconds < 10) seconds = "0" +  Math.round(seconds);
-    else seconds = Math.round(minutes);
+    if (minutes < 10) minutes = "0" +  Math.floor(minutes);
+    else minutes = Math.floor(minutes);
+    if (seconds < 10) seconds = "0" +  Math.floor(seconds);
+    else seconds = Math.floor(minutes);
     const timestamp = minutes + ":" + seconds;
     return timestamp;
   }
@@ -530,8 +530,11 @@ function MusicPlayer(props){
 
   /* RENDER */
 
+
+  const musicPlayerContainerCssClass = showPlaylist === true ? "show-playlist " : " ";
+
   return (
-    <div id="music-player-container">
+    <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
       <audio id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
@@ -644,7 +647,8 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-time-display">
         <span className="current-track-time">{props.currentTrackTime} </span>
         <span className="current-track-progress">
-          <span className="progress-bar-complete" style={progressBarStyle}></span>
+          <span className="progress-complete" style={progressBarStyle}></span>
+          <span className="progress-empty"></span>
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
       </div>
