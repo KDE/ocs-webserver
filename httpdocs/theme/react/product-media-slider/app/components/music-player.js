@@ -497,6 +497,7 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].currentTime = newCurrentTrackTime;
+    onPlayClick();
     setCurrentTrackProgress(newTrackProgress);
   }
 
