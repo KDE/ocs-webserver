@@ -375,6 +375,7 @@ function MusicPlayer(props){
     console.log('player element current time - ' + playerElement[0].currentTime);
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0){
       playerElement[0].src = currentSrc;
+      setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     }
     playerElement[0].play();
@@ -490,7 +491,7 @@ function MusicPlayer(props){
   }
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
-    
+
     console.log('on update current track progress change - ' + newTrackProgress);
     setCurrentTrackProgress(newTrackProgress);
 
