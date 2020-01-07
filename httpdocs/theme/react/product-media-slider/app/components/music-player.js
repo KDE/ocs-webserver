@@ -361,14 +361,6 @@ function MusicPlayer(props){
     getRandomMusicsupporter();
   },[])
 
-  React.useEffect(() => {
-    console.log('on current track time change');
-    const newCurrentTrackTime = (currentTrackTimeSeconds / setCurrentTrackProgress) * 100;
-    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-    playerElement[0].currentTime = newCurrentTrackTime;
-  },[currentTrackProgress])
-
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
       console.log(res);
@@ -498,6 +490,14 @@ function MusicPlayer(props){
     }
   }
 
+  function onUpdateCurrentTrackProgress(){
+    console.log('on current track time change');
+    const newCurrentTrackTime = (currentTrackTimeSeconds / currentTrackProgress) * 100;
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    playerElement[0].currentTime = newCurrentTrackTime;
+  }
+
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
@@ -558,7 +558,7 @@ function MusicPlayer(props){
         currentTrackTime={currentTrackTime}
         currentTrackDuration={currentTrackDuration}
         currentTrackProgress={currentTrackProgress}
-        setCurrentTrackProgress={(val) => setCurrentTrackProgress(val)}
+        onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
         items={props.items}
         onPlayClick={onPlayClick}
         onPauseClick={onPauseClick}
@@ -598,7 +598,7 @@ function MusicPlayerControlPanel(props){
   function setSliderValue(e){
     console.log(e);
     setTrackProgress(e);
-    props.setCurrentTrackProgress(e);
+    props.onUpdateCurrentTrackProgress(e);
   }
 
   /* DISPLAY */
