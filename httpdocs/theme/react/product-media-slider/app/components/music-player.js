@@ -641,7 +641,7 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-time-display">
         <span className="current-track-time">{props.currentTrackTime} </span>
         <span className="current-track-progress">
-          <span className="complete" style={progressBarStyle}></span>
+          <span className="complete"></span>
           <span className="empty"></span>
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
