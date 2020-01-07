@@ -351,24 +351,12 @@ function MusicPlayer(props){
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
   React.useEffect(() => {
-    
     console.log('init music player');
-    
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    
     playerElement[0].src = currentSrc;
-    
-    playerElement[0].onloadedmetadata = function(){
-      let newcurrentTrackDuration = playerElement[0].duration;
-      console.log(playerElement[0].duration);
-      if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
-      newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
-      setcurrentTrackDuration(newcurrentTrackDuration );
-    }
-
+    playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
     getRandomMusicsupporter();
-    
   },[])
 
   function getRandomMusicsupporter(){
@@ -384,7 +372,8 @@ function MusicPlayer(props){
     console.log('play track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    if (isPaused === false || playerElement[0].currentTime !== 0){
+    console.log('player element current time - ' + playerElement[0].currentTime);
+    if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0){
       playerElement[0].src = currentSrc;
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     }
@@ -534,10 +523,8 @@ function MusicPlayer(props){
     let minutes = Math.floor(time / 60);
     let seconds = time - minutes * 60;
     seconds = Math.floor(seconds);
-    console.log('initial seconds - ' + seconds);
     if (minutes < 10) minutes = "0" + minutes;
     if (seconds < 10) seconds = "0" +  seconds;
-    console.log('final seconds - ' + seconds);
     const timestamp = minutes + ":" + seconds;
     return timestamp;
   }
