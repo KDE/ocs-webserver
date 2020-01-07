@@ -351,16 +351,24 @@ function MusicPlayer(props){
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
 
   React.useEffect(() => {
+    
     console.log('init music player');
+    
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
+    
     playerElement[0].src = currentSrc;
-    let newcurrentTrackDuration = playerElement[0].duration;
-    console.log(playerElement[0].duration);
-    if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
-    newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
-    setcurrentTrackDuration(newcurrentTrackDuration );
+    
+    playerElement[0].onloadedmetadata = function(){
+      let newcurrentTrackDuration = playerElement[0].duration;
+      console.log(playerElement[0].duration);
+      if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
+      newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
+      setcurrentTrackDuration(newcurrentTrackDuration );
+    }
+
     getRandomMusicsupporter();
+    
   },[])
 
   function getRandomMusicsupporter(){
