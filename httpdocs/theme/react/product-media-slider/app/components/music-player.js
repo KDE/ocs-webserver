@@ -597,8 +597,8 @@ function MusicPlayerControlPanel(props){
 
   function setSliderValue(e){
     console.log(e);
-    setTrackProgress(e);
-    props.onUpdateCurrentTrackProgress(e);
+    // setTrackProgress(e);
+    // props.onUpdateCurrentTrackProgress(e);
   }
 
   /* DISPLAY */
@@ -726,7 +726,7 @@ function MusicPlayerPlaylist(props){
     <div id="music-player-playlist-panel">
       <div id="music-player-playlist-header">
         PLAYLIST TITLE
-        <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>close</a>
+        <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
       </div>
       <div id="music-player-playlist">
         {musicPlayerPlaylistDisplay}
