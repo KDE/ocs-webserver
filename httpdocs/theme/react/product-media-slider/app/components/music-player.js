@@ -491,14 +491,16 @@ function MusicPlayer(props){
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
     console.log('on update current track progress change - ' + newTrackProgress);
+    setCurrentTrackProgress(newTrackProgress);
+
     const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
     console.log(currentTrackTimeSeconds)
     console.log(' new current track time - ' + newCurrentTrackTime);
+
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].currentTime = newCurrentTrackTime;
-    onPlayClick();
-    setCurrentTrackProgress(newTrackProgress);
+    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    playerElement[0].play();
   }
 
   // time progress bar
