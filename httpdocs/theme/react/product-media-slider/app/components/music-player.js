@@ -652,7 +652,6 @@ function MusicPlayerControlPanel(props){
           <Slider 
             min={0}
             max={100}
-            value={props.currentTrackProgress} 
           />
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
