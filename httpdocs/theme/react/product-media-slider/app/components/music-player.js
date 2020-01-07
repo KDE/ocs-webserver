@@ -507,8 +507,7 @@ function MusicPlayer(props){
   function millisToMinutesAndSeconds(time) {
     let minutes = Math.floor(time / 60);
     let seconds = time - minutes * 60;
-    if (minutes < 10) minutes = "0" +  Math.floor(minutes);
-    else minutes = Math.floor(minutes);
+    if (minutes < 10) minutes = "0" + minutes;
     if (seconds < 10) seconds = "0" +  Math.floor(seconds);
     else seconds = Math.floor(minutes);
     const timestamp = minutes + ":" + seconds;
@@ -552,6 +551,7 @@ function MusicPlayer(props){
         togglePlaylistDisplay={togglePlaylistDisplay}
       />
       <MusicPlayerPlaylist 
+        randomSupporter={randomSupporter}
         items={props.items}
         playIndex={playIndex}
         isPlaying={isPlaying}
@@ -708,6 +708,9 @@ function MusicPlayerPlaylistItem(props){
   )
 
  const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
+
+  console.log(props.randomSupporter);
+
   return (
     <li className="music-player-playlist-item">
       {playlistItemPlayButtonDisplay}
