@@ -490,6 +490,7 @@ function MusicPlayer(props){
   }
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
+    
     console.log('on update current track progress change - ' + newTrackProgress);
     setCurrentTrackProgress(newTrackProgress);
 
@@ -501,6 +502,12 @@ function MusicPlayer(props){
     playerElement[0].currentTime = newCurrentTrackTime;
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
+
+    setIsPlaying(true);
+    setIsPlaused(false);
+    const currentSrc = props.items[playIndex].musicSrc;
+    onReportAudioPlay(currentSrc);
+
   }
 
   // time progress bar
