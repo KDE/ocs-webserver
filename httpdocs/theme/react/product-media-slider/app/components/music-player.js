@@ -376,6 +376,7 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
+    console.log(playerElement[0]);
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
     setIsPlaying(true);
@@ -647,8 +648,8 @@ function MusicPlayerControlPanel(props){
       <div className="music-player-time-display">
         <span className="current-track-time">{props.currentTrackTime} </span>
         <span className="current-track-progress">
-          <span className="progress-complete" style={progressBarStyle}></span>
-          <span className="progress-empty"></span>
+          <span className="complete" style={progressBarStyle}></span>
+          <span className="empty"></span>
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
       </div>
