@@ -551,6 +551,7 @@ function MusicPlayer(props){
         currentTrackTime={currentTrackTime}
         currentTrackDuration={currentTrackDuration}
         currentTrackProgress={currentTrackProgress}
+        setCurrentTrackProgress={setCurrentTrackProgress}
         items={props.items}
         onPlayClick={onPlayClick}
         onPauseClick={onPauseClick}
@@ -578,6 +579,22 @@ function MusicPlayer(props){
 
 function MusicPlayerControlPanel(props){
 
+  const [ trackProgress, setTrackProgress ] = useState(0);
+
+  React.useEffect(() => {
+    const newCurrentTrackProgress = props.currentTrackProgress;
+    setTrackProgress(newCurrentTrackProgress);
+  },[props.currentTrackProgress])
+
+  /* COMPONENT */
+
+  function setSliderValue(e){
+    console.log(e);
+    setTrackProgress(e);
+    props.setCurrentTrackProgress(e);
+  }
+
+  /* DISPLAY */
 
   // audio controls display
 
@@ -652,6 +669,9 @@ function MusicPlayerControlPanel(props){
           <Slider 
             min={0}
             max={100}
+            value={props.currentTrackProgress}
+            onChange={setSliderValue}
+            onAfterChange={setSliderValue}
           />
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>

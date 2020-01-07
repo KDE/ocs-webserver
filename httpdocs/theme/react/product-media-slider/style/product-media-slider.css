@@ -1018,23 +1018,28 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress {
   width: 70%;
   position: relative;
+  /*> span {
+            display: block;
+            position: absolute;
+            height: 4px;
+            left: 0;
+            top: 4px;
+            border-radius: 4px;
+
+            &.empty {
+              background-color: white;
+              width: 100%;
+              z-index: 100;
+            }
+
+            &.complete {
+              color: #31c27c;
+              z-index: 101;
+            }
+          }*/
 }
-#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress > span {
-  display: block;
-  position: absolute;
-  height: 4px;
-  left: 0;
-  top: 4px;
-  border-radius: 4px;
-}
-#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress > span.empty {
-  background-color: white;
-  width: 100%;
-  z-index: 100;
-}
-#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress > span.complete {
-  color: #31c27c;
-  z-index: 101;
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress .rc-slider-track {
+  background-color: #31c27c !important;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
   width: 15%;
