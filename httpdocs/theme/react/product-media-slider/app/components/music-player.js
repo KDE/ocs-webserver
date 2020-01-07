@@ -490,12 +490,14 @@ function MusicPlayer(props){
     }
   }
 
-  function onUpdateCurrentTrackProgress(){
-    console.log('on current track time change');
-    const newCurrentTrackTime = (currentTrackTimeSeconds / currentTrackProgress) * 100;
+  function onUpdateCurrentTrackProgress(newTrackProgress){
+    console.log('on update current track progress change');
+    const newCurrentTrackTime = (currentTrackTimeSeconds / newTrackProgress) * 100;
+    console.log(' new current track time - ' + currentTrackTime);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].currentTime = newCurrentTrackTime;
+    setCurrentTrackProgress(newTrackProgress);
   }
 
   // time progress bar
@@ -598,6 +600,7 @@ function MusicPlayerControlPanel(props){
   function onChangeSliderPosition(e){
     console.log('on change slider position')
     console.log(e);
+    props.onUpdateCurrentTrackProgress(e);
   }
 
   function onAfterChangeSliderPosition(e){
@@ -608,7 +611,6 @@ function MusicPlayerControlPanel(props){
   function setSliderValue(e){
     // console.log(e);
     // setTrackProgress(e);
-    // props.onUpdateCurrentTrackProgress(e);
   }
 
   /* DISPLAY */
