@@ -987,7 +987,7 @@ video:focus {
   color: #31c27c;
 }
 #music-player-container #music-player-control-panel {
-  width: 0%;
+  width: 100%;
   float: left;
   padding: 10px;
 }
@@ -1055,7 +1055,7 @@ video:focus {
   float: left;
 }
 #music-player-container #music-player-playlist-panel {
-  width: 100%;
+  width: 0%;
   float: left;
 }
 #music-player-container #music-player-playlist-panel #music-player-header {

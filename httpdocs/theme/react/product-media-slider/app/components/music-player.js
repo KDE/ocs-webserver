@@ -630,13 +630,6 @@ function MusicPlayerControlPanel(props){
 
   const playIndex = props.playIndex;
   
-  const progressBarStyle = {
-    height:"10px",
-    width:props.currentTrackProgress+"%",
-    backgroundColor:"green",
-    display:"block"
-  }
-
   return (
     <div id="music-player-control-panel">
       <div className="music-player-cover">
