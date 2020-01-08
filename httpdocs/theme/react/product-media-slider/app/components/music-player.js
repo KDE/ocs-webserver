@@ -360,6 +360,8 @@ function MusicPlayer(props){
   },[])
 
   React.useEffect(() => {
+    console.log('on playindex change music player');
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
     playerElement[0].onloadedmetadata = function(){ 
@@ -725,8 +727,14 @@ function MusicPlayerPlaylist(props){
 
   function onMusicPlayerPlaylistItemClick(val){
     props.setPlayIndex(val);
-    if (props.isPlaying === false) props.onPlayClick();
-    else props.onPauseClick();
+    if (props.isPlaying === false){
+      if (props.playIndex === val) props.onPlayClick();
+      else props.onPauseClick();
+    }
+    else {
+      if (props.playIndex === val) props.onPauseClick();
+      else props.onPlayClick();
+    }
   }
 
   const musicPlayerPlaylistItems = props.items.map((item,index) => (
