@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
-import Switch from 'rc-switch';
+import Switch from 'react-switch';
 
 function MusicPlayerWrapper(props){
 
@@ -727,8 +727,9 @@ function MusicPlayerControlPanel(props){
           <div className="theme-switch-container">
             <span className="theme-switch">
               <Switch 
-                checked={props.theme === "dark" ? false : true} 
                 onChange={onThemeSwitchClick}
+                offColor={'#000'}
+                onColor={'#fff'}
               />
             </span>
           </div>

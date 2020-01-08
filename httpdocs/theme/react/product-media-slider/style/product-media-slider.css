@@ -1024,10 +1024,10 @@ video:focus {
   height: 20px;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-time {
-  width: 15%;
+  width: 10%;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress {
-  width: 70%;
+  width: 80%;
   position: relative;
   padding: 0 10px;
   /*> span {
@@ -1051,7 +1051,7 @@ video:focus {
           }*/
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
-  width: 15%;
+  width: 10%;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar {
   width: 100%;
