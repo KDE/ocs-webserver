@@ -362,7 +362,10 @@ function MusicPlayer(props){
   React.useEffect(() => {
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
-    playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    playerElement[0].onloadedmetadata = function(){ 
+      playerElement[0].currentTime = 0;
+      onPlayerTimeUpdate(playerElement[0]); 
+    }
   },[playIndex]);
 
   function getRandomMusicsupporter(){
