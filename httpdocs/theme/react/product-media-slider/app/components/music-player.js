@@ -577,7 +577,7 @@ function MusicPlayer(props){
         onPrevTrackPlayClick={onPrevTrackPlayClick}
         onNextTrackPlayClick={onNextTrackPlayClick}
         togglePlaylistDisplay={togglePlaylistDisplay}
-        toggleAudioMuted={() => setIsMuted(isMuted === true ? false : true))}
+        toggleAudioMuted={() => setIsMuted(isMuted === true ? false : true)}
       />
       <MusicPlayerPlaylist 
         title={props.product.title}
