@@ -356,15 +356,21 @@ function MusicPlayer(props){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
+    playerElement[0].volume = audioVolume;
     playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
     getRandomMusicsupporter();
   },[])
+
+  React.useEffect(() => {
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    playerElement[0].volume = audioVolume;
+  },[audioVolume])
 
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
       console.log(res);
       setRandomSupporter(res.supporter)
-    });    
+    });
   }
 
   // audio player

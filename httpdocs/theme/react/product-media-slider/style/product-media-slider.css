@@ -1090,8 +1090,27 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span.volume-bar-container {
   display: block;
   float: left;
+  width: 0;
+  padding: 0;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span.volume-bar-container .rc-slider {
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container {
+  overflow: hidden;
   width: 100px;
   padding: 6px 10px;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container .rc-slider {
+  opacity: 1;
 }
 #music-player-container #music-player-playlist-panel {
   width: 0%;

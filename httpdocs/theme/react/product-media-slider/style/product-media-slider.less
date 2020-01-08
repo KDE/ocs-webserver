@@ -1339,8 +1339,26 @@ video:focus {
               &.volume-bar-container {
                 display: block;
                 float: left;
+                width: 0;
+                padding: 0;
+                .transition();
+                
+                .rc-slider {
+                  opacity: 0;
+                  .transition();
+                }
+              }
+            }
+
+            &:hover {
+              .volume-bar-container {
+                overflow: hidden;
                 width: 100px;
                 padding: 6px 10px;
+
+                .rc-slider {
+                  opacity: 1;
+                }
               }
             }
           }
