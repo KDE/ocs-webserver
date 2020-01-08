@@ -976,7 +976,7 @@ video:focus {
 }
 #music-player-container svg {
   font-size: 26px;
-  fcolor: white;
+  color: white;
   cursor: pointer;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
