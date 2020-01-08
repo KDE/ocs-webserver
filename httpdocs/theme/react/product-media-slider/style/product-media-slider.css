@@ -986,6 +986,9 @@ video:focus {
 #music-player-container.light svg {
   color: #31c27c;
 }
+#music-player-container.light #music-player-control-panel {
+  box-shadow: 0 1px 2px 0 rgba(0, 34, 77, 0.05);
+}
 #music-player-container.dark {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
@@ -1181,6 +1184,7 @@ video:focus {
   width: 100%;
   line-height: 50px;
   text-align: left;
+  background: rgba(0, 0, 0, 0.05);
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist-header h2 {
   margin: 0;
