@@ -318,12 +318,17 @@ function MusicPlayerWrapper(props){
         <ReactJkMusicPlayer {...options} />
         {sponsorDetailsDisplay}
       </div>
-      <MusicPlayer items={props.slide.items} />
+      <MusicPlayer 
+        product={props.product}
+        items={props.slide.items} 
+      />
     </div>
   )
 }
 
 function MusicPlayer(props){
+
+  console.log(props.product);
 
   /* COMPONENT */
 
@@ -443,10 +448,7 @@ function MusicPlayer(props){
 
     if (playedAudioArray[audioItemIndex].played === 0){
 
-      let audioStartUrlPrefix = window.location.href;
-      if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
-
-      const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.projectId + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       
       console.log(audioStartUrl);
 
@@ -484,10 +486,7 @@ function MusicPlayer(props){
 
     if  (playedAudioArray[audioItemIndex].stopped === 0){
 
-      let audioStopPrefixUrl = window.location.href;
-      if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
-
-      const audioStopUrl =  audioStopPrefixUrl + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.projectId + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
 
       console.log(audioStopUrl);
 
