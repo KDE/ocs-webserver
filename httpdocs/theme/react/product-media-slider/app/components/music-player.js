@@ -694,8 +694,8 @@ function MusicPlayerControlPanel(props){
   const playIndex = props.playIndex;
   
   console.log(props.theme);
-
-  let themeSwitchCssClass = 
+  let themeSwitchCssClass = "theme-switch-container rc-switch ";
+  if (props.theme === "light") themeSwitchCssClass += " checked";
 
   return (
     <div id="music-player-control-panel">
@@ -727,7 +727,7 @@ function MusicPlayerControlPanel(props){
           </div>
           <div className="theme-switch-container">
             <span className="theme-switch">
-              <button onClick={onThemeSwitchClick} type="button" role="switch" aria-checked="false" className={"theme-switch-container rc-switch " + (props.theme === "dark" ? "" : "checked")}>
+              <button onClick={onThemeSwitchClick} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
                 <span className="rc-switch-inner">light</span>
               </button>
             </span>
