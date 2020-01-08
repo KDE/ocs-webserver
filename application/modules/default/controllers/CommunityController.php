@@ -70,7 +70,7 @@ class CommunityController extends Local_Controller_Action_DomainSwitch
               case 'supporters':            
                 $json_data = array(
                     'status'     => 'ok',                            
-                    'data'       => $modelInfo->getNewActiveSupporters(100)
+                    'data'       => $modelInfo->getNewActiveSupportersForSectionAll(100)
                 );  
                 $this->view->json_data = $json_data;
                 break;
