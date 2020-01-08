@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
-import Switch from 'react-switch';
 
 function MusicPlayerWrapper(props){
 
@@ -623,9 +622,7 @@ function MusicPlayerControlPanel(props){
   }
 
   function onThemeSwitchClick(checked,event){
-    console.log(checked);
-    console.log(event);
-    const newThemeValue = checked === true ? "light" : "dark";
+    const newThemeValue = props.theme === "dark" ? "light" : "dark";
     props.setTheme(newThemeValue);
   }
 
@@ -726,11 +723,9 @@ function MusicPlayerControlPanel(props){
           </div>
           <div className="theme-switch-container">
             <span className="theme-switch">
-              <Switch 
-                onChange={onThemeSwitchClick}
-                offColor={'#000'}
-                onColor={'#fff'}
-              />
+              <button onClick={onThemeSwitchClick} type="button" role="switch" aria-checked="false" className={"theme-switch-container rc-switch " + (props.theme === "dark" ? "" : "checked")}>
+                <span className="rc-switch-inner">light</span>
+              </button>
             </span>
           </div>
         </div>

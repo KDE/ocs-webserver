@@ -1112,6 +1112,63 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container .rc-slider {
   opacity: 1;
 }
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 22px;
+  line-height: 20px;
+  padding: 0;
+  vertical-align: middle;
+  border-radius: 20px 20px;
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+  box-sizing: border-box;
+  background-color: transparent;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch .rc-switch-inner {
+  color: #fff;
+  font-size: 12px;
+  position: absolute;
+  left: 24px;
+  top: 0;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch::after {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  top: 1px;
+  border-radius: 50% 50%;
+  background-color: #fff;
+  content: " ";
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  transition: left 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+  -webkit-animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);
+  animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch.checked {
+  background-color: #31c27c !important;
+  border: 1px solid #31c27c;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch.checked .rc-switch-inner {
+  left: 6px;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch.checked::after {
+  left: 39px;
+  background-color: white;
+}
 #music-player-container #music-player-playlist-panel {
   width: 0%;
   height: 100%;
