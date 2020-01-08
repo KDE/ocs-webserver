@@ -1206,7 +1206,7 @@ video:focus {
   color: white;
 
   svg {
-    font-size: 26px;
+    font-size: 26px;f
     color: white;
     cursor: pointer;
     .transition();
@@ -1328,6 +1328,20 @@ video:focus {
               border-radius: 12px;
               font-weight: bold;
               cursor: pointer;
+            }
+          }
+          
+          &.music-player-volume-control {
+            span {
+              display: block;
+              float: left;
+
+              &.volume-bar-container {
+                display: block;
+                float: left;
+                width: 100px;
+                padding: 6px 10px;
+              }
             }
           }
         }

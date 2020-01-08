@@ -614,6 +614,7 @@ function MusicPlayerControlPanel(props){
   function onChangeVolumeSliderPosition(e){
     console.log('on change audio volume ');
     const newVolumeValue = e / 100;
+    console.log(newVolumeValue)
     props.onChangeAudioVolume(newVolumeValue);
   }
 
@@ -680,7 +681,7 @@ function MusicPlayerControlPanel(props){
           <Slider 
             min={0}
             max={100}
-            value={props.audioVolume}
+            value={props.audioVolume * 100}
             onChange={onChangeVolumeSliderPosition}
             onAfterChange={onAfterChangeVolumeSliderPosition}
           />
