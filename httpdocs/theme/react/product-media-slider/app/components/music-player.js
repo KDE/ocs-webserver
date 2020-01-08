@@ -557,7 +557,7 @@ function MusicPlayer(props){
 
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
-      <audio volume={audioVolume} id="music-player-audio"></audio>
+      <audio volume={isMuted === true ? 0 : audioVolume} id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
