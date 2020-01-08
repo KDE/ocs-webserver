@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
+import Switch from 'rc-switch';
 
 function MusicPlayerWrapper(props){
 
@@ -328,8 +329,6 @@ function MusicPlayerWrapper(props){
 
 function MusicPlayer(props){
 
-  console.log(props.product);
-
   /* COMPONENT */
 
   const [ playIndex, setPlayIndex ] = useState(0);
@@ -448,7 +447,7 @@ function MusicPlayer(props){
 
     if (playedAudioArray[audioItemIndex].played === 0){
 
-      const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.projectId + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       
       console.log(audioStartUrl);
 
@@ -486,7 +485,7 @@ function MusicPlayer(props){
 
     if  (playedAudioArray[audioItemIndex].stopped === 0){
 
-      const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.projectId + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.project_id + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
 
       console.log(audioStopUrl);
 
@@ -552,15 +551,7 @@ function MusicPlayer(props){
     setShowPlaylist(newShowPlaylistValue);
   }
 
-  // theme
-
-  function toggleThemes(){
-    const newThemeValue = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newThemeValue);
-  }
-
   /* RENDER */
-
 
   const musicPlayerContainerCssClass = showPlaylist === true ? "show-playlist " : " ";
 
@@ -576,6 +567,7 @@ function MusicPlayer(props){
         currentTrackDuration={currentTrackDuration}
         currentTrackProgress={currentTrackProgress}
         items={props.items}
+        setTheme={(val) => setTheme(val)}
         onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
         onChangeAudioVolume={(val) => setAudioVolume(val)}
         onPlayClick={(reload) => onPlayClick(reload)}
@@ -585,6 +577,7 @@ function MusicPlayer(props){
         togglePlaylistDisplay={togglePlaylistDisplay}
       />
       <MusicPlayerPlaylist 
+        title={props.product.title}
         randomSupporter={randomSupporter}
         items={props.items}
         playIndex={playIndex}
@@ -627,6 +620,13 @@ function MusicPlayerControlPanel(props){
   function onAfterChangeVolumeSliderPosition(e){
     console.log('on after change audio volume ');
     console.log(e);
+  }
+
+  function onThemeSwitchClick(checked,event){
+    console.log(checked);
+    console.log(event);
+    const newThemeValue = checked === true ? "light" : "dark";
+    props.setTheme(newThemeValue);
   }
 
   /* DISPLAY */
@@ -726,7 +726,10 @@ function MusicPlayerControlPanel(props){
           </div>
           <div className="theme-switch-container">
             <span className="theme-switch">
-              theme switch
+              <Switch 
+                checked={props.theme === "dark" ? false : true} 
+                onChange={onThemeSwitchClick}
+              />
             </span>
           </div>
         </div>
@@ -766,7 +769,7 @@ function MusicPlayerPlaylist(props){
   return (
     <div id="music-player-playlist-panel">
       <div id="music-player-playlist-header">
-        <h2>PLAYLIST TITLE PLAYLIST TITLE PLAYLIST TITLE PLAYLIST TITLE PLAYLIST TITLE</h2>
+        <h2>{props.title + " / " + props.items.length }</h2>
         <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
       </div>
       <div id="music-player-playlist">
