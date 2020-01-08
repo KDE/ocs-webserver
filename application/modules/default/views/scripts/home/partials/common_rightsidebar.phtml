@@ -20,7 +20,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 $modelInfo = new Default_Model_Info();
-$this->supporters = $modelInfo->getNewActiveSupporters(9);
+//$this->supporters = $modelInfo->getNewActiveSupporters(9);
+$this->supporters = $modelInfo->getNewActiveSupportersForSectionAll(9);
 
 $helpPrintDate = new Default_View_Helper_PrintDate();
 
@@ -97,7 +98,7 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
                    <?php } ?>
              </div>
              <span>
-                    <a href="/community#supportersPanel">see all</a>
+                    <a href="/supporters">see all</a>
              </span>
         </div>
 
