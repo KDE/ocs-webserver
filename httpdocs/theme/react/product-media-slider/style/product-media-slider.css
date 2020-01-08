@@ -1123,6 +1123,9 @@ video:focus {
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.theme-switch-wrapper .rc-switch:focus {
+  box-shadow: none !important;
+}
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.theme-switch-wrapper .rc-switch .rc-switch-inner {
   color: #fff;
   font-size: 12px;
@@ -1200,11 +1203,17 @@ video:focus {
   width: 100%;
   height: auto;
   float: left;
+  padding-bottom: 60px;
+  height: calc(100% - 50px);
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul {
+  overflow-y: scroll;
   padding: 0;
   margin: 0;
   list-style-type: none;
+  height: 100%;
+  float: left;
+  width: 100%;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li {
   width: 100%;
@@ -1223,9 +1232,10 @@ video:focus {
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
-#music-player-container #music-player-playlist-panel #music-player-playlist ul li.playing,
-#music-player-container #music-player-playlist-panel #music-player-playlist ul li.hover,
-#music-player-container #music-player-playlist-panel #music-player-playlist ul li.active {
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li.is-playing,
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li.is-paused,
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li:hover,
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li:active {
   background-color: #454951;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li svg {

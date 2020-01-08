@@ -1371,6 +1371,10 @@ video:focus {
               background-color: transparent;
               .transition();
 
+              &:focus {
+                box-shadow: none !important;
+              }
+
               .rc-switch-inner {
                 color: #fff;
                 font-size: 12px;
@@ -1462,11 +1466,17 @@ video:focus {
       width: 100%;
       height: auto;
       float: left;
+      padding-bottom: 60px;
+      height: calc(100% - 50px);
 
       ul {
+        overflow-y: scroll;
         padding: 0;
-        margin:0;
+        margin: 0;
         list-style-type: none;
+        height: 100%;
+        float: left;
+        width: 100%;
 
         li {
           width: 100%;
@@ -1482,7 +1492,7 @@ video:focus {
           cursor: pointer;
           .transition();
 
-          &.playing, &.hover, &.active {
+          &.is-playing, &.is-paused, &:hover, &:active {
             background-color: #454951;
           }
 
