@@ -714,7 +714,7 @@ function MusicPlayerControlPanel(props){
   
   console.log(props.theme);
 
-  let themeSwitchCssClass = "theme-switch-container rc-switch ";
+  let themeSwitchCssClass = "theme-switch rc-switch ";
   if (props.theme === "light") themeSwitchCssClass += " checked";
 
   return (

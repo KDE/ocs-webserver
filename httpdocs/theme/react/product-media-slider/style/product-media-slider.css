@@ -1003,9 +1003,9 @@ video:focus {
   z-index: 1111;
 }
 #music-player-container #music-player-control-panel .music-player-cover figure {
-  padding: 10px;
+  padding: 0;
   text-align: center;
-  height: 240px;
+  height: 221px;
 }
 #music-player-container #music-player-control-panel .music-player-track-title h2 {
   margin: 10px 0;
@@ -1015,8 +1015,10 @@ video:focus {
 }
 #music-player-container #music-player-control-panel .music-player-time-display {
   width: 100%;
-  padding: 5px;
+  padding: 15px 50px 10px;
   font-size: 12px;
+  float: left;
+  position: relative;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span {
   display: block;
@@ -1024,34 +1026,17 @@ video:focus {
   height: 20px;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-time {
-  width: 10%;
+  position: absolute;
+  left: 10px;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress {
-  width: 80%;
+  width: 100%;
   position: relative;
   padding: 0 10px;
-  /*> span {
-            display: block;
-            position: absolute;
-            height: 4px;
-            left: 0;
-            top: 4px;
-            border-radius: 4px;
-
-            &.empty {
-              background-color: white;
-              width: 100%;
-              z-index: 100;
-            }
-
-            &.complete {
-              color: #31c27c;
-              z-index: 101;
-            }
-          }*/
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
-  width: 10%;
+  position: absolute;
+  right: 10px;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar {
   width: 100%;
@@ -1116,11 +1101,14 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control.is-muted .rc-slider-handle {
   opacity: 0;
 }
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch {
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container {
+  padding: 2px 5px;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container .rc-switch {
   position: relative;
   display: inline-block;
   width: 60px;
-  height: 22px;
+  height: 20px;
   line-height: 20px;
   padding: 0;
   vertical-align: middle;
@@ -1136,17 +1124,17 @@ video:focus {
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch .rc-switch-inner {
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container .rc-switch .rc-switch-inner {
   color: #fff;
   font-size: 12px;
   position: absolute;
   left: 24px;
   top: 0;
 }
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch::after {
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container .rc-switch::after {
   position: absolute;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   left: 2px;
   top: 1px;
   border-radius: 50% 50%;
@@ -1162,14 +1150,14 @@ video:focus {
   -webkit-animation-duration: 0.3s;
   animation-duration: 0.3s;
 }
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch.checked {
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container .rc-switch.checked {
   background-color: #31c27c !important;
   border: 1px solid #31c27c;
 }
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch.checked .rc-switch-inner {
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container .rc-switch.checked .rc-switch-inner {
   left: 6px;
 }
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .rc-switch.checked::after {
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div .theme-switch-container .rc-switch.checked::after {
   left: 39px;
   background-color: white;
 }
@@ -1180,7 +1168,7 @@ video:focus {
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist-header {
   height: 50px;
-  padding: 0 75px 0 10px;
+  padding: 0 75px 0 20px;
   width: 100%;
   line-height: 50px;
   text-align: left;
@@ -1188,7 +1176,7 @@ video:focus {
 #music-player-container #music-player-playlist-panel #music-player-playlist-header h2 {
   margin: 0;
   line-height: 50px;
-  font-size: 18px;
+  font-size: 16px;
   overflow: auto;
   text-overflow: ellipsis;
   width: 100%;
@@ -1223,9 +1211,10 @@ video:focus {
   width: 100%;
   float: left;
   text-align: left;
-  height: 50px;
+  height: 46px;
   line-height: 50px;
-  padding: 0 20px 0 40px;
+  padding: 0 20px 0 60px;
+  font-size: 14px;
   position: relative;
   background-color: #40444b;
   border-bottom: #40444b;
@@ -1242,9 +1231,9 @@ video:focus {
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li svg {
   font-size: 22px;
-  left: 10px;
+  left: 21px;
   position: absolute;
-  top: 14px;
+  top: 13px;
 }
 #music-player-container.show-playlist #music-player-control-panel {
   width: 50%;
