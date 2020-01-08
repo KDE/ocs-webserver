@@ -986,6 +986,14 @@ video:focus {
 #music-player-container svg:hover {
   color: #31c27c;
 }
+#music-player-container .rc-slider-track {
+  background-color: #31c27c !important;
+}
+#music-player-container .rc-slider-handle {
+  border-color: white;
+  background-color: #31c27c;
+  margin-left: 0 !important;
+}
 #music-player-container #music-player-control-panel {
   width: 100%;
   float: left;
@@ -1041,13 +1049,6 @@ video:focus {
               z-index: 101;
             }
           }*/
-}
-#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress .rc-slider-track {
-  background-color: #31c27c !important;
-}
-#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-progress .rc-slider-handle {
-  border-color: white;
-  background-color: #31c27c;
 }
 #music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration {
   width: 15%;

@@ -330,6 +330,7 @@ function MusicPlayer(props){
   const [ playIndex, setPlayIndex ] = useState(0);
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ isPaused, setIsPaused ] = useState(false);
+  const [ audioVolume, setAudioVolume ] = useState(0.5);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
   const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
   const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
@@ -560,16 +561,18 @@ function MusicPlayer(props){
 
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
-      <audio id="music-player-audio"></audio>
+      <audio volume={audioVolume} id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
         isPaused={isPaused}
+        audioVolume={audioVolume}
         currentTrackTime={currentTrackTime}
         currentTrackDuration={currentTrackDuration}
         currentTrackProgress={currentTrackProgress}
-        onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
         items={props.items}
+        onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
+        onChangeAudioVolume={(val) => setAudioVolume(val)}
         onPlayClick={(reload) => onPlayClick(reload)}
         onPauseClick={onPauseClick}
         onPrevTrackPlayClick={onPrevTrackPlayClick}
@@ -598,13 +601,25 @@ function MusicPlayerControlPanel(props){
 
   /* COMPONENT */
 
-  function onChangeSliderPosition(e){
+  function onChangeTrackProgressPosition(e){
     console.log('on change slider position');
     props.onUpdateCurrentTrackProgress(e);
   }
 
-  function onAfterChangeSliderPosition(e){
+  function onAfterChangeTrackProgressPosition(e){
     console.log('on after change slider position');
+    console.log(e);
+  }
+
+  function onChangeVolumeSliderPosition(e){
+    console.log('on change audio volume ');
+    const newVolumeValue = e / 100;
+    props.onChangeAudioVolume(newVolumeValue);
+  }
+
+
+  function onAfterChangeVolumeSliderPosition(e){
+    console.log('on after change audio volume ');
     console.log(e);
   }
 
@@ -662,7 +677,13 @@ function MusicPlayerControlPanel(props){
         {volumeIcon}
       </span>
       <span className="volume-bar-container progress_bar">
-
+          <Slider 
+            min={0}
+            max={100}
+            value={props.audioVolume}
+            onChange={onChangeVolumeSliderPosition}
+            onAfterChange={onAfterChangeVolumeSliderPosition}
+          />
       </span>
     </div>
   )
@@ -684,8 +705,8 @@ function MusicPlayerControlPanel(props){
             min={0}
             max={100}
             value={props.currentTrackProgress}
-            onChange={onChangeSliderPosition}
-            onAfterChange={onAfterChangeSliderPosition}
+            onChange={onChangeTrackProgressPosition}
+            onAfterChange={onAfterChangeTrackProgressPosition}
           />
         </span>
         <span className="current-track-duration">{props.currentTrackDuration}</span>
