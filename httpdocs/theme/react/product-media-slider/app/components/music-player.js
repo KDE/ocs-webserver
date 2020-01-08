@@ -566,6 +566,7 @@ function MusicPlayer(props){
         currentTrackDuration={currentTrackDuration}
         currentTrackProgress={currentTrackProgress}
         items={props.items}
+        theme={theme}
         setTheme={(val) => setTheme(val)}
         onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
         onChangeAudioVolume={(val) => setAudioVolume(val)}
