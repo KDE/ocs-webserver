@@ -360,7 +360,7 @@ function MusicPlayer(props){
   },[])
 
   React.useEffect(() => {
-    console.log('on playindex change music player');
+    console.log('on playIndex change music player');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     playerElement[0].src = currentSrc;
@@ -506,7 +506,6 @@ function MusicPlayer(props){
     setCurrentTrackProgress(newTrackProgress);
 
     const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
-    console.log(currentTrackTimeSeconds)
     console.log(' new current track time - ' + newCurrentTrackTime);
 
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
@@ -607,18 +606,15 @@ function MusicPlayer(props){
 
 function MusicPlayerControlPanel(props){
 
-  console.log('props current track progress - ' + props.currentTrackProgress)
-
   /* COMPONENT */
 
   function onChangeSliderPosition(e){
-    console.log('on change slider position')
-    console.log(e);
+    console.log('on change slider position');
     props.onUpdateCurrentTrackProgress(e);
   }
 
   function onAfterChangeSliderPosition(e){
-    console.log('on after change slider position')
+    console.log('on after change slider position');
     console.log(e);
   }
 
