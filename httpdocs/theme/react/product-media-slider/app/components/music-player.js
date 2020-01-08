@@ -368,6 +368,7 @@ function MusicPlayer(props){
       playerElement[0].currentTime = 0;
       onPlayerTimeUpdate(playerElement[0]); 
     }
+    onPlayClick();
   },[playIndex]);
 
   function getRandomMusicsupporter(){
@@ -414,7 +415,6 @@ function MusicPlayer(props){
       }
       console.log('new playIndex - ' + prevTrackIndex)
       setPlayIndex(prevTrackIndex);
-      onPlayClick(prevTrackIndex);
   }
 
   function onNextTrackPlayClick(){
@@ -427,7 +427,6 @@ function MusicPlayer(props){
       }
       console.log('new playIndex - ' + nextTrackIndex);
       setPlayIndex(nextTrackIndex);
-      onPlayClick(nextTrackIndex);
   }
 
   function onReportAudioPlay(musicSrc){
