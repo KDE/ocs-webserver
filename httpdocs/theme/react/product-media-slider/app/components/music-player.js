@@ -334,6 +334,7 @@ function MusicPlayer(props){
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ isPaused, setIsPaused ] = useState(false);
   const [ audioVolume, setAudioVolume ] = useState(0.5);
+  const [ isMuted, setIsMuted ] = useState(false);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
   const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
   const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
@@ -561,6 +562,7 @@ function MusicPlayer(props){
         playIndex={playIndex}
         isPlaying={isPlaying}
         isPaused={isPaused}
+        isMuted={isMuted}
         audioVolume={audioVolume}
         currentTrackTime={currentTrackTime}
         currentTrackDuration={currentTrackDuration}
@@ -575,6 +577,7 @@ function MusicPlayer(props){
         onPrevTrackPlayClick={onPrevTrackPlayClick}
         onNextTrackPlayClick={onNextTrackPlayClick}
         togglePlaylistDisplay={togglePlaylistDisplay}
+        toggleAudioMuted={() => setIsMuted(isMuted === true ? false : true))}
       />
       <MusicPlayerPlaylist 
         title={props.product.title}
@@ -616,14 +619,19 @@ function MusicPlayerControlPanel(props){
     props.onChangeAudioVolume(newVolumeValue);
   }
 
-
   function onAfterChangeVolumeSliderPosition(e){
     console.log('on after change audio volume ');
     console.log(e);
   }
 
+  function onVolumeIconClick(){
+    props.toggleAudioMuted()
+  }
+
   function onThemeSwitchClick(){
+    console.log('on theme swith click')
     const newThemeValue = props.theme === "dark" ? "light" : "dark";
+    console.log(newThemeValue);
     props.setTheme(newThemeValue);
   }
 
@@ -675,10 +683,20 @@ function MusicPlayerControlPanel(props){
     </svg>
   )
 
+  const noVolumeIcon = (
+    <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40"  style={{"verticalAlign":"middle"}}>
+      <g><path d="m20 6.6v7.1l-3.5-3.5z m-12.9-1.6l27.9 27.9-2.1 2.1-3.4-3.4c-1.8 1.4-3.9 2.5-6.1 3v-3.4c1.4-0.4 2.6-1.1 3.7-2l-7.1-7.1v11.3l-8.4-8.4h-6.6v-10h7.9l-7.9-7.9z m24.5 15c0-5.3-3.4-9.8-8.2-11.2v-3.4c6.7 1.5 11.6 7.5 11.6 14.6 0 2.5-0.6 4.9-1.7 7l-2.5-2.6c0.5-1.4 0.8-2.8 0.8-4.4z m-4.1 0c0 0.4 0 0.7-0.1 1l-4-4.1v-3.6c2.5 1.2 4.1 3.7 4.1 6.7z"></path></g>
+    </svg>
+  )
+
+  const volumeIconDisplay = props.isMuted === false ? volumeIcon : noVolumeIcon;
+  let musicPlayerVolumeControlCssClass = "music-player-volume-control";
+  if (props.isMuted) musicPlayerVolumeControlCssClass += " is-muted";
+  
   const volumeControlDisplay = (
-    <div className="music-player-volume-control">
-      <span className="volume-icon">
-        {volumeIcon}
+    <div className={musicPlayerVolumeControlCssClass}>
+      <span className="volume-icon" onClick={onVolumeIconClick}>
+        {volumeIconDisplay}
       </span>
       <span className="volume-bar-container progress_bar">
           <Slider 
@@ -695,6 +713,7 @@ function MusicPlayerControlPanel(props){
   const playIndex = props.playIndex;
   
   console.log(props.theme);
+
   let themeSwitchCssClass = "theme-switch-container rc-switch ";
   if (props.theme === "light") themeSwitchCssClass += " checked";
 
@@ -728,8 +747,8 @@ function MusicPlayerControlPanel(props){
           </div>
           <div className="theme-switch-container">
             <span className="theme-switch">
-              <button onClick={onThemeSwitchClick} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
-                <span className="rc-switch-inner">light</span>
+              <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+                <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
               </button>
             </span>
           </div>
