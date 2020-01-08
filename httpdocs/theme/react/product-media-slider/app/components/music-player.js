@@ -621,7 +621,7 @@ function MusicPlayerControlPanel(props){
     console.log(e);
   }
 
-  function onThemeSwitchClick(checked,event){
+  function onThemeSwitchClick(){
     const newThemeValue = props.theme === "dark" ? "light" : "dark";
     props.setTheme(newThemeValue);
   }
@@ -693,6 +693,10 @@ function MusicPlayerControlPanel(props){
 
   const playIndex = props.playIndex;
   
+  console.log(props.theme);
+
+  let themeSwitchCssClass = 
+
   return (
     <div id="music-player-control-panel">
       <div className="music-player-cover">
