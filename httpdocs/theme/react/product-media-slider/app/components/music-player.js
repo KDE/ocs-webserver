@@ -359,18 +359,6 @@ function MusicPlayer(props){
     getRandomMusicsupporter();
   },[])
 
-  React.useEffect(() => {
-    console.log('on playIndex change music player');
-    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const currentSrc = props.items[playIndex].musicSrc;
-    playerElement[0].src = currentSrc;
-    playerElement[0].onloadedmetadata = function(){ 
-      playerElement[0].currentTime = 0;
-      onPlayerTimeUpdate(playerElement[0]); 
-    }
-    onPlayClick();
-  },[playIndex]);
-
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
       console.log(res);
@@ -380,12 +368,12 @@ function MusicPlayer(props){
 
   // audio player
 
-  function onPlayClick(){
-    console.log('play track');
+  function onPlayClick(reload){
+    console.log('play track, reload - ' + reload);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     console.log('player element current time - ' + playerElement[0].currentTime);
-    if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0){
+    if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
@@ -415,6 +403,7 @@ function MusicPlayer(props){
       }
       console.log('new playIndex - ' + prevTrackIndex)
       setPlayIndex(prevTrackIndex);
+      onPlayClick(true);
   }
 
   function onNextTrackPlayClick(){
@@ -427,6 +416,7 @@ function MusicPlayer(props){
       }
       console.log('new playIndex - ' + nextTrackIndex);
       setPlayIndex(nextTrackIndex);
+      onPlayClick(true);
   }
 
   function onReportAudioPlay(musicSrc){
@@ -580,7 +570,7 @@ function MusicPlayer(props){
         currentTrackProgress={currentTrackProgress}
         onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
         items={props.items}
-        onPlayClick={onPlayClick}
+        onPlayClick={(reload) => onPlayClick(reload)}
         onPauseClick={onPauseClick}
         onPrevTrackPlayClick={onPrevTrackPlayClick}
         onNextTrackPlayClick={onNextTrackPlayClick}
@@ -597,7 +587,7 @@ function MusicPlayer(props){
         currentTrackProgress={currentTrackProgress}
         togglePlaylistDisplay={togglePlaylistDisplay}
         setPlayIndex={setPlayIndex}
-        onPlayClick={onPlayClick}
+        onPlayClick={(reload) => onPlayClick(reload)}
         onPauseClick={onPauseClick}
       />
     </div>
@@ -728,7 +718,7 @@ function MusicPlayerPlaylist(props){
     }
     else {
       if (props.playIndex === val) props.onPauseClick();
-      else props.onPlayClick();
+      else props.onPlayClick(true);
     }
   }
 
