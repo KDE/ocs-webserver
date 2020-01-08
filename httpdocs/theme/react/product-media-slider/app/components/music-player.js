@@ -544,6 +544,15 @@ function MusicPlayer(props){
     return timestamp;
   }
 
+  // volume
+
+  function toggleAudioMuted(){
+    console.log('is muted - ' + isMuted);
+    const newIsMuted = isMuted === true ? false : true;
+    console.log('new is muted - ' + newIsMuted);
+    setIsMuted(newIsMuted);
+  }
+
   // playlist
 
   function togglePlaylistDisplay(){
@@ -577,7 +586,7 @@ function MusicPlayer(props){
         onPrevTrackPlayClick={onPrevTrackPlayClick}
         onNextTrackPlayClick={onNextTrackPlayClick}
         togglePlaylistDisplay={togglePlaylistDisplay}
-        toggleAudioMuted={() => setIsMuted(isMuted === true ? false : true)}
+        toggleAudioMuted={() => toggleAudioMuted()}
       />
       <MusicPlayerPlaylist 
         title={props.product.title}
