@@ -1368,7 +1368,7 @@ video:focus {
               vertical-align: middle;
               border-radius: 20px 20px;
               border: 1px solid #ccc;
-              background-color: #ccc;
+              background-color: transparent;
               cursor: pointer;
               transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
               box-sizing: border-box;
@@ -1402,8 +1402,9 @@ video:focus {
                 -webkit-animation-duration: 0.3s;
                 animation-duration: 0.3s;
               }
+            }
 
-              &.checked {
+            .rc-switch.checked {
                 background-color: #31c27c !important;
                 border: 1px solid #31c27c;
                 
@@ -1415,7 +1416,6 @@ video:focus {
                   left: 39px;
                   background-color: white;
                 }
-              }
             }
           }
         }
