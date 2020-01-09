@@ -1316,7 +1316,7 @@ video:focus {
   height: auto;
 }
 #music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control span {
-  padding: 0 16px;
+  padding: 0 16px !important;
 }
 #music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .play-icon,
 #music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .pause-icon {
