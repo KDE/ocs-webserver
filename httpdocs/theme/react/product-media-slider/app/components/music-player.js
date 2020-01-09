@@ -455,7 +455,7 @@ function MusicPlayerControlPanel(props){
 
   let currentTrackDurationDisplay = props.currentTrackDuration;
   if (props.currentTrackDuration === 0){
-    currentTrackDurationDisplay = <span>&infin;</span>
+    currentTrackDurationDisplay = <span className="infinite">&infin;</span>
   }
 
   const musicPlayerTimeDisplay = (
@@ -487,7 +487,7 @@ function MusicPlayerControlPanel(props){
           <div className="music-player-controls-wrapper">
             {audioControlsDisplay}
             <div className="playlist-toggle-container">
-              <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>
+              <span className="playlist-toggle-button" onTouchStart={() => props.togglePlaylistDisplay()}>
                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align": "middle"}}>
                   <g><path d="m28.4 10h8.2v3.4h-5v15c0 2.7-2.2 5-5 5s-5-2.3-5-5 2.3-5 5-5c0.6 0 1.2 0.1 1.8 0.3v-13.7z m-23.4 16.6v-3.2h13.4v3.2h-13.4z m20-10v3.4h-20v-3.4h20z m0-6.6v3.4h-20v-3.4h20z"></path></g>
                 </svg>
@@ -558,6 +558,7 @@ function MusicPlayerPlaylist(props){
       playIndex={props.playIndex}
       isPlaying={props.isPlaying}
       isPaused={props.isPaused}
+      isMobile={props.isMobile}
       onMusicPlayerPlaylistItemClick={(val) => onMusicPlayerPlaylistItemClick(val)}
     />
   ));
@@ -583,11 +584,14 @@ function MusicPlayerPlaylist(props){
     )
   }
 
+  let closeButtonDisplay = <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
+  if (props.isMobile === true) closeButtonDisplay = <a className="toggle-playlist" onTouchStart={props.togglePlaylistDisplay}>X</a>
+
   return (
     <div id="music-player-playlist-panel">
       <div id="music-player-playlist-header">
         <h2>{props.title + " / " + props.items.length }</h2>
-        <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
+        {closeButtonDisplay}
       </div>
       <div id="music-player-playlist">
         <Scrollbars
@@ -621,12 +625,26 @@ function MusicPlayerPlaylistItem(props){
   const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
   const playlistItemCssClass =  props.playIndex === props.index ? props.isPlaying === true ? 'is-playing' : 'is-paused' : '';
 
+  let musicPlayerPlaylistItemDisplay;
+  if (props.isMobile === true){
+    musicPlayerPlaylistItemDisplay = (
+      <a onTouchStart={() => props.onMusicPlayerPlaylistItemClick(props.index)}>
+        {playlistItemPlayButtonDisplay}
+        {props.item.title}
+      </a>
+    )
+  } else {
+    musicPlayerPlaylistItemDisplay = (
+      <a onClick={() => props.onMusicPlayerPlaylistItemClick(props.index)}>
+        {playlistItemPlayButtonDisplay}
+        {props.item.title}
+      </a>
+    )    
+  }
+
   return (
-    <li className={"music-player-playlist-item " + playlistItemCssClass} 
-      onClick={() => props.onMusicPlayerPlaylistItemClick(props.index)}
-      >
-      {playlistItemPlayButtonDisplay}
-      {props.item.title}
+    <li className={"music-player-playlist-item " + playlistItemCssClass} >
+
     </li>
   )
 }

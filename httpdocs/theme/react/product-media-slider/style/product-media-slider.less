@@ -1305,6 +1305,12 @@ video:focus {
         &.current-track-duration {
           position: absolute;
           right: 10px;
+
+          .inifinite {
+            font-size: 29px;
+            margin-top: -13px;
+            display: block;
+          }
         }
       }
     }
@@ -1518,18 +1524,26 @@ video:focus {
           text-align: left;
           height: 46px;
           line-height: 50px;
-          padding: 0 20px 0 60px;
-          font-size: 14px;
           position: relative;
           background-color: rgba(0,0,0,0.1);
           border-bottom: #40444b;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          width: 100%;
-          word-break: break-all;
-          white-space: pre;
           cursor: pointer;
           .transition();
+
+          a {
+            display: block;
+            width: 100%;
+            height: inherit;
+            font-size: 14px;
+            padding: 0 20px 0 60px;
+            float: left;
+            text-decoration: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            word-break: break-all;
+            white-space: pre;
+          }
 
           &.is-playing, &.is-paused, &:hover, &:active {
             background-color: rgba(0,0,0,0.2);

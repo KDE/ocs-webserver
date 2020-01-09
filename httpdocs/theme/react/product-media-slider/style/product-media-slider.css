@@ -1069,6 +1069,11 @@ video:focus {
   position: absolute;
   right: 10px;
 }
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration .inifinite {
+  font-size: 29px;
+  margin-top: -13px;
+  display: block;
+}
 #music-player-container #music-player-control-panel .music-player-controls-bar {
   width: 100%;
   text-align: center;
@@ -1252,25 +1257,32 @@ video:focus {
   width: 100%;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li {
+  width: 100%;
   float: left;
   text-align: left;
   height: 46px;
   line-height: 50px;
-  padding: 0 20px 0 60px;
-  font-size: 14px;
   position: relative;
   background-color: rgba(0, 0, 0, 0.1);
   border-bottom: #40444b;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  word-break: break-all;
-  white-space: pre;
   cursor: pointer;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul li a {
+  display: block;
+  height: inherit;
+  font-size: 14px;
+  padding: 0 20px 0 60px;
+  float: left;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li.is-playing,
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li.is-paused,
