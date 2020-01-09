@@ -367,8 +367,13 @@ function MusicPlayerControlPanel(props){
   )
 
   let playButtonDisplay;
-  if (props.isPlaying === true) playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
-  else playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
+  if (props.isPlaying === true){
+    if (props.isMobile === true) playButtonDisplay = <span onTouchStart={() => props.onPauseClick()}>{pauseButtonElement}</span>
+    else playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
+  } else {
+    if (props.isMobile === true)  playButtonDisplay = <span onTouchStart={() => props.onPlayClick()}>{playButtonElement}</span>
+    else  playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
+  }
 
   let audioControlsDisplay;
 
@@ -450,7 +455,7 @@ function MusicPlayerControlPanel(props){
 
   let currentTrackDurationDisplay = props.currentTrackDuration;
   if (props.currentTrackDuration === 0){
-    currentTrackDurationDisplay = '&infin;'
+    currentTrackDurationDisplay = <span>&infin;</span>
   }
 
   const musicPlayerTimeDisplay = (
