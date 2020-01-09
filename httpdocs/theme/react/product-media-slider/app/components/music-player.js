@@ -817,7 +817,7 @@ function MusicPlayerControlPanel(props){
   )
 }
 
-function MusicPlayerPlaylist(props){x
+function MusicPlayerPlaylist(props){
 
   function onMusicPlayerPlaylistItemClick(val){
     props.setPlayIndex(val);
