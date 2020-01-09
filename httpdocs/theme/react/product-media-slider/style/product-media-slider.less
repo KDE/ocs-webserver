@@ -1248,6 +1248,7 @@ video:focus {
     box-shadow: 0 0 3px #080808;
     position: absolute;
     z-index: 1111;
+    .transition();
 
     .music-player-cover {
       figure {
@@ -1449,6 +1450,8 @@ video:focus {
     width:0%;
     height: 100%;
     float: right;
+    opacity: 0;
+    .transition();
 
     #music-player-playlist-header {
       height: 50px;
@@ -1536,6 +1539,8 @@ video:focus {
     }
     #music-player-playlist-panel {
       width: 50%;
+      height: 100%;
+      opacity: 1;
     }
   }
 }

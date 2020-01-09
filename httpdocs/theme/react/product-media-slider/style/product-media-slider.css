@@ -1011,6 +1011,10 @@ video:focus {
   box-shadow: 0 0 3px #080808;
   position: absolute;
   z-index: 1111;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 #music-player-container #music-player-control-panel .music-player-cover figure {
   padding: 0;
@@ -1180,6 +1184,11 @@ video:focus {
   width: 0%;
   height: 100%;
   float: right;
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist-header {
   height: 50px;
@@ -1263,6 +1272,8 @@ video:focus {
 }
 #music-player-container.show-playlist #music-player-playlist-panel {
   width: 50%;
+  height: 100%;
+  opacity: 1;
 }
 #comics-reader-wrapper {
   height: 100%;
