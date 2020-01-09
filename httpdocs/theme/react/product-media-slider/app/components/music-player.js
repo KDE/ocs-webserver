@@ -362,6 +362,9 @@ function MusicPlayer(props){
   const initialShowPlaylistValue = isMobile === true ? false : true;
   const [ showPlaylist, setShowPlaylist ] = useState(initialShowPlaylistValue);
 
+  console.log('is mobile - ' + isMobile);
+  console.log('show playlist - ' + showPlaylist);
+
   React.useEffect(() => {
     console.log('init music player');
       

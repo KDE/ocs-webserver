@@ -392,7 +392,7 @@ function SlideItem(props){
     slideContentDisplay = (
       <ComicsReaderWrapper 
         height={props.sliderHeight}
-        width={props.containerWidth}
+        containerWidth={props.containerWidth}
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
         slideIndex={props.slideIndex}
