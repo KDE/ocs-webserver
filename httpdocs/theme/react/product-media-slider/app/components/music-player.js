@@ -543,8 +543,10 @@ function MusicPlayerPlaylist(props){
 
   const musicPlayerPlaylistDisplay = <ul>{musicPlayerPlaylistItems}</ul>
   
+
   let randomSupporterDisplay;
-  if (props.randomSupporter !== null){
+  console.log('props random supporter - ' + props.randomSupporter);
+  if (props.randomSupporter && props.randomSupporter !== null){
     randomSupporterDisplay = (
       <div id="music-sponsor-display">
         <span>made possible by supporters like</span>
