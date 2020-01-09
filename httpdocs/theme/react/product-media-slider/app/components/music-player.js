@@ -886,7 +886,10 @@ function MusicPlayerPlaylistItem(props){
   const playlistItemCssClass =  props.playIndex === props.index ? props.isPlaying === true ? 'is-playing' : 'is-paused' : '';
 
   return (
-    <li className={"music-player-playlist-item " + playlistItemCssClass} onClick={() => props.onMusicPlayerPlaylistItemClick(props.index)}>
+    <li className={"music-player-playlist-item " + playlistItemCssClass} 
+      onMouseUp={() => props.onMusicPlayerPlaylistItemClick(props.index)}
+      onTouchEnd={() => props.onMusicPlayerPlaylistItemClick(props.index)}
+      >
       {playlistItemPlayButtonDisplay}
       {props.item.title}
     </li>
