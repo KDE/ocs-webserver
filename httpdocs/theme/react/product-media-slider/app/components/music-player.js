@@ -41,7 +41,6 @@ function MusicPlayerWrapper(props){
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
-    console.log(currentSrc);
     onReportAudioPlay(currentSrc);
   }
 
@@ -346,11 +345,9 @@ function MusicPlayer(props){
   const [ theme, setTheme ] = useState('dark');
   let initialPLayedAudioArray = []
   props.items.forEach(function(i,index){
-    let pl = 0;
-    if (index === 0) pl = -1;
     const pa = {
       ...i,
-      played:pl,
+      played:0,
       stopped:0
     }
     initialPLayedAudioArray.push(pa);
@@ -608,6 +605,7 @@ function MusicPlayer(props){
         playIndex={playIndex}
         isPlaying={isPlaying}
         isPaused={isPaused}
+        isMobile={isMobile}
         currentTrackTime={currentTrackTime}
         currentTrackDuration={currentTrackDuration}
         currentTrackProgress={currentTrackProgress}
@@ -684,13 +682,25 @@ function MusicPlayerControlPanel(props){
   if (props.isPlaying === true) playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
   else playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
 
-  const audioControlsDisplay = (
-    <div className="music-player-audio-control">
-      <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
-      {playButtonDisplay}
-      <span onClick={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
-    </div>
-  )
+  let audioControlsDisplay;
+
+  if (props.isMobile === true){
+    audioControlsDisplay = (
+      <div className="music-player-audio-control">
+        <span onTouchEnd={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+        {playButtonDisplay}
+        <span onTouchEnd={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+      </div>
+    )
+  } else {
+    audioControlsDisplay = (
+      <div className="music-player-audio-control">
+        <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+        {playButtonDisplay}
+        <span onClick={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+      </div>
+    )
+  }
 
   // volume control
 
@@ -846,8 +856,6 @@ function MusicPlayerPlaylist(props){
   ));
 
   const musicPlayerPlaylistDisplay = <ul>{musicPlayerPlaylistItems}</ul>
-
-  console.log(props.containerWidth);
   
   return (
     <div id="music-player-playlist-panel">
@@ -887,8 +895,7 @@ function MusicPlayerPlaylistItem(props){
 
   return (
     <li className={"music-player-playlist-item " + playlistItemCssClass} 
-      onMouseUp={() => props.onMusicPlayerPlaylistItemClick(props.index)}
-      onTouchEnd={() => props.onMusicPlayerPlaylistItemClick(props.index)}
+      onClick={() => props.onMusicPlayerPlaylistItemClick(props.index)}
       >
       {playlistItemPlayButtonDisplay}
       {props.item.title}

@@ -1210,6 +1210,7 @@ video:focus {
 
   svg {
     font-size: 26px;
+    cursor: pointer;
   }
 
   .rc-slider-track {
@@ -1241,7 +1242,6 @@ video:focus {
 
     svg {
       color: white;
-      cursor: pointer;
       .transition();
   
       &:hover {
@@ -1540,6 +1540,12 @@ video:focus {
             left: 21px;
             position: absolute;
             top: 13px;
+          }
+
+          &:hover {
+            svg {
+              color: #31c27c;
+            }
           }
         }
       }
