@@ -250,6 +250,16 @@ function MusicPlayer(props){
     setShowPlaylist(newShowPlaylistValue);
   }
 
+  // key press 
+
+  function handleKeyPress(e){
+    console.log(e.key)
+    if (e.key === 'Space'){
+      if (isPlaying === true) onPauseClick();
+      else onPlayClick();
+    }
+  }
+
   /* RENDER */
 
   let musicPlayerContainerCssClass = "";
@@ -259,7 +269,7 @@ function MusicPlayer(props){
   const audioElVolume = isMuted === true ? 0.0 : audioVolume;
 
   return (
-    <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
+    <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
       <audio volume={audioElVolume} id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
