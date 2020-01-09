@@ -1040,9 +1040,14 @@ video:focus {
 }
 #music-player-container #music-player-control-panel .music-player-track-title h2 {
   margin: 10px 0;
-  width: 100%;
   text-align: center;
   font-size: 16px;
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre;
 }
 #music-player-container #music-player-control-panel .music-player-time-display {
   width: 100%;
