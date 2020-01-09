@@ -323,7 +323,7 @@ function MusicPlayerWrapper(props){
       <MusicPlayer 
         product={props.product}
         items={props.slide.items} 
-        containerWidth={props.containerWidth}
+        containerWidth={props.width}
       />
     </div>
   )
