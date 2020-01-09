@@ -1195,7 +1195,6 @@ video:focus {
 }
 
 #music-player-container {
-  display: none;
   width: 100%;
   height: 100%;
 
@@ -1558,7 +1557,7 @@ video:focus {
 
       .music-player-track-title {
         h2 {
-          margin-bottom: 30px;
+          margin: 15px 0;
         }
       }
 
@@ -1580,8 +1579,12 @@ video:focus {
       }
 
       .music-player-controls-bar {
+        .music-player-controls-wrapper {
+          width: 240px;
+        }
         .music-player-audio-control {
           width: 100%;
+          height: auto;
           .play-icon {
             font-size: 60px;
           }  
@@ -1589,7 +1592,12 @@ video:focus {
           .prev-icon,
           .next-icon {
             font-size: 40px;
+            margin-top: 8px;
           }
+        }
+
+        .playlist-toggle-container {
+          width: 100%;
         }
       }
     }

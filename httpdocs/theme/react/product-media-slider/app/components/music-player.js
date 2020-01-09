@@ -313,13 +313,14 @@ function MusicPlayerWrapper(props){
       )
     }
   }
-
-  return (
-    <div>
-      <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
+  /*
+        <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
         <ReactJkMusicPlayer {...options} />
         {sponsorDetailsDisplay}
       </div>
+  */
+  return (
+    <div>
       <MusicPlayer 
         product={props.product}
         items={props.slide.items} 
