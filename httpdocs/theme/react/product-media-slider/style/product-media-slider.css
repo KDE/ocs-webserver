@@ -1017,6 +1017,9 @@ video:focus {
   text-align: center;
   height: 221px;
 }
+#music-player-container #music-player-control-panel .music-player-cover figure img {
+  cursor: auto;
+}
 #music-player-container #music-player-control-panel .music-player-track-title h2 {
   margin: 10px 0;
   width: 100%;

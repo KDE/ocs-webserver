@@ -547,9 +547,13 @@ function MusicPlayer(props){
   // volume
 
   function toggleAudioMuted(){
-    console.log('is muted - ' + isMuted);
     const newIsMuted = isMuted === true ? false : true;
-    console.log('new is muted - ' + newIsMuted);
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    if (newIsMuted === true) {
+      playerElement[0].volume = 0;
+    } else {
+      playerElement[0].volume = audioVolume;
+    }
     setIsMuted(newIsMuted);
   }
 
@@ -563,7 +567,7 @@ function MusicPlayer(props){
   /* RENDER */
 
   const musicPlayerContainerCssClass = showPlaylist === true ? "show-playlist " : " ";
-  const audioElVolume = isMuted === true ? 0 : audioVolume;
+  const audioElVolume = isMuted === true ? 0.0 : audioVolume;
   console.log(audioElVolume);
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
