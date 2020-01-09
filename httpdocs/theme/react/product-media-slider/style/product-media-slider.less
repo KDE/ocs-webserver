@@ -1513,6 +1513,11 @@ video:focus {
           position: relative;
           background-color: rgba(0,0,0,0.1);
           border-bottom: #40444b;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          word-break: break-all;
+          white-space: pre;
           cursor: pointer;
           .transition();
 
@@ -1550,6 +1555,7 @@ video:focus {
       position: absolute;
       top: 360px;
       background-color: inherit;
+      z-index: 1112;
     }
 
     #music-player-control-panel {
@@ -1579,13 +1585,20 @@ video:focus {
       }
 
       .music-player-controls-bar {
+        padding: 0;
+
         .music-player-controls-wrapper {
           width: 240px;
         }
         .music-player-audio-control {
           width: 100%;
           height: auto;
-          .play-icon {
+
+          span {
+            padding: 0 16px;
+          }
+          .play-icon,
+          .pause-icon {
             font-size: 60px;
           }  
 
@@ -1605,6 +1618,19 @@ video:focus {
     &.show-playlist {
       #music-player-playlist-panel {
         top:0;
+
+        #music-player-playlist {
+          ul {
+            li {
+              padding: 0 75px 0 50px;
+              font-size: 12px;
+              
+              svg {
+                left: 275px;
+              }
+            }
+          }
+        }
       }
     }
   }

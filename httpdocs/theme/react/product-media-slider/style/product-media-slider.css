@@ -1237,7 +1237,6 @@ video:focus {
   width: 100%;
 }
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li {
-  width: 100%;
   float: left;
   text-align: left;
   height: 46px;
@@ -1247,6 +1246,11 @@ video:focus {
   position: relative;
   background-color: rgba(0, 0, 0, 0.1);
   border-bottom: #40444b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre;
   cursor: pointer;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
@@ -1280,6 +1284,7 @@ video:focus {
   position: absolute;
   top: 360px;
   background-color: inherit;
+  z-index: 1112;
 }
 #music-player-container.is-mobile #music-player-control-panel {
   width: 100% !important;
@@ -1300,6 +1305,9 @@ video:focus {
   overflow: hidden;
   transition: box-shadow, border 350ms cubic-bezier(0.43, -0.1, 0.16, 1.1);
 }
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar {
+  padding: 0;
+}
 #music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper {
   width: 240px;
 }
@@ -1307,7 +1315,11 @@ video:focus {
   width: 100%;
   height: auto;
 }
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .play-icon {
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control span {
+  padding: 0 16px;
+}
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .play-icon,
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .pause-icon {
   font-size: 60px;
 }
 #music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .prev-icon,
@@ -1320,6 +1332,13 @@ video:focus {
 }
 #music-player-container.is-mobile.show-playlist #music-player-playlist-panel {
   top: 0;
+}
+#music-player-container.is-mobile.show-playlist #music-player-playlist-panel #music-player-playlist ul li {
+  padding: 0 75px 0 50px;
+  font-size: 12px;
+}
+#music-player-container.is-mobile.show-playlist #music-player-playlist-panel #music-player-playlist ul li svg {
+  left: 275px;
 }
 #comics-reader-wrapper {
   height: 100%;
