@@ -344,7 +344,6 @@ function MusicPlayer(props){
   const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
   const [ showPlaylist, setShowPlaylist ] = useState(true);
   const [ theme, setTheme ] = useState('dark');
-  const [ randomSupporter, setRandomSupporter ] = useState();
   let initialPLayedAudioArray = []
   props.items.forEach(function(i,index){
     let pl = 0;
@@ -357,15 +356,25 @@ function MusicPlayer(props){
     initialPLayedAudioArray.push(pa);
   })
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+  const [ randomSupporter, setRandomSupporter ] = useState();
+  const [ isMobile, setIsMobile ] = useState();
 
   React.useEffect(() => {
     console.log('init music player');
+    
+    const newIsMobileValue = props.containerWidth < 600 ? true : false;
+    console.log('check if mobile - ' + newIsMobileValue);
+    setIsMobile(newIsMobileValue);
+    
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
+    
     playerElement[0].src = currentSrc;
     playerElement[0].volume = audioVolume;
     playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    
     getRandomMusicsupporter();
+  
   },[])
 
   React.useEffect(() => {
@@ -383,10 +392,8 @@ function MusicPlayer(props){
   // audio player
 
   function onPlayClick(reload){
-    console.log('play track, reload - ' + reload);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
-    console.log('player element current time - ' + playerElement[0].currentTime);
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
@@ -399,7 +406,6 @@ function MusicPlayer(props){
   }
 
   function onPauseClick(){
-    console.log('pause track');
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].pause();
     setIsPlaying(false);
@@ -408,27 +414,23 @@ function MusicPlayer(props){
   }
 
   function onPrevTrackPlayClick(){
-      console.log('on prev track play click');
       let prevTrackIndex;
       if (playIndex === 0){
           prevTrackIndex = props.items.length - 1;
       } else {
           prevTrackIndex = playIndex - 1;
       }
-      console.log('new playIndex - ' + prevTrackIndex)
       setPlayIndex(prevTrackIndex);
       onPlayClick(true);
   }
 
   function onNextTrackPlayClick(){
-      console.log('on next track play click');
       let nextTrackIndex;
       if (playIndex + 1 === props.items.length){
           nextTrackIndex = 0;
       } else {
           nextTrackIndex = playIndex + 1;
       }
-      console.log('new playIndex - ' + nextTrackIndex);
       setPlayIndex(nextTrackIndex);
       onPlayClick(true);
   }
@@ -552,11 +554,8 @@ function MusicPlayer(props){
   function toggleAudioMuted(){
     const newIsMuted = isMuted === true ? false : true;
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    if (newIsMuted === true) {
-      playerElement[0].volume = 0;
-    } else {
-      playerElement[0].volume = audioVolume;
-    }
+    if (newIsMuted === true) playerElement[0].volume = 0;
+    else playerElement[0].volume = audioVolume;
     setIsMuted(newIsMuted);
   }
 
@@ -571,7 +570,7 @@ function MusicPlayer(props){
 
   const musicPlayerContainerCssClass = showPlaylist === true ? "show-playlist " : " ";
   const audioElVolume = isMuted === true ? 0.0 : audioVolume;
-  console.log(audioElVolume);
+
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
       <audio volume={audioElVolume} id="music-player-audio"></audio>
@@ -621,38 +620,30 @@ function MusicPlayerControlPanel(props){
   /* COMPONENT */
 
   function onChangeTrackProgressPosition(e){
-    console.log('on change slider position');
     props.onUpdateCurrentTrackProgress(e);
   }
 
   function onAfterChangeTrackProgressPosition(e){
-    console.log('on after change slider position');
-    console.log(e);
+    // console.log(e);
   }
 
   function onChangeVolumeSliderPosition(e){
-    console.log('on change audio volume ');
     if (props.isMuted === false){
       const newVolumeValue = e / 100;
-      console.log(newVolumeValue)
       props.onChangeAudioVolume(newVolumeValue);
     }
   }
 
   function onAfterChangeVolumeSliderPosition(e){
-    console.log('on after change audio volume ');
-    console.log(e);
+    // console.log(e);
   }
 
   function onVolumeIconClick(){
-    console.log('on volume icon click')
     props.toggleAudioMuted()
   }
 
   function onThemeSwitchClick(){
-    console.log('on theme swith click')
     const newThemeValue = props.theme === "dark" ? "light" : "dark";
-    console.log(newThemeValue);
     props.setTheme(newThemeValue);
   }
 
@@ -733,53 +724,100 @@ function MusicPlayerControlPanel(props){
 
   const playIndex = props.playIndex;
   
-  console.log(props.theme);
-
   let themeSwitchCssClass = "theme-switch-container rc-switch ";
   if (props.theme === "light") themeSwitchCssClass += " checked";
 
-  return (
-    <div id="music-player-control-panel">
-      <div className="music-player-cover">
-        <figure><img src={props.items[playIndex].cover}/></figure>
-      </div>
-      <div className="music-player-track-title">
-        <h2>{props.items[playIndex].title}</h2>
-      </div>
-      <div className="music-player-time-display">
-        <span className="current-track-time">{props.currentTrackTime} </span>
-        <span className="current-track-progress">
-          <Slider 
-            min={0}
-            max={100}
-            value={props.currentTrackProgress}
-            onChange={onChangeTrackProgressPosition}
-            onAfterChange={onAfterChangeTrackProgressPosition}
-          />
-        </span>
-        <span className="current-track-duration">{props.currentTrackDuration}</span>
-      </div>
-      <div className="music-player-controls-bar">
-        <div className="music-player-controls-wrapper">
-          {audioControlsDisplay}
-          {volumeControlDisplay}
-          <div className="playlist-toggle-container">
-            <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+  let musicPlayerControlPanelDisplay;
+  if (props.isMobile === false){
+    musicPlayerControlPanelDisplay = (
+        <div className="desktop-control-panel-wrapper">
+          <div className="music-player-cover">
+            <figure><img src={props.items[playIndex].cover}/></figure>
           </div>
-          <div className="theme-switch-wrapper">
-            <span className="theme-switch">
-              <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
-                <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
-              </button>
+          <div className="music-player-track-title">
+            <h2>{props.items[playIndex].title}</h2>
+          </div>
+          <div className="music-player-time-display">
+            <span className="current-track-time">{props.currentTrackTime} </span>
+            <span className="current-track-progress">
+              <Slider 
+                min={0}
+                max={100}
+                value={props.currentTrackProgress}
+                onChange={onChangeTrackProgressPosition}
+                onAfterChange={onAfterChangeTrackProgressPosition}
+              />
             </span>
+            <span className="current-track-duration">{props.currentTrackDuration}</span>
+          </div>
+          <div className="music-player-controls-bar">
+            <div className="music-player-controls-wrapper">
+              {audioControlsDisplay}
+              {volumeControlDisplay}
+              <div className="playlist-toggle-container">
+                <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+              </div>
+              <div className="theme-switch-wrapper">
+                <span className="theme-switch">
+                  <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+                    <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+    )
+  } else {
+    musicPlayerControlPanelDisplay = (
+      <div className="mobile-control-panel-wrapper">
+        <div className="music-player-track-title">
+          <h2>{props.items[playIndex].title}</h2>
+        </div>
+        <div className="music-player-cover">
+          <figure><img src={props.items[playIndex].cover}/></figure>
+        </div>
+        <div className="music-player-time-display">
+            <span className="current-track-time">{props.currentTrackTime} </span>
+            <span className="current-track-progress">
+              <Slider 
+                min={0}
+                max={100}
+                value={props.currentTrackProgress}
+                onChange={onChangeTrackProgressPosition}
+                onAfterChange={onAfterChangeTrackProgressPosition}
+              />
+            </span>
+            <span className="current-track-duration">{props.currentTrackDuration}</span>
+          </div>
+        <div className="music-player-controls-bar">
+          <div className="music-player-controls-wrapper">
+            {audioControlsDisplay}
+            {volumeControlDisplay}
+            <div className="playlist-toggle-container">
+              <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+            </div>
+            <div className="theme-switch-wrapper">
+              <span className="theme-switch">
+                <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+                  <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
+                </button>
+              </span>
+            </div>
           </div>
         </div>
       </div>
+    )
+  }
+
+  return (
+    <div id="music-player-control-panel">
+      {musicPlayerControlPanelDisplay}
     </div>
   )
 }
 
-function MusicPlayerPlaylist(props){
+function MusicPlayerPlaylist(props){x
 
   function onMusicPlayerPlaylistItemClick(val){
     props.setPlayIndex(val);
