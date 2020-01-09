@@ -385,13 +385,6 @@ function MusicPlayer(props){
     playerElement[0].volume = audioVolume;
   },[audioVolume])
 
-  function getRandomMusicsupporter(){
-    $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
-      console.log(res);
-      setRandomSupporter(res.supporter)
-    });
-  }
-
   // audio player
 
   function onPlayClick(reload){
@@ -523,6 +516,15 @@ function MusicPlayer(props){
 
   }
 
+  // random supporter
+
+  function getRandomMusicsupporter(){
+    $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
+      console.log(res);
+      setRandomSupporter(res.supporter)
+    });
+  }
+
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
@@ -539,6 +541,11 @@ function MusicPlayer(props){
 
     const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
     setCurrentTrackProgress(newCurrentTrackProgress);
+
+    if (newCurrentTrackTime === playerElement.duration){
+      console.log('song ended');
+      onNextTrackPlayClick();
+    }
 
   }
 
@@ -585,6 +592,7 @@ function MusicPlayer(props){
         isPlaying={isPlaying}
         isPaused={isPaused}
         isMuted={isMuted}
+        isMobile={isMobile}
         audioVolume={audioVolume}
         currentTrackTime={currentTrackTime}
         currentTrackDuration={currentTrackDuration}
