@@ -111,7 +111,7 @@ function MusicPlayer(props){
   }
 
   function onReportAudioPlay(musicSrc){
-    console.log('on report audio play');
+
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
     const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
@@ -124,8 +124,6 @@ function MusicPlayer(props){
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
     setPlayedAudioArray(newPLayedAudioArray);
-
-    console.log(playedAudioArray[audioItemIndex]);
 
     if (playedAudioArray[audioItemIndex].played === 0){
 
@@ -151,7 +149,6 @@ function MusicPlayer(props){
   }
 
   function onReportAudioStop(musicSrc){
-    console.log('on report audio stop');
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
     const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {

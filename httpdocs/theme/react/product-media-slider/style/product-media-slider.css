@@ -1034,7 +1034,7 @@ video:focus {
   transition: all 0.2s ease-out;
 }
 #music-player-container #music-player-control-panel .music-player-cover figure {
-  padding: 0;
+  padding: 10px 0;
   text-align: center;
   height: 221px;
 }
@@ -1077,7 +1077,7 @@ video:focus {
   position: absolute;
   right: 10px;
 }
-#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration .inifinite {
+#music-player-container #music-player-control-panel .music-player-time-display > span.current-track-duration .infinite {
   font-size: 29px;
   margin-top: -13px;
   display: block;
