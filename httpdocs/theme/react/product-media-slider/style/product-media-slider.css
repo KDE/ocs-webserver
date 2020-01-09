@@ -1230,6 +1230,16 @@ video:focus {
   float: left;
   width: 100%;
 }
+#music-player-container #music-player-playlist-panel #music-player-playlist ul ul::-webkit-scrollbar {
+  width: 1em;
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul ul::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+#music-player-container #music-player-playlist-panel #music-player-playlist ul ul::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li {
   width: 100%;
   float: left;

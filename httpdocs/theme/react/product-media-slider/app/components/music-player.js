@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
-import ScrollArea from 'react-scrollbar';
 
 
 function MusicPlayerWrapper(props){
@@ -812,14 +811,7 @@ function MusicPlayerPlaylist(props){
         <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
       </div>
       <div id="music-player-playlist">
-        <ScrollArea
-          speed={0.8}
-          className="area"
-          contentClassName="content"
-          horizontal={false}
-        >
-          {musicPlayerPlaylistDisplay}
-        </ScrollArea>
+        {musicPlayerPlaylistDisplay}
       </div>
       <div id="music-player-playlist-footer"></div>
     </div>
