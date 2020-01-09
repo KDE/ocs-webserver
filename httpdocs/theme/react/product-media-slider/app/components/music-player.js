@@ -563,10 +563,11 @@ function MusicPlayer(props){
   /* RENDER */
 
   const musicPlayerContainerCssClass = showPlaylist === true ? "show-playlist " : " ";
-
+  const audioElVolume = isMuted === true ? 0 : audioVolume;
+  console.log(audioElVolume);
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme}>
-      <audio volume={isMuted === true ? 0 : audioVolume} id="music-player-audio"></audio>
+      <audio volume={audioElVolume} id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
@@ -634,6 +635,7 @@ function MusicPlayerControlPanel(props){
   }
 
   function onVolumeIconClick(){
+    console.log('on volume icon click')
     props.toggleAudioMuted()
   }
 
