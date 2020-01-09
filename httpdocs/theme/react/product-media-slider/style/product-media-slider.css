@@ -1308,6 +1308,35 @@ video:focus {
 #music-player-container #music-player-playlist-panel #music-player-playlist ul li:hover svg {
   color: #31c27c;
 }
+#music-player-container #music-player-playlist-panel #music-sponsor-display {
+  position: absolute;
+  width: 50%;
+  bottom: 0;
+  left: 50%;
+  height: 65px;
+  z-index: 1000;
+  color: white;
+  background-color: #454951;
+  padding: 5px;
+  text-align: center;
+  font-size: 10px;
+}
+#music-player-container #music-player-playlist-panel #music-sponsor-display span {
+  display: block;
+  float: left;
+  width: 100%;
+}
+#music-player-container #music-player-playlist-panel #music-sponsor-display span {
+  text-align: center;
+}
+#music-player-container #music-player-playlist-panel #music-sponsor-display span img {
+  border-radius: 100%;
+  border: 2px solid #c1c1c1;
+  width: 30px;
+  height: 30px;
+  margin-top: 3px;
+  cursor: pointer;
+}
 #music-player-container.show-playlist #music-player-control-panel {
   width: 50%;
   height: 100%;
