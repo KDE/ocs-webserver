@@ -338,6 +338,8 @@ function MusicPlayerControlPanel(props){
 
   /* DISPLAY */
 
+  const playIndex = props.playIndex;
+
   // audio controls display
 
   const playButtonElement = (
@@ -422,36 +424,60 @@ function MusicPlayerControlPanel(props){
       </span>
     </div>
   )
-
-  const playIndex = props.playIndex;
   
-  let themeSwitchCssClass = "theme-switch-container rc-switch ";
-  if (props.theme === "light") themeSwitchCssClass += " checked";
+  // cover 
+
+  const musicPlayerCoverDisplay = (
+    <div className="music-player-cover">
+      <figure><img src={props.items[playIndex].cover}/></figure>
+    </div>
+  )
+
+  // title
+
+  const musicPlayerTitleDisplay = (
+    <div className="music-player-track-title">
+      <h2>{props.items[playIndex].title}</h2>
+    </div>
+  )
+
+  // time display
+
+  let currentTrackTimeDisplay = props.currentTrackTime;
+  if (props.currentTrackTime === 0){
+    currentTrackTimeDisplay = '00:00'
+  }
+
+  let currentTrackDurationDisplay = props.currentTrackDuration;
+  if (props.currentTrackDuration === 0){
+    currentTrackDurationDisplay = '&infin;'
+  }
+
+  const musicPlayerTimeDisplay = (
+    <div className="music-player-time-display">
+      <span className="current-track-time">{currentTrackTimeDisplay} </span>
+      <span className="current-track-progress">
+        <Slider 
+          min={0}
+          max={100}
+          value={props.currentTrackProgress}
+          onChange={onChangeTrackProgressPosition}
+          onAfterChange={onAfterChangeTrackProgressPosition}
+        />
+      </span>
+      <span className="current-track-duration">{currentTrackDurationDisplay}</span>
+    </div>
+  )
+
+  // mobile / desktop switch display
 
   let musicPlayerControlPanelDisplay;
-
   if (props.isMobile === true){
     musicPlayerControlPanelDisplay = (
       <div className="mobile-control-panel-wrapper">
-        <div className="music-player-track-title">
-          <h2>{props.items[playIndex].title}</h2>
-        </div>
-        <div className="music-player-cover">
-          <figure><img src={props.items[playIndex].cover}/></figure>
-        </div>
-        <div className="music-player-time-display">
-            <span className="current-track-time">{props.currentTrackTime} </span>
-            <span className="current-track-progress">
-              <Slider 
-                min={0}
-                max={100}
-                value={props.currentTrackProgress}
-                onChange={onChangeTrackProgressPosition}
-                onAfterChange={onAfterChangeTrackProgressPosition}
-              />
-            </span>
-            <span className="current-track-duration">{props.currentTrackDuration}</span>
-          </div>
+        {musicPlayerTitleDisplay}
+        {musicPlayerCoverDisplay}
+        {musicPlayerTimeDisplay}
         <div className="music-player-controls-bar">
           <div className="music-player-controls-wrapper">
             {audioControlsDisplay}
@@ -467,27 +493,15 @@ function MusicPlayerControlPanel(props){
       </div>
     )
   } else {
+    
+    let themeSwitchCssClass = "theme-switch-container rc-switch ";
+    if (props.theme === "light") themeSwitchCssClass += " checked";
+
     musicPlayerControlPanelDisplay = (
       <div className="desktop-control-panel-wrapper">
-        <div className="music-player-cover">
-          <figure><img src={props.items[playIndex].cover}/></figure>
-        </div>
-        <div className="music-player-track-title">
-          <h2>{props.items[playIndex].title}</h2>
-        </div>
-        <div className="music-player-time-display">
-          <span className="current-track-time">{props.currentTrackTime} </span>
-          <span className="current-track-progress">
-            <Slider 
-              min={0}
-              max={100}
-              value={props.currentTrackProgress}
-              onChange={onChangeTrackProgressPosition}
-              onAfterChange={onAfterChangeTrackProgressPosition}
-            />
-          </span>
-          <span className="current-track-duration">{props.currentTrackDuration}</span>
-        </div>
+        {musicPlayerCoverDisplay}
+        {musicPlayerTitleDisplay}
+        {musicPlayerTimeDisplay}
         <div className="music-player-controls-bar">
           <div className="music-player-controls-wrapper">
             {audioControlsDisplay}
@@ -507,6 +521,8 @@ function MusicPlayerControlPanel(props){
       </div>
     )
   }
+
+  /* RENDER */
 
   return (
     <div id="music-player-control-panel">
