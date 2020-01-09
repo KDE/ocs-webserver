@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
+import ScrollArea from 'react-scrollbar';
+
 
 function MusicPlayerWrapper(props){
 
@@ -628,9 +630,11 @@ function MusicPlayerControlPanel(props){
 
   function onChangeVolumeSliderPosition(e){
     console.log('on change audio volume ');
-    const newVolumeValue = e / 100;
-    console.log(newVolumeValue)
-    props.onChangeAudioVolume(newVolumeValue);
+    if (props.isMuted === false){
+      const newVolumeValue = e / 100;
+      console.log(newVolumeValue)
+      props.onChangeAudioVolume(newVolumeValue);
+    }
   }
 
   function onAfterChangeVolumeSliderPosition(e){
@@ -808,7 +812,14 @@ function MusicPlayerPlaylist(props){
         <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
       </div>
       <div id="music-player-playlist">
-        {musicPlayerPlaylistDisplay}
+        <ScrollArea
+          speed={0.8}
+          className="area"
+          contentClassName="content"
+          horizontal={false}
+        >
+          {musicPlayerPlaylistDisplay}
+        </ScrollArea>
       </div>
       <div id="music-player-playlist-footer"></div>
     </div>
