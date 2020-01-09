@@ -644,7 +644,7 @@ function MusicPlayerPlaylistItem(props){
 
   return (
     <li className={"music-player-playlist-item " + playlistItemCssClass} >
-
+      {musicPlayerPlaylistItemDisplay}
     </li>
   )
 }
