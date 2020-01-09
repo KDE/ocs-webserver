@@ -577,7 +577,6 @@ function MusicPlayerPlaylist(props){
   
 
   let randomSupporterDisplay;
-  console.log('props random supporter - ' + props.randomSupporter);
   if (props.randomSupporter && props.randomSupporter !== null){
     randomSupporterDisplay = (
       <div id="music-sponsor-display">
