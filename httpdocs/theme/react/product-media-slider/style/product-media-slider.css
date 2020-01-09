@@ -1004,6 +1004,9 @@ video:focus {
 #music-player-container.light #music-player-control-panel {
   box-shadow: 0 1px 2px 0 rgba(0, 34, 77, 0.05);
 }
+#music-player-container.light a {
+  color: #32353d !important;
+}
 #music-player-container.dark {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
@@ -1370,7 +1373,6 @@ video:focus {
   left: 275px;
 }
 #music-player-container.is-mobile #music-player-playlist-panel #music-player-playlist ul li a {
-  color: #32353d;
   padding: 0 75px 0 50px;
   font-size: 12px;
 }
