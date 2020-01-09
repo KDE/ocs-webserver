@@ -101,7 +101,7 @@ class Default_Model_ProjectComments
                 ,(  select count(distinct c.name) sections from 
                     section_support s, support t , section c
                     where s.support_id = t.id and s.section_id = c.section_id
-                    and  t.member_id = comments.comment_member_id   and t.status_id=2
+                    and  t.member_id = comments.comment_member_id   and t.status_id>=2
                     and s.is_active = 1
                 ) as issupporter
                 ,(select score from project_rating where project_rating.comment_id = comments.comment_id ) as rating     
