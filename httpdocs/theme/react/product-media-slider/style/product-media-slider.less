@@ -1543,6 +1543,7 @@ video:focus {
             width: 100%;
             word-break: break-all;
             white-space: pre;
+            color: white;
           }
 
           &.is-playing, &.is-paused, &:hover, &:active {
@@ -1579,14 +1580,6 @@ video:focus {
   }
 
   &.is-mobile {
-    #music-player-playlist-panel {
-      width: 100% !important;
-      height: 100%;
-      position: absolute;
-      top: 360px;
-      background-color: inherit;
-      z-index: 1112;
-    }
 
     #music-player-control-panel {
       width: 100% !important;
@@ -1646,22 +1639,33 @@ video:focus {
       }
     }
 
-    &.show-playlist {
-      #music-player-playlist-panel {
-        top:0;
-
-        #music-player-playlist {
-          ul {
-            li {
+    #music-player-playlist-panel {
+      width: 100% !important;
+      height: 100%;
+      position: absolute;
+      top: 360px;
+      background-color: inherit;
+      z-index: 1112;
+      
+      #music-player-playlist {
+        ul {
+          li {
+            svg {
+              left: 275px;
+            }
+            a {
+              color: #32353d;
               padding: 0 75px 0 50px;
               font-size: 12px;
-              
-              svg {
-                left: 275px;
-              }
             }
           }
         }
+      }
+    }
+
+    &.show-playlist {
+      #music-player-playlist-panel {
+        top:0;
       }
     }
   }
