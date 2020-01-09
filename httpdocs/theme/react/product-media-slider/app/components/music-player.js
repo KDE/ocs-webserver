@@ -363,11 +363,7 @@ function MusicPlayer(props){
   const initialShowPlaylistValue = isMobile === true ? false : true;
   const [ showPlaylist, setShowPlaylist ] = useState(initialShowPlaylistValue);
 
-  console.log('is mobile - ' + isMobile);
-  console.log('show playlist - ' + showPlaylist);
-
   React.useEffect(() => {
-    console.log('init music player');
       
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
@@ -446,6 +442,8 @@ function MusicPlayer(props){
     ];
     setPlayedAudioArray(newPLayedAudioArray);
 
+    console.log(playedAudioArray[audioItemIndex]);
+
     if (playedAudioArray[audioItemIndex].played === 0){
 
       const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
@@ -497,23 +495,16 @@ function MusicPlayer(props){
   }
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
-
-    console.log('on update current track progress change - ' + newTrackProgress);
     setCurrentTrackProgress(newTrackProgress);
-
     const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
-    console.log(' new current track time - ' + newCurrentTrackTime);
-
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].currentTime = newCurrentTrackTime;
     playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
-
     setIsPlaying(true);
     setIsPaused(false);
     const currentSrc = props.items[playIndex].musicSrc;
     onReportAudioPlay(currentSrc);
-
   }
 
   // random supporter
@@ -541,8 +532,8 @@ function MusicPlayer(props){
 
     const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
     setCurrentTrackProgress(newCurrentTrackProgress);
-
-    if (newCurrentTrackTime === playerElement.duration){
+    
+    if (playerElement.currentTime === playerElement.duration){
       console.log('song ended');
       onNextTrackPlayClick();
     }
@@ -742,7 +733,7 @@ function MusicPlayerControlPanel(props){
   if (props.theme === "light") themeSwitchCssClass += " checked";
 
   let musicPlayerControlPanelDisplay;
-  console.log('props isMobile - ' + props.isMobile);
+
   if (props.isMobile === true){
     musicPlayerControlPanelDisplay = (
       <div className="mobile-control-panel-wrapper">
