@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import ReactJkMusicPlayer from "react-jinke-music-player";
-import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -687,9 +685,9 @@ function MusicPlayerControlPanel(props){
   if (props.isMobile === true){
     audioControlsDisplay = (
       <div className="music-player-audio-control">
-        <span onTouchEnd={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+        <span onTouchStart={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
         {playButtonDisplay}
-        <span onTouchEnd={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+        <span onTouchStart={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
       </div>
     )
   } else {
@@ -835,7 +833,7 @@ function MusicPlayerPlaylist(props){
     props.setPlayIndex(val);
     if (props.isPlaying === false){
       if (props.playIndex === val) props.onPlayClick();
-      else props.onPauseClick();
+      else props.onPlayClick(true);
     }
     else {
       if (props.playIndex === val) props.onPauseClick();
@@ -857,6 +855,23 @@ function MusicPlayerPlaylist(props){
 
   const musicPlayerPlaylistDisplay = <ul>{musicPlayerPlaylistItems}</ul>
   
+  let randomSupporterDisplay;
+  if (props.randomSupporter !== null){
+    randomSupporterDisplay = (
+      <div id="music-sponsor-display">
+        <span>made possible by supporters like</span>
+        <span className="sponsor-avatar">
+          <a href={"/u/" + props.randomSupporter.username}>
+            <img src={props.randomSupporter.profile_image_url}/>
+          </a>
+        </span>
+        <span>
+          {props.randomSupporter.username}
+        </span>
+      </div>
+    )
+  }
+
   return (
     <div id="music-player-playlist-panel">
       <div id="music-player-playlist-header">
@@ -871,7 +886,9 @@ function MusicPlayerPlaylist(props){
           {musicPlayerPlaylistDisplay}
         </Scrollbars>
       </div>
-      <div id="music-player-playlist-footer"></div>
+      <div id="music-player-playlist-footer">
+        {randomSupporterDisplay}
+      </div>
     </div>
   )
 }
