@@ -1068,7 +1068,7 @@ class Default_Model_Member extends Default_Model_DbTable_Member
         $sql = "
                 select 
                 member_id,
-                max(active_time_max) as active_time_max,
+                max(valid_till) as active_time_max,
                 min(active_time_min) as active_time_min,
                 max(is_valid) as issupporter,
                 count(1) AS cnt
