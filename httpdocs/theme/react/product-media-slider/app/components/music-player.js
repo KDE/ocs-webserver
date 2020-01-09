@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactJkMusicPlayer from "react-jinke-music-player";
 import {isMobile} from 'react-device-detect';
 import Slider from 'rc-slider'; 
+import { Scrollbars } from 'react-custom-scrollbars';
 
 
 function MusicPlayerWrapper(props){
@@ -322,6 +323,7 @@ function MusicPlayerWrapper(props){
       <MusicPlayer 
         product={props.product}
         items={props.slide.items} 
+        containerWidth={props.containerWidth}
       />
     </div>
   )
@@ -595,6 +597,7 @@ function MusicPlayer(props){
         toggleAudioMuted={() => toggleAudioMuted()}
       />
       <MusicPlayerPlaylist 
+        containerWidth={props.containerWidth}
         title={props.product.title}
         randomSupporter={randomSupporter}
         items={props.items}
@@ -811,7 +814,12 @@ function MusicPlayerPlaylist(props){
         <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
       </div>
       <div id="music-player-playlist">
-        {musicPlayerPlaylistDisplay}
+        <Scrollbars
+          width={props.containerWidth / 2}
+          height={250}
+        >
+          {musicPlayerPlaylistDisplay}
+        </Scrollbars>
       </div>
       <div id="music-player-playlist-footer"></div>
     </div>
