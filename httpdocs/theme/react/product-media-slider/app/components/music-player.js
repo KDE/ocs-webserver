@@ -734,47 +734,8 @@ function MusicPlayerControlPanel(props){
   if (props.theme === "light") themeSwitchCssClass += " checked";
 
   let musicPlayerControlPanelDisplay;
-  if (props.isMobile === false){
-    musicPlayerControlPanelDisplay = (
-        <div className="desktop-control-panel-wrapper">
-          <div className="music-player-cover">
-            <figure><img src={props.items[playIndex].cover}/></figure>
-          </div>
-          <div className="music-player-track-title">
-            <h2>{props.items[playIndex].title}</h2>
-          </div>
-          <div className="music-player-time-display">
-            <span className="current-track-time">{props.currentTrackTime} </span>
-            <span className="current-track-progress">
-              <Slider 
-                min={0}
-                max={100}
-                value={props.currentTrackProgress}
-                onChange={onChangeTrackProgressPosition}
-                onAfterChange={onAfterChangeTrackProgressPosition}
-              />
-            </span>
-            <span className="current-track-duration">{props.currentTrackDuration}</span>
-          </div>
-          <div className="music-player-controls-bar">
-            <div className="music-player-controls-wrapper">
-              {audioControlsDisplay}
-              {volumeControlDisplay}
-              <div className="playlist-toggle-container">
-                <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
-              </div>
-              <div className="theme-switch-wrapper">
-                <span className="theme-switch">
-                  <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
-                    <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
-                  </button>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-    )
-  } else {
+  console.log('props isMobile - ' + props.isMobile);
+  if (props.isMobile === true){
     musicPlayerControlPanelDisplay = (
       <div className="mobile-control-panel-wrapper">
         <div className="music-player-track-title">
@@ -804,6 +765,46 @@ function MusicPlayerControlPanel(props){
                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align": "middle"}}>
                   <g><path d="m28.4 10h8.2v3.4h-5v15c0 2.7-2.2 5-5 5s-5-2.3-5-5 2.3-5 5-5c0.6 0 1.2 0.1 1.8 0.3v-13.7z m-23.4 16.6v-3.2h13.4v3.2h-13.4z m20-10v3.4h-20v-3.4h20z m0-6.6v3.4h-20v-3.4h20z"></path></g>
                 </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  } else {
+    musicPlayerControlPanelDisplay = (
+      <div className="desktop-control-panel-wrapper">
+        <div className="music-player-cover">
+          <figure><img src={props.items[playIndex].cover}/></figure>
+        </div>
+        <div className="music-player-track-title">
+          <h2>{props.items[playIndex].title}</h2>
+        </div>
+        <div className="music-player-time-display">
+          <span className="current-track-time">{props.currentTrackTime} </span>
+          <span className="current-track-progress">
+            <Slider 
+              min={0}
+              max={100}
+              value={props.currentTrackProgress}
+              onChange={onChangeTrackProgressPosition}
+              onAfterChange={onAfterChangeTrackProgressPosition}
+            />
+          </span>
+          <span className="current-track-duration">{props.currentTrackDuration}</span>
+        </div>
+        <div className="music-player-controls-bar">
+          <div className="music-player-controls-wrapper">
+            {audioControlsDisplay}
+            {volumeControlDisplay}
+            <div className="playlist-toggle-container">
+              <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+            </div>
+            <div className="theme-switch-wrapper">
+              <span className="theme-switch">
+                <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+                  <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
+                </button>
               </span>
             </div>
           </div>
