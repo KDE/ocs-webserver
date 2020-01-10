@@ -26,6 +26,11 @@
  */
 function crawlerDetect($USER_AGENT)
 {
+    // If the user agent is empty, we assume that it is not a bot.
+    if (empty($USER_AGENT)) {
+        return false;
+    }
+
     $crawlers = array(
         array('Googlebot', 'Googlebot'),
         array('MSN', 'MSN'),
@@ -76,14 +81,32 @@ function crawlerDetect($USER_AGENT)
         array('urlwatch','urlwatch/2.17 (+https://thp.io/2008/urlwatch/info.html)'),
         array('Buck','Buck/2.2; (+https://app.hypefactors.com/media-monitoring/about.html)'),
         array('Anitya','Anitya 0.17.2 at release-monitoring.org'),
-        array('MauiBot','MauiBot (crawler.feedback+dc@gmail.com)')
+        array('MauiBot','MauiBot (crawler.feedback+dc@gmail.com)'),
+        array('istellabot','istellabot/t.1.13'),
+        array('SeznamBot','Mozilla/5.0 (compatible; SeznamBot/3.2-test1; +http://napoveda.seznam.cz/en/seznambot-intro/)'),
+        array('TelegramBot','TelegramBot (like TwitterBot)'),
+        array('Synapse','Synapse/1.0.0'),
+        array('VelenPublicWebCrawler','Mozilla/5.0 (compatible; VelenPublicWebCrawler/1.0; +https://velen.io)'),
+        array('MagiBot','Mozilla/5.0 (compatible; MagiBot/1.0.0; Matarael; +https://magi.com/bots)'),
+        array('linkfluence','Mozilla/5.0 (compatible; YaK/1.0; http://linkfluence.com/; bot@linkfluence.com)'),
+        array('repology','repology-linkchecker/1 (+https://repology.org/bots)'),
+        array('yacybot','Mozilla/5.0 (compatible; yacybot/1.921/custom +https://searx.everdot.org/about)'),
+        array('facebookexternalhit','facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'),
+        array('ZoominfoBot','ZoominfoBot (zoominfobot at zoominfo dot com)'),
+        array('curl','curl/7.66.0'),
+        array('ZoomBot','ZoomBot (Linkbot 1.0 http://suite.seozoom.it/bot.html)'),
+        array('PaperLiBot','Mozilla/5.0 (compatible; PaperLiBot/2.1; https://support.paper.li/entries/20023257-what-is-paper-li)'),
+        array('python-requests','python-requests/2.22.0'),
+        array('Cliqzbot','Mozilla/5.0 (compatible; Cliqzbot/3.0; +http://cliqz.com/company/cliqzbot)'),
+        array('YisouSpider','YisouSpider'),
+        array('trendictionbot','Mozilla/5.0 (Windows NT 10.0; Win64; x64; trendictionbot0.5.0; trendiction search; http://www.trendiction.de/bot; please let us know of any problems; web at trendiction.com) Gecko/20170101 Firefox/67.0')
     );
 
     foreach ($crawlers as $c)
     {
         if (stristr($USER_AGENT, $c[0]))
         {
-            return($c[1]);
+            return true;
         }
     }
 
