@@ -430,8 +430,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $result = $this->_db->fetchRow($sql, array(
             'projectId'       => $project_id,
             'projectStatus'   => self::PROJECT_INACTIVE,
-            'typeIdStd'          => self::PROJECT_TYPE_STANDARD,
-            'typeIdColl'          => self::PROJECT_TYPE_COLLECTION,
+            'typeIdStd'       => self::PROJECT_TYPE_STANDARD,
+            'typeIdColl'      => self::PROJECT_TYPE_COLLECTION,
             'tag_licence_gid' => self::TAG_LICENCE_GID,
             'tag_type_id'     => self::TAG_TYPE_ID
 
