@@ -68,10 +68,7 @@ function MusicPlayer(props){
   },[audioVolume])
 
   useEffect(() => {
-    if (isPlaying === true){
-      console.log(prevIndex)
-      onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
-    }
+    if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
   },[playIndex])
 
   // audio player
@@ -120,8 +117,7 @@ function MusicPlayer(props){
       setPlayIndex(nextTrackIndex);
       onPlayClick(true);
   }
-
-  
+ 
   function onReportAudioPlay(musicSrc,newPlayIndex){  
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
     const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
@@ -135,12 +131,18 @@ function MusicPlayer(props){
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
 
+    console.log('played audio array - ');
+    console.log(playedAudioArray);
+    console.log('audio item index - ' + audioItemIndex);
+    console.log('is played - ' + playedAudioArray[audioItemIndex].played)
+
     if (playedAudioArray[audioItemIndex].played === 0){
 
       const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-      
+      console.log('audio start url - ' + audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
-
+        console.log('ajax res - ');
+        console.log(res);
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,

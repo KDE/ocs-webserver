@@ -117,7 +117,7 @@ function BookReaderWrapper(props){
     let nextButtonDisplay;
     if (showNextButton === true){
       nextButtonDisplay = (
-        <span><a onClick={() => onEndClick()}>{"Last Page >"}</a></span>
+        <span><a onClick={() => onEndClick()}>{"next >"}</a></span>
       )
     }
     bookNavigation = (
