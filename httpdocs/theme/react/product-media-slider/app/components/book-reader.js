@@ -108,36 +108,34 @@ function BookReaderWrapper(props){
   let bookNavigation;
   if (loading === false){
     loadingDisplay = "";
+    let prevButtonDisplay;
+    if (showPrevButton === true){
+      prevButtonDisplay = (
+        <span><a onClick={() => goPrev()}>{"< previous"}</a></span>
+      )
+    }
+    let nextButtonDisplay;
+    if (showNextButton === true){
+      nextButtonDisplay = (
+        <span><a onClick={() => onEndClick()}>{"Last Page >"}</a></span>
+      )
+    }
     bookNavigation = (
       <div id="book-pager">
         <div>
-          <span><a onClick={() => onStartClick()}>{"< First Page"}</a></span>
+          {prevButtonDisplay}
           <span>
             <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
             {" / " + totalPages}
           </span>
-          <span><a onClick={() => onEndClick()}>{"Last Page >"}</a></span>
+          {nextButtonDisplay}
         </div>
       </div>
     )
   }
 
-  let bookMenuDisplay, tocMenuToggleDisplay, prevButtonDisplay, nextButtonDisplay;
+  let bookMenuDisplay, tocMenuToggleDisplay;
   if (renditionState){
-    if (showPrevButton === true){
-      prevButtonDisplay = (
-        <div id="prev" className="arrow" onClick={goPrev}>
-          <span className="glyphicon glyphicon-chevron-left"></span>  
-        </div>
-      )
-    }
-    if (showNextButton === true){
-      nextButtonDisplay = (
-        <div id="next" className="arrow" onClick={goNext}>
-          <span className="glyphicon glyphicon-chevron-right"></span>  
-        </div>
-      )
-    }
     if (renditionState.book.navigation){
       tocMenuToggleDisplay = (
         <div id="toc-menu-toggle" onClick={toggleMenu}>
@@ -159,8 +157,6 @@ function BookReaderWrapper(props){
     <div id="book-reader-wrapper" className={bookReaderWrapperCssClass}>
       {loadingDisplay}
       {tocMenuToggleDisplay}
-      {prevButtonDisplay}
-      {nextButtonDisplay}
       <div id="viewer" className="spreads">
       </div>
       {bookNavigation}
