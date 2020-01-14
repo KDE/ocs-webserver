@@ -113,7 +113,9 @@ function MusicPlayer(props){
   function onReportAudioPlay(musicSrc,newPlayIndex){
 
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    console.log('audio item - ' + audioItem);
     const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+    console.log('audio item index - ' + audioItemIndex);
     const newAudioItem = {
       ...audioItem,
       played:audioItem.played + 1
