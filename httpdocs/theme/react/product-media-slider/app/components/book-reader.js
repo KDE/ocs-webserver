@@ -58,7 +58,7 @@ function BookReaderWrapper(props){
         console.log(locations.start.cfi);
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         console.log('books locations total - ')
-        console.log(books.locations.total);
+        console.log(book.locations.total);
         setTotalPages(book.locations.total)
         
         if (loading === true) setLoading(false);
