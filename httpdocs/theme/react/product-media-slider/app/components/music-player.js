@@ -134,6 +134,9 @@ function MusicPlayer(props){
     console.log('played audio array - ');
     console.log(playedAudioArray);
     console.log('audio item index - ' + audioItemIndex);
+    console.log('audio item - ')
+    console.log(audioItem);
+    console.log( playedAudioArray[audioItemIndex]);
     console.log('is played - ' + playedAudioArray[audioItemIndex].played)
 
     if (playedAudioArray[audioItemIndex].played === 0){
@@ -173,7 +176,6 @@ function MusicPlayer(props){
       newAudioItem,
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
-    setPlayedAudioArray(newPLayedAudioArray);
 
     if  (playedAudioArray[audioItemIndex].stopped === 0){
 
@@ -183,7 +185,10 @@ function MusicPlayer(props){
 
       $.ajax({url: audioStopUrl}).done(function(res) { 
         console.log(res);
+        setPlayedAudioArray(newPLayedAudioArray);
       });
+    } else {
+      setPlayedAudioArray(newPLayedAudioArray);
     }
   }
 
