@@ -4,19 +4,19 @@ function PersonalLinksContainer(props)
   return (
     <ul id="personal-links-container">
       <li id="storage-link-item">
-        <a href={props.myopendesktopUrl}  >
+        <a href={props.myopendesktopUrl+'/apps/files'}  >
           <div className="icon"></div>
           <span>Files</span>
         </a>
       </li>
       <li id="calendar-link-item">
-        <a href={props.myopendesktopUrl+"/index.php/apps/calendar/"} >
+        <a href={props.myopendesktopUrl+"/apps/calendar/"} >
           <div className="icon"></div>
           <span>Calendar</span>
         </a>
       </li>
       <li id="contacts-link-item">
-        <a href={props.myopendesktopUrl+"/index.php/apps/contacts/"} >
+        <a href={props.myopendesktopUrl+"/apps/contacts/"} >
           <div className="icon"></div>
           <span>Contacts</span>
         </a>

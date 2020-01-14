@@ -69,18 +69,18 @@ const DevelopmentAppMenu = () => {
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">                          
           
               <MyButton id="storage-link-item"
-                      url={state.myopendesktopUrl}
+                      url={state.myopendesktopUrl+"/apps/files/"}
                       label="Storage" />
               <MyButton id="calendar-link-item"
-                      url={state.myopendesktopUrl+"/index.php/apps/calendar/"}
+                      url={state.myopendesktopUrl+"/apps/calendar/"}
                       label="Calendar" />
               <MyButton id="contacts-link-item"
-                      url={state.myopendesktopUrl+"/index.php/apps/contacts/"}
+                      url={state.myopendesktopUrl+"/apps/contacts/"}
                       label="Contacts" />
                 <li id="messages-link-item">
                     <a href={state.forumUrl+"/u/"+state.user.username+"/messages"}>
                       <div className="icon"></div>
-                      <span>PM</span>
+                      <span>DM</span>
                       {notification && 
                           <span className="badge-notification">{notification_count}</span>
                         } 

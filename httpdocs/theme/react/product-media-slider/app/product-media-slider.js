@@ -214,7 +214,7 @@ function ProductMediaSlider(){
   ));
 
   let thumbnailNavigationDisplay;
-  if (showPlaylist){
+  if (showPlaylist && gallery.length > 1){
   // thumbnail navigation
     const slidesThumbnailNavigationDisplay = gallery.map((g, index) => (
       <ThumbNavigationItem 
@@ -300,19 +300,7 @@ function SlideItem(props){
             setMediaStyle({height:imageHeight})
             props.onSetSliderHeight(imageHeight);
           } else {
-            if (imageEl.offsetHeight > 0) {
-              if (props.disableGallery){
-                let imageHeight = itemSetHeight;
-                if (!itemSetHeight) setItemSetHeight(imageEl.offsetHeight)
-                setMediaStyle({maxHeight:itemSetHeight})
-                props.onSetSliderHeight(itemSetHeight)
-              } else {
-                setMediaStyle({marginTop:(props.sliderHeight - imageEl.offsetHeight) / 2})
-                props.onSetSliderHeight(360)
-              }          
-            } else {
               if (props.disableGallery) setMediaStyle({maxHeight:360})
-            }
           }
         }
         else if (props.slide.type === "embed"){ 
@@ -417,12 +405,13 @@ function SlideItem(props){
         onFullScreenToggle={props.onFullScreenToggle}
         isFullScreen={props.isFullScreen}
       />
-    )    
+    )
+
   }
 
-  return(
+  return (
     <div 
-      id={"slide-"+props.slideIndex}     
+      id={"slide-"+props.slideIndex}
       className={props.currentSlide === props.slideIndex ? "active slide-item swiper-slide " + props.slide.type : "slide-item swiper-slide " + props.slide.type } 
       style={ { width:props.containerWidth, height:props.sliderHeight }}>
         {slideContentDisplay}

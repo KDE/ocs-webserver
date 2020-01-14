@@ -1,90 +1,119 @@
 import React, { useState } from "react";
-import ReactJkMusicPlayer from "react-jinke-music-player";
-import {isMobile} from 'react-device-detect';
+import Slider from 'rc-slider'; 
+import { Scrollbars } from 'react-custom-scrollbars';
 
 function MusicPlayerWrapper(props){
 
-  const [ showPlaylist, setShowPlaylist ] = useState(isMobile === true ? false : true);
+  return (
+    <div>
+      <MusicPlayer 
+        product={props.product}
+        items={props.slide.items} 
+        containerWidth={props.width}
+      />
+    </div>
+  )
+}
+
+function MusicPlayer(props){
+
+  /* COMPONENT */
+
+  const [ playIndex, setPlayIndex ] = useState(0);
+  const [ isPlaying, setIsPlaying ] = useState(false);
+  const [ isPaused, setIsPaused ] = useState(false);
+  const [ audioVolume, setAudioVolume ] = useState(0.5);
+  const [ isMuted, setIsMuted ] = useState(false);
+  const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
+  const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
+  const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
+  const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
+  const [ theme, setTheme ] = useState('dark');
   let initialPLayedAudioArray = []
-  props.slide.items.forEach(function(i,index){
-    let pl = 0;
-    if (index === 0) pl = -1;
+  props.items.forEach(function(i,index){
     const pa = {
       ...i,
-      played:pl,
+      played:0,
       stopped:0
     }
     initialPLayedAudioArray.push(pa);
   })
   const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
   const [ randomSupporter, setRandomSupporter ] = useState();
-  const [ isPlaying, setIsPlaying ] = useState(false);
-  const [ isPaused, setIsPaused ] = useState(false);
-  const [ playIndex, setPlayIndex ] = useState(0);
 
-  console.log(playedAudioArray);
+  const initialIsMobileValue = props.containerWidth < 600 ? true : false;
+  const [ isMobile, setIsMobile ] = useState(initialIsMobileValue);
+  const initialShowPlaylistValue = isMobile === true ? false : true;
+  const [ showPlaylist, setShowPlaylist ] = useState(initialShowPlaylistValue);
 
   React.useEffect(() => {
+      
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const currentSrc = props.items[playIndex].musicSrc;
+    
+    playerElement[0].src = currentSrc;
+    playerElement[0].volume = audioVolume;
+    playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    
     getRandomMusicsupporter();
-    // $('#music-player-wrapper').find('.player-content').prepend($('.music-player-controls'));
+  
   },[])
 
-  function onPlayClick(){
-    console.log('play track');
-    const playerElement = document.getElementById("music-player-wrapper").getElementsByTagName('audio');
-    let currentSrc;
-    if (isPaused === false) {
-        currentSrc = props.slide.items[playIndex].musicSrc;
-        playerElement[0].src = currentSrc;
+  React.useEffect(() => {
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    playerElement[0].volume = audioVolume;
+  },[audioVolume])
+
+  // audio player
+
+  function onPlayClick(reload){
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const currentSrc = props.items[playIndex].musicSrc;
+    if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
+      playerElement[0].src = currentSrc;
+      setCurrentTrackProgress(0);
+      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     }
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
-    console.log(currentSrc);
     onReportAudioPlay(currentSrc);
   }
 
   function onPauseClick(){
-    console.log('pause track');
-    const playerElement = document.getElementById("music-player-wrapper").getElementsByTagName('audio');
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].pause();
     setIsPlaying(false);
     setIsPaused(true);
-    onReportAudioStop(props.slide.items[playIndex].musicSrc)
+    onReportAudioStop(props.items[playIndex].musicSrc)
   }
 
   function onPrevTrackPlayClick(){
       let prevTrackIndex;
       if (playIndex === 0){
-          prevTrackIndex = props.slide.items.length - 1;
+          prevTrackIndex = props.items.length - 1;
       } else {
           prevTrackIndex = playIndex - 1;
       }
       setPlayIndex(prevTrackIndex);
-      onPlayClick(prevTrackIndex);
+      onPlayClick(true);
   }
 
   function onNextTrackPlayClick(){
       let nextTrackIndex;
-      if (playIndex + 1 === props.slide.items.length){
+      if (playIndex + 1 === props.items.length){
           nextTrackIndex = 0;
       } else {
           nextTrackIndex = playIndex + 1;
       }
       setPlayIndex(nextTrackIndex);
-      onPlayClick(nextTrackIndex);
+      onPlayClick(true);
   }
 
-  function getRandomMusicsupporter(){
-    const suffix = window.location.host.endsWith('cc') ? 'cc' :  window.location.host.endsWith('com') ||  window.location.host.endsWith('org') ? 'com' : 'cc';
-    $.ajax({url: "https://www.pling."+suffix+"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
-      setRandomSupporter(res.supporter)
-    });    
-  }
+  function onReportAudioPlay(musicSrc){
 
-  function onReportAudioPlay(audioInfo){
-    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
       ...audioItem,
       played:audioItem.played + 1
@@ -98,10 +127,9 @@ function MusicPlayerWrapper(props){
 
     if (playedAudioArray[audioItemIndex].played === 0){
 
-      let audioStartUrlPrefix = window.location.href;
-      if (audioStartUrlPrefix.substr(audioStartUrlPrefix.length - 1) !== "/" ) audioStartUrlPrefix += "/";
-
-      const audioStartUrl = audioStartUrlPrefix + 'startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+      
+      console.log(audioStartUrl);
 
       $.ajax({url: audioStartUrl}).done(function(res) { 
         console.log(res);
@@ -120,9 +148,9 @@ function MusicPlayerWrapper(props){
     }    
   }
 
-  function onReportAudioStop(audioInfo){
-    const audioItem = playedAudioArray.find((i => i.musicSrc === audioInfo.musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === audioInfo.musicSrc));
+  function onReportAudioStop(musicSrc){
+    const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
       ...audioItem,
       stopped:audioItem.stopped + 1
@@ -136,10 +164,7 @@ function MusicPlayerWrapper(props){
 
     if  (playedAudioArray[audioItemIndex].stopped === 0){
 
-      let audioStopPrefixUrl = window.location.href;
-      if (audioStopPrefixUrl.substr(audioStopPrefixUrl.length - 1) !== "/" ) audioStopPrefixUrl += "/";
-
-      const audioStopUrl =  audioStopPrefixUrl + "stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+      const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.project_id + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
 
       console.log(audioStopUrl);
 
@@ -149,169 +174,180 @@ function MusicPlayerWrapper(props){
     }
   }
 
-  const options = {
-      //audio lists model
-      audioLists: props.slide.items,
-      audioListsPanelVisible:showPlaylist,
-      //default play index of the audio player  [type `number` default `0`]
-      defaultPlayIndex: 0,
-      //if you want dynamic change current play audio you can change it [type `number` default `0`]
-      // playIndex: 0,
-      //color of the music player theme    [ type `string: 'light' or 'dark'  ` default 'dark' ]
-      theme: "dark",
-      // Specifies movement boundaries. Accepted values:
-      // - `parent` restricts movement within the node's offsetParent
-      //    (nearest node with position relative or absolute), or
-      // - a selector, restricts movement within the targeted node
-      // - An object with `left, top, right, and bottom` properties.
-      //   These indicate how far in each direction the draggable
-      //   can be moved.
-      bounds: "parent",
-      //Whether to load audio immediately after the page loads.  [type `Boolean | String`, default `false`]
-      //"auto|metadata|none" "true| false"
-      preload: false,
-      //Whether the player's background displays frosted glass effect  [type `Boolean`, default `false`]
-      glassBg: false,
-      //The next time you access the player, do you keep the last state  [type `Boolean` default `false`]
-      remember: false,
-      //The Audio Can be deleted  [type `Boolean`, default `true`]
-      remove: false,
-      //audio controller initial position    [ type `Object` default '{top:0,left:0}' ]
-      defaultPosition: {
-        top: 300,
-        left: 120
-      },
-      // play mode text config of the audio player
-      playModeText: {
-        order: "order",
-        orderLoop: "loop",
-        singleLoop: "single loop",
-        shufflePlay: "shuffle"
-      },
-      //audio controller open text  [ type `String | ReactNode` default 'open']
-      openText: "open",
-      //audio controller close text  [ type `String | ReactNode` default 'close']
-      closeText: "close",
-      //audio theme switch checkedText  [ type `String | ReactNode` default '-']
-      checkedText: "dark",      
-      //audio theme switch unCheckedText [ type `String | ReactNode` default '-']
-      unCheckedText: "light",
-      // audio list panel show text of the playlist has no songs [ type `String` | ReactNode  default 'no music']
-      notContentText: "No Music",
-      panelTitle: props.product.title,
-      defaultPlayMode: "order",
-      //audio mode        mini | full          [type `String`  default `mini`]
-      mode: "full",
-        // [ type `Boolean` default 'false' ]
-        // The default audioPlay handle function will be played again after each pause, If you only want to trigger it once, you can set 'true'
-      once: true,
-      //Whether the audio is played after loading is completed. [type `Boolean` default 'true']
-      autoPlay: false,
-      //Whether you can switch between two modes, full => mini  or mini => full   [type 'Boolean' default 'true']
-      toggleMode: false,
-      //audio cover is show of the "mini" mode [type `Boolean` default 'true']
-      showMiniModeCover: true,   
-      //audio playing progress is show of the "mini"  mode
-      showMiniProcessBar: false,
-      //audio controller is can be drag of the "mini" mode     [type `Boolean` default `true`]
-      drag: false,
-      //drag the audio progress bar [type `Boolean` default `true`]
-      seeked: true,
-      //audio controller title [type `String | ReactNode`  default <FaHeadphones/>]
-      // controllerTitle: <FaHeadphones />,
-      //Displays the audio load progress bar.  [type `Boolean` default `true`]
-      showProgressLoadBar: true,
-      //play button display of the audio player panel   [type `Boolean` default `true`]
-      showPlay: true,
-      //reload button display of the audio player panel   [type `Boolean` default `true`]
-      showReload: false,
-      //download button display of the audio player panel   [type `Boolean` default `true`]
-      showDownload: false,
-      //loop button display of the audio player panel   [type `Boolean` default `true`]
-      showPlayMode: false,
-      //theme toggle switch  display of the audio player panel   [type `Boolean` default `true`]
-      showThemeSwitch: true,
-      //lyric display of the audio player panel   [type `Boolean` default `false`]
-      showLyric: false,
-      //Extensible custom content       [type 'Array' default '[]' ]
-      extendsContent: [],
-      //default volume of the audio player [type `Number` default `100` range `0-100`]
-      defaultVolume: 50,
-      //playModeText show time [type `Number(ms)` default `700`]
-      playModeShowTime: 600,
-      //Whether to try playing the next audio when the current audio playback fails [type `Boolean` default `true`]
-      loadAudioErrorPlayNext: true,
-      //Music is downloaded handle
-      //onAudioDownload(audioInfo) { console.log("audio download", audioInfo); },
-      //audio play handle
-      onAudioPlay(audioInfo) {
-          $('.play-btn[title="Click to play"]').trigger("click");
-          onReportAudioPlay(audioInfo);
-      },
-      //audio pause handle
-      onAudioPause(audioInfo) { 
-        console.log("audio pause", audioInfo); 
-        onReportAudioStop(audioInfo)
-      },
-      //When the user has moved/jumped to a new location in audio
-      onAudioSeeked(audioInfo) { console.log("audio seeked", audioInfo); },
-      //When the volume has changed  min = 0.0  max = 1.0
-      onAudioVolumeChange(currentVolume) { console.log("audio volume change", currentVolume); },
-      //The single song is ended handle
-      onAudioEnded(audioInfo) { console.log("audio ended", audioInfo); },
-      //audio load abort The target event like {...,audioName:xx,audioSrc:xx,playMode:xx}
-      onAudioAbort(e) { console.log("audio abort", e); },
-      //audio play progress handle
-      onAudioProgress(audioInfo) { /*console.log('audio progress',audioInfo);*/ },
-      //audio reload handle
-      onAudioReload(audioInfo) { console.log("audio reload:", audioInfo);},
-      //audio load failed error handle
-      onAudioLoadError(e) { console.log("audio load err", e); },
-      //theme change handle
-      onThemeChange(theme) { console.log("theme change:", theme); },
-      //audio lists change
-      onAudioListsChange(currentPlayId, audioLists, audioInfo) {
-        console.log("[currentPlayId] audio lists change:", currentPlayId);
-        console.log("[audioLists] audio lists change:", audioLists);
-        console.log("[audioInfo] audio lists change:", audioInfo);
-        console.log(audioInfo)
-      },
-      onAudioPlayTrackChange(currentPlayId, audioLists, audioInfo) { console.log( "audio play track change:", currentPlayId, audioLists, audioInfo ); },
-      onPlayModeChange(playMode) { console.log("play mode change:", playMode); },
-      onModeChange(mode) { console.log("mode change:", mode); },
-      onAudioListsPanelChange(panelVisible) {
-        const newShowPlayListValue = showPlaylist === true ? false : true;
-        setShowPlaylist(newShowPlayListValue);
-      }, 
-      onAudioListsDragEnd(fromIndex, endIndex) {
-        console.log("audio lists drag end:", fromIndex, endIndex);
-      },
-      onAudioLyricChange(lineNum, currentLyric) {
-        console.log("audio lyric change:", lineNum, currentLyric);
-      }
-  };
+  function onUpdateCurrentTrackProgress(newTrackProgress){
+    setCurrentTrackProgress(newTrackProgress);
+    const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    playerElement[0].currentTime = newCurrentTrackTime;
+    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    playerElement[0].play();
+    setIsPlaying(true);
+    setIsPaused(false);
+    const currentSrc = props.items[playIndex].musicSrc;
+    onReportAudioPlay(currentSrc);
+  }
 
-  let musicPlayerWrapperCssClass = "desktop ";
-  let sponsorDetailsDisplay;
-  if (isMobile === true) musicPlayerWrapperCssClass = "mobile ";
-  if (showPlaylist === true) {
-    musicPlayerWrapperCssClass += " show-playlist";
-    if (randomSupporter){
-      sponsorDetailsDisplay = (
-        <div id="music-sponsor-display">
-          <span>made possible by supporters like</span>
-          <span className="sponsor-avatar">
-            <a href={"/u/" + randomSupporter.username}>
-              <img src={randomSupporter.profile_image_url}/>
-            </a>
-          </span>
-          <span>
-            {randomSupporter.username}
-          </span>
-        </div>
-      )
+  // random supporter
+
+  function getRandomMusicsupporter(){
+    $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
+      console.log(res);
+      setRandomSupporter(res.supporter)
+    });
+  }
+
+  // time progress bar
+
+  function onPlayerTimeUpdate(playerElement){
+
+    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
+    setCurrentTrackTime(newCurrentTrackTime);
+
+    setCurrentTrackTimeSeconds(playerElement.duration);
+
+    let newcurrentTrackDuration = playerElement.duration;
+    if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
+    newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
+    setcurrentTrackDuration(newcurrentTrackDuration );
+
+    const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
+    setCurrentTrackProgress(newCurrentTrackProgress);
+    
+    if (playerElement.currentTime === playerElement.duration){
+      console.log('song ended');
+      onNextTrackPlayClick();
+    }
+
+  }
+
+  function millisToMinutesAndSeconds(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = time - minutes * 60;
+    seconds = Math.floor(seconds);
+    if (minutes < 10) minutes = "0" + minutes;
+    if (seconds < 10) seconds = "0" +  seconds;
+    const timestamp = minutes + ":" + seconds;
+    return timestamp;
+  }
+
+  // volume
+
+  function toggleAudioMuted(){
+    const newIsMuted = isMuted === true ? false : true;
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    if (newIsMuted === true) playerElement[0].volume = 0;
+    else playerElement[0].volume = audioVolume;
+    setIsMuted(newIsMuted);
+  }
+
+  // playlist
+
+  function togglePlaylistDisplay(){
+    const newShowPlaylistValue = showPlaylist === true ? false : true;
+    setShowPlaylist(newShowPlaylistValue);
+  }
+
+  // key press 
+
+  function handleKeyPress(e){
+    console.log(e.key)
+    if (e.key === 'Space'){
+      if (isPlaying === true) onPauseClick();
+      else onPlayClick();
     }
   }
+
+  /* RENDER */
+
+  let musicPlayerContainerCssClass = "";
+  if (showPlaylist === true) musicPlayerContainerCssClass += "show-playlist ";
+  if (isMobile === true) musicPlayerContainerCssClass += " is-mobile";
+
+  const audioElVolume = isMuted === true ? 0.0 : audioVolume;
+
+  return (
+    <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
+      <audio volume={audioElVolume} id="music-player-audio"></audio>
+      <MusicPlayerControlPanel 
+        playIndex={playIndex}
+        isPlaying={isPlaying}
+        isPaused={isPaused}
+        isMuted={isMuted}
+        isMobile={isMobile}
+        audioVolume={audioVolume}
+        currentTrackTime={currentTrackTime}
+        currentTrackDuration={currentTrackDuration}
+        currentTrackProgress={currentTrackProgress}
+        items={props.items}
+        theme={theme}
+        setTheme={(val) => setTheme(val)}
+        onUpdateCurrentTrackProgress={(val) => onUpdateCurrentTrackProgress(val)}
+        onChangeAudioVolume={(val) => setAudioVolume(val)}
+        onPlayClick={(reload) => onPlayClick(reload)}
+        onPauseClick={onPauseClick}
+        onPrevTrackPlayClick={onPrevTrackPlayClick}
+        onNextTrackPlayClick={onNextTrackPlayClick}
+        togglePlaylistDisplay={togglePlaylistDisplay}
+        toggleAudioMuted={() => toggleAudioMuted()}
+      />
+      <MusicPlayerPlaylist 
+        containerWidth={props.containerWidth}
+        title={props.product.title}
+        randomSupporter={randomSupporter}
+        items={props.items}
+        playIndex={playIndex}
+        isPlaying={isPlaying}
+        isPaused={isPaused}
+        isMobile={isMobile}
+        currentTrackTime={currentTrackTime}
+        currentTrackDuration={currentTrackDuration}
+        currentTrackProgress={currentTrackProgress}
+        togglePlaylistDisplay={togglePlaylistDisplay}
+        setPlayIndex={setPlayIndex}
+        onPlayClick={(reload) => onPlayClick(reload)}
+        onPauseClick={onPauseClick}
+      />
+    </div>
+  )
+}
+
+function MusicPlayerControlPanel(props){
+
+  /* COMPONENT */
+
+  function onChangeTrackProgressPosition(e){
+    props.onUpdateCurrentTrackProgress(e);
+  }
+
+  function onAfterChangeTrackProgressPosition(e){
+    // console.log(e);
+  }
+
+  function onChangeVolumeSliderPosition(e){
+    if (props.isMuted === false){
+      const newVolumeValue = e / 100;
+      props.onChangeAudioVolume(newVolumeValue);
+    }
+  }
+
+  function onAfterChangeVolumeSliderPosition(e){
+    // console.log(e);
+  }
+
+  function onVolumeIconClick(){
+    props.toggleAudioMuted()
+  }
+
+  function onThemeSwitchClick(){
+    const newThemeValue = props.theme === "dark" ? "light" : "dark";
+    props.setTheme(newThemeValue);
+  }
+
+  /* DISPLAY */
+
+  const playIndex = props.playIndex;
+
+  // audio controls display
 
   const playButtonElement = (
     <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="play-icon">
@@ -338,14 +374,284 @@ function MusicPlayerWrapper(props){
   )
 
   let playButtonDisplay;
-  if (isPlaying === true) playButtonDisplay = <span  onClick={() => onPauseClick()}>{pauseButtonElement}</span>
-  else playButtonDisplay = <span  onClick={() => onPlayClick(playIndex)}>{playButtonElement}</span>
+  if (props.isPlaying === true){
+    if (props.isMobile === true) playButtonDisplay = <span onTouchStart={() => props.onPauseClick()}>{pauseButtonElement}</span>
+    else playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
+  } else {
+    if (props.isMobile === true)  playButtonDisplay = <span onTouchStart={() => props.onPlayClick()}>{playButtonElement}</span>
+    else  playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
+  }
+
+  let audioControlsDisplay;
+
+  if (props.isMobile === true){
+    audioControlsDisplay = (
+      <div className="music-player-audio-control">
+        <span onTouchStart={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+        {playButtonDisplay}
+        <span onTouchStart={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+      </div>
+    )
+  } else {
+    audioControlsDisplay = (
+      <div className="music-player-audio-control">
+        <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+        {playButtonDisplay}
+        <span onClick={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+      </div>
+    )
+  }
+
+  // volume control
+
+  const volumeIcon = (
+    <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"verticalAlign":"middle"}}>
+      <g><path d="m23.4 5.4c6.7 1.5 11.6 7.5 11.6 14.6s-4.9 13.1-11.6 14.6v-3.4c4.8-1.4 8.2-5.9 8.2-11.2s-3.4-9.8-8.2-11.2v-3.4z m4.1 14.6c0 3-1.6 5.5-4.1 6.7v-13.4c2.5 1.2 4.1 3.7 4.1 6.7z m-22.5-5h6.6l8.4-8.4v26.8l-8.4-8.4h-6.6v-10z"></path></g>
+    </svg>
+  )
+
+  const noVolumeIcon = (
+    <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40"  style={{"verticalAlign":"middle"}}>
+      <g><path d="m20 6.6v7.1l-3.5-3.5z m-12.9-1.6l27.9 27.9-2.1 2.1-3.4-3.4c-1.8 1.4-3.9 2.5-6.1 3v-3.4c1.4-0.4 2.6-1.1 3.7-2l-7.1-7.1v11.3l-8.4-8.4h-6.6v-10h7.9l-7.9-7.9z m24.5 15c0-5.3-3.4-9.8-8.2-11.2v-3.4c6.7 1.5 11.6 7.5 11.6 14.6 0 2.5-0.6 4.9-1.7 7l-2.5-2.6c0.5-1.4 0.8-2.8 0.8-4.4z m-4.1 0c0 0.4 0 0.7-0.1 1l-4-4.1v-3.6c2.5 1.2 4.1 3.7 4.1 6.7z"></path></g>
+    </svg>
+  )
+
+  const volumeIconDisplay = props.isMuted === false ? volumeIcon : noVolumeIcon;
+  let musicPlayerVolumeControlCssClass = "music-player-volume-control";
+  if (props.isMuted) musicPlayerVolumeControlCssClass += " is-muted";
+  
+  const volumeControlDisplay = (
+    <div className={musicPlayerVolumeControlCssClass}>
+      <span className="volume-icon" onClick={onVolumeIconClick}>
+        {volumeIconDisplay}
+      </span>
+      <span className="volume-bar-container progress_bar">
+          <Slider 
+            min={0}
+            max={100}
+            value={props.audioVolume * 100}
+            onChange={onChangeVolumeSliderPosition}
+            onAfterChange={onAfterChangeVolumeSliderPosition}
+          />
+      </span>
+    </div>
+  )
+  
+  // cover 
+
+  const musicPlayerCoverDisplay = (
+    <div className="music-player-cover">
+      <figure><img src={props.items[playIndex].cover}/></figure>
+    </div>
+  )
+
+  // title
+
+  const musicPlayerTitleDisplay = (
+    <div className="music-player-track-title">
+      <h2>{props.items[playIndex].title}</h2>
+    </div>
+  )
+
+  // time display
+
+  let currentTrackTimeDisplay = props.currentTrackTime;
+  if (props.currentTrackTime === 0){
+    currentTrackTimeDisplay = '00:00'
+  }
+
+  let currentTrackDurationDisplay = props.currentTrackDuration;
+  if (props.currentTrackDuration === 0){
+    currentTrackDurationDisplay = <span className="infinite">&infin;</span>
+  }
+
+  const musicPlayerTimeDisplay = (
+    <div className="music-player-time-display">
+      <span className="current-track-time">{currentTrackTimeDisplay} </span>
+      <span className="current-track-progress">
+        <Slider 
+          min={0}
+          max={100}
+          value={props.currentTrackProgress}
+          onChange={onChangeTrackProgressPosition}
+          onAfterChange={onAfterChangeTrackProgressPosition}
+        />
+      </span>
+      <span className="current-track-duration">{currentTrackDurationDisplay}</span>
+    </div>
+  )
+
+  // mobile / desktop switch display
+
+  let musicPlayerControlPanelDisplay;
+  if (props.isMobile === true){
+    musicPlayerControlPanelDisplay = (
+      <div className="mobile-control-panel-wrapper">
+        {musicPlayerTitleDisplay}
+        {musicPlayerCoverDisplay}
+        {musicPlayerTimeDisplay}
+        <div className="music-player-controls-bar">
+          <div className="music-player-controls-wrapper">
+            {audioControlsDisplay}
+            <div className="playlist-toggle-container">
+              <span className="playlist-toggle-button" onTouchStart={() => props.togglePlaylistDisplay()}>
+                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align": "middle"}}>
+                  <g><path d="m28.4 10h8.2v3.4h-5v15c0 2.7-2.2 5-5 5s-5-2.3-5-5 2.3-5 5-5c0.6 0 1.2 0.1 1.8 0.3v-13.7z m-23.4 16.6v-3.2h13.4v3.2h-13.4z m20-10v3.4h-20v-3.4h20z m0-6.6v3.4h-20v-3.4h20z"></path></g>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  } else {
+    
+    let themeSwitchCssClass = "theme-switch-container rc-switch ";
+    if (props.theme === "light") themeSwitchCssClass += " checked";
+
+    musicPlayerControlPanelDisplay = (
+      <div className="desktop-control-panel-wrapper">
+        {musicPlayerCoverDisplay}
+        {musicPlayerTitleDisplay}
+        {musicPlayerTimeDisplay}
+        <div className="music-player-controls-bar">
+          <div className="music-player-controls-wrapper">
+            {audioControlsDisplay}
+            {volumeControlDisplay}
+            <div className="playlist-toggle-container">
+              <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+            </div>
+            <div className="theme-switch-wrapper">
+              <span className="theme-switch">
+                <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+                  <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /* RENDER */
 
   return (
-      <div id="music-player-wrapper" className={musicPlayerWrapperCssClass}>
-        <ReactJkMusicPlayer {...options} />
-        {sponsorDetailsDisplay}
+    <div id="music-player-control-panel">
+      {musicPlayerControlPanelDisplay}
+    </div>
+  )
+}
+
+function MusicPlayerPlaylist(props){
+
+  function onMusicPlayerPlaylistItemClick(val){
+    props.setPlayIndex(val);
+    if (props.isPlaying === false){
+      if (props.playIndex === val) props.onPlayClick();
+      else props.onPlayClick(true);
+    }
+    else {
+      if (props.playIndex === val) props.onPauseClick();
+      else props.onPlayClick(true);
+    }
+  }
+
+  const musicPlayerPlaylistItems = props.items.map((item,index) => (
+    <MusicPlayerPlaylistItem 
+      key={index}
+      index={index}
+      item={item}
+      playIndex={props.playIndex}
+      isPlaying={props.isPlaying}
+      isPaused={props.isPaused}
+      isMobile={props.isMobile}
+      onMusicPlayerPlaylistItemClick={(val) => onMusicPlayerPlaylistItemClick(val)}
+    />
+  ));
+
+  const musicPlayerPlaylistDisplay = <ul>{musicPlayerPlaylistItems}</ul>
+  
+
+  let randomSupporterDisplay;
+  if (props.randomSupporter && props.randomSupporter !== null){
+    randomSupporterDisplay = (
+      <div id="music-sponsor-display">
+        <span>made possible by supporters like</span>
+        <span className="sponsor-avatar">
+          <a href={"/u/" + props.randomSupporter.username}>
+            <img src={props.randomSupporter.profile_image_url}/>
+          </a>
+        </span>
+        <span>
+          {props.randomSupporter.username}
+        </span>
       </div>
+    )
+  }
+
+  let closeButtonDisplay = <a className="toggle-playlist" onClick={props.togglePlaylistDisplay}>X</a>
+  if (props.isMobile === true) closeButtonDisplay = <a className="toggle-playlist" onTouchStart={props.togglePlaylistDisplay}>X</a>
+
+  return (
+    <div id="music-player-playlist-panel">
+      <div id="music-player-playlist-header">
+        <h2>{props.title + " / " + props.items.length }</h2>
+        {closeButtonDisplay}
+      </div>
+      <div id="music-player-playlist">
+        <Scrollbars
+          width={props.containerWidth / 2}
+          height={250}
+        >
+          {musicPlayerPlaylistDisplay}
+        </Scrollbars>
+      </div>
+      <div id="music-player-playlist-footer">
+        {randomSupporterDisplay}
+      </div>
+    </div>
+  )
+}
+
+function MusicPlayerPlaylistItem(props){
+
+  const playButtonElement = (
+    <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="play-icon">
+        <g><path d="m20.1 2.9q4.7 0 8.6 2.3t6.3 6.2 2.3 8.6-2.3 8.6-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3z m8.6 18.3q0.7-0.4 0.7-1.2t-0.7-1.2l-12.1-7.2q-0.7-0.4-1.5 0-0.7 0.4-0.7 1.3v14.2q0 0.9 0.7 1.3 0.4 0.2 0.8 0.2 0.3 0 0.7-0.2z"></path></g>
+    </svg>
+  )
+
+  const pauseButtonElement = (
+      <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="pause-icon">
+          <g><path d="m18.7 26.4v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m10 0v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m8.6-6.4q0 4.7-2.3 8.6t-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3 8.6 2.3 6.3 6.2 2.3 8.6z"></path></g>
+      </svg>
+  )
+
+  const playlistItemPlayButtonDisplay = props.playIndex === props.index ? props.isPlaying === true ? pauseButtonElement : playButtonElement : '';
+  const playlistItemCssClass =  props.playIndex === props.index ? props.isPlaying === true ? 'is-playing' : 'is-paused' : '';
+
+  let musicPlayerPlaylistItemDisplay;
+  if (props.isMobile === true){
+    musicPlayerPlaylistItemDisplay = (
+      <a onTouchStart={() => props.onMusicPlayerPlaylistItemClick(props.index)}>
+        {playlistItemPlayButtonDisplay}
+        {props.item.title}
+      </a>
+    )
+  } else {
+    musicPlayerPlaylistItemDisplay = (
+      <a onClick={() => props.onMusicPlayerPlaylistItemClick(props.index)}>
+        {playlistItemPlayButtonDisplay}
+        {props.item.title}
+      </a>
+    )    
+  }
+
+  return (
+    <li className={"music-player-playlist-item " + playlistItemCssClass} >
+      {musicPlayerPlaylistItemDisplay}
+    </li>
   )
 }
 

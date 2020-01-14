@@ -13,6 +13,13 @@ const DomainsMenu = (props) => {
     )
   }
 
+  let opendesktopLabel = 'opendesktop.org';
+  if(state.baseUrl.endsWith('cc'))
+  {
+    opendesktopLabel = 'opendesktop.cc';
+  }
+  let plingLabel = 'pling';
+  let opencodeLabel = 'opencode.net';
     
   let cls =(props.onSwitchStyleChecked?'dark':'active');
   if(state.target && state.target.target=='gitlab')
@@ -29,12 +36,12 @@ const DomainsMenu = (props) => {
             <li className={cls}>              
               <a id="opendesktop-logo-single" href={state.baseUrl} >
                 <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                openDesktop.org  
+                {opendesktopLabel} 
               </a>            
                        
             </li>            
-            <li><a href={state.baseUrlStore}>Pling</a></li>
-            <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+            <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
+            <li><a href={state.baseUrlStore}>{plingLabel}</a></li>
           </>
         );
         break;
@@ -51,8 +58,8 @@ const DomainsMenu = (props) => {
                                       storeConfig ={state.storeConfig}
                                       />                   
               </li>
-              <li><a href={state.baseUrl}>openDesktop.org</a></li>
-              <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+              <li><a href={state.baseUrl}>{opendesktopLabel} </a></li>
+              <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
             </>
           );
           break;
@@ -64,10 +71,10 @@ const DomainsMenu = (props) => {
                   <img src={state.baseUrlStore + "/images_sys/store_kde/logo.png"} className="logo" />
                   { state.target.logoLabel }
                 </a>
-              </li>
-              <li><a href={state.baseUrlStore}>Pling</a></li>
-              <li><a href={state.baseUrl}>openDesktop.org</a></li>
-              <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+              </li>             
+              <li><a href={state.baseUrl}>{opendesktopLabel} </a></li>
+              <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
+              <li><a href={state.baseUrlStore}>{plingLabel}</a></li>
             </>
           );
           break;
@@ -77,33 +84,31 @@ const DomainsMenu = (props) => {
               <li className={cls}>
                 <a id="gitlab-logo" href={state.gitlabUrl + "/explore/projects"}>
                   <img src={state.baseUrl + "/theme/react/assets/img/logo-opencode.png"} className="logo" />
-                  Opencode 
+                  {opencodeLabel} 
                 </a>
               </li>
-              
-              <li><a href={state.baseUrlStore}>Pling</a></li>
-              <li><a href={state.baseUrl}>openDesktop.org</a></li>
-              
+              <li><a href={state.baseUrl}>{opendesktopLabel} </a></li>
+              <li><a href={state.baseUrlStore}>{plingLabel}</a></li>                            
             </>
           );
           break;
         case 'forum':
             
-            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'PM' : state.target.logoLabel;
+            let logoLabel =  window.location.href.indexOf('messages')>0 ? 'DM' : state.target.logoLabel;
             
             dT =(
               <>
                 <li className={cls}>                 
                     <a id="opendesktop-logo" href={state.baseUrl} >
                       <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                      openDesktop.org : 
+                      {opendesktopLabel} : 
                     </a>
                     <a href={state.target.link} style={{paddingLeft:'0px',marginLeft:'0px'}} >
                       <span className="target">{logoLabel}</span>
                     </a>                  
-                </li>
-                <li><a href={state.baseUrlStore}>Pling</a></li>
-                <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+                </li>                
+                <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
+                <li><a href={state.baseUrlStore}>{plingLabel}</a></li>
               </>
             );
             break;
@@ -113,14 +118,14 @@ const DomainsMenu = (props) => {
               <li className={cls}>                 
                   <a id="opendesktop-logo" href={state.baseUrl} >
                     <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-                    openDesktop.org : 
+                    {opendesktopLabel} : 
                   </a>
                   <a href={state.target.link} style={{paddingLeft:'0px',marginLeft:'0px'}}>
                     <span className="target">{ state.target.logoLabel }</span>
                   </a>                  
               </li>
-              <li><a href={state.baseUrlStore}>Pling</a></li>
-              <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+              <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
+              <li><a href={state.baseUrlStore}>{plingLabel}</a></li>              
             </>
           );
         break;
@@ -131,11 +136,11 @@ const DomainsMenu = (props) => {
         <li className={cls}>
           <a id="opendesktop-logo" href={state.baseUrl}>
             <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
-            openDesktop.org 
+            {opendesktopLabel} 
           </a>
-        </li>
-        <li><a href={state.baseUrlStore}>Pling</a></li>
-        <li><a href={state.gitlabUrl + "/explore/projects"}>Opencode</a></li>
+        </li>        
+        <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
+        <li><a href={state.baseUrlStore}>{plingLabel}</a></li>
       </>
     );
   }
