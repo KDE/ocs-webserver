@@ -21,8 +21,8 @@ function MusicPlayer(props){
 
   const [ playIndex, setPlayIndex ] = useState(0);
   const prevIndex = usePrevious(playIndex);
-  const [ isPlaying, setIsPlaying ] = useState(false);
-  const [ isPaused, setIsPaused ] = useState(false);
+  const [ isPlaying, setIsPlaying ] = useState();
+  const [ isPaused, setIsPaused ] = useState();
   const [ audioVolume, setAudioVolume ] = useState(0.5);
   const [ isMuted, setIsMuted ] = useState(false);
   const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
@@ -68,15 +68,19 @@ function MusicPlayer(props){
   },[audioVolume])
 
   useEffect(() => {
+    if (isPlaying || isPaused) onPlayClick();
     if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
   },[playIndex])
 
   // audio player
 
   function onPlayClick(reload,newPlayIndex){
+    console.log(newPlayIndex);
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     let pi = newPlayIndex ? newPlayIndex : playIndex;
     const currentSrc = props.items[pi].musicSrc;
+    console.log('current src on play click');
+    console.log(currentSrc);
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
@@ -105,7 +109,6 @@ function MusicPlayer(props){
           prevTrackIndex = playIndex - 1;
       }
       setPlayIndex(prevTrackIndex);
-      onPlayClick(true);
   }
 
   function onNextTrackPlayClick(){
@@ -116,7 +119,6 @@ function MusicPlayer(props){
           nextTrackIndex = playIndex + 1;
       }
       setPlayIndex(nextTrackIndex);
-      onPlayClick(true);
   }
  
   function onReportAudioPlay(musicSrc,newPlayIndex){  
@@ -132,21 +134,21 @@ function MusicPlayer(props){
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
 
-    console.log('played audio array - ');
+    /*console.log('played audio array - ');
     console.log(playedAudioArray);
     console.log('audio item index - ' + audioItemIndex);
     console.log('audio item - ')
     console.log(audioItem);
     console.log( playedAudioArray[audioItemIndex]);
-    console.log('is played - ' + playedAudioArray[audioItemIndex].played)
+    console.log('is played - ' + playedAudioArray[audioItemIndex].played)*/
 
     if (playedAudioArray[audioItemIndex].played === 0){
 
       const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-      console.log('audio start url - ' + audioStartUrl);
+      //console.log('audio start url - ' + audioStartUrl);
       $.ajax({url: audioStartUrl}).done(function(res) { 
-        console.log('ajax res - ');
-        console.log(res);
+        //console.log('ajax res - ');
+        //console.log(res);
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,
@@ -182,10 +184,10 @@ function MusicPlayer(props){
 
       const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.project_id + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
 
-      console.log(audioStopUrl);
+      //console.log(audioStopUrl);
 
       $.ajax({url: audioStopUrl}).done(function(res) { 
-        console.log(res);
+        //console.log(res);
         setPlayedAudioArray(newPLayedAudioArray);
       });
     } else {
@@ -580,15 +582,15 @@ function MusicPlayerControlPanel(props){
 function MusicPlayerPlaylist(props){
 
   function onMusicPlayerPlaylistItemClick(val){
-    props.setPlayIndex(val);
     if (props.isPlaying === false){
       if (props.playIndex === val) props.onPlayClick();
-      else props.onPlayClick(true,props.playIndex);
+      // else props.onPlayClick(true,props.playIndex);
     }
     else {
       if (props.playIndex === val) props.onPauseClick();
-      else props.onPlayClick(true,props.playIndex);
+      // else props.onPlayClick(true,props.playIndex);
     }
+    props.setPlayIndex(val);
   }
 
   const musicPlayerPlaylistItems = props.items.map((item,index) => (
