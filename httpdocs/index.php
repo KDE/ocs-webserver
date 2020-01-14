@@ -48,14 +48,9 @@ defined('APPLICATION_LIB')
 defined('APPLICATION_ENV')
 || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
-if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    require APPLICATION_LIB . '/Local/CrawlerDetect.php';
-    $crawler = crawlerDetect($_SERVER['HTTP_USER_AGENT']);
-    if ($crawler) {
-        define('SEARCHBOT_DETECTED', true);
-    } else {
-        define('SEARCHBOT_DETECTED', false);
-    }
+require APPLICATION_LIB . '/Local/CrawlerDetect.php';
+if (crawlerDetect($_SERVER['HTTP_USER_AGENT'])) {
+    define('SEARCHBOT_DETECTED', true);
 } else {
     define('SEARCHBOT_DETECTED', false);
 }
