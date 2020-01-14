@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import Slider from 'rc-slider'; 
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -20,6 +20,7 @@ function MusicPlayer(props){
   /* COMPONENT */
 
   const [ playIndex, setPlayIndex ] = useState(0);
+  const prevIndex = usePrevious(playIndex);
   const [ isPlaying, setIsPlaying ] = useState(false);
   const [ isPaused, setIsPaused ] = useState(false);
   const [ audioVolume, setAudioVolume ] = useState(0.5);
@@ -31,6 +32,8 @@ function MusicPlayer(props){
   const [ theme, setTheme ] = useState('dark');
   let initialPLayedAudioArray = []
   props.items.forEach(function(i,index){
+    let pl = 0;
+    if (index === 0) pl = -1;
     const pa = {
       ...i,
       played:0,
@@ -46,7 +49,7 @@ function MusicPlayer(props){
   const initialShowPlaylistValue = isMobile === true ? false : true;
   const [ showPlaylist, setShowPlaylist ] = useState(initialShowPlaylistValue);
 
-  React.useEffect(() => {
+  useEffect(() => {
       
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
@@ -59,10 +62,17 @@ function MusicPlayer(props){
   
   },[])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].volume = audioVolume;
   },[audioVolume])
+
+  useEffect(() => {
+    if (isPlaying === true){
+      console.log(prevIndex)
+      onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
+    }
+  },[playIndex])
 
   // audio player
 
@@ -73,6 +83,7 @@ function MusicPlayer(props){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+      
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -110,12 +121,10 @@ function MusicPlayer(props){
       onPlayClick(true);
   }
 
-  function onReportAudioPlay(musicSrc,newPlayIndex){
-
+  
+  function onReportAudioPlay(musicSrc,newPlayIndex){  
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
-    console.log('audio item - ' + audioItem);
     const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
-    console.log('audio item index - ' + audioItemIndex);
     const newAudioItem = {
       ...audioItem,
       played:audioItem.played + 1
@@ -125,16 +134,13 @@ function MusicPlayer(props){
       newAudioItem,
       ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
     ];
-    setPlayedAudioArray(newPLayedAudioArray);
 
     if (playedAudioArray[audioItemIndex].played === 0){
 
       const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
       
-      console.log(audioStartUrl);
-
       $.ajax({url: audioStartUrl}).done(function(res) { 
-        console.log(res);
+
         const newAudioItem = {
           ...audioItem,
           mediaViewId:res.MediaViewId,
@@ -147,10 +153,13 @@ function MusicPlayer(props){
         ];
         setPlayedAudioArray(newPLayedAudioArray);
       });
-    }    
+    } else {
+      setPlayedAudioArray(newPLayedAudioArray);
+    }
   }
 
   function onReportAudioStop(musicSrc){
+
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
     const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
@@ -311,6 +320,21 @@ function MusicPlayer(props){
       />
     </div>
   )
+}
+
+// Hook
+function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+  
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+  
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
 }
 
 function MusicPlayerControlPanel(props){
