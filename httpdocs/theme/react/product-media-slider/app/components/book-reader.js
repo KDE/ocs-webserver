@@ -53,10 +53,12 @@ function BookReaderWrapper(props){
 
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
-
         console.log('rendition.currentLocation():', rendition.currentLocation());
-        
+        console.log(book.locations);
+        console.log(locations.start.cfi);
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
+        console.log('books locations total - ')
+        console.log(books.locations.total);
         setTotalPages(book.locations.total)
         
         if (loading === true) setLoading(false);
