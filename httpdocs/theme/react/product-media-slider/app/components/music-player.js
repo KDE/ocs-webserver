@@ -66,7 +66,7 @@ function MusicPlayer(props){
 
   // audio player
 
-  function onPlayClick(reload){
+  function onPlayClick(reload,newPlayIndex){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     const currentSrc = props.items[playIndex].musicSrc;
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
@@ -77,7 +77,7 @@ function MusicPlayer(props){
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
-    onReportAudioPlay(currentSrc);
+    onReportAudioPlay(currentSrc,newPlayIndex);
   }
 
   function onPauseClick(){
@@ -110,10 +110,10 @@ function MusicPlayer(props){
       onPlayClick(true);
   }
 
-  function onReportAudioPlay(musicSrc){
+  function onReportAudioPlay(musicSrc,newPlayIndex){
 
     const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
-    const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+    const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
     const newAudioItem = {
       ...audioItem,
       played:audioItem.played + 1
@@ -549,11 +549,11 @@ function MusicPlayerPlaylist(props){
     props.setPlayIndex(val);
     if (props.isPlaying === false){
       if (props.playIndex === val) props.onPlayClick();
-      else props.onPlayClick(true);
+      else props.onPlayClick(true,props.playIndex);
     }
     else {
       if (props.playIndex === val) props.onPauseClick();
-      else props.onPlayClick(true);
+      else props.onPlayClick(true,props.playIndex);
     }
   }
 
