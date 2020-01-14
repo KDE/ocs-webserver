@@ -75,7 +75,8 @@ function MusicPlayer(props){
 
   function onPlayClick(reload,newPlayIndex){
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const currentSrc = props.items[playIndex].musicSrc;
+    let pi = newPlayIndex ? newPlayIndex : playIndex;
+    const currentSrc = props.items[pi].musicSrc;
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
