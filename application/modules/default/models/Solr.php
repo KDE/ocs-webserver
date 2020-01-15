@@ -200,8 +200,10 @@ class Default_Model_Solr
         {
             $currentStoreConfig = Zend_Registry::get('store_config');                                  
         }  
-
-        $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');        
+        if($currentStoreConfig->store_id)
+        {
+            $params['fq'] = array('stores:(' . $currentStoreConfig->store_id . ')');        
+        }        
         $csmodel  = new Default_Model_ConfigStoreTags();
         $packageFilter = $csmodel->getPackageTagsForStore($currentStoreConfig->store_id);       
         if($packageFilter)
