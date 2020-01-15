@@ -33,12 +33,12 @@ class Default_Model_Views
 
     public static function saveViewProduct($product_id)
     {
-        self::saveViewObject(self::OBJECT_TYPE_PRODUCT, $product_id);
+        $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_PRODUCT, $product_id, $sql);
     }
 
-    public static function saveViewObject($object_type, $object_id)
+    protected static function saveViewObject($object_type, $object_id, $sql)
     {
-        $sql = ("INSERT IGNORE INTO `stat_page_impression` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
         $session = new Zend_Session_Namespace();
         $view_member_id = Zend_Auth::getInstance()->hasIdentity() ? Zend_Auth::getInstance()->getIdentity()->member_id : null;
         $ipClient = Zend_Controller_Front::getInstance()->getRequest()->getClientIp();
@@ -49,10 +49,12 @@ class Default_Model_Views
         $session_ipv4 = isset($session->stat_ipv4) ? inet_pton($session->stat_ipv4) : null;
         $session_remote = isset($remoteAddress) ? inet_pton($remoteAddress) : null;
         $ip_inet = isset($session_ipv6) ? $session_ipv6 : (isset($session_ipv4) ? $session_ipv4 : $session_remote);
+        $time = (round(time() / 300)) * 300;
+        $seen_at = date('Y-m-d H:i:s', $time);
 
         try {
             Zend_Db_Table::getDefaultAdapter()->query($sql, array(
-                'seen'        => round(time() / 300),
+                'seen'        => $seen_at,
                 'ip_inet'     => $ip_inet,
                 'object_type' => $object_type,
                 'product_id'  => $object_id,
@@ -94,17 +96,20 @@ class Default_Model_Views
 
     public static function saveViewMemberpage($member_id)
     {
-        self::saveViewObject(self::OBJECT_TYPE_MEMBERPAGE, $member_id);
+        $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_MEMBERPAGE, $member_id, $sql);
     }
 
-    public static function saveViewDownload($file_id)
+    public static function saveFileDownload($file_id)
     {
-        self::saveViewObject(self::OBJECT_TYPE_DOWNLOAD, $file_id);
+        $sql = ("INSERT IGNORE INTO `stat_object_download` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_DOWNLOAD, $file_id, $sql);
     }
 
     public static function saveViewCollection($_projectId)
     {
-        self::saveViewObject(self::OBJECT_TYPE_COLLECTION, $_projectId);
+        $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_COLLECTION, $_projectId, $sql);
     }
 
 }
