@@ -1354,6 +1354,7 @@ video:focus {
         > div {
           float: left;
           height: 30px;
+          position: relative;
 
           &.music-player-audio-control {
             span {
@@ -1373,54 +1374,6 @@ video:focus {
               border-radius: 12px;
               font-weight: bold;
               cursor: pointer;
-            }
-          }
-          
-          &.music-player-volume-control {
-            float: right;
-            span {
-              display: block;
-              float: left;
-
-              &.volume-bar-container {
-                width: 26px;
-                display: block;
-                float: left;
-                height: 0;
-                padding: 0 6px;
-                position: absolute;
-                bottom: 38px;
-                background-color: rgba(62, 61, 61, 0.8);
-                .transition();
-                
-                .rc-slider {
-                  opacity: 0;
-                  .transition();
-
-                  .rc-slider-handle {
-                    left: 0;
-                  }
-                }
-              }
-            }
-
-            &:hover {
-              .volume-bar-container {
-                overflow: hidden;
-                height: 100px;
-                padding: 10px 6px 15px;
-
-                .rc-slider {
-                  opacity: 1;
-                }
-              }
-            }
-
-            &.is-muted {
-              .rc-slider-track,
-              .rc-slider-handle {
-                opacity: 0;
-              }
             }
           }
 
@@ -1490,6 +1443,61 @@ video:focus {
                 left: 39px;
                 background-color: white;
               }
+            }
+          }
+        }
+
+        .music-player-volume-control {
+          float: right;
+
+          span {
+            display: block;
+            float: left;
+          }
+          
+          .volume-bar-container {
+            width: 26px;
+            display: block;
+            float: left;
+            height: 0;
+            padding: 0 6px;
+            position: absolute;
+            bottom: 30px;
+            background-color: rgba(62, 61, 61, 0.8);
+            .transition();
+            
+            .rc-slider {
+              opacity: 0;
+              .transition();
+
+              .rc-slider-handle {
+                left: 0;
+              }
+            }
+
+            &:hover {
+              .rc-slider {
+                opacity: 1;
+              }
+            }
+          }
+
+          &:hover {
+            .volume-bar-container {
+              overflow: hidden;
+              height: 100px;
+              padding: 10px 6px 15px;
+
+              .rc-slider {
+                opacity: 1;
+              }
+            }
+          }
+
+          &.is-muted {
+            .rc-slider-track,
+            .rc-slider-handle {
+              opacity: 0;
             }
           }
         }
@@ -1677,32 +1685,60 @@ video:focus {
 
       .music-player-controls-bar {
         padding: 0;
-
         .music-player-controls-wrapper {
-          width: 240px;
-        }
-        .music-player-audio-control {
           width: 100%;
-          height: auto;
-
-          span {
-            padding: 0 16px !important;
+          .music-player-audio-control {
+            display: table;
+            width: 240px;
+            height: auto;
+            margin: 0 auto;
+            float: none;
+  
+            span {
+              padding: 0 16px !important;
+            }
+  
+            .play-icon,
+            .pause-icon {
+              font-size: 60px;
+            }  
+  
+            .prev-icon,
+            .next-icon {
+              font-size: 40px;
+              margin-top: 8px;
+            }
           }
+          .bottom-controls {
+            float: left;
+            height: 30px;
+            width: 100%;
 
-          .play-icon,
-          .pause-icon {
-            font-size: 60px;
-          }  
+            .music-player-volume-control {
+              float: left;
+              width: 50%;
 
-          .prev-icon,
-          .next-icon {
-            font-size: 40px;
-            margin-top: 8px;
+              .volume-bar-container {
+                opacity: 1;
+                position: relative;
+                bottom: 0;
+                left: 0;
+                width: calc(100% - 50px);
+                height: 26px;
+                padding: 6px 10px 6px 10px;
+                background: transparent;
+
+                .rc-slider {
+                  opacity: 1;
+                }
+              }
+            }
           }
         }
-
         .playlist-toggle-container {
-          width: 100%;
+          width: 50%;
+          float: right;
+          text-align: right;
         }
       }
     }
