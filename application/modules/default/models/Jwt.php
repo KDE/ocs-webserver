@@ -68,4 +68,5 @@ class Default_Model_Jwt
 
         return JWT::encode($payload, $config->secret, $algo = 'HS256');
     }
+
 }

@@ -738,45 +738,48 @@ class Embedv1Controller extends Zend_Controller_Action
     protected function _getPploadFiles($ppload_collection_id)
     {
         $result = array();
-         $pploadApi = new Ppload_Api(array(
-             'apiUri'   => PPLOAD_API_URI,
-             'clientId' => PPLOAD_CLIENT_ID,
-             'secret'   => PPLOAD_SECRET
-         ));
-        if ($ppload_collection_id)
-        {
-             $filesRequest = array(
-                 'collection_id' => $ppload_collection_id,
-                  'perpage'       => 100
-             );
+        $pploadApi = new Ppload_Api(array(
+            'apiUri'   => PPLOAD_API_URI,
+            'clientId' => PPLOAD_CLIENT_ID,
+            'secret'   => PPLOAD_SECRET
+        ));
+        if ($ppload_collection_id) {
+            $filesRequest = array(
+                'collection_id' => $ppload_collection_id,
+                'perpage'       => 100
+            );
 
-             $filesResponse = $pploadApi->getFiles($filesRequest);
+            $filesResponse = $pploadApi->getFiles($filesRequest);
 
-             if (isset($filesResponse->status)  && $filesResponse->status == 'success') {
-                 $i=0;
-                 foreach ($filesResponse->files as $file) {
-                     $downloadLink = PPLOAD_API_URI . 'files/download/'. 'id/' . $file->id . '/' . $file->name;
-                     $tags = $this->_parseFileTags($file->tags);
-                     $p_type = $this->_getPackagetypeText($tags['packagetypeid']);
-                     $p_lice = $this->_getLicenceText($tags['licensetype']);
-                     $result[] = array(
-                                                        'id' =>$file->id,
-                                                        'downloadlink'=>$downloadLink,
-                                                        'name'=> $file->name,
-                                                        'version'=> $file->version,
-                                                        'description'=> $file->description,
-                                                        'type'=> $file->type,
-                                                        'downloaded_count'  => $file->downloaded_count,
-                                                        'size'                         => round($file->size / (1024*1024),2),
-                                                        'license'                    => $p_lice,
-                                                        'package_type'          => $p_type,
-                                                        'package_arch'          => $tags['packagearch'],
-                                                        'created'                    =>$file->created_timestamp ,
-                                                        'updated'                   =>$file->updated_timestamp
-                        );
-                 }
-             }
-         }
+            if (isset($filesResponse->status) && $filesResponse->status == 'success') {
+                $i = 0;
+                foreach ($filesResponse->files as $file) {
+                    $downloadLink = PPLOAD_API_URI . 'files/download/' . 'id/' . $file->id . '/' . $file->name;
+                    $payload = array('id' => $file->id);
+                    $downloadLink = Default_Model_PpLoad::createDownloadUrlJwt($ppload_collection_id, $file->name, $payload);
+
+                    $tags = $this->_parseFileTags($file->tags);
+                    $p_type = $this->_getPackagetypeText($tags['packagetypeid']);
+                    $p_lice = $this->_getLicenceText($tags['licensetype']);
+                    $result[] = array(
+                        'id'               => $file->id,
+                        'downloadlink'     => $downloadLink,
+                        'name'             => $file->name,
+                        'version'          => $file->version,
+                        'description'      => $file->description,
+                        'type'             => $file->type,
+                        'downloaded_count' => $file->downloaded_count,
+                        'size'             => round($file->size / (1024 * 1024), 2),
+                        'license'          => $p_lice,
+                        'package_type'     => $p_type,
+                        'package_arch'     => $tags['packagearch'],
+                        'created'          => $file->created_timestamp,
+                        'updated'          => $file->updated_timestamp
+                    );
+                }
+            }
+        }
+
         return $result;
     }
 

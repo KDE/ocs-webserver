@@ -32,10 +32,9 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $file_name = $this->getParam('file_name');
         $file_size = $this->getParam('file_size');
         $projectId = $this->getParam('project_id');
+        $linkType = "download";
         if ($this->hasParam('link_type')) {
             $linkType = $this->getParam('link_type');
-        } else {
-            $linkType = "download";
         }
         $isExternal = $this->getParam('is_external');
         $externalLink = $this->getParam('external_link');
@@ -71,58 +70,8 @@ class DlController extends Local_Controller_Action_DomainSwitch
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            /*
-            //Log download
-            try {
-                $filesDl = new Default_Model_DbTable_PploadFilesDownloaded();
-                $id = $filesDl->getNewId();
-                $data = array('id' => $id, 'client_id' => PPLOAD_CLIENT_ID, 'owner_id' => $productInfo->member_id, 'collection_id' => $collectionID, 'file_id' => $file_id, 'downloaded_timestamp' => new Zend_Db_Expr ('Now()'), 'downloaded_ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
-                if(!empty($memberId)) {
-                   $data['user_id'] = $memberId;
-                }
-                $data['source'] = 'OCS-Webserver';
-                $data['link_type'] = $linkType;
-
-                $filesDl->createRow($data)->save();
-
-            } catch (Exception $exc) {
-                //echo $exc->getTraceAsString();
-                $errorLog = Zend_Registry::get('logger');
-                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
-            }
-            */
-
-            //create ppload download hash: secret + collection_id + expire-timestamp
-            $salt = PPLOAD_DOWNLOAD_SECRET;
-
-            $timestamp = time() + 3600; // one hour valid
-            //20181009 ronald: change hash from MD5 to SHA512
-            //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-            $hash = hash('sha512',
-                $salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-
-            // handle cookie
-            $config = Zend_Registry::get('config');
-            $cookieName = $config->settings->session->auth->anonymous;
-            $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : null;
-            if (!$storedInCookie) {
-                $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
-                $cookieExpire = time() + $remember_me_seconds;
-                $storedInCookie = $hash;
-                setcookie($cookieName, $hash, $cookieExpire, '/');
-            }
-
-            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp;
-            if (isset($memberId)) {
-                $url .= '/u/' . $memberId;
-            }
-            $url .= '/c/' . $storedInCookie;
-            $url .= '/lt/' . $linkType . '/' . $file_name;
-
-            $session = new Zend_Session_Namespace();
-            $payload = array('id'=>$file_id, 's'=>$hash, 't'=> $timestamp, 'u'=>$memberId, 'c'=>$storedInCookie, 'lt'=>$linkType, 'stfp'=>$session->stat_fp, 'stip'=>$session->stat_ipv6?$session->stat_ipv6:$session->stat_ipv4);
-            $jwt = Default_Model_Jwt::encodeFromArray($payload);
-            $url = PPLOAD_API_URI . 'files/download/j/'.$jwt.'/'.$file_name;
+            $payload = array('id' => $file_id, 'u' => $memberId, 'lt' => $linkType);
+            $url = Default_Model_PpLoad::createDownloadUrlJwt($collectionID, $file_name, $payload);
 
             if ($linkType == 'install') {
                 $helperCatXdgType = new Default_View_Helper_CatXdgType();
@@ -133,13 +82,11 @@ class DlController extends Local_Controller_Action_DomainSwitch
                        . '&type=' . urlencode($xdgType)
                        . '&filename=' . urldecode($file_name);
             }
-            $this->view->url = $url;
 
+            $this->view->url = $url;
 
             // save to member_download_history            
             if (isset($file_id) && isset($projectId)) {
-
-                // $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());               
 
                 $server_info = '';
 
@@ -149,6 +96,17 @@ class DlController extends Local_Controller_Action_DomainSwitch
                     }
                 }
 
+                // handle cookie
+                $config = Zend_Registry::get('config');
+                $cookieName = $config->settings->session->auth->anonymous;
+                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : null;
+                if (!$storedInCookie) {
+                    $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+                    $cookieExpire = time() + $remember_me_seconds;
+                    $hash = hash('sha512', PPLOAD_DOWNLOAD_SECRET . $collectionID . (time() + 3600));
+                    $storedInCookie = $hash;
+                    setcookie($cookieName, $hash, $cookieExpire, '/');
+                }
 
                 $data = array(
                     'project_id'           => $projectId,
@@ -171,28 +129,14 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
                 $memberDlHistory->createRow($data)->save();
             }
-
-
-            // anonymous dl save to member_download_fingerprint 17.07 temperately deactived
-            /*if(isset($file_id) && isset($projectId) && !isset($memberId)) {
-                $config = Zend_Registry::get('config');                
-                $cookieName = $config->settings->session->auth->anonymous;
-                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-                if(!$storedInCookie)
-                {
-                   $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
-                   $cookieExpire = time() + $remember_me_seconds;
-                   setcookie($cookieName, $hash, $cookieExpire, '/'); 
-                }
-
-                $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
-                $data = array('project_id' => $projectId, 'user' => $_COOKIE[$cookieName], 'file_id' => $file_id);
-                $memberDlAnonymous->createRow($data)->save();
-            }*/
         }
     }
 
-    function humanFileSize($bytes)
+    /**
+     * @param int $bytes
+     * @return string|null
+     */
+    public function humanFileSize($bytes)
     {
         if (!empty($bytes)) {
             $size = round($bytes / 1048576, 2);
@@ -206,7 +150,7 @@ class DlController extends Local_Controller_Action_DomainSwitch
         }
     }
 
-    function getRealIpAddr()
+    public function getRealIpAddr()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
         {
@@ -221,7 +165,10 @@ class DlController extends Local_Controller_Action_DomainSwitch
         return $ip;
     }
 
-    function getReferer()
+    /**
+     * @return mixed|null
+     */
+    protected function getReferer()
     {
         $referer = null;
         if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -231,7 +178,12 @@ class DlController extends Local_Controller_Action_DomainSwitch
         return $referer;
     }
 
-    function formatBytes($bytes, $precision = 2)
+    /**
+     * @param int $bytes
+     * @param int $precision
+     * @return string
+     */
+    protected function formatBytes($bytes, $precision = 2)
     {
         $units = array('B', 'KB', 'MB', 'GB', 'TB');
 
