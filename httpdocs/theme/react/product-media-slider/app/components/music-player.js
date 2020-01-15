@@ -69,7 +69,10 @@ function MusicPlayer(props){
 
   useEffect(() => {
     if (isPlaying) onPlayClick(true);
-    if (isPaused) onPlayClick();
+    if (isPaused){
+        if (prevIndex === playIndex) onPlayClick();
+        else  onPlayClick(true);
+    }
     if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
   },[playIndex])
 

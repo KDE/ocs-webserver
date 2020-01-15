@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef} from "react";
 import StoreContextProvider,{Context} from './context-provider.js';
 import { isMobile   } from 'react-device-detect';
 import { getImageUrl } from './product-browse-helpers';
+import Slider from 'rc-slider'; 
+import { Scrollbars } from 'react-custom-scrollbars';
+
 
 export function ProductBrowseItem(props){
 
@@ -434,5 +437,203 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
         </div>
     )
 }
+
+function MusicPlayerWrapper(props){
+
+    return (
+      <div>
+        <MusicPlayer 
+          product={props.product}
+          items={props.slide.items} 
+          containerWidth={props.width}
+        />
+      </div>
+    )
+}
+
+
+function MusicPlayer(props){
+
+    /* COMPONENT */
+  
+    const [ playIndex, setPlayIndex ] = useState(0);
+    const prevIndex = usePrevious(playIndex);
+    const [ isPlaying, setIsPlaying ] = useState();
+    const [ isPaused, setIsPaused ] = useState();
+
+    let initialPLayedAudioArray = []
+    props.items.forEach(function(i,index){
+      let pl = 0;
+      if (index === 0) pl = -1;
+      const pa = {
+        ...i,
+        played:0,
+        stopped:0
+      }
+      initialPLayedAudioArray.push(pa);
+    })
+    const [ playedAudioArray, setPlayedAudioArray ] = useState(initialPLayedAudioArray);
+  
+    const initialIsMobileValue = props.containerWidth < 600 ? true : false;
+    const [ isMobile, setIsMobile ] = useState(initialIsMobileValue);
+    
+    useEffect(() => {
+        
+      const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+      const currentSrc = props.items[playIndex].musicSrc;
+      
+      playerElement[0].src = currentSrc;
+      playerElement[0].volume = audioVolume;
+      playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
+      
+      // getRandomMusicsupporter();
+    
+    },[])
+  
+    useEffect(() => {
+      if (isPlaying) onPlayClick(true);
+      if (isPaused){
+          if (prevIndex === playIndex) onPlayClick();
+          else  onPlayClick(true);
+      }
+      if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
+    },[playIndex])
+  
+    // audio player
+  
+    function onPlayClick(reload,newPlayIndex){
+      const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+      let pi = newPlayIndex ? newPlayIndex : playIndex;
+      const currentSrc = props.items[pi].musicSrc;
+      if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
+        playerElement[0].src = currentSrc;
+      }
+      playerElement[0].play();
+      setIsPlaying(true);
+      setIsPaused(false);
+      onReportAudioPlay(currentSrc,newPlayIndex);
+    }
+  
+    function onPauseClick(){
+      const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+      playerElement[0].pause();
+      setIsPlaying(false);
+      setIsPaused(true);
+      onReportAudioStop(props.items[playIndex].musicSrc)
+    }
+  
+    function onPrevTrackPlayClick(){
+        let prevTrackIndex;
+        if (playIndex === 0){
+            prevTrackIndex = props.items.length - 1;
+        } else {
+            prevTrackIndex = playIndex - 1;
+        }
+        setPlayIndex(prevTrackIndex);
+    }
+  
+    function onNextTrackPlayClick(){
+        let nextTrackIndex;
+        if (playIndex + 1 === props.items.length){
+            nextTrackIndex = 0;
+        } else {
+            nextTrackIndex = playIndex + 1;
+        }
+        setPlayIndex(nextTrackIndex);
+    }
+   
+    function onReportAudioPlay(musicSrc,newPlayIndex){  
+      
+        const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+      const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+      const newAudioItem = {
+        ...audioItem,
+        played:audioItem.played + 1
+      }
+      
+      const newPLayedAudioArray = [
+        ...playedAudioArray.slice(0,audioItemIndex),
+        newAudioItem,
+        ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+      ];
+  
+      if (playedAudioArray[audioItemIndex].played === 0){
+  
+        const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+        //console.log('audio start url - ' + audioStartUrl);
+        $.ajax({url: audioStartUrl}).done(function(res) { 
+          //console.log('ajax res - ');
+          //console.log(res);
+          const newAudioItem = {
+            ...audioItem,
+            mediaViewId:res.MediaViewId,
+            played:audioItem.played + 1
+          }
+          const newPLayedAudioArray = [
+            ...playedAudioArray.slice(0,audioItemIndex),
+            newAudioItem,
+            ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+          ];
+          setPlayedAudioArray(newPLayedAudioArray);
+        });
+      } else {
+        setPlayedAudioArray(newPLayedAudioArray);
+      }
+    }
+  
+    function onReportAudioStop(musicSrc){
+  
+      const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
+      const audioItemIndex = playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+      const newAudioItem = {
+        ...audioItem,
+        stopped:audioItem.stopped + 1
+      }
+      const newPLayedAudioArray = [
+        ...playedAudioArray.slice(0,audioItemIndex),
+        newAudioItem,
+        ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+      ];
+  
+      if  (playedAudioArray[audioItemIndex].stopped === 0){
+  
+        const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.project_id + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+  
+        //console.log(audioStopUrl);
+  
+        $.ajax({url: audioStopUrl}).done(function(res) { 
+          //console.log(res);
+          setPlayedAudioArray(newPLayedAudioArray);
+        });
+      } else {
+        setPlayedAudioArray(newPLayedAudioArray);
+      }
+    }
+  
+    /* RENDER */
+  
+    let musicPlayerContainerCssClass = "";
+    if (showPlaylist === true) musicPlayerContainerCssClass += "show-playlist ";
+    if (isMobile === true) musicPlayerContainerCssClass += " is-mobile";
+  
+    const audioElVolume = isMuted === true ? 0.0 : audioVolume;
+  
+    return (
+      <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
+        <audio volume={audioElVolume} id="music-player-audio"></audio>
+        <MusicPlayerControlPanel 
+          playIndex={playIndex}
+          isPlaying={isPlaying}
+          isPaused={isPaused}
+          isMobile={isMobile}
+          onPlayClick={(reload) => onPlayClick(reload)}
+          onPauseClick={onPauseClick}
+          onPrevTrackPlayClick={onPrevTrackPlayClick}
+          onNextTrackPlayClick={onNextTrackPlayClick}
+        />
+      </div>
+    )
+  }
+  
 
 export default ProductBrowseItem;
