@@ -148,12 +148,17 @@ div#preloaded-images {
 
                                     <?php
                                         echo $this->aboutmeUserInfo. ' '. $this->earnInfo;
-                                        if($isSupporterActive)
+                                        if($isSupporterSection)
                                         {
                                             $info = new Default_Model_Info();
                                             $activemonths = $info->getSupporterActiveMonths($this->member->member_id);
-                                            echo ' I am active supporter for '.$activemonths['active_months'].' months.';
-                                        }
+                                            if($isSupporterActive)
+                                            {
+                                                echo " I'm an active supporter for ".$activemonths['active_months'].' months.';    
+                                            }else{
+                                                echo " I have been a supporter for ".$activemonths['active_months'].' months.';    
+                                            }                                            
+                                        }                                        
                                     ?>
 
                                 </div>

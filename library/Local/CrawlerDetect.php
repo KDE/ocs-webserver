@@ -39,7 +39,7 @@ function crawlerDetect($USER_AGENT)
         array('MegaIndex.ru' , 'MegaIndex.ru'),
         array('Baiduspider', 'Baiduspider'),
         array('YandexBot', 'YandexBot'),
-        array('AhrefsBot', 'ahrefs.com/robot'),
+        array('AhrefsBot', 'Mozilla/5.0 (compatible; AhrefsBot/6.1; +http://ahrefs.com/robot/)'),
         array('ltx71', 'ltx71'),
         array('msnbot', 'MSN'),
         array('Rambler', 'Rambler'),
@@ -60,7 +60,7 @@ function crawlerDetect($USER_AGENT)
         array('IDBot', 'ID-Search Bot'),
         array('eStyle', 'eStyle Bot'),
         array('Scrubby', 'Scrubby robot'),
-        array('MJ12bot','http://mj12bot.com/'),
+        array('MJ12bot','Mozilla/5.0 (compatible; MJ12bot/v1.4.8; http://mj12bot.com/)'),
         array('SemrushBot', 'SemrushBot'),
         array('bingbot','bingbot'),
         array('DotBot','http://www.opensiteexplorer.org/dotbot'),
@@ -99,7 +99,9 @@ function crawlerDetect($USER_AGENT)
         array('python-requests','python-requests/2.22.0'),
         array('Cliqzbot','Mozilla/5.0 (compatible; Cliqzbot/3.0; +http://cliqz.com/company/cliqzbot)'),
         array('YisouSpider','YisouSpider'),
-        array('trendictionbot','Mozilla/5.0 (Windows NT 10.0; Win64; x64; trendictionbot0.5.0; trendiction search; http://www.trendiction.de/bot; please let us know of any problems; web at trendiction.com) Gecko/20170101 Firefox/67.0')
+        array('trendictionbot','Mozilla/5.0 (Windows NT 10.0; Win64; x64; trendictionbot0.5.0; trendiction search; http://www.trendiction.de/bot; please let us know of any problems; web at trendiction.com) Gecko/20170101 Firefox/67.0'),
+        array('Seekport','Mozilla/5.0 (compatible; Seekport Crawler; http://seekport.com/)'),
+        array('GarlikCrawler','GarlikCrawler/1.2 (http://garlik.com/, crawler@garlik.com)')
     );
 
     foreach ($crawlers as $c)
