@@ -1105,8 +1105,8 @@ video:focus {
   padding: 10px 0;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper {
-  margin: 0 auto;
-  display: table;
+  width: 100%;
+  float: left;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div {
   float: left;
@@ -1118,6 +1118,7 @@ video:focus {
   float: left;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.playlist-toggle-container {
+  float: right;
   padding: 3px;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.playlist-toggle-container .playlist-toggle-button {
@@ -1128,15 +1129,22 @@ video:focus {
   font-weight: bold;
   cursor: pointer;
 }
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control {
+  float: right;
+}
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span {
   display: block;
   float: left;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span.volume-bar-container {
+  width: 26px;
   display: block;
   float: left;
-  width: 0;
-  padding: 6px 0;
+  height: 0;
+  padding: 0 6px;
+  position: absolute;
+  bottom: 38px;
+  background-color: rgba(62, 61, 61, 0.8);
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -o-transition: all 0.2s ease-out;
@@ -1149,10 +1157,13 @@ video:focus {
   -o-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span.volume-bar-container .rc-slider .rc-slider-handle {
+  left: 0;
+}
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container {
   overflow: hidden;
-  width: 100px;
-  padding: 6px 10px;
+  height: 100px;
+  padding: 10px 6px 15px;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container .rc-slider {
   opacity: 1;

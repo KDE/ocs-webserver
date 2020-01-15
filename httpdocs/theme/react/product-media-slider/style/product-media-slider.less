@@ -1348,8 +1348,8 @@ video:focus {
       padding: 10px 0;
 
       .music-player-controls-wrapper {
-        margin: 0 auto;
-        display: table;
+        width: 100%;
+        float: left;
 
         > div {
           float: left;
@@ -1364,6 +1364,7 @@ video:focus {
           }
 
           &.playlist-toggle-container {
+            float: right;
             padding: 3px;
             .playlist-toggle-button {
               background: rgba(0,0,0,0.2);
@@ -1376,20 +1377,29 @@ video:focus {
           }
           
           &.music-player-volume-control {
+            float: right;
             span {
               display: block;
               float: left;
 
               &.volume-bar-container {
+                width: 26px;
                 display: block;
                 float: left;
-                width: 0;
-                padding: 6px 0;
+                height: 0;
+                padding: 0 6px;
+                position: absolute;
+                bottom: 38px;
+                background-color: rgba(62, 61, 61, 0.8);
                 .transition();
                 
                 .rc-slider {
                   opacity: 0;
                   .transition();
+
+                  .rc-slider-handle {
+                    left: 0;
+                  }
                 }
               }
             }
@@ -1397,8 +1407,8 @@ video:focus {
             &:hover {
               .volume-bar-container {
                 overflow: hidden;
-                width: 100px;
-                padding: 6px 10px;
+                height: 100px;
+                padding: 10px 6px 15px;
 
                 .rc-slider {
                   opacity: 1;

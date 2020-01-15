@@ -68,7 +68,8 @@ function MusicPlayer(props){
   },[audioVolume])
 
   useEffect(() => {
-    if (isPlaying || isPaused) onPlayClick();
+    if (isPlaying) onPlayClick(true);
+    if (isPaused) onPlayClick();
     if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
   },[playIndex])
 
@@ -464,6 +465,7 @@ function MusicPlayerControlPanel(props){
             min={0}
             max={100}
             value={props.audioVolume * 100}
+            vertical={true}
             onChange={onChangeVolumeSliderPosition}
             onAfterChange={onAfterChangeVolumeSliderPosition}
           />
@@ -519,6 +521,7 @@ function MusicPlayerControlPanel(props){
 
   let musicPlayerControlPanelDisplay;
   if (props.isMobile === true){
+
     musicPlayerControlPanelDisplay = (
       <div className="mobile-control-panel-wrapper">
         {musicPlayerTitleDisplay}
@@ -527,6 +530,7 @@ function MusicPlayerControlPanel(props){
         <div className="music-player-controls-bar">
           <div className="music-player-controls-wrapper">
             {audioControlsDisplay}
+            {volumeControlDisplay}
             <div className="playlist-toggle-container">
               <span className="playlist-toggle-button" onTouchStart={() => props.togglePlaylistDisplay()}>
                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align": "middle"}}>
@@ -538,9 +542,18 @@ function MusicPlayerControlPanel(props){
         </div>
       </div>
     )
+  
   } else {
     
     let themeSwitchCssClass = "theme-switch-container rc-switch ";
+    /*<div className="theme-switch-wrapper">
+      <span className="theme-switch">
+        <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+          <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
+        </button>
+      </span>
+    </div>*/
+
     if (props.theme === "light") themeSwitchCssClass += " checked";
 
     musicPlayerControlPanelDisplay = (
@@ -550,18 +563,11 @@ function MusicPlayerControlPanel(props){
         {musicPlayerTimeDisplay}
         <div className="music-player-controls-bar">
           <div className="music-player-controls-wrapper">
-            {audioControlsDisplay}
-            {volumeControlDisplay}
-            <div className="playlist-toggle-container">
-              <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
-            </div>
-            <div className="theme-switch-wrapper">
-              <span className="theme-switch">
-                <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
-                  <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
-                </button>
-              </span>
-            </div>
+              {audioControlsDisplay}
+              <div className="playlist-toggle-container">
+                <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+              </div>
+              {volumeControlDisplay}
           </div>
         </div>
       </div>
