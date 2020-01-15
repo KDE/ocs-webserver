@@ -75,17 +75,15 @@ function MusicPlayer(props){
   // audio player
 
   function onPlayClick(reload,newPlayIndex){
-    console.log(newPlayIndex);
+
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     let pi = newPlayIndex ? newPlayIndex : playIndex;
     const currentSrc = props.items[pi].musicSrc;
-    console.log('current src on play click');
-    console.log(currentSrc);
+    
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
-      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-      
+      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -212,7 +210,7 @@ function MusicPlayer(props){
 
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
-      console.log(res);
+      // console.log(res);
       setRandomSupporter(res.supporter)
     });
   }
@@ -235,7 +233,7 @@ function MusicPlayer(props){
     setCurrentTrackProgress(newCurrentTrackProgress);
     
     if (playerElement.currentTime === playerElement.duration){
-      console.log('song ended');
+      // console.log('song ended');
       onNextTrackPlayClick();
     }
 
@@ -271,7 +269,7 @@ function MusicPlayer(props){
   // key press 
 
   function handleKeyPress(e){
-    console.log(e.key)
+    // console.log(e.key)
     if (e.key === 'Space'){
       if (isPlaying === true) onPauseClick();
       else onPlayClick();

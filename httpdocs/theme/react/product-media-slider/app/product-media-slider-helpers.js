@@ -1,7 +1,7 @@
 export function GenerateGalleryArray(product){
     let galleryArray = [];
     let noGallery = false, noLogo = false;
-    console.log(window.galleryPicturesJson);
+
     if (window.galleryPicturesJson){
         window.galleryPicturesJson.forEach(function(gp,index){ galleryArray.push({url:gp,type:'image'}); });
         noGallery = true;
@@ -11,7 +11,7 @@ export function GenerateGalleryArray(product){
         if (!product.image_small) noLogo = true;
     }
     if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
-    console.log(window.filesJson);
+
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
@@ -65,10 +65,11 @@ export function GenerateGalleryArray(product){
             }
         })
     }
+
     galleryArray = galleryArray.sort(function(a, b) {
         return a.created_timestamp - b.created_timestamp;
     })
-    console.log(galleryArray);
+
     return galleryArray;
 }
 
@@ -79,14 +80,7 @@ function convertDateToTimstamp(date){
     const hour = date.split(' ')[1].split(':')[0];
     const minute = date.split(' ')[1].split(':')[1];
     const second = date.split(' ')[1].split(':')[2];
-    console.log(year);
-    console.log(month);
-    console.log(day);
-    console.log(hour);
-    console.log(minute);
-    console.log(second);
     const datum = new Date(Date.UTC(year,month,day,hour,minute,second));
-    console.log(datum);
     return datum.getTime()/1000;
 }
 
