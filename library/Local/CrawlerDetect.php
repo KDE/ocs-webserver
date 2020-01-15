@@ -99,8 +99,8 @@ function crawlerDetect($USER_AGENT)
         array('python-requests','python-requests/2.22.0'),
         array('Cliqzbot','Mozilla/5.0 (compatible; Cliqzbot/3.0; +http://cliqz.com/company/cliqzbot)'),
         array('YisouSpider','YisouSpider'),
-        array('trendictionbot','Mozilla/5.0 (Windows NT 10.0; Win64; x64; trendictionbot0.5.0; trendiction search; http://www.trendiction.de/bot; please let us know of any problems; web at trendiction.com) Gecko/20170101 Firefox/67.0')
-        array('Jetslide','Mozilla/5.0 (compatible; Jetslide; +http://jetsli.de/crawler)')
+        array('trendictionbot','Mozilla/5.0 (Windows NT 10.0; Win64; x64; trendictionbot0.5.0; trendiction search; http://www.trendiction.de/bot; please let us know of any problems; web at trendiction.com) Gecko/20170101 Firefox/67.0'),
+        array('Jetslide','Mozilla/5.0 (compatible; Jetslide; +http://jetsli.de/crawler)'),
         array('Seekport','Mozilla/5.0 (compatible; Seekport Crawler; http://seekport.com/)'),
         array('GarlikCrawler','GarlikCrawler/1.2 (http://garlik.com/, crawler@garlik.com)')
     );
