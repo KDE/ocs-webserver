@@ -74,7 +74,8 @@ class Backend_Commands_ConvertVideo implements Local_Queue_CommandInterface
         $hash = hash('sha512',$salt . $collectionId . $timestamp); // order isn't important at all... just do the same when verifying
         $url = PPLOAD_API_URI . 'files/download/id/' . $fileId . '/s/' . $hash . '/t/' . $timestamp;
         $url .= '/lt/filepreview/' . $fileId;
-        
+        $url = Default_Model_PpLoad::createDownloadUrl($collectionId,$fileId,array('id'=>$fileId, 't'=>$timestamp, 'lt'=>'filepreview'));
+
         $result = $videoServer->storeExternalVideo($collectionId, $fileType, $url);
         
         if(!empty($result) && $result != 'Error') {

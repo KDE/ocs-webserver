@@ -340,7 +340,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if (null != $this->_authMember && null != $this->_authMember->member_id) {
             $this->view->member_id = $this->_authMember->member_id;
         }
-        //        $this->fetchDataForIndexView();
 
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($this->_projectId);
@@ -398,8 +397,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             Default_Model_Views::saveViewProduct($this->_projectId);
 
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
-            $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
-                $this->_authMember->member_id);
+            $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(), $this->_authMember->member_id);
         }
 
         $fmodel = new  Default_Model_DbTable_PploadFiles();
@@ -418,17 +416,18 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         $url .= '/u/' . $this->_authMember->member_id;
                     }
                     $url .= '/lt/filepreview/' . $file['name'];
+
+                    $payload = array('id' => $file['id'], 'u' => $this->_authMember->member_id, 'lt' => 'filepreview');
+                    $url = Default_Model_PpLoad::createDownloadUrlJwt($file['collection_id'], $file['name'], $payload);
+
                     $file['url'] = urlencode($url);
 
                     //If this file is a video, we have to convert it for preview
-                    if (!empty($file['type']) && in_array($file['type'],
-                            Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
+                    if (!empty($file['type']) && in_array($file['type'], Backend_Commands_ConvertVideo::$VIDEO_FILE_TYPES) && empty($file['ppload_file_preview_id'])) {
                         $queue = Local_Queue_Factory::getQueue();
-                        $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'],
-                            $file['type']);
+                        $command = new Backend_Commands_ConvertVideo($file['collection_id'], $file['id'], $file['type']);
                         $queue->send(serialize($command));
                     }
-
 
                     if (!empty($file['url_preview'])) {
                         $file['url_preview'] = urlencode($file['url_preview']);
@@ -665,6 +664,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $url .= '/u/' . $this->_authMember->member_id;
             }
             $url .= '/lt/filepreview/' . $file['name'];
+
+            $payload = array('id' => $file['id'], 'u' => $this->_authMember->member_id, 'lt' => 'filepreview');
+            $url = Default_Model_PpLoad::createDownloadUrlJwt($file['collection_id'], $file['name'], $payload);
+
             $file['url'] = urlencode($url);
             $filesList[] = $file;
         }
@@ -744,14 +747,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         if ($this->_request->isGet()) {
             return;
         }
-
-        $helperUserRole = new Backend_View_Helper_UserRole();
-        $userRoleName = $helperUserRole->userRole();
-        $isAdmin = false;
-        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
-            $isAdmin = true;
-        }
-
 
         if (isset($_POST['cancel'])) { // user cancel function
             $this->redirect('/member/' . $this->_authMember->member_id . '/news/');
@@ -1760,15 +1755,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
         $product = $tableProduct->find($this->_projectId)->current();
 
-        // delete product from search index
-        $modelSearch = new Default_Model_Search_Lucene();
-        $modelSearch->deleteDocument($product->toArray());
-        //        $command = new Backend_Commands_DeleteProductExtended($product);
-        //        $command->doCommand();
-        //        $queue = Local_Queue_Factory::getQueue('search');
-        //        $command = new Backend_Commands_DeleteProductFromIndex($product->project_id, $product->project_category_id);
-        //        $msg = $queue->send(serialize($command));
-
         // ppload
         // Delete collection
         if ($product->ppload_collection_id) {
@@ -1866,11 +1852,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
             Default_Model_ActivityLog::PROJECT_PUBLISHED,
             $product->toArray());
-
-        // add published project to search index
-//        $productInfo = $tableProduct->fetchProductInfo($this->_projectId);
-//        $modelSearch = new Default_Model_Search_Lucene();
-//        $modelSearch->addDocument($productInfo);
 
         // ppload
         if ($product->ppload_collection_id) {
@@ -1997,6 +1978,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $url .= '/u/' . $this->_authMember->member_id;
             }
             $url .= '/lt/filepreview/' . $file['name'];
+
+            $payload = array('id' => $file['id'], 'u' => $this->_authMember->member_id, 'lt' => 'filepreview');
+            $url = Default_Model_PpLoad::createDownloadUrlJwt($file['collection_id'], $file['name'], $payload);
+
             $file['url'] = urlencode($url);
         }
         $this->_helper->json($files);
@@ -2019,6 +2004,10 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $url .= '/u/' . $this->_authMember->member_id;
         }
         $url .= '/lt/filepreview/' . $file['name'];
+
+        $payload = array('id' => $file['id'], 'u' => $this->_authMember->member_id, 'lt' => 'filepreview');
+        $url = Default_Model_PpLoad::createDownloadUrlJwt($file['collection_id'], $file['name'], $payload);
+
         $file['url'] = urlencode($url);
 
         $this->_helper->json($file);
@@ -2065,27 +2054,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
                 Default_Model_ActivityLog::PROJECT_FOLLOWED, $product->toArray());
         }
-
-
-        // ppload
-        //Add collection to favorite
-        // $projectTable = new Default_Model_DbTable_Project();
-        // $projectData = $projectTable->find($this->_projectId)->current();
-        // if ($projectData->ppload_collection_id) {
-        //     $pploadApi = new Ppload_Api(array(
-        //         'apiUri'   => PPLOAD_API_URI,
-        //         'clientId' => PPLOAD_CLIENT_ID,
-        //         'secret'   => PPLOAD_SECRET
-        //     ));
-        //
-        //     $favoriteRequest = array(
-        //         'user_id'       => $this->_authMember->member_id,
-        //         'collection_id' => $projectData->ppload_collection_id
-        //     );
-        //
-        //     $favoriteResponse = $pploadApi->postFavorite($favoriteRequest);
-        // }
-
     }
 
     public function unfollowAction()
@@ -2108,29 +2076,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $activityLog = new Default_Model_ActivityLog();
         $activityLog->writeActivityLog($this->_projectId, $this->_authMember->member_id,
             Default_Model_ActivityLog::PROJECT_UNFOLLOWED, $product->toArray());
-
-        // ppload
-        // Delete collection from favorite
-        // $projectTable = new Default_Model_DbTable_Project();
-        // $projectData = $projectTable->find($this->_projectId)->current();
-        // if ($projectData->ppload_collection_id) {
-        //     $pploadApi = new Ppload_Api(array(
-        //         'apiUri'   => PPLOAD_API_URI,
-        //         'clientId' => PPLOAD_CLIENT_ID,
-        //         'secret'   => PPLOAD_SECRET
-        //     ));
-        //
-        //     $favoriteRequest = array(
-        //         'user_id'       => $this->_authMember->member_id,
-        //         'collection_id' => $projectData->ppload_collection_id
-        //     );
-        //
-        //     $favoriteResponse =
-        //         $pploadApi->postFavorite($favoriteRequest); // This post call will retrieve existing favorite info
-        //     if (!empty($favoriteResponse->favorite->id)) {
-        //         $favoriteResponse = $pploadApi->deleteFavorite($favoriteResponse->favorite->id);
-        //     }
-        // }
     }
 
     public function followpAction()
@@ -2444,8 +2389,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
             $helperUserIsOwner = new Default_View_Helper_UserIsOwner();
             $helperIsProjectActive = new Default_View_Helper_IsProjectActive();
-            if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status)) AND (false
-                                                                                                               === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
+            if ((false === $helperIsProjectActive->isProjectActive($this->view->product->project_status))
+                AND
+                (false === $helperUserIsOwner->UserIsOwner($this->view->product->member_id))
             ) {
                 throw new Zend_Controller_Action_Exception('This page does not exist', 404);
             }
@@ -2881,66 +2827,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $projectId = $this->_projectId;
 
         $this->redirect('/dl?file_id=' . $file_id . '&file_type=' . $file_type . '&file_name=' . $file_name . '&file_size=' . $file_size . '&project_id=' . $projectId);
-
-
-//        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        /*            if(isset($file_id) && isset($projectId) && isset($memberId)) {
-                        $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
-                        $data = array('project_id' => $projectId, 'member_id' => $memberId, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size);
-                        $memberDlHistory->createRow($data)->save();
-                    }
-
-                    $url = urldecode($urltring);
-                    $this->redirect($url);
-         *
-         */
-//        } else {
-//            $this->redirect('/ads?file_id='.$file_id);
-//        }
     }
 
-    /**
-     * ppload
-     */
-    /*public function deletepploadcollectionAction()
-    {
-        $this->_helper->layout()->disableLayout();
-
-        $projectTable = new Default_Model_DbTable_Project();
-        $projectData = $projectTable->find($this->_projectId)->current();
-
-        // Delete ppload collection
-        if ($projectData->ppload_collection_id) {
-            $pploadApi = new Ppload_Api(array(
-                'apiUri' => PPLOAD_API_URI,
-                'clientId' => PPLOAD_CLIENT_ID,
-                'secret' => PPLOAD_SECRET
-            ));
-
-            $collectionResponse = $pploadApi->deleteCollection($projectData->ppload_collection_id);
-
-            if (isset($collectionResponse->status)
-                && $collectionResponse->status == 'success'
-            ) {
-                $projectData->ppload_collection_id = null;
-                $projectData->changed_at = new Zend_Db_Expr('NOW()');
-                $projectData->save();
-
-                $activityLog = new Default_Model_ActivityLog();
-                $activityLog->writeActivityLog(
-                    $this->_projectId,
-                    $projectData->member_id,
-                    Default_Model_ActivityLog::PROJECT_EDITED,
-                    $projectData->toArray()
-                );
-
-                $this->_helper->json(array('status' => 'ok'));
-                return;
-            }
-        }
-
-        $this->_helper->json(array('status' => 'error'));
-    }*/
     /**
      * ppload
      */

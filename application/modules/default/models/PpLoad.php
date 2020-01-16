@@ -31,17 +31,63 @@ class Default_Model_PpLoad
     {
     }
 
-    public function isAuthmemberProjectCreator($creator_id)    
+    public static function createDownloadUrl($collection_id, $file_name, array $params)
     {
-        $auth = Zend_Auth::getInstance();
-        $authMember = $auth->getStorage()->read();
-        if($authMember->member_id == $creator_id)
-        {
-            return true;
+        $valid_until = time() + 3600; // one hour valid
+        $hash = self::createDownloadHash($collection_id, $valid_until);
+        $url = PPLOAD_API_URI . 'files/download';
+        foreach ($params as $key => $param) {
+            $url .= '/' . $key . '/' . $param;
         }
-        return false;        
+
+        return $url . '/s/' . $hash . '/t/' . $valid_until . '/' . $file_name;
     }
 
+    /**
+     * @param int $collection_id
+     * @param int $valid_until
+     * @return string
+     */
+    public static function createDownloadHash($collection_id, $valid_until)
+    {
+        return hash('sha512',
+            PPLOAD_DOWNLOAD_SECRET . $collection_id . $valid_until); // order isn't important at all... just do the same when verifying
+    }
+
+    /**
+     * @param int    $collection_id
+     * @param string $file_name
+     * @param array  $payload
+     * @return string
+     */
+    public static function createDownloadUrlJwt($collection_id, $file_name, array $payload)
+    {
+        $valid_until = time() + 3600; // one hour valid
+        $hash = self::createDownloadHash($collection_id, $valid_until);
+        $payload['s'] = $hash;
+        $payload['t'] = $valid_until;
+        try {
+            $session = new Zend_Session_Namespace();
+            $payload['stfp'] = $session->stat_fp;
+            $payload['stip'] = $session->stat_ipv6 ? $session->stat_ipv6 : $session->stat_ipv4;
+        } catch (Zend_Session_Exception $e) {
+            Zend_Registry::get('logger')->err(__METHOD__ . '   ' . $e->getMessage());
+//            error_log(__METHOD__ . '   ' . $e->getMessage());
+        }
+        $jwt = Default_Model_Jwt::encodeFromArray($payload);
+
+        return PPLOAD_API_URI . 'files/download/j/' . $jwt . '/' . $file_name;
+    }
+
+    /**
+     * @param int    $projectId
+     * @param string $url
+     * @param string $filename
+     * @param string $fileDescription
+     * @return bool|mixed
+     * @throws Zend_Auth_Storage_Exception
+     * @throws Zend_Exception
+     */
     public function uploadEmptyFileWithLink($projectId, $url, $filename, $fileDescription)
     {
         $projectId = (int)$projectId;
@@ -50,8 +96,7 @@ class Default_Model_PpLoad
 
         if (empty($projectData)) {
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ppload upload error. no project data found. project_id:'
-                . $projectId)
-            ;
+                                              . $projectId);
 
             return false;
         }
@@ -59,7 +104,6 @@ class Default_Model_PpLoad
         $pploadApi = $this->getPpLoadApi();
 
         // create empty text file
-        //        $fileDummy = '/dev/null';
         $fileDummy = '../../data/files/empty';
 
         $fileRequest = array(
@@ -84,34 +128,33 @@ class Default_Model_PpLoad
         Zend_Registry::get('logger')->debug(__METHOD__ . ' - fileResponse: ' . print_r($fileResponse, true));
 
         if (empty($fileResponse) OR empty($fileResponse->file) OR $fileResponse->status <> 'success') {
-            Zend_Registry::get('logger')->err(__METHOD__ . ' - ppload upload error. requestData:'
-                . print_r($fileRequest, true) . "\n" . 'response:' . print_r($fileResponse, true))
-            ;
+            Zend_Registry::get('logger')->err(__METHOD__
+                                              . ' - ppload upload error. requestData:'
+                                              . print_r($fileRequest, true) . "\n" . 'response:'
+                                              . print_r($fileResponse, true)
+            );
 
             return false;
         }
         $log = Zend_Registry::get('logger');
         if ($projectData->ppload_collection_id <> $fileResponse->file->collection_id) {
             $projectData->ppload_collection_id = $fileResponse->file->collection_id;
-            if($this->isAuthmemberProjectCreator($projectData->member_id))
-            {
+            if ($this->isAuthmemberProjectCreator($projectData->member_id)) {
                 $projectData->changed_at = new Zend_Db_Expr('NOW()');
             } else {
                 $auth = Zend_Auth::getInstance();
                 $authMember = $auth->getStorage()->read();
-                $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                $log->info('********** ' . __METHOD__ . ' Project ChangedAt is not set: Auth-Member (' . $authMember->member_id . ') != Project-Owner (' . $projectData->member_id . '): **********' . "\n");
             }
             $projectData->save();
-        }else
-        {
-            if($this->isAuthmemberProjectCreator($projectData->member_id))
-            {
+        } else {
+            if ($this->isAuthmemberProjectCreator($projectData->member_id)) {
                 $projectData->changed_at = new Zend_Db_Expr('NOW()');
                 $projectData->save();
             } else {
                 $auth = Zend_Auth::getInstance();
                 $authMember = $auth->getStorage()->read();
-                $log->info('********** ' . __CLASS__ . '::' . __FUNCTION__ . ' Project ChangedAt is not set: Auth-Member ('.$authMember->member_id.') != Project-Owner ('.$projectData->member_id.'): **********' . "\n");
+                $log->info('********** ' . __METHOD__ . ' Project ChangedAt is not set: Auth-Member (' . $authMember->member_id . ') != Project-Owner (' . $projectData->member_id . '): **********' . "\n");
             }
         }
 
@@ -119,16 +162,16 @@ class Default_Model_PpLoad
     }
 
     /**
-     * @param $projectId
+     * @param int $projectId
      *
      * @return Zend_Db_Table_Row_Abstract
+     * @throws Zend_Db_Table_Exception
      */
     protected function getProjectData($projectId)
     {
         $projectTable = new Default_Model_DbTable_Project();
-        $projectData = $projectTable->find($projectId)->current();
 
-        return $projectData;
+        return $projectTable->find($projectId)->current();
     }
 
     /**
@@ -136,13 +179,27 @@ class Default_Model_PpLoad
      */
     protected function getPpLoadApi()
     {
-        $pploadApi = new Ppload_Api(array(
+        return new Ppload_Api(array(
             'apiUri'   => PPLOAD_API_URI,
             'clientId' => PPLOAD_CLIENT_ID,
             'secret'   => PPLOAD_SECRET
         ));
+    }
 
-        return $pploadApi;
+    /**
+     * @param int $creator_id
+     * @return bool
+     * @throws Zend_Auth_Storage_Exception
+     */
+    public function isAuthmemberProjectCreator($creator_id)
+    {
+        $auth = Zend_Auth::getInstance();
+        $authMember = $auth->getStorage()->read();
+        if ($authMember->member_id == $creator_id) {
+            return true;
+        }
+
+        return false;
     }
 
 }

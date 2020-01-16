@@ -61,4 +61,12 @@ class Default_Model_Jwt
 
         return JWT::decode($jwt, $config->secret, $verify);
     }
+
+    public static function encodeFromArray(array $payload)
+    {
+        $config = Zend_Registry::get('config')->settings->jwt;
+
+        return JWT::encode($payload, $config->secret, $algo = 'HS256');
+    }
+
 }

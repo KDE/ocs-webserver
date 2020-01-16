@@ -22,36 +22,35 @@
  **/
 class DlController extends Local_Controller_Action_DomainSwitch
 {
-    
+
     public function indexAction()
     {
         $this->_helper->layout->disableLayout();
-        
+
         $file_id = $this->getParam('file_id');
         $file_type = $this->getParam('file_type');
         $file_name = $this->getParam('file_name');
         $file_size = $this->getParam('file_size');
         $projectId = $this->getParam('project_id');
-        if($this->hasParam('link_type')) {
-        $linkType = $this->getParam('link_type');
-        } else {
-            $linkType = "download";
+        $linkType = "download";
+        if ($this->hasParam('link_type')) {
+            $linkType = $this->getParam('link_type');
         }
         $isExternal = $this->getParam('is_external');
         $externalLink = $this->getParam('external_link');
-        
+
         $hasTorrent = $this->getParam('has_torrent');
-        
+
         $modelProduct = new Default_Model_Project();
         $productInfo = $modelProduct->fetchProductInfo($projectId);
-        
+
         $collectionID = $productInfo->ppload_collection_id;
 
         $sModel = new Default_Model_Section();
         $section = $sModel->fetchSectionForCategory($productInfo->project_category_id);
         $info = new Default_Model_Info();
         $supporter = $info->getRandomSupporterForSection($section['section_id']);
-        
+
         $this->view->section_id = $section['section_id'];
 
         $this->view->link_type = $linkType;
@@ -64,90 +63,50 @@ class DlController extends Local_Controller_Action_DomainSwitch
         $this->view->is_external = $isExternal;
         $this->view->external_link = $externalLink;
         $this->view->supporter = $supporter;
-        $this->view->has_torrent = ($hasTorrent=="1");
+        $this->view->has_torrent = ($hasTorrent == "1");
         $this->view->file_id = $file_id;
-        
+
         $memberId = $this->_authMember->member_id;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
-            
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            /*
-            //Log download
-            try {
-                $filesDl = new Default_Model_DbTable_PploadFilesDownloaded();
-                $id = $filesDl->getNewId();
-                $data = array('id' => $id, 'client_id' => PPLOAD_CLIENT_ID, 'owner_id' => $productInfo->member_id, 'collection_id' => $collectionID, 'file_id' => $file_id, 'downloaded_timestamp' => new Zend_Db_Expr ('Now()'), 'downloaded_ip' => $this->getRealIpAddr(), 'referer' => $this->getReferer());
-                if(!empty($memberId)) {
-                   $data['user_id'] = $memberId;
-                }
-                $data['source'] = 'OCS-Webserver';
-                $data['link_type'] = $linkType;
+            $payload = array('id' => $file_id, 'u' => $memberId, 'lt' => $linkType);
+            $url = Default_Model_PpLoad::createDownloadUrlJwt($collectionID, $file_name, $payload);
 
-                $filesDl->createRow($data)->save();
-
-            } catch (Exception $exc) {
-                //echo $exc->getTraceAsString();
-                $errorLog = Zend_Registry::get('logger');
-                $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
-            }
-            */
-
-            
-            //create ppload download hash: secret + collection_id + expire-timestamp
-            $salt = PPLOAD_DOWNLOAD_SECRET;
-            
-            $timestamp = time() + 3600; // one hour valid
-            //20181009 ronald: change hash from MD5 to SHA512
-            //$hash = md5($salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-            $hash = hash('sha512',$salt . $collectionID . $timestamp); // order isn't important at all... just do the same when verifying
-
-            // handle cookie
-            $config = Zend_Registry::get('config');                
-            $cookieName = $config->settings->session->auth->anonymous;
-            $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-            if(!$storedInCookie)
-            {
-               $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
-               $cookieExpire = time() + $remember_me_seconds;
-               $storedInCookie = $hash;
-               setcookie($cookieName, $hash, $cookieExpire, '/'); 
-            }            
-
-            $url = PPLOAD_API_URI . 'files/download/id/' . $file_id . '/s/' . $hash . '/t/' . $timestamp;
-            if(isset($memberId)) {
-                $url .= '/u/' . $memberId;
-            }
-            $url .= '/c/' . $storedInCookie;            
-            $url .= '/lt/' . $linkType . '/' . $file_name;
-
-            
-            if($linkType == 'install') {
+            if ($linkType == 'install') {
                 $helperCatXdgType = new Default_View_Helper_CatXdgType();
                 $xdgType = $helperCatXdgType->catXdgType($productInfo->project_category_id);
 
                 $url = 'ocs://install'
-                    . '?url=' . urlencode($url)
-                    . '&type=' . urlencode($xdgType)
-                    . '&filename=' . urldecode($file_name);
+                       . '?url=' . urlencode($url)
+                       . '&type=' . urlencode($xdgType)
+                       . '&filename=' . urldecode($file_name);
             }
+
             $this->view->url = $url;
 
-
             // save to member_download_history            
-            if(isset($file_id) && isset($projectId)) {            
-                
-                // $data = array('project_id' => $projectId, 'member_id' => $memberId,'anonymous_cookie'=>$storedInCookie, 'file_id' => $file_id, 'file_type' => $file_type, 'file_name' => $file_name, 'file_size' => $file_size,'downloaded_ip' => $this->getRealIpAddr());               
+            if (isset($file_id) && isset($projectId)) {
 
+                $server_info = '';
 
-                $server_info = '';               
-
-                foreach ( $_SERVER as $key=>$value ) {                   
-                   if ($value) {
-                        $server_info = $server_info.$key.': '.$value.' ';                        
-                    } 
+                foreach ($_SERVER as $key => $value) {
+                    if ($value) {
+                        $server_info = $server_info . $key . ': ' . $value . ' ';
+                    }
                 }
 
+                // handle cookie
+                $config = Zend_Registry::get('config');
+                $cookieName = $config->settings->session->auth->anonymous;
+                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : null;
+                if (!$storedInCookie) {
+                    $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
+                    $cookieExpire = time() + $remember_me_seconds;
+                    $hash = hash('sha512', PPLOAD_DOWNLOAD_SECRET . $collectionID . (time() + 3600));
+                    $storedInCookie = $hash;
+                    setcookie($cookieName, $hash, $cookieExpire, '/');
+                }
 
                 $data = array(
                     'project_id'           => $projectId,
@@ -170,86 +129,73 @@ class DlController extends Local_Controller_Action_DomainSwitch
                 $memberDlHistory = new Default_Model_DbTable_MemberDownloadHistory();
                 $memberDlHistory->createRow($data)->save();
             }
-
-
-            // anonymous dl save to member_download_fingerprint 17.07 temperately deactived
-            /*if(isset($file_id) && isset($projectId) && !isset($memberId)) {
-                $config = Zend_Registry::get('config');                
-                $cookieName = $config->settings->session->auth->anonymous;
-                $storedInCookie = isset($_COOKIE[$cookieName]) ? $_COOKIE[$cookieName] : NULL;
-                if(!$storedInCookie)
-                {
-                   $remember_me_seconds = $config->settings->session->remember_me->cookie_lifetime;
-                   $cookieExpire = time() + $remember_me_seconds;
-                   setcookie($cookieName, $hash, $cookieExpire, '/'); 
-                }
-
-                $memberDlAnonymous = new Default_Model_DbTable_MemberDownloadAnonymous();
-                $data = array('project_id' => $projectId, 'user' => $_COOKIE[$cookieName], 'file_id' => $file_id);
-                $memberDlAnonymous->createRow($data)->save();
-            }*/
         }
-        
-
     }
 
-    function getRealIpAddr()
+    /**
+     * @param int $bytes
+     * @return string|null
+     */
+    public function humanFileSize($bytes)
+    {
+        if (!empty($bytes)) {
+            $size = round($bytes / 1048576, 2);
+            if ($size == 0.0) {
+                return '0.01 MB';
+            } else {
+                return $size . ' MB';
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public function getRealIpAddr()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
         {
-          $ip=$_SERVER['HTTP_CLIENT_IP'];
-        }
-        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
         {
-          $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
         }
-        else
-        {
-          $ip=$_SERVER['REMOTE_ADDR'];
-        }
+
         return $ip;
     }
 
-    function getReferer()
+    /**
+     * @return mixed|null
+     */
+    protected function getReferer()
     {
         $referer = null;
         if (!empty($_SERVER['HTTP_REFERER'])) {
             $referer = $_SERVER['HTTP_REFERER'];
         }
+
         return $referer;
     }
-    
-    function formatBytes($bytes, $precision = 2) { 
-        $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
 
-        $bytes = max($bytes, 0); 
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
-        $pow = min($pow, count($units) - 1); 
+    /**
+     * @param int $bytes
+     * @param int $precision
+     * @return string
+     */
+    protected function formatBytes($bytes, $precision = 2)
+    {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
 
         // Uncomment one of the following alternatives
         // $bytes /= pow(1024, $pow);
-        // $bytes /= (1 << (10 * $pow)); 
+        // $bytes /= (1 << (10 * $pow));
 
-        return round($bytes, $precision) . ' ' . $units[$pow]; 
-    } 
-    
-    function humanFileSize($bytes) {
-        if(!empty($bytes))
-        {
-            $size = round($bytes / 1048576, 2);
-            if($size == 0.0)
-            {
-               return '0.01 MB';
-            }else
-            {
-               return $size.' MB';
-            }
-        }
-        else
-        {
-           return null;
-        }
+        return round($bytes, $precision) . ' ' . $units[$pow];
     }
 
-   
 }
