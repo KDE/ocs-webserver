@@ -102,7 +102,11 @@ function crawlerDetect($USER_AGENT)
         array('trendictionbot','Mozilla/5.0 (Windows NT 10.0; Win64; x64; trendictionbot0.5.0; trendiction search; http://www.trendiction.de/bot; please let us know of any problems; web at trendiction.com) Gecko/20170101 Firefox/67.0'),
         array('Jetslide','Mozilla/5.0 (compatible; Jetslide; +http://jetsli.de/crawler)'),
         array('Seekport','Mozilla/5.0 (compatible; Seekport Crawler; http://seekport.com/)'),
-        array('GarlikCrawler','GarlikCrawler/1.2 (http://garlik.com/, crawler@garlik.com)')
+        array('GarlikCrawler','GarlikCrawler/1.2 (http://garlik.com/, crawler@garlik.com)'),
+        array('Mb2345Browser','Mozilla/5.0(Linux;Android 5.1.1;OPPO A33 Build/LMY47V;wv) AppleWebKit/537.36(KHTML,link Gecko) Version/4.0 Chrome/42.0.2311.138 Mobile Safari/537.36 Mb2345Browser/9.0'),
+        array('LieBaoFast','Mozilla/5.0(Linux;Android 5.1.1;OPPO A33 Build/LMY47V;wv) AppleWebKit/537.36(KHTML,link Gecko) Version/4.0 Chrome/43.0.2357.121 Mobile Safari/537.36 LieBaoFast/4.51.3'),
+        array('TBS/043602','Mozilla/5.0 (Linux; Android 7.0; FRD-AL00 Build/HUAWEIFRD-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/53.0.2785.49 Mobile MQQBrowser/6.2 TBS/043602 Safari/537.36 MicroMessenger/6.5.16.1120 NetType/WIFI Language/zh_CN'),
+        array('zh-CN;OPPO A33 Build/LMY47V','Mozilla/5.0(Linux;U;Android 5.1.1;zh-CN;OPPO A33 Build/LMY47V) AppleWebKit/537.36(KHTML,like Gecko) Version/4.0 Chrome/40.0.2214.89 UCBrowser/11.7.0.953 Mobile Safari/537.36')
     );
 
     foreach ($crawlers as $c)
