@@ -330,9 +330,10 @@ class JsonController extends Zend_Controller_Action
         if($this->hasParam('s')){
             $store = $this->getParam('s');
         }                
-        $filterCat = 'project_category_id:('.$projectSearchCategory.')';
-        $param = array('q' => $projectSearchText,'store'=>$store,'page' => 1
-            , 'count' => 10,'fq' => array($filterCat));
+        //$filterCat = 'project_category_id:('.$projectSearchCategory.')';
+        //$param = array('q' => $projectSearchText,'store'=>$store,'page' => 1
+          //  , 'count' => 10,'fq' => array($filterCat));
+        $param = array('q' => $projectSearchText,'store'=>$store,'page' => 1, 'count' => 10);
         $viewHelperImage = new Default_View_Helper_Image();
         $modelSearch = new Default_Model_Solr();   
         try {

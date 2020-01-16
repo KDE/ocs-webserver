@@ -42,7 +42,7 @@ const SearchProductInput = (props) => {
     const inputLength = value.length;
     if (inputLength < 3) return;
     setIsLoading(true);
-    let url = props.baseUrlStore + '/json/searchp/p/' + value+'/c/'+projectCategoryId;
+    let url = props.baseUrlStore + '/json/searchp/p/' + value+'/c/'+projectCategoryId;    
     if (props.store) {
       url += '/s/' + props.store
     }
