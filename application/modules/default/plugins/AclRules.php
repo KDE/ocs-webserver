@@ -153,6 +153,11 @@ class Default_Plugin_AclRules extends Zend_Acl
         $this->allow(self::ROLENAME_GUEST, array(
             'portal_index'
         ));
+        
+        $this->addResource(new Zend_Acl_Resource ('portal_user'));
+        $this->allow(self::ROLENAME_GUEST, array(
+            'portal_user'
+        ));
 
 
         $this->allow(self::ROLENAME_GUEST, array(
