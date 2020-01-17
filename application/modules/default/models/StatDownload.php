@@ -913,7 +913,7 @@ class Default_Model_StatDownload
                 ) A2
                 
                 GROUP BY yearmonth
-                HAVING amount > 0
+                #HAVING amount > 0
                 order by yearmonth
 					 	";
         
