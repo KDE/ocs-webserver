@@ -27,13 +27,13 @@ class MisuseController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-        $this->view->headTitle('Misuse-Reports','SET');
+        $this->view->headTitle('Watchlist - Misuse-Reports','SET');
         $this->forward('list', 'misuse', 'default', $this->getAllParams());
     }
 
     public function listAction()
     {
-        $this->view->headTitle('Misuse-Reports','SET');
+        $this->view->headTitle('Watchlist - Misuse-Reports','SET');
         $this->view->page = (int)$this->getParam('page', 1);
     }
 
