@@ -62,5 +62,62 @@ class Portal_UserController extends Local_Controller_Action_Portal
         $this->view->userProjectCategories = $tableProject->getUserCreatingCategorys($this->_memberId);
         $this->view->aboutmeUserInfo = $this->getAboutmeUserInfo($this->_memberId, $this->view->member->username);
     }
+    
+    
+    public function getAboutmeUserInfo($member_id, $username)
+    {
+        $tableProject = new Default_Model_Project();
+        $userProjectCategories = $tableProject->getUserCreatingCategorys($member_id);
+        $cnt = sizeof($userProjectCategories);
+        $userinfo = '';
+        $isAdmin = false;
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+            $isAdmin = true;
+        }
+        if ($cnt > 0) {
+            $userinfo = "Hi, I am <b>" . $username . "</b> and I create ";
+            if ($cnt == 1) {
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>.';                
+            }elseif($cnt == 2) {                
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>'
+                            . ' and <b>' . $userProjectCategories[1]['category1'] . '</b>.';                           
+            }elseif($cnt == 3) {                     
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>'                        
+                            . ', <b>' . $userProjectCategories[1]['category1'] . '</b>'
+                            . ' and <b>' . $userProjectCategories[2]['category1'] . '</b>.';                        
+            }else{                        
+                $userinfo = $userinfo . ' <b>' . $userProjectCategories[0]['category1'] . '</b>'
+                            . ', <b>' . $userProjectCategories[1]['category1'] . '</b>'
+                            . ', <b>' . $userProjectCategories[2]['category1'] . '</b>'
+                            . ' and more.';                        
+            }         
+        }else{
+            $userinfo = "Hi, I am <b>" . $username . "</b>.";
+        }
+
+        $mModel = new Default_Model_Member();
+        $supportSections = $mModel->fetchSupporterSectionInfo($member_id);
+        if($supportSections && $supportSections['sections'])
+        {
+            $userinfo = $userinfo." I ".($cnt==0?" ":" also ")."support";
+            $sections = explode(",", $supportSections['sections']);
+            foreach ($sections as $s) {
+                $userinfo.=" <b>".$s."</b>, ";
+            }
+            
+            $userinfo = trim($userinfo);
+            $userinfo = substr($userinfo, 0, -1);
+        }
+
+
+        
+         if(substr($userinfo, strlen($userinfo)-1) <> ".")
+         {
+            $userinfo.=".";          
+         }
+        return $userinfo;
+    }
 
 }
