@@ -56,7 +56,7 @@ class Portal_UserController extends Local_Controller_Action_Portal
             $this->redirect("/");
         }
 
-        $this->view->headTitle($this->view->member->username . ' - ' . $this->getHeadTitle(), 'SET');
+        $this->view->headTitle($this->view->member->username, 'SET');
         $this->view->mainProject = $this->view->member->findDependentRowset($tableProject, 'MainProject')->current();
 
         $this->view->userProjectCategories = $tableProject->getUserCreatingCategorys($this->_memberId);
