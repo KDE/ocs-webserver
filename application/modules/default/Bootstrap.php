@@ -562,6 +562,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'paypal'
         )));
 
+        $router->addRoute('watchlist_products_files', new Zend_Controller_Router_Route('/products-10-files', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'product'
+        )));       
+
         $router->addRoute('support_new', new Zend_Controller_Router_Route('/supportold2', array(
             'module'     => 'default',
             'controller' => 'subscription',

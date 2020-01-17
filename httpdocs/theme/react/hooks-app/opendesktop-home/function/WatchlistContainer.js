@@ -37,7 +37,7 @@ function WatchlistContainer(props)
           </li>
 
           <li id="product-files-link-item">
-            <a href={props.baseUrlStore+"/spam/product"} >
+            <a href={props.baseUrlStore+"/products-10-files"} >
               <span>New Products with min.10 files</span>
             </a>
           </li>
