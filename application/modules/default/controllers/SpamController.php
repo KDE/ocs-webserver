@@ -46,7 +46,7 @@ class SpamController extends Local_Controller_Action_DomainSwitch
     }
      public function productAction()
     {   
-        $this->view->headTitle('Spam - Products','SET');
+        $this->view->headTitle('Spam - Products-10-files','SET');
         
     }
 
