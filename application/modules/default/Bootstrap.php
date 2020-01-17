@@ -578,7 +578,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $router->addRoute('watchlist_md5sum', new Zend_Controller_Router_Route('/watchlist-md5sum-duplicated', array(
             'module'     => 'default',
             'controller' => 'spam',
-            'action'     => 'product'
+            'action'     => 'mdsum'
         ))); 
 
         $router->addRoute('watchlist_unpublishedproduct', new Zend_Controller_Router_Route('/watchlist-unpublishedproduct', array(
