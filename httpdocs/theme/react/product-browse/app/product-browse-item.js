@@ -634,6 +634,7 @@ function MusicPlayer(props){
             onPauseClick={onPauseClick}
             onPrevTrackPlayClick={onPrevTrackPlayClick}
             onNextTrackPlayClick={onNextTrackPlayClick}
+            items={props.items}
         />
       </div>
     )
@@ -721,6 +722,9 @@ function MusicPlayerControlPanel(props){
           <div className="music-player-controls-bar">
             <div className="music-player-controls-wrapper">
               {audioControlsDisplay}
+            </div>
+            <div className="track-number-display">
+                {props.playIndex + " / " + props.items.length}
             </div>
           </div>
         </div>

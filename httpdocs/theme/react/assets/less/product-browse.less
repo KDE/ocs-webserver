@@ -287,8 +287,11 @@
                     height: 40px;
                     z-index: 10;
 
-                    .music-player-audio-control{
-                        
+                    .music-player-audio-control {
+                        float: left;
+                        background: rgba(0,0,0,0.5);
+                        height: 40px;
+
                         span {
                             display: inline-block;
                             padding: 5px;
@@ -296,8 +299,22 @@
                             svg {
                                 font-size: 28px;
                                 color: white;
+                                .transition();
+
+                                &:hover {
+                                    color:#31c27c;
+                                }
                             }
                         }
+                    }
+
+                    .track-number-display {
+                        float: right;
+                        background: rgba(0,0,0,0.5);
+                        height: 40px;
+                        padding: 5px;
+                        color: white;
+                        font-size: 12px;
                     }
                 }
             }
