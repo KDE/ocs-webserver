@@ -727,7 +727,7 @@ function MusicPlayerControlPanel(props){
               {audioControlsDisplay}
             </div>
             <div className="track-number-display">
-                {props.playIndex + " / " + props.items.length}
+                {parseInt(props.playIndex + 1) + " / " + props.items.length}
             </div>
           </div>
       </div>
