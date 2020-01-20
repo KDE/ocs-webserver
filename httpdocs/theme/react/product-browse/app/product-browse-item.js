@@ -126,7 +126,6 @@ export function ProductBrowseItem(props){
                     <MusicPlayerWrapper 
                         product={p}
                         items={productFiles} 
-                        imgHeight={props.imgHeight}
                     />
                 )
         }
@@ -443,7 +442,7 @@ function MusicPlayerWrapper(props){
       <div>
         <MusicPlayer 
           product={props.product}
-          items={props.slide.items} 
+          items={props.items} 
           containerWidth={props.width}
         />
       </div>
@@ -455,6 +454,8 @@ function MusicPlayer(props){
 
     /* COMPONENT */
   
+    const { productBrowseState, productBrowseDispatch } = React.useContext(Context);
+
     const [ playIndex, setPlayIndex ] = useState(0);
     const prevIndex = usePrevious(playIndex);
     const [ isPlaying, setIsPlaying ] = useState();
@@ -498,6 +499,21 @@ function MusicPlayer(props){
       if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
     },[playIndex])
   
+
+    React.useEffect(() => {
+        if (productBrowseState.current === props.product.project_id){
+            if (productBrowseState.isPlaying === true){
+                playTrack();
+            } else {
+                pauseTrack()
+            }
+        } else {
+            if (isPlaying === true){
+                pauseTrack();
+            }
+        }
+    },[productBrowseState.current,productBrowseState.isPlaying])
+
     // audio player
   
     function onPlayClick(reload,newPlayIndex){
