@@ -486,10 +486,10 @@ function MusicPlayer(props){
   
     useEffect(() => {
         console.log('play index change');
-      if (isPlaying) onPlayClick(true);
+      if (isPlaying) playAudio(true);
       if (isPaused){
-          if (prevIndex === playIndex) onPlayClick();
-          else  onPlayClick(true);
+          if (prevIndex === playIndex) playAudio();
+          else  playAudio(true);
       }
       if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
     },[playIndex])
