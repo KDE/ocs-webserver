@@ -505,9 +505,7 @@ function MusicPlayer(props){
 
     // audio player
   
-    function onPlayClick(){
-        productBrowseDispatch({type:'SET_CURRENT_ITEM',itemId:props.props.project_id,pIndex:plqyIndex});
-    }
+    function onPlayClick(){ productBrowseDispatch({type:'SET_CURRENT_ITEM',itemId:props.product.project_id,pIndex:playIndex}); }
 
     function playAudio(reload,newPlayIndex){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
@@ -521,9 +519,7 @@ function MusicPlayer(props){
       onReportAudioPlay(currentSrc,newPlayIndex);
     }
 
-    function onPauseClick(){
-        productBrowseDispatch({type:'PAUSE'});
-    }    
+    function onPauseClick(){ productBrowseDispatch({type:'PAUSE'}); }
 
     function pauseAudio(){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
