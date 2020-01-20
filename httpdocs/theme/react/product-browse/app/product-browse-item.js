@@ -501,16 +501,20 @@ function MusicPlayer(props){
 
     React.useEffect(() => {
         if (productBrowseState.current === props.product.project_id){
-            if (productBrowseState.isPlaying === true) onPlayClick(true);
-            else onPauseClick();
+            if (productBrowseState.isPlaying === true) playAudio(true);
+            else pauseAudio();
         } else {
-            if (isPlaying === true) onPauseClick();
+            if (isPlaying === true) pauseAudio();
         }
     },[productBrowseState.current,productBrowseState.isPlaying])
 
     // audio player
   
-    function onPlayClick(reload,newPlayIndex){
+    function onPlayClick(){
+        productBrowseDispatch({type:'SET_CURRENT_ITEM',itemId:props.props.project_id,pIndex:plqyIndex});
+    }
+
+    function playAudio(reload,newPlayIndex){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       console.log(playerElement)
       let pi = newPlayIndex ? newPlayIndex : playIndex;
@@ -521,8 +525,12 @@ function MusicPlayer(props){
       setIsPaused(false);
       onReportAudioPlay(currentSrc,newPlayIndex);
     }
-  
+
     function onPauseClick(){
+        productBrowseDispatch({type:'PAUSE'});
+    }    
+
+    function pauseAudio(){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       playerElement[0].pause();
       setIsPlaying(false);
@@ -624,14 +632,14 @@ function MusicPlayer(props){
       <div id={"music-player-container-"+props.product.project_id}> 
         <audio volume={0.5} id={"music-player-audio-"+props.product.project_id}></audio>
         <MusicPlayerControlPanel 
-          playIndex={playIndex}
-          isPlaying={isPlaying}
-          isPaused={isPaused}
-          isMobile={isMobile}
-          onPlayClick={(reload) => onPlayClick(reload)}
-          onPauseClick={onPauseClick}
-          onPrevTrackPlayClick={onPrevTrackPlayClick}
-          onNextTrackPlayClick={onNextTrackPlayClick}
+            playIndex={playIndex}
+            isPlaying={isPlaying}
+            isPaused={isPaused}
+            isMobile={isMobile}
+            onPlayClick={(reload) => onPlayClick(reload)}
+            onPauseClick={onPauseClick}
+            onPrevTrackPlayClick={onPrevTrackPlayClick}
+            onNextTrackPlayClick={onNextTrackPlayClick}
         />
       </div>
     )
