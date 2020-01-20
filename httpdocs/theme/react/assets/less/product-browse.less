@@ -293,6 +293,7 @@
                             float: left;
                             background: rgba(0,0,0,0.5);
                             height: 40px;
+                            .transition();
     
                             span {
                                 display: inline-block;
@@ -309,9 +310,7 @@
                                 }
     
                                 &:first-child, &:last-child {
-                                    width:0px;
-                                    opacity: 0;
-                                    .transition();
+                                    display: none;
                                 }
                             }
                         }
@@ -337,7 +336,6 @@
                                     &:first-child, &:last-child {
                                         width:auto;
                                         padding: 5px 0;
-                                        opacity: 1;
                                     }
                                 }
                             }
