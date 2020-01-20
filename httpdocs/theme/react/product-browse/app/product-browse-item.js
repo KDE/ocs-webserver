@@ -485,6 +485,7 @@ function MusicPlayer(props){
     },[])
   
     useEffect(() => {
+        console.log('play index change');
       if (isPlaying) onPlayClick(true);
       if (isPaused){
           if (prevIndex === playIndex) onPlayClick();
@@ -530,6 +531,7 @@ function MusicPlayer(props){
     }
   
     function onPrevTrackPlayClick(){
+        console.log('on prev track play click');
         let prevTrackIndex;
         if (playIndex === 0){
             prevTrackIndex = props.items.length - 1;
@@ -540,6 +542,7 @@ function MusicPlayer(props){
     }
   
     function onNextTrackPlayClick(){
+        console.log('on next track play click');
         let nextTrackIndex;
         if (playIndex + 1 === props.items.length){
             nextTrackIndex = 0;
