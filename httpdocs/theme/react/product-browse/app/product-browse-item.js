@@ -548,42 +548,43 @@ function MusicPlayer(props){
     }
    
     function onReportAudioPlay(musicSrc,newPlayIndex){  
-      
+        console.log('on report audio play');
+        console.log(musicSrc);
         const audioItem = playedAudioArray.find((i => i.musicSrc === musicSrc));
-      const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
-      const newAudioItem = {
-        ...audioItem,
-        played:audioItem.played + 1
-      }
-      
-      const newPLayedAudioArray = [
-        ...playedAudioArray.slice(0,audioItemIndex),
-        newAudioItem,
-        ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
-      ];
-  
-      if (playedAudioArray[audioItemIndex].played === 0){
-  
-        const audioStartUrl = "https://" + window.location.hostname + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-        console.log('audio start url - ' + audioStartUrl);
-        $.ajax({url: audioStartUrl}).done(function(res) { 
-          console.log('ajax res - ');
-          console.log(res);
-          const newAudioItem = {
+        console.log(audioItem);
+        const audioItemIndex = newPlayIndex ? newPlayIndex : playedAudioArray.findIndex((i => i.musicSrc === musicSrc));
+        const newAudioItem = {
             ...audioItem,
-            mediaViewId:res.MediaViewId,
             played:audioItem.played + 1
-          }
-          const newPLayedAudioArray = [
+        }
+      
+        const newPLayedAudioArray = [
             ...playedAudioArray.slice(0,audioItemIndex),
             newAudioItem,
             ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
-          ];
-          setPlayedAudioArray(newPLayedAudioArray);
-        });
-      } else {
-        setPlayedAudioArray(newPLayedAudioArray);
-      }
+        ];
+  
+        if (playedAudioArray[audioItemIndex].played === 0){
+            const audioStartUrl = "https://" + window.location.hostname + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+            console.log('audio start url - ' + audioStartUrl);
+            $.ajax({url: audioStartUrl}).done(function(res) { 
+            console.log('ajax res - ');
+            console.log(res);
+            const newAudioItem = {
+                ...audioItem,
+                mediaViewId:res.MediaViewId,
+                played:audioItem.played + 1
+            }
+            const newPLayedAudioArray = [
+                ...playedAudioArray.slice(0,audioItemIndex),
+                newAudioItem,
+                ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+            ];
+            setPlayedAudioArray(newPLayedAudioArray);
+            });
+        } else {
+            setPlayedAudioArray(newPLayedAudioArray);
+        }
     }
   
     function onReportAudioStop(musicSrc){
