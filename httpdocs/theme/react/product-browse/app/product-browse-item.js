@@ -206,7 +206,7 @@ export function ProductBrowseItem(props){
     )
 }
 
-function ProductBrowseItemPreviewMusicPlayerTwo(props){
+/*function ProductBrowseItemPreviewMusicPlayerTwo(props){
 
     const {productBrowseState, productBrowseDispatch} = React.useContext(Context);
 
@@ -433,7 +433,7 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
             {musicPlayerDisplay}
         </div>
     )
-}
+}*/
 
 function MusicPlayerWrapper(props){
     console.log('music player wrapper, props:')
@@ -479,7 +479,7 @@ function MusicPlayer(props){
     
     useEffect(() => {
         
-      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
+      const playerElement = document.getElementById("music-player-audio-"+props.product.project_id).getElementsByTagName('audio');
       const currentSrc = props.items[playIndex].musicSrc;
       
       playerElement[0].src = currentSrc;
@@ -512,7 +512,7 @@ function MusicPlayer(props){
     // audio player
   
     function onPlayClick(reload,newPlayIndex){
-      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
+      const playerElement = document.getElementById("music-player-audio-"+props.product.project_id).getElementsByTagName('audio');
       let pi = newPlayIndex ? newPlayIndex : playIndex;
       const currentSrc = props.items[pi].musicSrc;
       if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true) playerElement[0].src = currentSrc;
@@ -523,7 +523,7 @@ function MusicPlayer(props){
     }
   
     function onPauseClick(){
-      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
+      const playerElement = document.getElementById("music-player-audio-"+props.product.project_id).getElementsByTagName('audio');
       playerElement[0].pause();
       setIsPlaying(false);
       setIsPaused(true);
@@ -622,7 +622,7 @@ function MusicPlayer(props){
   
     return (
       <div id={"music-player-container"+props.product.project_id}> 
-        <audio volume={0.5} id={"music-player-audio-"}></audio>
+        <audio volume={0.5} id={"music-player-audio-"+props.product.project_id}></audio>
         <MusicPlayerControlPanel 
           playIndex={playIndex}
           isPlaying={isPlaying}
@@ -651,7 +651,6 @@ function usePrevious(value) {
     // Return previous value (happens before update in useEffect above)
     return ref.current;
 }
-
 
 function MusicPlayerControlPanel(props){
   
@@ -725,7 +724,7 @@ function MusicPlayerControlPanel(props){
         </div>
       </div>
     )
-  }
+}
   
 
 export default ProductBrowseItem;
