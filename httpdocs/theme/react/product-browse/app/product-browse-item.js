@@ -512,7 +512,7 @@ function MusicPlayer(props){
     // audio player
   
     function onPlayClick(reload,newPlayIndex){
-      const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       let pi = newPlayIndex ? newPlayIndex : playIndex;
       const currentSrc = props.items[pi].musicSrc;
       if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true) playerElement[0].src = currentSrc;
@@ -523,7 +523,7 @@ function MusicPlayer(props){
     }
   
     function onPauseClick(){
-      const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       playerElement[0].pause();
       setIsPlaying(false);
       setIsPaused(true);
