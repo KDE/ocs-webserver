@@ -449,7 +449,6 @@ function MusicPlayerWrapper(props){
     )
 }
 
-
 function MusicPlayer(props){
 
     /* COMPONENT */
@@ -458,6 +457,7 @@ function MusicPlayer(props){
 
     const [ playIndex, setPlayIndex ] = useState(0);
     const prevIndex = usePrevious(playIndex);
+
     const [ isPlaying, setIsPlaying ] = useState();
     const [ isPaused, setIsPaused ] = useState();
 
@@ -483,7 +483,7 @@ function MusicPlayer(props){
       const currentSrc = props.items[playIndex].musicSrc;
       
       playerElement[0].src = currentSrc;
-      playerElement[0].volume = audioVolume;
+      playerElement[0].volume = 0.5;
       playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
       
       // getRandomMusicsupporter();
@@ -515,9 +515,7 @@ function MusicPlayer(props){
       const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
       let pi = newPlayIndex ? newPlayIndex : playIndex;
       const currentSrc = props.items[pi].musicSrc;
-      if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
-        playerElement[0].src = currentSrc;
-      }
+      if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true) playerElement[0].src = currentSrc;
       playerElement[0].play();
       setIsPlaying(true);
       setIsPaused(false);
@@ -624,7 +622,7 @@ function MusicPlayer(props){
   
     return (
       <div id="music-player-container" onKeyPress={(e) => handleKeyPress(e)}> 
-        <audio volume={audioElVolume} id={"music-player-audio-"+props.product.project_id}></audio>
+        <audio volume={0.5} id={"music-player-audio-"+props.product.project_id}></audio>
         <MusicPlayerControlPanel 
           playIndex={playIndex}
           isPlaying={isPlaying}
