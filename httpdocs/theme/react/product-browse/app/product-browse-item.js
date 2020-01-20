@@ -719,7 +719,7 @@ function MusicPlayerControlPanel(props){
     return (
       <div id="music-player-control-panel">
         <div className="mobile-control-panel-wrapper">
-          <div className="music-player-controls-bar">
+          <div className={"music-player-controls-bar " + isPlaying === true ? "is-playing" : ""}>
             <div className="music-player-controls-wrapper">
               {audioControlsDisplay}
             </div>
