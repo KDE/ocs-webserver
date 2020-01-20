@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef} from "react";
-import StoreContextProvider,{Context} from './context-provider.js';
-import { isMobile   } from 'react-device-detect';
+import React, { useState, useEffect, useRef } from "react";
+import { Context } from './context-provider.js';
+import { isMobile } from 'react-device-detect';
 import { getImageUrl } from './product-browse-helpers';
-import Slider from 'rc-slider'; 
-import { Scrollbars } from 'react-custom-scrollbars';
 
 
 export function ProductBrowseItem(props){
@@ -125,9 +123,9 @@ export function ProductBrowseItem(props){
         );
         if (productFiles && productFiles.length > 0){
                 musicPlayerDisplay = (
-                    <ProductBrowseItemPreviewMusicPlayerTwo
-                        productFiles={productFiles} 
-                        projectId={p.project_id} 
+                    <MusicPlayerWrapper 
+                        product={p}
+                        items={productFiles} 
                         imgHeight={props.imgHeight}
                     />
                 )
@@ -439,7 +437,8 @@ function ProductBrowseItemPreviewMusicPlayerTwo(props){
 }
 
 function MusicPlayerWrapper(props){
-
+    console.log('music player wrapper, props:')
+    console.log(props);
     return (
       <div>
         <MusicPlayer 
@@ -479,7 +478,7 @@ function MusicPlayer(props){
     
     useEffect(() => {
         
-      const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       const currentSrc = props.items[playIndex].musicSrc;
       
       playerElement[0].src = currentSrc;
@@ -620,7 +619,7 @@ function MusicPlayer(props){
   
     return (
       <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
-        <audio volume={audioElVolume} id="music-player-audio"></audio>
+        <audio volume={audioElVolume} id={"music-player-audio-"+props.product.project_id}></audio>
         <MusicPlayerControlPanel 
           playIndex={playIndex}
           isPlaying={isPlaying}
@@ -633,7 +632,7 @@ function MusicPlayer(props){
         />
       </div>
     )
-  }
+}
   
 
 export default ProductBrowseItem;
