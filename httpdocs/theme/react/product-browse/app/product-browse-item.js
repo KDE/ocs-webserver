@@ -621,8 +621,8 @@ function MusicPlayer(props){
     /* RENDER */
   
     return (
-      <div id="music-player-container" onKeyPress={(e) => handleKeyPress(e)}> 
-        <audio volume={0.5} id={"music-player-audio-"+props.product.project_id}></audio>
+      <div id={"music-player-container"+props.product.project_id}> 
+        <audio volume={0.5} id={"music-player-audio-"}></audio>
         <MusicPlayerControlPanel 
           playIndex={playIndex}
           isPlaying={isPlaying}
