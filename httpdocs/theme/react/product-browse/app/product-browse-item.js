@@ -436,8 +436,7 @@ export function ProductBrowseItem(props){
 }*/
 
 function MusicPlayerWrapper(props){
-    console.log('music player wrapper, props:')
-    console.log(props);
+    
     return (
       <div>
         <MusicPlayer 
@@ -485,13 +484,12 @@ function MusicPlayer(props){
     },[])
   
     useEffect(() => {
-        console.log('play index change');
-      if (isPlaying) playAudio(true);
-      if (isPaused){
+        if (isPlaying) playAudio(true);
+        if (isPaused){
           if (prevIndex === playIndex) playAudio();
           else  playAudio(true);
-      }
-      if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
+        }
+        if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
     },[playIndex])
   
 
@@ -510,7 +508,6 @@ function MusicPlayer(props){
 
     function playAudio(reload,newPlayIndex){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
-      console.log(playerElement)
       let pi = newPlayIndex ? newPlayIndex : playIndex;
       const currentSrc = props.items[pi].musicSrc;
       if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true) playerElement[0].src = currentSrc;
@@ -531,7 +528,6 @@ function MusicPlayer(props){
     }
   
     function onPrevTrackPlayClick(){
-        console.log('on prev track play click');
         let prevTrackIndex;
         if (playIndex === 0){
             prevTrackIndex = props.items.length - 1;
@@ -542,7 +538,6 @@ function MusicPlayer(props){
     }
   
     function onNextTrackPlayClick(){
-        console.log('on next track play click');
         let nextTrackIndex;
         if (playIndex + 1 === props.items.length){
             nextTrackIndex = 0;
@@ -569,11 +564,11 @@ function MusicPlayer(props){
   
       if (playedAudioArray[audioItemIndex].played === 0){
   
-        const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
-        //console.log('audio start url - ' + audioStartUrl);
+        const audioStartUrl = "https://" + window.location.hostname + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+        console.log('audio start url - ' + audioStartUrl);
         $.ajax({url: audioStartUrl}).done(function(res) { 
-          //console.log('ajax res - ');
-          //console.log(res);
+          console.log('ajax res - ');
+          console.log(res);
           const newAudioItem = {
             ...audioItem,
             mediaViewId:res.MediaViewId,
@@ -607,12 +602,12 @@ function MusicPlayer(props){
   
       if  (playedAudioArray[audioItemIndex].stopped === 0){
   
-        const audioStopUrl =   "https://" + window.location.hostname + "/p/" + props.product.project_id + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
+        const audioStopUrl =   "https://" + window.location.hostname + "/stopmediaviewajax?media_view_id=" + playedAudioArray[audioItemIndex].mediaViewId;
   
-        //console.log(audioStopUrl);
+        console.log(audioStopUrl);
   
         $.ajax({url: audioStopUrl}).done(function(res) { 
-          //console.log(res);
+          console.log(res);
           setPlayedAudioArray(newPLayedAudioArray);
         });
       } else {
