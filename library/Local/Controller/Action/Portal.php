@@ -1,0 +1,54 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+class Local_Controller_Action_Portal extends Zend_Controller_Action
+{
+
+    /** @var  object */
+    protected $_authMember;
+
+    public function init()
+    {
+        $auth = Zend_Auth::getInstance();
+
+        // Design issue: getStorage()->read() should return an empty member object for unknown user. This is a workaround for the moment.
+        if ($auth->hasIdentity()) {
+            $this->_authMember = $auth->getStorage()->read();
+        } else {
+            $tableMember = new Default_Model_Member();
+            $this->_authMember = $tableMember->createRow();
+        }
+
+        $this->initView();
+    }
+
+    public function initView()
+    {
+        parent::initView();
+
+        $this->_helper->layout()->setLayoutPath(APPLICATION_PATH . "/modules/portal/views/layout");
+        $this->_helper->layout()->setLayout('layout');
+
+        return $this->view;
+    }
+
+} 

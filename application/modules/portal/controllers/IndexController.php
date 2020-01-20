@@ -1,11 +1,12 @@
 <?php
 
 /**
- *  ocs-webserver
  *
- *  Copyright 2016 by pling GmbH.
+ *   ocs-apiserver
  *
- *    This file is part of ocs-webserver.
+ *   Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-apiserver.
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as
@@ -20,21 +21,13 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Created: 31.05.2017
  */
-class MisuseController extends Local_Controller_Action_DomainSwitch
+class Portal_IndexController extends Local_Controller_Action_Portal
 {
 
     public function indexAction()
     {
-        $this->view->headTitle('Watchlist - Misuse-Reports','SET');
-        $this->forward('list', 'misuse', 'default', $this->getAllParams());
-    }
-
-    public function listAction()
-    {
-        $this->view->headTitle('Watchlist - Misuse-Reports','SET');
-        $this->view->page = (int)$this->getParam('page', 1);
+        $dummy = 1;
     }
 
 }

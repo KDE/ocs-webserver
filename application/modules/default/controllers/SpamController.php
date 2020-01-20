@@ -46,27 +46,27 @@ class SpamController extends Local_Controller_Action_DomainSwitch
     }
      public function productAction()
     {   
-        $this->view->headTitle('Spam - Products','SET');
+        $this->view->headTitle('Watchlist - Products-10-files','SET');
         
     }
 
     public function newproductAction()
     {   
-        $this->view->headTitle('Spam - new products < 2 months','SET');
+        $this->view->headTitle('Watchlist - new products < 2 months','SET');
         
     }
     public function unpublishedproductAction()
     {
-        $this->view->headTitle('Spam - Unpublished Products','SET');
+        $this->view->headTitle('Watchlist - Unpublished Products','SET');
     }
 
     public function paypalAction()
     {   
-        $this->view->headTitle('Spam - Paypal','SET');
+        $this->view->headTitle('Watchlist - Paypal duplicated','SET');
     }
     public function mdsumAction()
     {   
-        $this->view->headTitle('Md5sum - Duplicated','SET');
+        $this->view->headTitle('Watchlist - Md5sum duplicated','SET');
     }
 
 

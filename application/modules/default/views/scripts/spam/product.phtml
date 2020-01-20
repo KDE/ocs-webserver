@@ -128,7 +128,10 @@
                     title: 'project id',
                     create: false,
                     edit: false,
-                    list: true
+                    list: true,
+                    display:function(data){                                                                                                             
+                          return '<a style="color:#2673b0" href="/p/'+data.record.project_id+'" target="_blank">'+data.record.project_id+'<a>';
+                          }   
                 }, 
                 cat_title: {                    
                     title: 'category',

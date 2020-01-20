@@ -555,12 +555,49 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'controller' => 'support',
                 'action'     => 'paymentcancel'
             )));
+        
 
-        $router->addRoute('samepaypal', new Zend_Controller_Router_Route('/samepaypal', array(
+        $router->addRoute('watchlist_productmoderation', new Zend_Controller_Router_Route('/watchlist-productmoderation', array(
+            'module'     => 'default',
+            'controller' => 'moderation',
+            'action'     => 'productmoderation'
+        )));
+        
+        $router->addRoute('watchlist_samepaypal', new Zend_Controller_Router_Route('/watchlist-samepaypal', array(
             'module'     => 'default',
             'controller' => 'spam',
             'action'     => 'paypal'
         )));
+
+        $router->addRoute('watchlist_products_files', new Zend_Controller_Router_Route('/watchlist-products-10-files', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'product'
+        )));   
+        
+        $router->addRoute('watchlist_md5sum', new Zend_Controller_Router_Route('/watchlist-md5sum-duplicated', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'mdsum'
+        ))); 
+
+        $router->addRoute('watchlist_unpublishedproduct', new Zend_Controller_Router_Route('/watchlist-unpublishedproduct', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'unpublishedproduct'
+        ))); 
+
+        $router->addRoute('watchlist_newproduct_2_month', new Zend_Controller_Router_Route('/watchlist-newproduct-2-month', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'newproduct'
+        ))); 
+
+        $router->addRoute('watchlist_newproducts', new Zend_Controller_Router_Route('/watchlist-newproducts', array(
+            'module'     => 'default',
+            'controller' => 'newproducts',
+            'action'     => 'index'
+        ))); 
 
         $router->addRoute('support_new', new Zend_Controller_Router_Route('/supportold2', array(
             'module'     => 'default',

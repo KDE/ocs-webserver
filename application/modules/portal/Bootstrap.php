@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  ocs-webserver
  *
@@ -19,22 +18,26 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Created: 31.05.2017
- */
-class MisuseController extends Local_Controller_Action_DomainSwitch
+ **/
+class Portal_Bootstrap extends Zend_Application_Module_Bootstrap
 {
 
-    public function indexAction()
+    protected function _initAutoloader()
     {
-        $this->view->headTitle('Watchlist - Misuse-Reports','SET');
-        $this->forward('list', 'misuse', 'default', $this->getAllParams());
+        $autoloader = new Zend_Application_Module_Autoloader(array(
+            'namespace' => 'Portal',
+            'basePath'  => realpath(dirname(__FILE__)),
+        ));
+
+        return $autoloader;
     }
 
-    public function listAction()
+    protected function _initIncludePath()
     {
-        $this->view->headTitle('Watchlist - Misuse-Reports','SET');
-        $this->view->page = (int)$this->getParam('page', 1);
+        set_include_path(implode(PATH_SEPARATOR, array(
+            dirname(__FILE__) . '/library',
+            get_include_path(),
+        )));
     }
 
 }

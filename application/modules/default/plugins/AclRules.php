@@ -149,6 +149,27 @@ class Default_Plugin_AclRules extends Zend_Acl
             'statistics_data'
         ));
 
+        $this->addResource(new Zend_Acl_Resource ('portal_index'));
+        $this->allow(self::ROLENAME_GUEST, array(
+            'portal_index'
+        ));
+        
+        $this->addResource(new Zend_Acl_Resource ('portal_user'));
+        $this->allow(self::ROLENAME_GUEST, array(
+            'portal_user'
+        ));
+        
+        // resource portal_user
+        $this->allow(self::ROLENAME_GUEST, 'portal_index', array(
+            'index'
+        ));
+        
+        // resource portal_user
+        $this->allow(self::ROLENAME_GUEST, 'portal_user', array(
+            'index'
+        ));
+
+
         $this->allow(self::ROLENAME_GUEST, array(
             'default_logout',
             'default_authorization',

@@ -102,7 +102,7 @@ class ModerationController extends Local_Controller_Action_DomainSwitch
 
 	public function productmoderationAction()
     {		
-		$this->view->headTitle('Product Moderation','SET');   
+		$this->view->headTitle('Watchlist - Product Moderation','SET');   
     }
 
 	public function listmoderationAction()
