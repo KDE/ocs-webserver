@@ -262,6 +262,10 @@ class JsonController extends Zend_Controller_Action
         if($this->hasParam('s')){
             $store = $this->getParam('s');
         }
+        if($store=='Opendesktop')
+        {
+            $store = null;
+        }
 
         // $storemodel = new Default_Model_DbTable_ConfigStore(); 
         // $s = $storemodel->fetchDomainObjectsByName($store);
