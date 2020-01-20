@@ -478,16 +478,14 @@ function MusicPlayer(props){
     const [ isMobile, setIsMobile ] = useState(initialIsMobileValue);
     
     useEffect(() => {
-        
-      const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
-      const currentSrc = props.items[playIndex].musicSrc;
-      
-      playerElement[0].src = currentSrc;
-      playerElement[0].volume = 0.5;
-      playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
-      
-      // getRandomMusicsupporter();
-    
+        const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
+        console.log(props.product);
+        console.log(playerElement)
+        const currentSrc = props.items[playIndex].musicSrc;
+        playerElement[0].src = currentSrc;
+        playerElement[0].volume = 0.5;
+        playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
+        // getRandomMusicsupporter();
     },[])
   
     useEffect(() => {
@@ -512,7 +510,6 @@ function MusicPlayer(props){
     // audio player
   
     function onPlayClick(reload,newPlayIndex){
-        console.log(props.product);
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       console.log(playerElement)
       let pi = newPlayIndex ? newPlayIndex : playIndex;
