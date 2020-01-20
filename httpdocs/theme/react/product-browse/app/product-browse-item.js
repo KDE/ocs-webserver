@@ -565,7 +565,7 @@ function MusicPlayer(props){
         ];
   
         if (playedAudioArray[audioItemIndex].played === 0){
-            const audioStartUrl = "https://" + window.location.hostname + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=2';
+            const audioStartUrl = "https://" + window.location.hostname + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.id+'&type_id=2';
             console.log('audio start url - ' + audioStartUrl);
             $.ajax({url: audioStartUrl}).done(function(res) { 
             console.log('ajax res - ');
