@@ -717,7 +717,7 @@ function MusicPlayerControlPanel(props){
     /* RENDER */
   
     let musicPlayerControlBarCssClass = "music-player-controls-bar ";
-    if (isPlaying) musicPlayerControlBarCssClass += "is-playing";
+    if (props.isPlaying) musicPlayerControlBarCssClass += "is-playing";
 
     return (
       <div id="music-player-control-panel">
