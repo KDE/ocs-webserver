@@ -502,15 +502,10 @@ function MusicPlayer(props){
 
     React.useEffect(() => {
         if (productBrowseState.current === props.product.project_id){
-            if (productBrowseState.isPlaying === true){
-                playTrack();
-            } else {
-                pauseTrack()
-            }
+            if (productBrowseState.isPlaying === true) onPlayClick(true);
+            else onPauseClick();
         } else {
-            if (isPlaying === true){
-                pauseTrack();
-            }
+            if (isPlaying === true) onPauseClick();
         }
     },[productBrowseState.current,productBrowseState.isPlaying])
 
@@ -626,8 +621,6 @@ function MusicPlayer(props){
     }
   
     /* RENDER */
-    
-    const audioElVolume = isMuted === true ? 0.0 : audioVolume;
   
     return (
       <div id="music-player-container" onKeyPress={(e) => handleKeyPress(e)}> 
