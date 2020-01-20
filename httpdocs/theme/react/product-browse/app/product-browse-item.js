@@ -716,10 +716,12 @@ function MusicPlayerControlPanel(props){
     
     /* RENDER */
   
+    let musicPlayerControlBarCssClass = "music-player-controls-bar ";
+    if (isPlaying) musicPlayerControlBarCssClass += "is-playing";
+
     return (
       <div id="music-player-control-panel">
-        <div className="mobile-control-panel-wrapper">
-          <div className={"music-player-controls-bar " + props.isPlaying === true ? "is-playing" : ""}>
+          <div className={musicPlayerControlBarCssClass}>
             <div className="music-player-controls-wrapper">
               {audioControlsDisplay}
             </div>
@@ -727,7 +729,6 @@ function MusicPlayerControlPanel(props){
                 {props.playIndex + " / " + props.items.length}
             </div>
           </div>
-        </div>
       </div>
     )
 }
