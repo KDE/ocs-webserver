@@ -626,15 +626,11 @@ function MusicPlayer(props){
     }
   
     /* RENDER */
-  
-    let musicPlayerContainerCssClass = "";
-    if (showPlaylist === true) musicPlayerContainerCssClass += "show-playlist ";
-    if (isMobile === true) musicPlayerContainerCssClass += " is-mobile";
-  
+    
     const audioElVolume = isMuted === true ? 0.0 : audioVolume;
   
     return (
-      <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
+      <div id="music-player-container" onKeyPress={(e) => handleKeyPress(e)}> 
         <audio volume={audioElVolume} id={"music-player-audio-"+props.product.project_id}></audio>
         <MusicPlayerControlPanel 
           playIndex={playIndex}
@@ -664,5 +660,81 @@ function usePrevious(value) {
     // Return previous value (happens before update in useEffect above)
     return ref.current;
 }
+
+
+function MusicPlayerControlPanel(props){
+  
+    /* DISPLAY */
+    
+    // audio controls display
+  
+    const playButtonElement = (
+      <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="play-icon">
+          <g><path d="m20.1 2.9q4.7 0 8.6 2.3t6.3 6.2 2.3 8.6-2.3 8.6-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3z m8.6 18.3q0.7-0.4 0.7-1.2t-0.7-1.2l-12.1-7.2q-0.7-0.4-1.5 0-0.7 0.4-0.7 1.3v14.2q0 0.9 0.7 1.3 0.4 0.2 0.8 0.2 0.3 0 0.7-0.2z"></path></g>
+      </svg>
+    )
+  
+    const pauseButtonElement = (
+        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="pause-icon">
+            <g><path d="m18.7 26.4v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m10 0v-12.8q0-0.3-0.2-0.5t-0.5-0.2h-5.7q-0.3 0-0.5 0.2t-0.2 0.5v12.8q0 0.3 0.2 0.5t0.5 0.2h5.7q0.3 0 0.5-0.2t0.2-0.5z m8.6-6.4q0 4.7-2.3 8.6t-6.3 6.2-8.6 2.3-8.6-2.3-6.2-6.2-2.3-8.6 2.3-8.6 6.2-6.2 8.6-2.3 8.6 2.3 6.3 6.2 2.3 8.6z"></path></g>
+        </svg>
+    )
+  
+    const prevButtonElement = (
+        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="prev-icon">
+            <g><path d="m15.9 20l14.1-10v20z m-5.9-10h3.4v20h-3.4v-20z"></path></g>
+        </svg>
+    )
+  
+    const nextButtonElement = (
+        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" className="next-icon">
+            <g><path d="m26.6 10h3.4v20h-3.4v-20z m-16.6 20v-20l14.1 10z"></path></g>
+        </svg>
+    )
+  
+    let playButtonDisplay;
+    if (props.isPlaying === true){
+      if (props.isMobile === true) playButtonDisplay = <span onTouchStart={() => props.onPauseClick()}>{pauseButtonElement}</span>
+      else playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
+    } else {
+      if (props.isMobile === true)  playButtonDisplay = <span onTouchStart={() => props.onPlayClick()}>{playButtonElement}</span>
+      else  playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
+    }
+  
+    let audioControlsDisplay;
+  
+    if (props.isMobile === true){
+      audioControlsDisplay = (
+        <div className="music-player-audio-control">
+          <span onTouchStart={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+          {playButtonDisplay}
+          <span onTouchStart={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+        </div>
+      )
+    } else {
+      audioControlsDisplay = (
+        <div className="music-player-audio-control">
+          <span onClick={() => props.onPrevTrackPlayClick()}>{prevButtonElement}</span>
+          {playButtonDisplay}
+          <span onClick={() => props.onNextTrackPlayClick()}>{nextButtonElement}</span>
+        </div>
+      )
+    }
+    
+    /* RENDER */
+  
+    return (
+      <div id="music-player-control-panel">
+        <div className="mobile-control-panel-wrapper">
+          <div className="music-player-controls-bar">
+            <div className="music-player-controls-wrapper">
+              {audioControlsDisplay}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
 
 export default ProductBrowseItem;
