@@ -478,9 +478,10 @@ function MusicPlayer(props){
     const [ isMobile, setIsMobile ] = useState(initialIsMobileValue);
     
     useEffect(() => {
-        const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
         console.log(props.product);
-        console.log(playerElement)
+        console.log(document.getElementById("music-player-container-"+props.product.project_id))
+        const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
+        console.log(playerElement);
         const currentSrc = props.items[playIndex].musicSrc;
         playerElement[0].src = currentSrc;
         playerElement[0].volume = 0.5;
