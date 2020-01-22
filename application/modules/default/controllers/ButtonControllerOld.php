@@ -23,6 +23,9 @@
 class ButtonController extends Zend_Controller_Action
 {
 
+    //20200122 ronald: I have disabeld this controller, because it is no longer in use
+    
+    
     public function indexAction()
     {
         $this->_helper->viewRenderer('render');
