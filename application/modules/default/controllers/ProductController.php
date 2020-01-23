@@ -397,7 +397,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             Default_Model_Views::saveViewProduct($this->_projectId);
 
             $tablePageViews = new Default_Model_DbTable_StatPageViews();
-            $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(), $this->_authMember->member_id);
+            $tablePageViews->savePageView($this->_projectId, $this->getRequest()->getClientIp(),
+                $this->_authMember->member_id);
         }
 
         $fmodel = new  Default_Model_DbTable_PploadFiles();
@@ -1882,23 +1883,24 @@ class ProductController extends Local_Controller_Action_DomainSwitch
 
     public function loadcommentAction()
     {
-        $this->_helper->layout->disableLayout();        
-        $this->view->comments = $this->loadComments(1, $this->_projectId,0);
+        $this->_helper->layout->disableLayout();
+        $this->view->comments = $this->loadComments(1, $this->_projectId, 0);
         $tableProject = new Default_Model_Project();
-        $project = $tableProject->fetchProductInfo($this->_projectId);       
+        $project = $tableProject->fetchProductInfo($this->_projectId);
         $this->view->product = $project;
         $this->view->member_id = (int)$this->_authMember->member_id;
         $requestResult = $this->view->render('product/partials/productCommentsUX1.phtml');
-        $this->_helper->json(array('status' =>'ok', 'data' => $requestResult));
+        $this->_helper->json(array('status' => 'ok', 'data' => $requestResult));
 
     }
 
-    private function loadComments($page_offset, $project_id,$comment_type)
+    private function loadComments($page_offset, $project_id, $comment_type)
     {
         $modelComments = new Default_Model_ProjectComments();
-        $paginationComments = $modelComments->getCommentTreeForProject($project_id,$comment_type);
+        $paginationComments = $modelComments->getCommentTreeForProject($project_id, $comment_type);
         $paginationComments->setItemCountPerPage(25);
         $paginationComments->setCurrentPageNumber($page_offset);
+
         return $paginationComments;
     }
 
@@ -2919,7 +2921,6 @@ class ProductController extends Local_Controller_Action_DomainSwitch
     }
 
 
-
     public function saveproductAction()
     {
         $form = new Default_Form_Product();
@@ -3058,8 +3059,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $param = array(
                 'q'     => 'test',
                 'store' => null,
-                'page'  => 1
-            ,
+                'page'  => 1,
                 'count' => 10
             );
             $viewHelperImage = new Default_View_Helper_Image();
@@ -3078,20 +3078,13 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                         'height' => 50
                     ));
                     $ps[] = array(
-                        'description'   => $p->description
-                    ,
-                        'title'         => $p->title
-                    ,
-                        'project_id'    => $p->project_id
-                    ,
-                        'member_id'     => $p->member_id
-                    ,
-                        'username'      => $p->username
-                    ,
-                        'laplace_score' => $p->laplace_score
-                    ,
-                        'score'         => $p->score
-                    ,
+                        'description'   => $p->description,
+                        'title'         => $p->title,
+                        'project_id'    => $p->project_id,
+                        'member_id'     => $p->member_id,
+                        'username'      => $p->username,
+                        'laplace_score' => $p->laplace_score,
+                        'score'         => $p->score,
                         'image_small'   => $img
                     );
                 }
@@ -3125,23 +3118,20 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $collection_id = null;
         $file_id = null;
         $memberId = $this->_authMember->member_id;
-        $media_view_type_id = $this->getParam('type_id');
-        if (!$media_view_type_id) {
-            // default
-            $media_view_type_id = Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO;
-        }
+        $media_view_type_id = (int)$this->getParam('type_id', Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO);
 
         if ($this->hasParam('collection_id') && $this->hasParam('file_id')) {
-            $collection_id = $this->getParam('collection_id');
-            $file_id = $this->getParam('file_id');
+            $collection_id = (int)$this->getParam('collection_id');
+            $file_id = (int)$this->getParam('file_id');
             $id = null;
 
             //Log media view
             try {
+                $this->saveMediaView($file_id, $media_view_type_id);
+
                 $mediaviewsTable = new Default_Model_DbTable_MediaViews();
-                $id = $mediaviewsTable->getNewId();
                 $data = array(
-                    'media_view_id'      => $id,
+                    'media_view_id'      => $mediaviewsTable->getNewId(),
                     'media_view_type_id' => $media_view_type_id,
                     'project_id'         => $this->_projectId,
                     'collection_id'      => $collection_id,
@@ -3158,11 +3148,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $mediaviewsTable->createRow($data)->save();
 
             } catch (Exception $exc) {
-                //echo $exc->getTraceAsString();
                 $errorLog = Zend_Registry::get('logger');
                 $errorLog->err(__METHOD__ . ' - ' . $exc->getMessage() . ' ---------- ' . PHP_EOL);
             }
-
 
             $this->_helper->json(array('status' => 'success', 'MediaViewId' => $id));
 
@@ -3172,14 +3160,39 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->_helper->json(array('status' => 'error'));
     }
 
-    function getRealIpAddr()
+    /**
+     * @param int $file_id
+     * @param int $media_view_type_id
+     */
+    protected function saveMediaView($file_id, $media_view_type_id)
     {
+        switch ($media_view_type_id) {
+            case Default_Model_DbTable_MediaViews::MEDIA_TYPE_VIDEO:
+                Default_Model_Views::saveViewVideo($file_id);
+                break;
+            case Default_Model_DbTable_MediaViews::MEDIA_TYPE_MUSIC:
+                Default_Model_Views::saveViewMusic($file_id);
+                break;
+            case Default_Model_DbTable_MediaViews::MEDIA_TYPE_BOOK:
+                Default_Model_Views::saveViewBook($file_id);
+                break;
+            default:
+                error_log(__METHOD__ . ' :: no mediatype found for value: ' . $media_view_type_id);
+        }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRealIpAddr()
+    {
+        $ip = null;
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
         {
             $ip = $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
         {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            list($ip) = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']); // this could be an array
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
@@ -3187,14 +3200,19 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         return $ip;
     }
 
-    function getReferer()
+    /**
+     * @return string|null
+     */
+    public function getReferer()
     {
-        $referer = null;
+        if (isset($_SERVER['HTTP_X_FORWARDED_REFERRER'])) {
+            return $_SERVER['HTTP_X_FORWARDED_REFERRER'];
+        }
         if (!empty($_SERVER['HTTP_REFERER'])) {
-            $referer = $_SERVER['HTTP_REFERER'];
+            return $_SERVER['HTTP_REFERER'];
         }
 
-        return $referer;
+        return null;
     }
 
     public function stopmediaviewajaxAction()
