@@ -108,4 +108,34 @@ class VerifyController extends Local_Controller_Action_DomainSwitch
         return $request->getHttpHost();
     }
 
+    public function requestAction()
+    {
+        $this->_helper->viewRenderer('resend');
+        $member_id = (int)$this->getParam('i', null);
+
+        $modelMember = new Default_Model_Member();
+        $memberData = $modelMember->fetchMemberData($member_id);
+
+        if (count($memberData->toArray()) == 0) {
+            throw new Zend_Controller_Action_Exception('could not found data for member_id: ' . print_r($member_id, true));
+        }
+
+        $modelEmail = new Default_Model_MemberEmail();
+        $primaryEmail = $modelEmail->fetchMemberPrimaryMail($member_id);
+        $mailValidationValue = $primaryEmail['email_verification_value'];
+        $memberEmail = $primaryEmail['email_address'];
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - resend of verification mail requested by user id: '. $this->_authMember->member_id)
+        ;
+
+        $this->resendVerificationMail($memberData, $memberEmail, $mailValidationValue);
+
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - verification mail successfully transmitted to mail server for user id: '
+                                           . $memberData->member_id)
+        ;
+
+        $this->_helper->flashMessenger->addMessage('<p class="text-info">We have send a new verification mail to the stored mail address. </p>');
+        $this->redirect('/');
+    }
+
 }
