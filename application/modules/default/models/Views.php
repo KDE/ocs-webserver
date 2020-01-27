@@ -25,11 +25,14 @@ class Default_Model_Views
 {
 
     const OBJECT_TYPE_PRODUCT = 10;
+    const OBJECT_TYPE_COLLECTION = 12;
     const OBJECT_TYPE_MEMBERPAGE = 20;
     const OBJECT_TYPE_LOGIN = 30;
     const OBJECT_TYPE_LOGOUT = 32;
     const OBJECT_TYPE_DOWNLOAD = 40;
-    const OBJECT_TYPE_COLLECTION = 50;
+    const OBJECT_TYPE_MEDIA_VIDEO = 52;
+    const OBJECT_TYPE_MEDIA_MUSIC = 54;
+    const OBJECT_TYPE_MEDIA_BOOK = 56;
 
     public static function saveViewProduct($product_id)
     {
@@ -110,6 +113,24 @@ class Default_Model_Views
     {
         $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
         self::saveViewObject(self::OBJECT_TYPE_COLLECTION, $_projectId, $sql);
+    }
+
+    public static function saveViewMusic($object_id)
+    {
+        $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_MEDIA_MUSIC, $object_id, $sql);
+    }
+
+    public static function saveViewVideo($object_id)
+    {
+        $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_MEDIA_VIDEO, $object_id, $sql);
+    }
+
+    public static function saveViewBook($object_id)
+    {
+        $sql = ("INSERT IGNORE INTO `stat_object_view` (`seen_at`, `ip_inet`, `object_type`, `object_id`, `ipv4`, `ipv6`, `fingerprint`, `user_agent`, `member_id_viewer`) VALUES (:seen, :ip_inet, :object_type, :product_id, :ipv4, :ipv6, :fp, :ua, :member)");
+        self::saveViewObject(self::OBJECT_TYPE_MEDIA_BOOK, $object_id, $sql);
     }
 
 }
