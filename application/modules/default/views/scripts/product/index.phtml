@@ -79,10 +79,6 @@ $this->updates = $tableProjectUpdates->fetchProjectUpdates($this->product->proje
 
 $tableProjectRatings = new Default_Model_DbTable_ProjectRating();
 $this->ratings = $tableProjectRatings->fetchRating($this->product->project_id);
-//$cntRatingsActive = 0;
- // foreach ($this->ratings as $p) {
- //    if($p['rating_active']==1) $cntRatingsActive =$cntRatingsActive+1;
- // }
 
 $commentModel = new Default_Model_ProjectComments();
 $cntModeration = $commentModel->fetchCommentsWithTypeProjectCount(30,$this->product->project_id);
@@ -134,9 +130,6 @@ foreach ($pics as $p) {
 }
 
 $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
-
-
-
 ?>
     <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
 
@@ -145,7 +138,6 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
 
     <link href="/theme/react/lib/swiper/swiper.min.css" type="text/css" rel="stylesheet" >
     <link href="/theme/react/lib/bookblock/css/bookblock.css" type="text/css" rel="stylesheet" >
-    <link href="/theme/react/product-media-slider/style/rc-slider.css?<?= APPLICATION_VERSION ?>" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/video-react.css?<?= APPLICATION_VERSION ?>" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/music-player.css?<?= APPLICATION_VERSION ?>" type="text/css" rel="stylesheet" />
     <link href="/theme/react/product-media-slider/style/product-media-slider.css?<?= APPLICATION_VERSION ?>" type="text/css" rel="stylesheet" />
@@ -573,7 +565,6 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         <?php } ?>
 
                         <?php if($this->product->show_gitlab_project_issues){
-                                //$cntGitIssues = count($this->gitlab_project_issues);
                                 $cntGitIssues = $this->gitlab_project['open_issues_count'];
                             ?>
                             <li><a href="#gitlabissues-panel" data-toggle="tab">Issues <?php echo '('.$cntGitIssues.')';  ?></a></li>
@@ -739,22 +730,6 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                 </div>
                             </div>
                          <?php } ?>
-
-                        <!-- ratings panel old -->
-                        <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) { ?>
-                        <div class="tab-pane" id="ratings-panel">
-                            <div id="ratings-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                            <article>
-                                <div id="productRatingContainer">
-                                <?php
-                                       echo $this->render('product/partials/productRating.phtml');
-                                  ?>
-                                  </div>
-                            </article>
-                            </div>
-                        </div>
-                       <?php } */?>
-
 
                         <!-- ratings panel2 -->
 
