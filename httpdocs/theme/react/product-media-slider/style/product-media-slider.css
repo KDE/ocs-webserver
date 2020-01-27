@@ -1105,12 +1105,13 @@ video:focus {
   padding: 10px 0;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper {
-  margin: 0 auto;
-  display: table;
+  width: 100%;
+  float: left;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div {
   float: left;
   height: 30px;
+  position: relative;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-audio-control span {
   display: block;
@@ -1118,6 +1119,7 @@ video:focus {
   float: left;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.playlist-toggle-container {
+  float: right;
   padding: 3px;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.playlist-toggle-container .playlist-toggle-button {
@@ -1127,39 +1129,6 @@ video:focus {
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
-}
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span {
-  display: block;
-  float: left;
-}
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span.volume-bar-container {
-  display: block;
-  float: left;
-  width: 0;
-  padding: 6px 0;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-}
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control span.volume-bar-container .rc-slider {
-  opacity: 0;
-  -webkit-transition: all 0.2s ease-out;
-  -moz-transition: all 0.2s ease-out;
-  -o-transition: all 0.2s ease-out;
-  transition: all 0.2s ease-out;
-}
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container {
-  overflow: hidden;
-  width: 100px;
-  padding: 6px 10px;
-}
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control:hover .volume-bar-container .rc-slider {
-  opacity: 1;
-}
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control.is-muted .rc-slider-track,
-#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.music-player-volume-control.is-muted .rc-slider-handle {
-  opacity: 0;
 }
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.theme-switch-wrapper {
   padding: 2px 5px;
@@ -1222,6 +1191,52 @@ video:focus {
 #music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper > div.theme-switch-wrapper .rc-switch.checked::after {
   left: 39px;
   background-color: white;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control {
+  float: right;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control span {
+  display: block;
+  float: left;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control .volume-bar-container {
+  width: 26px;
+  display: block;
+  float: left;
+  height: 0;
+  padding: 0 6px;
+  position: absolute;
+  bottom: 30px;
+  background-color: rgba(62, 61, 61, 0.8);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control .volume-bar-container .rc-slider {
+  opacity: 0;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control .volume-bar-container .rc-slider .rc-slider-handle {
+  left: 0;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control .volume-bar-container:hover .rc-slider {
+  opacity: 1;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control:hover .volume-bar-container {
+  overflow: hidden;
+  height: 100px;
+  padding: 10px 6px 15px;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control:hover .volume-bar-container .rc-slider {
+  opacity: 1;
+}
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control.is-muted .rc-slider-track,
+#music-player-container #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-volume-control.is-muted .rc-slider-handle {
+  opacity: 0;
 }
 #music-player-container #music-player-playlist-panel {
   width: 0%;
@@ -1385,26 +1400,53 @@ video:focus {
   padding: 0;
 }
 #music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper {
-  width: 240px;
-}
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control {
   width: 100%;
-  height: auto;
 }
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control span {
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-audio-control {
+  display: table;
+  width: 240px;
+  height: auto;
+  margin: 0 auto;
+  float: none;
+}
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-audio-control span {
   padding: 0 16px !important;
 }
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .play-icon,
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .pause-icon {
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-audio-control .play-icon,
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-audio-control .pause-icon {
   font-size: 60px;
 }
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .prev-icon,
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-audio-control .next-icon {
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-audio-control .prev-icon,
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .music-player-audio-control .next-icon {
   font-size: 40px;
   margin-top: 8px;
 }
-#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .playlist-toggle-container {
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .bottom-controls {
+  float: left;
+  height: 30px;
   width: 100%;
+}
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .bottom-controls .music-player-volume-control {
+  float: left;
+  width: 50%;
+}
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .bottom-controls .music-player-volume-control .volume-bar-container {
+  opacity: 1;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - 50px);
+  height: 26px;
+  padding: 6px 10px 6px 10px;
+  background: transparent;
+}
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .music-player-controls-wrapper .bottom-controls .music-player-volume-control .volume-bar-container .rc-slider {
+  opacity: 1;
+}
+#music-player-container.is-mobile #music-player-control-panel .music-player-controls-bar .playlist-toggle-container {
+  width: 50%;
+  float: right;
+  text-align: right;
 }
 #music-player-container.is-mobile #music-player-playlist-panel {
   width: 100% !important;

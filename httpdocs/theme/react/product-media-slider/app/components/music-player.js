@@ -68,24 +68,26 @@ function MusicPlayer(props){
   },[audioVolume])
 
   useEffect(() => {
-    if (isPlaying || isPaused) onPlayClick();
+    if (isPlaying) onPlayClick(true);
+    if (isPaused){
+        if (prevIndex === playIndex) onPlayClick();
+        else  onPlayClick(true);
+    }
     if (isPlaying === true) onReportAudioStop(props.items[prevIndex].musicSrc,playIndex)
   },[playIndex])
 
   // audio player
 
   function onPlayClick(reload,newPlayIndex){
-    console.log(newPlayIndex);
+
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     let pi = newPlayIndex ? newPlayIndex : playIndex;
     const currentSrc = props.items[pi].musicSrc;
-    console.log('current src on play click');
-    console.log(currentSrc);
+    
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
-      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
-      
+      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -212,7 +214,7 @@ function MusicPlayer(props){
 
   function getRandomMusicsupporter(){
     $.ajax({url: "https://"+window.location.hostname +"/json/fetchrandomsupporter/s/3"}).done(function(res) { 
-      console.log(res);
+      // console.log(res);
       setRandomSupporter(res.supporter)
     });
   }
@@ -235,7 +237,7 @@ function MusicPlayer(props){
     setCurrentTrackProgress(newCurrentTrackProgress);
     
     if (playerElement.currentTime === playerElement.duration){
-      console.log('song ended');
+      // console.log('song ended');
       onNextTrackPlayClick();
     }
 
@@ -271,7 +273,7 @@ function MusicPlayer(props){
   // key press 
 
   function handleKeyPress(e){
-    console.log(e.key)
+    // console.log(e.key)
     if (e.key === 'Space'){
       if (isPlaying === true) onPauseClick();
       else onPlayClick();
@@ -466,6 +468,7 @@ function MusicPlayerControlPanel(props){
             min={0}
             max={100}
             value={props.audioVolume * 100}
+            vertical={props.isMobile ? false : true}
             onChange={onChangeVolumeSliderPosition}
             onAfterChange={onAfterChangeVolumeSliderPosition}
           />
@@ -521,6 +524,7 @@ function MusicPlayerControlPanel(props){
 
   let musicPlayerControlPanelDisplay;
   if (props.isMobile === true){
+
     musicPlayerControlPanelDisplay = (
       <div className="mobile-control-panel-wrapper">
         {musicPlayerTitleDisplay}
@@ -529,20 +533,32 @@ function MusicPlayerControlPanel(props){
         <div className="music-player-controls-bar">
           <div className="music-player-controls-wrapper">
             {audioControlsDisplay}
-            <div className="playlist-toggle-container">
-              <span className="playlist-toggle-button" onTouchStart={() => props.togglePlaylistDisplay()}>
-                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align": "middle"}}>
-                  <g><path d="m28.4 10h8.2v3.4h-5v15c0 2.7-2.2 5-5 5s-5-2.3-5-5 2.3-5 5-5c0.6 0 1.2 0.1 1.8 0.3v-13.7z m-23.4 16.6v-3.2h13.4v3.2h-13.4z m20-10v3.4h-20v-3.4h20z m0-6.6v3.4h-20v-3.4h20z"></path></g>
-                </svg>
-              </span>
+            <div className="bottom-controls">
+              {volumeControlDisplay}
+              <div className="playlist-toggle-container">
+                <span className="playlist-toggle-button" onTouchStart={() => props.togglePlaylistDisplay()}>
+                  <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style={{"vertical-align": "middle"}}>
+                    <g><path d="m28.4 10h8.2v3.4h-5v15c0 2.7-2.2 5-5 5s-5-2.3-5-5 2.3-5 5-5c0.6 0 1.2 0.1 1.8 0.3v-13.7z m-23.4 16.6v-3.2h13.4v3.2h-13.4z m20-10v3.4h-20v-3.4h20z m0-6.6v3.4h-20v-3.4h20z"></path></g>
+                  </svg>
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     )
+  
   } else {
     
     let themeSwitchCssClass = "theme-switch-container rc-switch ";
+    /*<div className="theme-switch-wrapper">
+      <span className="theme-switch">
+        <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
+          <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
+        </button>
+      </span>
+    </div>*/
+
     if (props.theme === "light") themeSwitchCssClass += " checked";
 
     musicPlayerControlPanelDisplay = (
@@ -552,18 +568,11 @@ function MusicPlayerControlPanel(props){
         {musicPlayerTimeDisplay}
         <div className="music-player-controls-bar">
           <div className="music-player-controls-wrapper">
-            {audioControlsDisplay}
-            {volumeControlDisplay}
-            <div className="playlist-toggle-container">
-              <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
-            </div>
-            <div className="theme-switch-wrapper">
-              <span className="theme-switch">
-                <button onClick={() => onThemeSwitchClick()} type="button" role="switch" aria-checked="false" className={ themeSwitchCssClass }>
-                  <span className="rc-switch-inner">{props.theme === "dark" ? "light" : "dark"}</span>
-                </button>
-              </span>
-            </div>
+              {audioControlsDisplay}
+              {volumeControlDisplay}
+              <div className="playlist-toggle-container">
+                <span className="playlist-toggle-button" onClick={() => props.togglePlaylistDisplay()}>PL</span>
+              </div>
           </div>
         </div>
       </div>
