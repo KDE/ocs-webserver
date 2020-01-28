@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "react-device-detect": "^1.6.2",
-    "react-draggable": "^3.3.0",
-    "react-jinke-music-player": "^4.3.5"
+    "react-draggable": "^3.3.0"
   }
 }
