@@ -279,11 +279,73 @@
                     -ms-user-select: none;
                 }
 
-                .product-browse-music-item-info {
-                    h2, span {
-                        font-size: 13px;
-                        line-height: 14px;
-                        font-weight: 400;
+                .product-browse-music-player-wrapper {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 40px;
+                    z-index: 10;
+
+                    .music-player-controls-bar {
+
+                        .music-player-audio-control {
+                            float: left;
+                            background: rgba(0,0,0,0.5);
+                            height: 40px;
+                            .transition();
+    
+                            span {
+                                display: block;
+                                padding: 5px;
+                                float: left;
+                                
+                                svg {
+                                    font-size: 28px;
+                                    color: white;
+                                    .transition();
+    
+                                    &:hover {
+                                        color:#31c27c;
+                                    }
+                                }
+    
+                                &:first-child, &:last-child {
+                                    display: none;
+                                }
+                            }
+                        }
+    
+                        .track-number-display {
+                            opacity: 0;
+                            float: right;
+                            background: rgba(0,0,0,0.5);
+                            height: 40px;
+                            padding: 5px;
+                            color: white;
+                            font-size: 12px;
+                            line-height: 30px;
+                            .transition()
+                        }
+
+                    
+                        &.is-playing {
+
+                            .music-player-audio-control {
+        
+                                span {
+                                    &:first-child, &:last-child {
+                                        display: block;
+                                        padding: 5px 0;
+                                    }
+                                }
+                            }
+        
+                            .track-number-display {
+                                opacity: 1;
+                            }
+    
+                        }
                     }
                 }
             }
