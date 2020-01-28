@@ -18,6 +18,11 @@ function BookReaderWrapper(props){
     initBookReader()
   },[props.cinemaMode,props.width])
 
+  React.useEffect(() => {
+    console.log('bookstate locations total')
+    console.log(bookState.locations.total)
+  },[bookState])
+
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
