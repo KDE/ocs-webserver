@@ -34,7 +34,7 @@ const DomainsMenu_subdomain = () => {
         <a className="domains-menu-link-item">{state.storeConfig.name} &#8964;</a>
         <ul className="dropdown-menu dropdown-menu-right">
          {state.domains.filter(domain=>domain.is_show_in_menu==1)
-                       .sort((a, b) => a.name > b.name)
+                       .sort((a, b) => a.name > b.name? 1 : -1)
                        .map((domain, index)=><li key={index}>
                            <a href={domain.is_show_real_domain_as_url==1?'https://'+domain.host:state.baseUrlStore+'/s/'+domain.name}>{domain.name}</a></li>)}        
         </ul>
