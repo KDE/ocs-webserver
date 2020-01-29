@@ -97,7 +97,7 @@ export function getImageUrl(p,itemWidth,imgHeight){
     if (p.image_small && p.image_small.indexOf('https://') > -1 || p.image_small && p.image_small.indexOf('http://') > -1 ) imgUrl = p.image_small;
     else {
         imgUrl = json_server_images;
-        imgUrl += "/cache/" + Math.ceil(itemWidth * 2) + "x" + Math.ceil(imgHeight * 2) + "/img/" + p.image_small;    
+        imgUrl += "/cache/" + Math.ceil(itemWidth) + "x" + Math.ceil(imgHeight) + "/img/" + p.image_small;    
     }
     return imgUrl;
 }
