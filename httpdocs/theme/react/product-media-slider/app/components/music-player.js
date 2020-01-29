@@ -365,6 +365,8 @@ function MusicPlayerControlPanel(props){
     if (props.isMuted === false){
       const newVolumeValue = e / 100;
       props.onChangeAudioVolume(newVolumeValue);
+      alert('audio changed - ' + newVolumeValue);
+      
     }
   }
 

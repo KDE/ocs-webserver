@@ -5,7 +5,6 @@ function BookReaderWrapper(props){
 
   const [ loading, setLoading ] = useState(true);
   const [ renditionState , setRenditionState ] = useState();
-  const [ bookState, setBookState ] = useState();
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
   const [ showBookMenu, setShowBookMenu ] = useState(false);
@@ -18,16 +17,9 @@ function BookReaderWrapper(props){
     initBookReader()
   },[props.cinemaMode,props.width])
 
-  React.useEffect(() => {
-    console.log('bookstate locations total')
-    console.log(bookState.locations.total)
-  },[bookState])
-
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
-    setBookState(window.book);
-    
     window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
         manager: 'default',
@@ -62,8 +54,6 @@ function BookReaderWrapper(props){
     window.rendition.on('relocated', function(locations) {
 
         console.log('rendition.currentLocation():', rendition.currentLocation());
-        console.log(book.locations);
-        console.log(locations.start.cfi);
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
         console.log('books locations total - ')
         console.log(book);
