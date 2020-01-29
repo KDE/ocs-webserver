@@ -24,17 +24,18 @@
 class JsonController extends Zend_Controller_Action
 {
 
-    const chat_access_token = 'MDAyMmxvY2F0aW9uIGNoYXQub3BlbmRlc2t0b3Aub3JnCjAwMTNpZGVudGlmaWVyIGtleQowMDEwY2lkIGdlbiA9IDEKMDAzM2NpZCB1c2VyX2lkID0gQG1hZ2dpZWRvbmc6Y2hhdC5vcGVuZGVza3RvcC5vcmcKMDAxNmNpZCB0eXBlID0gYWNjZXNzCjAwMjFjaWQgbm9uY2UgPSBnMSxnRUA2c3AuKyxtYSx4CjAwMmZzaWduYXR1cmUgc3LtmFDiz7wU0TVOdGS7EbEg0wnXVKwXxNqkqe5qpCAK';
     const chat_avatarUrl = 'https://chat.opendesktop.org/_matrix/media/v1/thumbnail';
     const chat_roomPublicUrl = 'https://chat.opendesktop.org/_matrix/client/unstable/publicRooms';
     const chat_roomsUrl = 'https://chat.opendesktop.org/_matrix/client/unstable/rooms/';
     const chat_roomUrl = 'https://chat.opendesktop.org/#/room/';
 
+    const chat_userProfileUrl = 'https://chat.opendesktop.org/_matrix/client/r0/profile/';
     protected $_format = 'json';
     public function init()
     {
         parent::init();
         $this->initView();
+        $this->log = Zend_Registry::get('logger');
     }
 
     public function initView()
@@ -80,8 +81,7 @@ class JsonController extends Zend_Controller_Action
     }
 
     protected function _sendResponse($response, $format = 'json', $xmlRootTag = 'ocs')
-    {
-
+    {          
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($response);
     }
@@ -124,6 +124,31 @@ class JsonController extends Zend_Controller_Action
             $rooms[] = $room;
         }
         $this->_sendResponse($rooms, $this->_format);
+    }
+
+
+    public function riotAction()
+    {
+        $chatServer='chat.opendesktop.org';
+        $this->_initResponseHeader();
+        $config = Zend_Registry::get('config')->settings->client->default;
+        $access_token = $config->riot_access_token;
+        $p_username = $this->getParam('username');
+        $member_data = $this->getUserData($p_username);
+
+        $urlProfile = JsonController::chat_userProfileUrl.'@'.$member_data['username'].':'.$chatServer.'?access_token=' . $access_token;
+        //https://chat.opendesktop.org/_matrix/client/r0/profile/@rvs75:chat.opendesktop.org?access_token=
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $urlProfile);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $results = json_decode($data);   
+        $resonse=array("user" => $results);     
+        $this->_sendResponse($resonse, $this->_format);
     }
 
     public function forumAction()
@@ -169,6 +194,89 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($results, $this->_format);
     }
 
+    protected function getUserData($p_username)
+    {
+        $helperUserRole = new Backend_View_Helper_UserRole();
+        $userRoleName = $helperUserRole->userRole();
+        $isAdmin = false;
+        if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+                $isAdmin = true;
+        }
+        $member_data = null;
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $modelSubSystem = new Default_Model_Ocs_Forum();
+            if($isAdmin)
+            {               
+                if($p_username && $p_username!='null')
+                {                
+                    $modelMember = new Default_Model_Member();
+                    $memberId = $modelMember->fetchActiveUserByUsername($p_username);                    
+                    $member_data = array('username'=>$p_username,'member_id' =>$memberId);
+                }else{
+                    $authMember = $auth->getStorage()->read();                              
+                    $member_data = array('username'=>$authMember->username,'member_id' =>$authMember->member_id);    
+                }
+            }else
+            {
+                $authMember = $auth->getStorage()->read();                              
+                $member_data = array('username'=>$authMember->username,'member_id' =>$authMember->member_id);
+            }
+        }           
+        return $member_data;  
+    }
+
+    public function forumpostsAction()
+    {        
+        $this->_initResponseHeader();
+        $p_username = $this->getParam('username');
+        $results=null;        
+        $member_data = $this->getUserData($p_username);        
+        if($member_data)
+        {          
+            $modelSubSystem = new Default_Model_Ocs_Forum();
+            $user = $modelSubSystem->getUserByUsername($member_data['username']);    
+            if($user)
+            {
+                $results['user'] = $user;
+            }
+            $posts = $modelSubSystem->getPostsFromUser($member_data);  
+                
+           
+            if($posts)
+            {
+                $results['posts'] = $posts['posts'];
+            }
+             
+        }            
+        $this->_sendResponse($results, $this->_format);
+    }
+
+    public function gitlabAction()
+    {
+        $this->_initResponseHeader();
+        $p_username = $this->getParam('username');
+        $results=null;        
+        $member_data = $this->getUserData($p_username);        
+        if ($member_data) {
+            $modelSubSystem = new Default_Model_Ocs_Gitlab();                              
+            $user = $modelSubSystem->getUserWithName($member_data['username']);    
+            //$this->log->info(">>>>>>>results>>>>".json_encode($user));     
+            if($user)
+            {
+                $results['user'] = $user;
+                $posts = $modelSubSystem->getUserProjects($user['id']);    
+                if($posts)
+                {
+                    $results['projects'] = $posts;
+                }
+            }
+
+            //$this->log->info(">>>>>>>results>>>>".json_encode($results));      
+        }               
+        $this->_sendResponse($results, $this->_format);
+    }
+
     public function gitlabnewprojectsAction()
     {
 
@@ -193,8 +301,7 @@ class JsonController extends Zend_Controller_Action
     }
 
     public function gitlabfetchuserAction()
-    {
-
+    {        
         $this->_initResponseHeader();
         $url_git = Zend_Registry::get('config')->settings->server->opencode->host;
         $url = $url_git . '/api/v4/users?username=' . $this->getParam('username');
@@ -205,10 +312,12 @@ class JsonController extends Zend_Controller_Action
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $data = curl_exec($ch);
-        curl_close($ch);
+        curl_close($ch);        
         $results = json_decode($data);
         $this->_sendResponse($results, $this->_format);
     }
+
+   
 
     public function newsAction()
     {        
