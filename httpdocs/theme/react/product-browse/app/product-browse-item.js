@@ -49,7 +49,7 @@ export function ProductBrowseItem(props){
             if (!newImgUrl){
                 newImgUrl = "https://cn.opendesktop.";
                 newImgUrl += window.location.host.endsWith('org') === true || window.location.host.endsWith('com') === true  ? "org" : "cc";
-                newImgUrl += "/cache/" + props.itemWidth + "x" + props.imgHeight + "/img/default.png";                 
+                newImgUrl += "/cache/" + Math.ceil(props.itemWidth * 2) + "x" + Math.ceil(props.imgHeight * 2) + "/img/default.png";                 
             }
             setImgUrl(newImgUrl);
         });
