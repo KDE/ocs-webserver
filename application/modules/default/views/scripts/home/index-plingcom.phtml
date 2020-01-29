@@ -327,10 +327,10 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
                       )
                   );
 
-                  echo $this->partial('/home/partials/product_group.phtml', array(
+                  echo $this->partial('/home/partials/product_group_store.phtml', array(
                           "title"  => "Artwork",
                           "products" => $this->productsArtwork,
-                          "catIDs" =>"158"
+                          "stores" =>"Artwork"
                       )
                   );   
 
@@ -362,16 +362,16 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
         <div class="row blockpadding disply-flex" id="productgroup1">
           <?php
-                    echo $this->partial('/home/partials/product_group.phtml', array(
+                    echo $this->partial('/home/partials/product_group_store.phtml', array(
                             "title"  => "Music,Videos",
                             "products" => $this->productsVideos,
-                            "catIDs" =>"518,586"
+                            "stores" =>"Music,Videos"
                         )
                     );
-                    echo $this->partial('/home/partials/product_group.phtml', array(
+                    echo $this->partial('/home/partials/product_group_store.phtml', array(
                             "title"  => "Books,Comics",
                             "products" => $this->productsBooksComics,
-                            "catIDs" =>"581,39"
+                            "stores" =>"Books,Comics"
                         )
                     );  
                     
