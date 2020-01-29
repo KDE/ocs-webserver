@@ -193,7 +193,7 @@ $response = array(
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme,
     "target" => $targetObject,
-    "store" => ($storeConfig?$storeConfig->name:null)
+    "store" => null
 );
 
 echo Zend_Json::encode($response);
