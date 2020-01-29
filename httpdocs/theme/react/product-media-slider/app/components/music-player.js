@@ -364,9 +364,7 @@ function MusicPlayerControlPanel(props){
   function onChangeVolumeSliderPosition(e){
     if (props.isMuted === false){
       const newVolumeValue = e / 100;
-      props.onChangeAudioVolume(newVolumeValue);
-      alert('audio changed - ' + newVolumeValue);
-      
+      props.onChangeAudioVolume(newVolumeValue);      
     }
   }
 
@@ -460,23 +458,26 @@ function MusicPlayerControlPanel(props){
   let musicPlayerVolumeControlCssClass = "music-player-volume-control";
   if (props.isMuted) musicPlayerVolumeControlCssClass += " is-muted";
   
-  const volumeControlDisplay = (
-    <div className={musicPlayerVolumeControlCssClass}>
-      <span className="volume-icon" onClick={onVolumeIconClick}>
-        {volumeIconDisplay}
-      </span>
-      <span className="volume-bar-container progress_bar">
-          <Slider 
-            min={0}
-            max={100}
-            value={props.audioVolume * 100}
-            vertical={props.isMobile ? false : true}
-            onChange={onChangeVolumeSliderPosition}
-            onAfterChange={onAfterChangeVolumeSliderPosition}
-          />
-      </span>
-    </div>
-  )
+  let volumeControlDisplay;
+  if (props.isMobile === false){
+    volumeControlDisplay = (
+      <div className={musicPlayerVolumeControlCssClass}>
+        <span className="volume-icon" onClick={onVolumeIconClick}>
+          {volumeIconDisplay}
+        </span>
+        <span className="volume-bar-container progress_bar">
+            <Slider 
+              min={0}
+              max={100}
+              value={props.audioVolume * 100}
+              vertical={props.isMobile ? false : true}
+              onChange={onChangeVolumeSliderPosition}
+              onAfterChange={onAfterChangeVolumeSliderPosition}
+            />
+        </span>
+      </div>
+    )
+  }
   
   // cover 
 
