@@ -27,7 +27,8 @@ class Portal_IndexController extends Local_Controller_Action_Portal
 
     public function indexAction()
     {
-        $dummy = 1;
+        $p_username = $this->getParam('username',null);        
+        $this->view->username=$p_username;
     }
 
 }
