@@ -25,7 +25,7 @@ function PersonalLinksContainer(props)
       <li id="messages-link-item">
         <a href={props.forumUrl+"/u/"+props.user.username+"/messages"} >
           <div className="icon"></div>
-          <span>Messages</span>
+          <span>DM</span>
         </a>
       </li>
 
@@ -39,11 +39,17 @@ function PersonalLinksContainer(props)
       { props.user.isAdmin &&
         <React.Fragment>
         <li id="mail-link-item">
-          <a href={props.myopendesktopUrl+"/index.php/apps/rainloop/"} >
+          <a href={props.myopendesktopUrl+"/apps/rainloop/"} >
             <div className="icon"></div>
             <span>Mail</span>
           </a>
-        </li>        
+        </li>      
+        <li id="maps-link-item">
+          <a href={props.myopendesktopUrl+"/apps/maps/"} >
+            <div className="icon"></div>
+            <span>Maps</span>
+          </a>
+        </li>     
         </React.Fragment>
       }
       <li id="chat-link-item">

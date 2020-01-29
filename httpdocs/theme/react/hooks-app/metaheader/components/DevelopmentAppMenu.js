@@ -91,6 +91,17 @@ const DevelopmentAppMenu = () => {
                               url={state.musicopendesktopUrl}
                               label="Music" />
              
+             { 
+               state.isAdmin &&
+               <>
+                  <MyButton id="mail-link-item"
+                            url={state.myopendesktopUrl+"/apps/rainloop/"}
+                            label="Mail" />
+                  <MyButton id="maps-link-item"
+                        url={state.myopendesktopUrl+"/apps/maps/"}
+                        label="Maps" />
+                </>
+              }
           </ul>
           
         </div>
