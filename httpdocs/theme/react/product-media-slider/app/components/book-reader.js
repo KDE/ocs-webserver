@@ -53,12 +53,7 @@ function BookReaderWrapper(props){
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
 
-        console.log('rendition.currentLocation():', rendition.currentLocation());
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
-        console.log('books locations total - ')
-        console.log(book);
-        console.log(book.locations);
-        console.log(book.locations.total);
         setTotalPages(book.locations.total)
         
         if (loading === true) setLoading(false);
@@ -69,7 +64,12 @@ function BookReaderWrapper(props){
         if (rendition.currentLocation().atEnd === true) setShowNextButton(false)
         else setShowNextButton(true)
 
-      })
+        if (totalPage === 0){
+          console.log(totalPages);
+          goPrev();
+        }
+
+    })
   }
 
   function goPrev(){
