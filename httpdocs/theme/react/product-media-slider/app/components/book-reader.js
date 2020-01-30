@@ -18,13 +18,16 @@ function BookReaderWrapper(props){
   },[props.cinemaMode,props.width])
 
   React.useEffect(() => {
-    if (totalPages === 0){
-      console.log(window.book)
-      console.log(window.book.locations);
-      console.log(window.book.locations.total);
-      setTotalPages(window.book.locations.total)
-    }
-  },[totalPages,renditionState])
+    console.log(totalPages + ' - ' + window.book.locations.total);
+    if (totalPages === 0) hackBookPageCount()
+  },[totalPages,window.book])
+
+  function hackBookPageCount(){
+    console.log(window.book)
+    console.log(window.book.locations);
+    console.log(window.book.locations.total);
+    setTotalPages(window.book.locations.total)
+  }
 
   function initBookReader(){
     // Initialize the book
@@ -72,11 +75,6 @@ function BookReaderWrapper(props){
 
         if (rendition.currentLocation().atEnd === true) setShowNextButton(false)
         else setShowNextButton(true)
-
-        /*if (book.locations.total === 0){
-          hackInitPageCount();
-        }*/
-
     })
   }
 
