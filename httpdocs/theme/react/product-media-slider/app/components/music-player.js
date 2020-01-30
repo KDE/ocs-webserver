@@ -458,9 +458,7 @@ function MusicPlayerControlPanel(props){
   let musicPlayerVolumeControlCssClass = "music-player-volume-control";
   if (props.isMuted) musicPlayerVolumeControlCssClass += " is-muted";
   
-  let volumeControlDisplay;
-  if (props.isMobile === false){
-    volumeControlDisplay = (
+  const volumeControlDisplay = (
       <div className={musicPlayerVolumeControlCssClass}>
         <span className="volume-icon" onClick={onVolumeIconClick}>
           {volumeIconDisplay}
@@ -476,8 +474,7 @@ function MusicPlayerControlPanel(props){
             />
         </span>
       </div>
-    )
-  }
+    );
   
   // cover 
 
