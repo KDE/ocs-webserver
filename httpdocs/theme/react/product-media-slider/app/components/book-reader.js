@@ -64,8 +64,8 @@ function BookReaderWrapper(props){
         if (rendition.currentLocation().atEnd === true) setShowNextButton(false)
         else setShowNextButton(true)
 
-        if (totalPage === 0){
-          console.log(totalPages);
+        if (book.locations.total === 0){
+          console.log(book.locations.total);
           goPrev();
         }
 
