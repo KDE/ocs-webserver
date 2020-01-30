@@ -65,11 +65,18 @@ function BookReaderWrapper(props){
         else setShowNextButton(true)
 
         if (book.locations.total === 0){
-          console.log(book.locations.total);
-          goPrev();
+          hackInitPageCount();
         }
 
     })
+  }
+
+  function hackInitPageCount(){
+    setTimeout(() => {
+      console.log(renditionState);
+      if (renditionState) goPrev();
+      else hackInitPageCount();
+    }, 100);
   }
 
   function goPrev(){
