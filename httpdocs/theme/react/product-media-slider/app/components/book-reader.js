@@ -73,7 +73,7 @@ function BookReaderWrapper(props){
 
   function hackInitPageCount(){
     setTimeout(() => {
-      onPageNumberInput(0);
+      $( "#next-page-button" ).trigger( "click" );
     }, 1000);
   }
 
@@ -124,7 +124,7 @@ function BookReaderWrapper(props){
     let nextButtonDisplay;
     if (showNextButton === true){
       nextButtonDisplay = (
-        <span><a onClick={() => goNext()}>{"next >"}</a></span>
+        <span><a id="next-page-button" onClick={() => goNext()}>{"next >"}</a></span>
       )
     }
     bookNavigation = (
