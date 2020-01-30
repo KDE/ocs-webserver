@@ -18,20 +18,20 @@ function BookReaderWrapper(props){
   },[props.cinemaMode,props.width])
 
   React.useEffect(() => {
-    console.log(totalPages + ' - ' + window.book.locations.total);
     if (totalPages === 0){
-      setTimeout(() => {
         hackBookPageCount();
-      }, 500);
     }
   },[totalPages,window.book])
 
   function hackBookPageCount(){
-    console.log(window.book)
-    console.log(window.book.locations);
-    console.log(window.book.locations.total);
     const newTotalPageCount = window.book.locations.total;
-    setTotalPages(newTotalPageCount)
+    if (newTotalPageCount === 0){
+      setTimeout(() => {
+        hackBookPageCount();
+      }, 200);
+    } else {
+      setTotalPages(newTotalPageCount)
+    }
   }
 
   function initBookReader(){
