@@ -74,7 +74,7 @@ function BookReaderWrapper(props){
   function hackInitPageCount(){
     setTimeout(() => {
       onPageNumberInput(0);
-    }, 100);
+    }, 1000);
   }
 
   function goPrev(){
