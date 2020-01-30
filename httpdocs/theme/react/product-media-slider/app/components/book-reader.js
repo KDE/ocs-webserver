@@ -19,7 +19,10 @@ function BookReaderWrapper(props){
 
   React.useEffect(() => {
     if (totalPages === 0){
-      $('#next-page-button').trigger('click');
+      console.log(window.book)
+      console.log(window.book.locations);
+      console.log(window.book.locations.total);
+      setTotalPages(window.book.locations.total)
     }
   },[totalPages,renditionState])
 
