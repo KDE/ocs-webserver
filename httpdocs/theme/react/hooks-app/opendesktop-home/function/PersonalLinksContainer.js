@@ -58,6 +58,18 @@ function PersonalLinksContainer(props)
           <span>Chat</span>
         </a>
       </li>
+      <li id="pling-link-item">
+        <a href={props.baseUrlStore} >
+          <div className="icon"></div>
+          <span>Products</span>
+        </a>
+      </li>
+      <li id="opencode-link-item">
+        <a href={props.gitlabUrl + "/explore/projects"} >
+          <div className="icon"></div>
+          <span>Projects</span>
+        </a>
+      </li>
     </ul>
   );
 }
