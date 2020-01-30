@@ -128,19 +128,25 @@ function BookReaderWrapper(props){
       )
     }
     let nextButtonDisplay;
-    if (showNextButton === true){
+    if (showNextButton === true && totalPages !== 0){
       nextButtonDisplay = (
         <span><a id="next-page-button" onClick={() => goNext()}>{"next >"}</a></span>
+      )
+    }
+    let bookNavigationMidDisplay;
+    if (totalPages !== 0){
+      bookNavigationMidDisplay = (
+        <span>
+          <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
+          {" / " + totalPages}
+        </span>
       )
     }
     bookNavigation = (
       <div id="book-pager">
         <div>
           {prevButtonDisplay}
-          <span>
-            <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
-            {" / " + totalPages}
-          </span>
+          {bookNavigationMidDisplay}
           {nextButtonDisplay}
         </div>
       </div>
