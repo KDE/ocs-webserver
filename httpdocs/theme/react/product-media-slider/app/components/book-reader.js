@@ -18,10 +18,10 @@ function BookReaderWrapper(props){
   },[props.cinemaMode,props.width])
 
   React.useEffect(() => {
-    console.log('total pages change')
+    console.log('total pages / renditionState change')
     console.log(totalPages);
     if (totalPages === 0){
-      onPageNumberInput(0);
+      onPageNumberInput(1);
     }
   },[totalPages,renditionState])
 
