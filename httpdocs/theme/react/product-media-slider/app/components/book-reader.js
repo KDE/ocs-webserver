@@ -19,14 +19,19 @@ function BookReaderWrapper(props){
 
   React.useEffect(() => {
     console.log(totalPages + ' - ' + window.book.locations.total);
-    if (totalPages === 0) hackBookPageCount()
+    if (totalPages === 0){
+      setTimeout(() => {
+        hackBookPageCount();
+      }, 500);
+    }
   },[totalPages,window.book])
 
   function hackBookPageCount(){
     console.log(window.book)
     console.log(window.book.locations);
     console.log(window.book.locations.total);
-    setTotalPages(window.book.locations.total)
+    const newTotalPageCount = window.book.locations.total;
+    setTotalPages(newTotalPageCount)
   }
 
   function initBookReader(){
