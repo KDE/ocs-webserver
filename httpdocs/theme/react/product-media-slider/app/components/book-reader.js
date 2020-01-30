@@ -17,6 +17,14 @@ function BookReaderWrapper(props){
     initBookReader()
   },[props.cinemaMode,props.width])
 
+  React.useEffect(() => {
+    console.log('total pages change')
+    console.log(totalPages);
+    if (totalPages === 0){
+      onPageNumberInput(0);
+    }
+  },[totalPages,renditionState])
+
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
@@ -64,17 +72,11 @@ function BookReaderWrapper(props){
         if (rendition.currentLocation().atEnd === true) setShowNextButton(false)
         else setShowNextButton(true)
 
-        if (book.locations.total === 0){
+        /*if (book.locations.total === 0){
           hackInitPageCount();
-        }
+        }*/
 
     })
-  }
-
-  function hackInitPageCount(){
-    setTimeout(() => {
-      $( "#next-page-button" ).trigger( "click" );
-    }, 1000);
   }
 
   function goPrev(){
