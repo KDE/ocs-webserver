@@ -5,7 +5,6 @@ function BookReaderWrapper(props){
 
   const [ loading, setLoading ] = useState(true);
   const [ renditionState , setRenditionState ] = useState();
-  const [ bookState, setBookState ] = useState();
   const [ currentPage, setCurrentPage ] = useState();
   const [ totalPages, setTotalPages ] = useState();
   const [ showBookMenu, setShowBookMenu ] = useState(false);
@@ -19,15 +18,25 @@ function BookReaderWrapper(props){
   },[props.cinemaMode,props.width])
 
   React.useEffect(() => {
-    console.log('bookstate locations total')
-    console.log(bookState.locations.total)
-  },[bookState])
+    if (totalPages === 0){
+        hackBookPageCount();
+    }
+  },[totalPages,window.book])
+
+  function hackBookPageCount(){
+    const newTotalPageCount = window.book.locations.total;
+    if (newTotalPageCount === 0){
+      setTimeout(() => {
+        hackBookPageCount();
+      }, 200);
+    } else {
+      setTotalPages(newTotalPageCount)
+    }
+  }
 
   function initBookReader(){
     // Initialize the book
     window.book = ePub(props.slide.url, {});
-    setBookState(window.book);
-    
     window.rendition = book.renderTo('viewer', {
         flow: 'paginated',
         manager: 'default',
@@ -61,14 +70,7 @@ function BookReaderWrapper(props){
     // When navigating to the next/previous page
     window.rendition.on('relocated', function(locations) {
 
-        console.log('rendition.currentLocation():', rendition.currentLocation());
-        console.log(book.locations);
-        console.log(locations.start.cfi);
         setCurrentPage(book.locations.locationFromCfi(locations.start.cfi));
-        console.log('books locations total - ')
-        console.log(book);
-        console.log(book.locations);
-        console.log(book.locations.total);
         setTotalPages(book.locations.total)
         
         if (loading === true) setLoading(false);
@@ -78,8 +80,7 @@ function BookReaderWrapper(props){
 
         if (rendition.currentLocation().atEnd === true) setShowNextButton(false)
         else setShowNextButton(true)
-
-      })
+    })
   }
 
   function goPrev(){
@@ -127,19 +128,25 @@ function BookReaderWrapper(props){
       )
     }
     let nextButtonDisplay;
-    if (showNextButton === true){
+    if (showNextButton === true && totalPages !== 0){
       nextButtonDisplay = (
-        <span><a onClick={() => goNext()}>{"next >"}</a></span>
+        <span><a id="next-page-button" onClick={() => goNext()}>{"next >"}</a></span>
+      )
+    }
+    let bookNavigationMidDisplay;
+    if (totalPages !== 0){
+      bookNavigationMidDisplay = (
+        <span>
+          <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
+          {" / " + totalPages}
+        </span>
       )
     }
     bookNavigation = (
       <div id="book-pager">
         <div>
           {prevButtonDisplay}
-          <span>
-            <input type="number" className="form-control" placeholder={currentPage} min="0" max={totalPages} onChange={(e) => onPageNumberInput(e.target.value)}/>
-            {" / " + totalPages}
-          </span>
+          {bookNavigationMidDisplay}
           {nextButtonDisplay}
         </div>
       </div>

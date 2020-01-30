@@ -47,6 +47,8 @@ class HomeMainContainer extends Component {
                                           forumUrl ={this.state.forumUrl}
                                           musicopendesktopUrl ={this.state.url_musicopendesktop}
                                           user ={this.state.user}
+                                          baseUrlStore={this.state.baseUrlStore}
+                                          gitlabUrl = {this.state.gitlabUrl}
 
                     />
                 </div>

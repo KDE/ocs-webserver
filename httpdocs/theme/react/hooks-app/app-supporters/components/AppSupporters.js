@@ -96,7 +96,7 @@ const AppSupporters = () => {
       <div className="pling-section-detail-left">        
         <h2 className={showContent == 'supporters' ? 'focused' : ''}><a onClick={() => showDetail('supporters')}>Supporters</a></h2>
         <h2 className={showContent == 'overview-category' || showContent == 'overview-category-subcat'  ? 'focused' : ''}>
-          <a onClick={() => showDetail('overview-category')}>Products</a></h2>
+          <a onClick={() => showDetail('overview-category')}>Plings</a></h2>
         <ul className="pling-section-detail-ul">{categories}</ul>
         <h2 className={showContent == 'recentplings' ? 'focused' : ''}><a onClick={() => showDetail('recentplings')}>Recent Plings</a></h2>
       </div>

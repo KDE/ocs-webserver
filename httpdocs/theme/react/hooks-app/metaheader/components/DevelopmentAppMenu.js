@@ -70,7 +70,7 @@ const DevelopmentAppMenu = () => {
           
               <MyButton id="storage-link-item"
                       url={state.myopendesktopUrl+"/apps/files/"}
-                      label="Storage" />
+                      label="Files" />
               <MyButton id="calendar-link-item"
                       url={state.myopendesktopUrl+"/apps/calendar/"}
                       label="Calendar" />
@@ -91,6 +91,17 @@ const DevelopmentAppMenu = () => {
                               url={state.musicopendesktopUrl}
                               label="Music" />
              
+             { 
+               state.isAdmin &&
+               <>
+                  <MyButton id="mail-link-item"
+                            url={state.myopendesktopUrl+"/apps/rainloop/"}
+                            label="Mail" />
+                  <MyButton id="maps-link-item"
+                        url={state.myopendesktopUrl+"/apps/maps/"}
+                        label="Maps" />
+                </>
+              }
           </ul>
           
         </div>

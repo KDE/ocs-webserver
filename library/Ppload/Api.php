@@ -261,7 +261,7 @@ class Ppload_Api
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->_config['apiUri'] . ltrim($uri, '/'),
+            CURLOPT_URL => $this->_config['apiUri'] . ltrim($uri, '/'), //. '?XDEBUG_SESSION_START=files',
             CURLOPT_HEADER => false,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $postFields,
@@ -269,8 +269,12 @@ class Ppload_Api
             CURLOPT_TIMEOUT => $timeout
         ));
         $response = curl_exec($curl);
+        $last_error = curl_error($curl);
         curl_close($curl);
 
+        if ($last_error) {
+            error_log(__METHOD__ . ' :: ' . $last_error);
+        }
         if ($response) {
             return json_decode($response);
         }

@@ -1,3 +1,4 @@
+.docker
 .docker_init
 
 #ignore pling-music and pling-books
@@ -86,3 +87,4 @@ appimagehub-bu/*
 /nbproject/
 
 robots.txt
+

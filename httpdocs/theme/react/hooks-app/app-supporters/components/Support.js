@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 const Support = (props) => {
-  const [typed, setTyped] = useState();
+  const [typed, setTyped] = useState(100);
   const tiers = [0.99, 2, 5, 10, 20, 50];
   const limits = [2, 5, 10, 20, 50, 100];
 
@@ -19,6 +19,8 @@ const Support = (props) => {
       }
       right = limits[index];
       const result = props.supporters.filter(s => (s.section_support_tier >= left && s.section_support_tier < right));
+      let url = props.baseUrlStore+'/support-predefined?section_id='+props.section.section_id;
+            url = url+'&amount_predefined='+tmp;
       return (
         <div className="tier-container" key={index}>
           <span>{result.length + ' Supporters'}</span>
@@ -55,7 +57,7 @@ const Support = (props) => {
 
         <div className="join">
           <div>
-            $<input className="free-amount" onChange={onChangeFreeamount}></input><span>100 or more</span>
+            $<input className="free-amount" onChange={onChangeFreeamount} value={typed}></input><span>or more</span>
           </div>
           <div>
             <a href={url} id="free-amount-link" >Join </a>
