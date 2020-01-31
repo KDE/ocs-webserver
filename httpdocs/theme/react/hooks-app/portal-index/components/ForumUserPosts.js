@@ -37,7 +37,7 @@ const ForumUserPosts = (props) => {
         {
             user.avatar_template &&
             <>            
-            <img src={baseUrl+user.avatar_template.replace('{size}','50')}></img>
+            <img src={forumUrl+user.avatar_template.replace('{size}','50')}></img>
             </>
         }
         
