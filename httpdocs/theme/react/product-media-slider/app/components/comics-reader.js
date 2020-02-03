@@ -62,7 +62,7 @@ function ComicBookReader(props){
     console.log(bookBlockElement);
     if (bookBlockElement){
       $(document).ready(function() {
-        window.comicSwiper = new Swiper('#bb-bookblock' , {
+        window.comicSwiper = new Swiper('.comic-book-reader' , {
           speed: 400,
           initialSlide: 0,
           observer: true, 
@@ -129,8 +129,8 @@ function ComicBookReader(props){
         <nav>
           <a id="bb-nav-counter">{currentPage + "/" + totalPages}</a>
           <a id="bb-nav-first" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
-          <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left swiper-button-prev"></span></a>
-          <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right swiper-button-next"></span></a>
+          <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
+          <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-viewmode" onClick={() => props.onFullScreenToggle(props.isFullScreen === true ? false : true)}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
