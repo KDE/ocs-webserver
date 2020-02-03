@@ -59,6 +59,7 @@ function ComicBookReader(props){
 
   function initComicReader(){
     const bookBlockElement = document.getElementById('#bb-bookblock-'+props.slideIndex);
+    console.log(bookBlockElement);
     if (bookBlockElement){
       $(document).ready(function() {
         window.comicSwiper = new Swiper('#bb-bookblock-'+props.slideIndex , {
@@ -79,6 +80,7 @@ function ComicBookReader(props){
         window.comicSwiper.update()
       });
     } else {
+      console.log('no book block element');
       setTimeout(() => {
         initComicReader();
       }, 500);
