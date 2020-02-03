@@ -109,28 +109,28 @@ function ComicBookReader(props){
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
     const comicPages = pages.map((p,index) => (
-      <div key={index}>
+      <div className="swiper-slide" key={index}>
         <img src={p[0]}/>
         <img src={p[1]}/>
       </div>      
     ))
 
     comicBookDisplay = (
-      <div id="bb-bookblock" className="bb-bookblock">
+      <div id="bb-bookblock" className="swiper-wrapper">
         {comicPages}
       </div>
     )
   }
 
   return (
-    <div className={"comic-book-reader " + viewMode}>
+    <div className={"comic-book-reader swiper-container " + viewMode}>
       {comicBookDisplay}
       <div className="nav-container">
         <nav>
           <a id="bb-nav-counter">{currentPage + "/" + totalPages}</a>
           <a id="bb-nav-first" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
-          <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
-          <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
+          <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left swiper-button-prev"></span></a>
+          <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right swiper-button-next"></span></a>
           <a id="bb-nav-last" onClick={() => onComicReaderNavClick('last')}><span className="glyphicon glyphicon-step-forward"></span></a>
           <a id="bb-nav-viewmode" onClick={() => props.onFullScreenToggle(props.isFullScreen === true ? false : true)}><span className="glyphicon glyphicon-fullscreen"></span></a>
         </nav>
