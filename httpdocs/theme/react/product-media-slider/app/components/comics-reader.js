@@ -59,13 +59,29 @@ function ComicBookReader(props){
 
   function initComicReader(){
     $(function() {
-      $( '#bb-bookblock-'+props.slideIndex ).bookblock( {
+      /*$( ).bookblock( {
         speed : 800,
         shadowSides : 0.8,
         shadowFlip : 0.7,
         onBeforeFlip: function( page ) { onBeforeFlip(page) },
         onEndFlip	: function( page, isLimit ) {  readerOnEndFlip(page,isLimit) },
-      } );
+      } );*/
+      window.comicSwiper = new Swiper('#bb-bookblock-'+props.slideIndex , {
+        speed: 400,
+        initialSlide: 0,
+        observer: true, 
+        observeParents: true,
+        preloadImages: true,
+        updateOnImagesReady: true,
+        pagination: '.swiper-pagination',
+        paginationClickable: '.swiper-pagination',
+        nested:true,
+        threshold:50,
+        onSlideChangeStart: function(swiper){
+          setCurrentSlide(swiper.activeIndex);
+        }
+      });
+      window.comicSwiper.update()
     })
   }
 
