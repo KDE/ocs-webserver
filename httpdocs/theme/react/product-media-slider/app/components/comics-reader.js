@@ -59,7 +59,7 @@ function ComicBookReader(props){
 
   function initComicReader(){
     const bookBlockElement = document.getElementById('bb-bookblock');
-    console.log(bookBlockElement);
+
     if (bookBlockElement){
       $(document).ready(function() {
         window.comicSwiper = new Swiper('.comic-book-reader' , {
@@ -78,7 +78,7 @@ function ComicBookReader(props){
         window.comicSwiper.update()
       });
     } else {
-      console.log('no book block element');
+
       setTimeout(() => {
         initComicReader();
       }, 500);
@@ -106,7 +106,6 @@ function ComicBookReader(props){
   let comicBookDisplay;
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
-    console.log(pages);
     const comicPages = pages.map((p,index) => (
       <div className="swiper-slide" key={index}>
         <img src={p}/>
