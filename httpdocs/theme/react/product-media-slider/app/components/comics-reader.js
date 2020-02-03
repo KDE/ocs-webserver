@@ -53,19 +53,13 @@ function ComicBookReader(props){
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
 
-  function onFinishComicPagesRender(){
-    initComicReader();
-  }
-  
+  React.useEffect(() => { 
+    initComicReader()
+  },[])
+
   function initComicReader(){
-    $(function() {
-      /*$( ).bookblock( {
-        speed : 800,
-        shadowSides : 0.8,
-        shadowFlip : 0.7,
-        onBeforeFlip: function( page ) { onBeforeFlip(page) },
-        onEndFlip	: function( page, isLimit ) {  readerOnEndFlip(page,isLimit) },
-      } );*/
+    const bookBlockElement = document.getElementById('#bb-bookblock-'+props.slideIndex);
+    if (bookBlockElement){
       window.comicSwiper = new Swiper('#bb-bookblock-'+props.slideIndex , {
         speed: 400,
         initialSlide: 0,
@@ -82,7 +76,11 @@ function ComicBookReader(props){
         }
       });
       window.comicSwiper.update()
-    })
+    } else {
+      setTimeout(() => {
+        initComicReader();
+      }, 500);
+    }
   }
 
   function onComicReaderNavClick(val){
@@ -101,15 +99,12 @@ function ComicBookReader(props){
   let comicBookDisplay;
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
-    const comicPages = pages.map((p,index) => {
-      if ((index + 1) === pages.length) onFinishComicPagesRender()
-      return (
-        <div key={index} className="bb-item">
+    const comicPages = pages.map((p,index) => (
+      <div key={index} className="bb-item">
         <img src={p[0]}/>
         <img src={p[1]}/>
-      </div>
-      )
-    })
+      </div>      
+    ))
 
     comicBookDisplay = (
       <div id={"bb-bookblock-" + props.slideIndex} className="bb-bookblock">
