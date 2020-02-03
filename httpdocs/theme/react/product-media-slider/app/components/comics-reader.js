@@ -49,7 +49,7 @@ function ComicBookReader(props){
   const [ loading, setLoading ] = useState(false);
   const [ displayType, setDisplayType ] = useState("double")
   const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType));
-  const [ currentPage, setCurrentPage ] = useState(1)
+  const [ currentPage, setCurrentPage ] = useState(0)
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
 
@@ -58,11 +58,11 @@ function ComicBookReader(props){
   },[])
 
   function initComicReader(){
-    const bookBlockElement = document.getElementById('#bb-bookblock-'+props.slideIndex);
+    const bookBlockElement = document.getElementById('bb-bookblock');
     console.log(bookBlockElement);
     if (bookBlockElement){
       $(document).ready(function() {
-        window.comicSwiper = new Swiper('#bb-bookblock-'+props.slideIndex , {
+        window.comicSwiper = new Swiper('#bb-bookblock' , {
           speed: 400,
           initialSlide: 0,
           observer: true, 
@@ -116,7 +116,7 @@ function ComicBookReader(props){
     ))
 
     comicBookDisplay = (
-      <div id={"bb-bookblock-" + props.slideIndex} className="bb-bookblock">
+      <div id="bb-bookblock" className="bb-bookblock">
         {comicPages}
       </div>
     )
