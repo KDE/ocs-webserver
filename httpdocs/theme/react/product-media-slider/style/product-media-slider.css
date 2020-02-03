@@ -1484,8 +1484,7 @@ video:focus {
 #comics-reader-wrapper .comic-book-reader {
   height: 100%;
   position: relative;
-  padding-bottom: 50px;
-  padding-top: 26px;
+  padding-bottom: 60px;
 }
 #comics-reader-wrapper .comic-book-reader .bb-bookblock {
   width: 450px;
@@ -1502,7 +1501,7 @@ video:focus {
   position: absolute;
   bottom: 0;
   z-index: 111;
-  height: 50px;
+  height: 58px;
 }
 #comics-reader-wrapper .nav-container nav {
   width: auto;
