@@ -106,10 +106,10 @@ function ComicBookReader(props){
   let comicBookDisplay;
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
+    console.log(pages);
     const comicPages = pages.map((p,index) => (
       <div className="swiper-slide" key={index}>
-        <img src={p[0]}/>
-        <img src={p[1]}/>
+        <img src={p}/>
       </div>      
     ))
 
