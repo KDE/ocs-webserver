@@ -53,10 +53,10 @@ function ComicBookReader(props){
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
 
-  React.useEffect(() => { 
-    initComicReader()
-  },[])
-
+  function onFinishComicPagesRender(){
+    initComicReader();
+  }
+  
   function initComicReader(){
     $(function() {
       /*$( ).bookblock( {
@@ -101,12 +101,15 @@ function ComicBookReader(props){
   let comicBookDisplay;
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
-    const comicPages = pages.map((p,index) => (
-      <div key={index} className="bb-item">
+    const comicPages = pages.map((p,index) => {
+      if ((index + 1) === pages.length) onFinishComicPagesRender()
+      return (
+        <div key={index} className="bb-item">
         <img src={p[0]}/>
         <img src={p[1]}/>
-      </div>      
-    ))
+      </div>
+      )
+    })
 
     comicBookDisplay = (
       <div id={"bb-bookblock-" + props.slideIndex} className="bb-bookblock">
