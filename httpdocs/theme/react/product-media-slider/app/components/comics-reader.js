@@ -72,7 +72,7 @@ function ComicBookReader(props){
           nested:true,
           threshold:0,
           onSlideChangeStart: function(swiper){
-            setCurrentSlide(swiper.activeIndex);
+            setCurrentPage(swiper.activeIndex);
           }
         });
         window.comicSwiper.update()
