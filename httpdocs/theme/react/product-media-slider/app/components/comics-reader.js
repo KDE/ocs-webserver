@@ -69,8 +69,6 @@ function ComicBookReader(props){
           observeParents: true,
           preloadImages: true,
           updateOnImagesReady: true,
-          pagination: '.swiper-pagination',
-          paginationClickable: '.swiper-pagination',
           nested:true,
           threshold:0,
           onSlideChangeStart: function(swiper){
