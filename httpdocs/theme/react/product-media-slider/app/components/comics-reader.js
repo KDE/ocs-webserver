@@ -124,7 +124,7 @@ function ComicBookReader(props){
       {comicBookDisplay}
       <div className="nav-container">
         <nav>
-          <a id="bb-nav-counter">{ ( currentPage + 1 ) + "/" + ( totalPages + 1 ) }</a>
+          <a id="bb-nav-counter">{ ( currentPage + 1 ) + "/" + totalPages }</a>
           <a id="bb-nav-first" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
           <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
           <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>
