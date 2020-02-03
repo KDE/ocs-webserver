@@ -60,22 +60,24 @@ function ComicBookReader(props){
   function initComicReader(){
     const bookBlockElement = document.getElementById('#bb-bookblock-'+props.slideIndex);
     if (bookBlockElement){
-      window.comicSwiper = new Swiper('#bb-bookblock-'+props.slideIndex , {
-        speed: 400,
-        initialSlide: 0,
-        observer: true, 
-        observeParents: true,
-        preloadImages: true,
-        updateOnImagesReady: true,
-        pagination: '.swiper-pagination',
-        paginationClickable: '.swiper-pagination',
-        nested:true,
-        threshold:0,
-        onSlideChangeStart: function(swiper){
-          setCurrentSlide(swiper.activeIndex);
-        }
+      $(document).ready(function() {
+        window.comicSwiper = new Swiper('#bb-bookblock-'+props.slideIndex , {
+          speed: 400,
+          initialSlide: 0,
+          observer: true, 
+          observeParents: true,
+          preloadImages: true,
+          updateOnImagesReady: true,
+          pagination: '.swiper-pagination',
+          paginationClickable: '.swiper-pagination',
+          nested:true,
+          threshold:0,
+          onSlideChangeStart: function(swiper){
+            setCurrentSlide(swiper.activeIndex);
+          }
+        });
+        window.comicSwiper.update()
       });
-      window.comicSwiper.update()
     } else {
       setTimeout(() => {
         initComicReader();
@@ -105,7 +107,7 @@ function ComicBookReader(props){
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
     const comicPages = pages.map((p,index) => (
-      <div key={index} className="bb-item">
+      <div key={index}>
         <img src={p[0]}/>
         <img src={p[1]}/>
       </div>      
