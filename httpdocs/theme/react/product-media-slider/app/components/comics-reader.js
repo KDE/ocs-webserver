@@ -48,7 +48,7 @@ function ComicBookReader(props){
 
   const [ loading, setLoading ] = useState(false);
   const [ displayType, setDisplayType ] = useState("double")
-  const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
+  const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType));
   const [ currentPage, setCurrentPage ] = useState(1)
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
@@ -70,7 +70,7 @@ function ComicBookReader(props){
         pagination: '.swiper-pagination',
         paginationClickable: '.swiper-pagination',
         nested:true,
-        threshold:50,
+        threshold:0,
         onSlideChangeStart: function(swiper){
           setCurrentSlide(swiper.activeIndex);
         }
@@ -84,7 +84,12 @@ function ComicBookReader(props){
   }
 
   function onComicReaderNavClick(val){
-    $( '#bb-bookblock-'+props.slideIndex).bookblock(val);
+    let nextPage;
+    if (val === "first") nextPage = 0;
+    else if (val === "last") nextPage = totalPages;
+    else if (val === "prev") nextPage = currentPage === 0 ? 0 : currentPage - 1;
+    else if (val === "next") nextPage = currentPage === totalPages ? totalPages : currentPage + 1;
+    window.comicSwiper.slideTo(nextPage) 
   }
 
   function onBeforeFlip(page){
