@@ -45,9 +45,11 @@ const MetaHeaderComponent = (props) => {
 
   const onSwitchStyle = evt => {    
     let url = state.baseUrl+'/membersetting/setsettings/itemid/2/itemvalue/'+ (evt.target.checked ? '1' : '0');    
+    console.log(url);
     const isChecked = evt.target.checked;    
     Axios.get(url)
-      .then(result => {      
+      .then(result => {
+        console.log(result);
         if (isChecked === true){
           $( "body" ).addClass( "dark-theme" );
       } else {
@@ -57,10 +59,12 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchMetaHeaderStyle = evt => {     
-    let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');    
+    let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');
+    console.log(url);  
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {
+        console.log(result)
         setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '')
     })
   }
