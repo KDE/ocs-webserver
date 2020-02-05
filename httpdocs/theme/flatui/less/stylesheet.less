@@ -6782,6 +6782,7 @@ main#plings-page{
   @black:#121212;
   @black2:#232323;
   @black3:#343434;
+  @black4:#454545;
   
   background-color: @black;
   color: white !important;
@@ -6887,7 +6888,7 @@ main#plings-page{
   }
 
   #category-tree-container ul li a {
-    color: white;
+    color: white !important;
   }
 
   .startpage-store .sidebar-left {
@@ -6900,6 +6901,10 @@ main#plings-page{
     border-left: @black2;
   }
 
+  #explore-content .sidebar-right-info {
+    background-color:@black2;
+  }
+
   #featureProductsContainer .feature_container .main_container {
     border: 1px solid @black3;
     background-color:@black2;
@@ -6907,13 +6912,42 @@ main#plings-page{
 
   #carousel-module-container .product-carousel.two .product-carousel-container .product-carousel-slider .product-carousel-item .product-carousel-item-wrapper {
     border: 1px solid @black3;
+    background-color: @black2;
   }
 
   #carousel-module-container .product-carousel.two .product-carousel-container .product-carousel-slider .product-carousel-item figure {
     border-bottom: 1px solid @black3;
+    background: white;
+    border-radius: 3px 3px 0 0;
   }
 
   #carousel-module-container .product-carousel.two .product-carousel-container .product-carousel-slider .product-carousel-item .product-info span {
     color: white;
+  }
+
+  .blockContainer {
+    background: @black2;
+    border: 1px solid @black3;
+
+    .header {
+      border-bottom: 1px solid @black3;
+    }
+
+    .productrow {
+      border-bottom: 1px solid @black3;
+    }
+  }
+
+  #explore-content .bgwhite {
+    background-color: @black3;
+    border: @black4;
+  }
+
+  .prod-widget-box {
+    border: 1px solid @black4 !important;
+  }
+
+  .commentstore {
+    border-bottom: 1px solid @black4 !important;
   }
 }
