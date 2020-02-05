@@ -6787,7 +6787,6 @@ main#plings-page{
 
   #metaheader {
 
-
     .metamenu {
       background-color: @black3 !important;
       color: white !important;
@@ -6813,6 +6812,11 @@ main#plings-page{
       .active>a:hover {
         color: @black3 !important;
       }
+
+      .user-settings-item  {
+        background-color: @black;
+        border-bottom: 1px solid @black3;
+      }
     }
 
     #metaheader-nav {
@@ -6836,7 +6840,41 @@ main#plings-page{
         }
 
       }
+    
+      #user-login-menu-container .user-dropdown .dropdown-menu #user-info-section {
+        background-color: @black;
+
+        .user-details #user-details-username,
+        .user-details #user-details-email {
+          color: white;
+
+          b {
+            color: white;
+          }
+        }
+      }
+
+      #user-login-menu-container .user-dropdown .dropdown-menu li.buttons {
+        background-color: @black;
+      }
+
+      #user-login-menu-container .user-dropdown .dropdown-menu #user-info-menu-item, 
+      #user-login-menu-container .user-dropdown .dropdown-menu .user-info-payout {
+        border-bottom: 1px solid @black3;
+      }
+
+      .user-dropdown .dropdown-menu li.buttons .btn {
+        color: white !important;
+        background-color: @black2;
+        border: 1px solid black;
+
+        &:hover {
+          background-color: @black3;
+        }
+      }
     }
+
+    
   }
 
   #explore-content {
@@ -6845,5 +6883,15 @@ main#plings-page{
       background-color: @black3;
       color: white;
     }
+  }
+
+  .startpage-store .sidebar-left {
+    background-color: @black;
+    border-right: @black2;
+  }
+
+  .startpage-store .sidebar-right {
+    background-color: @black;
+    border-left: @black2;
   }
 }
