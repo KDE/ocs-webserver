@@ -106,7 +106,7 @@ const UserLoginMenuContainer = (props) => {
              <span className="user-settings-item-title">Theme</span>
                <SwitchItem 
                 onSwitchStyle={e => props.onSwitchStyle(e)}
-                onSwitchStyleChecked={e => props.onSwitchStyleChecked(e)}
+                onSwitchStyleChecked={props.siteTheme === true ? true : false}
               />
               <span className="user-settings-item-title">dark</span>
             </li>
@@ -115,6 +115,7 @@ const UserLoginMenuContainer = (props) => {
              <span className="user-settings-item-title">Metaheader</span>
                <SwitchItem 
                 onSwitchStyle={e => props.onSwitchMetaHeaderStyle(e)}
+                onSwitchStyleChecked={props.metamenuTheme === "metamenu-theme-dark" ? true : false}
               />
               <span className="user-settings-item-title">dark</span>
             </li>
