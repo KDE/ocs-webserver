@@ -6778,67 +6778,27 @@ main#plings-page{
 /*************** DARK THEME ****************************/
 /*******************************************************/
 
-.dark-theme {
-  @black:#121212;
-  @black2:#232323;
-  @black3:#343434;
-  @black4:#454545;
-  
-  background-color: @black;
-  color: white !important;
 
-  #metaheader {
+#metaheader {
 
-    .metamenu {
-      background-color: @black3 !important;
-      color: white !important;
+  #metaheader-nav {
 
-      a {
-        color: white;        
-      }
-    }
+    .metamenu-theme-dark {
 
-    .dropdown-menu {
-      background-color: @black2 !important;
-
-      li {
-
-        a {
-
-          color: white !important;
-        }
-      }
-
-      li>a:hover, 
-      .active>a, 
-      .active>a:hover {
+      &.metamenu {
         background-color: @black3 !important;
         color: white !important;
+    
+        a {
+          color: white;        
+        }
       }
-
-      .user-settings-item  {
-        background-color: @black;
-        border-bottom: 1px solid @black3;
-      }
-    }
-
-    .dropdown-menu li>a:hover, .dropdown-menu .active>a, .dropdown-menu .active>a:hover {
-      background-color: @black3 !important;
-      color: white !important;
-    }
-
-    #metaheader #metaheader-nav ul.metaheader-menu>li>a:active, #metaheader #metaheader-nav ul.metaheader-menu>li>a:hover {
-      background-color: @black4 !important;
-      color: white !important;      
-    }
-
-    #metaheader-nav {
 
       ul.metaheader-menu {
 
         >li>a {
           color: white !important;
-
+  
           &:hover {
             background-color: @black4 !important;
           }
@@ -6855,63 +6815,109 @@ main#plings-page{
         >li .dropdown-menu::before {
           border-bottom-color:@black !important;
         }
-
+  
       }
     
       #user-login-menu-container .user-dropdown .dropdown-menu #user-info-section {
         background-color: @black;
-
+  
         .user-details #user-details-username,
         .user-details #user-details-email {
           color: white;
-
+  
           b {
             color: white;
           }
         }
       }
-
+  
       #user-login-menu-container .user-dropdown .dropdown-menu li.buttons {
         background-color: @black;
-
+  
         ul li {
           &:hover {
             background-color: @black3;
           }
         }
       }
-
+  
       #user-login-menu-container .user-dropdown .dropdown-menu #user-info-menu-item, 
       #user-login-menu-container .user-dropdown .dropdown-menu .user-info-payout {
         border-bottom: 1px solid @black3;
       }
-
+  
       .user-dropdown .dropdown-menu li.buttons .btn {
         color: white !important;
         background-color: @black2 !important;
         border: 1px solid black !important;
-
+  
         &:hover {
           background: @black3 !important;
         }
       }
-    }
-
-    #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
-      border-bottom: 1px solid @black3 !important;
-      background-color: @black !important;
-    }
-
-
-    #metaheader-nav #development-app-menu-container .user-dropdown .dropdown-menu li {
-      border: 1px solid transparent;
-      &:hover {
-        color: white;
-        background-color: @black2;
-        border-color: transparent !important;
+      
+      .dropdown-menu {
+        background-color: @black2 !important;
+    
+        li {
+    
+          a {
+    
+            color: white !important;
+          }
+        }
+    
+        li>a:hover, 
+        .active>a, 
+        .active>a:hover {
+          background-color: @black3 !important;
+          color: white !important;
+        }
+    
+        .user-settings-item  {
+          background-color: @black;
+          border-bottom: 1px solid @black3;
+        }
       }
+    
+      .dropdown-menu li>a:hover, .dropdown-menu .active>a, .dropdown-menu .active>a:hover {
+        background-color: @black3 !important;
+        color: white !important;
+      }
+    
+      ul.metaheader-menu>li>a:active, ul.metaheader-menu>li>a:hover {
+        background-color: @black4 !important;
+        color: white !important;      
+      }
+  
+      #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
+        border-bottom: 1px solid @black3 !important;
+        background-color: @black !important;
+      }
+    
+    
+      #development-app-menu-container .user-dropdown .dropdown-menu li {
+        border: 1px solid transparent;
+        &:hover {
+          color: white;
+          background-color: @black2;
+          border-color: transparent !important;
+        }
+      }
+
     }
+
   }
+}
+
+.dark-theme {
+  @black:#121212;
+  @black2:#232323;
+  @black3:#343434;
+  @black4:#454545;
+  
+  background-color: @black;
+  color: white !important;
 
   #site-header {
     background: @black2 !important;
