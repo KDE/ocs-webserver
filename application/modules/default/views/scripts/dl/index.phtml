@@ -111,6 +111,21 @@ if ($isExternal) {
     </style>
 
     <script type="text/javascript">
+        
+        function inIframe () {
+            try {
+                return window.self !== window.top;
+            } catch (e) {
+                return true;
+            }
+        }
+        
+        console.log('In Frame: ' + inIframe());
+        
+        if(!inIframe()) {
+            window.location.href = "<?= "/p/". $this->project_id ?>";
+        }
+
         function viewport() {
             var e = window
                 , a = 'inner';
