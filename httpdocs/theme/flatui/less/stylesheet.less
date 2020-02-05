@@ -6799,7 +6799,7 @@ main#plings-page{
     }
 
     .dropdown-menu {
-      background-color: @black !important;
+      background-color: @black2 !important;
 
       li {
 
@@ -6812,13 +6812,24 @@ main#plings-page{
       li>a:hover, 
       .active>a, 
       .active>a:hover {
-        color: @black3 !important;
+        background-color: @black3 !important;
+        color: white !important;
       }
 
       .user-settings-item  {
         background-color: @black;
         border-bottom: 1px solid @black3;
       }
+    }
+
+    .dropdown-menu li>a:hover, .dropdown-menu .active>a, .dropdown-menu .active>a:hover {
+      background-color: @black3 !important;
+      color: white !important;
+    }
+
+    #metaheader #metaheader-nav ul.metaheader-menu>li>a:active, #metaheader #metaheader-nav ul.metaheader-menu>li>a:hover {
+      background-color: @black4 !important;
+      color: white !important;      
     }
 
     #metaheader-nav {
@@ -6867,8 +6878,8 @@ main#plings-page{
 
       .user-dropdown .dropdown-menu li.buttons .btn {
         color: white !important;
-        background-color: @black2;
-        border: 1px solid black;
+        background-color: @black2 !important;
+        border: 1px solid black !important;
 
         &:hover {
           background-color: @black3;
@@ -6876,6 +6887,14 @@ main#plings-page{
       }
     }
 
+    #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
+      border-bottom: 1px solid @black3 !important;
+      background-color: @black !important;
+    }
+
+    #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-menu li.buttons .btn {
+
+    }
     
   }
 
@@ -6949,5 +6968,11 @@ main#plings-page{
 
   .commentstore {
     border-bottom: 1px solid @black4 !important;
+  }
+
+  .startpage-store .sidebar-right #blogJson,
+  .startpage-store .sidebar-right #rss-feeds,
+  .startpage-store .sidebar-right #lastcomments {
+    border: 1px solid @black4 !important;
   }
 }
