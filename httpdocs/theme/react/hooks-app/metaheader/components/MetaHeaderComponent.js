@@ -12,7 +12,9 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
+  const initialMetamenuTheme = state.metamenuTheme ? state.metamenuTheme : '';
+  const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuTheme);
+  const [siteTheme, setSiteTheme ] = useState(false);
 
   useEffect(() => {   
     updateDimensions(); 
@@ -73,6 +75,8 @@ const MetaHeaderComponent = (props) => {
           onSwitchStyle={onSwitchStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
           onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
+          metamenuTheme={metamenuTheme}
+          siteTheme={siteTheme}
         />
       )
     }
@@ -91,6 +95,8 @@ const MetaHeaderComponent = (props) => {
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
               onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
+              metamenuTheme={metamenuTheme}
+              siteTheme={siteTheme}
             />
             <SearchForm />
           </div>

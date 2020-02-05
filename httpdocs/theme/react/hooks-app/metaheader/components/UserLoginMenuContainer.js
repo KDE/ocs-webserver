@@ -48,7 +48,11 @@ const UserLoginMenuContainer = (props) => {
           }
         }        
         setDropdownClass(cls);              
-      }
+  }
+
+      
+  console.log(props.metamenuTheme)
+  console.log(props.siteTheme)
 
   return (
     <li id="user-login-menu-container" ref={toggleEl}>
