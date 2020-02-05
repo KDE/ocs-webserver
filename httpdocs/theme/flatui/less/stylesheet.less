@@ -6838,6 +6838,10 @@ main#plings-page{
 
         >li>a {
           color: white !important;
+
+          &:hover {
+            background-color: @black3 !important;
+          }
         }
     
         >li.active {
@@ -6869,6 +6873,12 @@ main#plings-page{
 
       #user-login-menu-container .user-dropdown .dropdown-menu li.buttons {
         background-color: @black;
+
+        ul li {
+          &:hover {
+            background-color: @black3;
+          }
+        }
       }
 
       #user-login-menu-container .user-dropdown .dropdown-menu #user-info-menu-item, 
@@ -6892,10 +6902,15 @@ main#plings-page{
       background-color: @black !important;
     }
 
-    #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-menu li.buttons .btn {
 
+    #metaheader-nav #development-app-menu-container .user-dropdown .dropdown-menu li {
+      border: 1px solid transparent;
+      &:hover {
+        color: white;
+        background-color: @black2;
+        border-color: transparent !important;
+      }
     }
-    
   }
 
   #explore-content {
@@ -6949,11 +6964,11 @@ main#plings-page{
     border: 1px solid @black3;
 
     .header {
-      border-bottom: 1px solid @black3;
+      border-bottom: 1px solid @black3 !important;
     }
 
     .productrow {
-      border-bottom: 1px solid @black3;
+      border-bottom: 1px solid @black3 !important;
     }
   }
 
