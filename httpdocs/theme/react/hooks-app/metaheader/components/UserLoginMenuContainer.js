@@ -32,8 +32,8 @@ const UserLoginMenuContainer = (props) => {
     props.onSwitchStyleChecked(e)
   }
 
-  function onUserSwitch(e){
-    props.onSwitchStyle(e);
+  function onMetaHeaderThemeSwitch(e){
+    console.log('on meta header theme switch');
   }
 
   const loadData = async () => {
@@ -107,14 +107,22 @@ const UserLoginMenuContainer = (props) => {
             </li>
 
             <li className="user-settings-item">
-             <span className="user-settings-item-title">Metaheader</span>
+             <span className="user-settings-item-title">Theme</span>
                <SwitchItem 
-                onSwitchStyle={e => onUserSwitch(e)}
+                onSwitchStyle={e => props.onSwitchStyle(e)}
                 onSwitchStyleChecked={e => onUserThemeSwitch(e)}
               />
               <span className="user-settings-item-title">dark</span>
             </li>
-            
+
+            <li className="user-settings-item">
+             <span className="user-settings-item-title">Metaheader</span>
+               <SwitchItem 
+                onSwitchStyle={e => onMetaHeaderThemeSwitch(e)}
+              />
+              <span className="user-settings-item-title">dark</span>
+            </li>
+
             <li className="buttons">
               <a href={state.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
               <a href={state.baseUrl + "/settings/profile"} className="btn btn-default btn-metaheader"><span>Profile</span></a>
