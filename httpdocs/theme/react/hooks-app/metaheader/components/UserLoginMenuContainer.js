@@ -26,7 +26,7 @@ const UserLoginMenuContainer = (props) => {
       })
       */
      loadData();
-  },[])
+  },[]);
 
   const loadData = async () => {
     const data = await fetch(`${state.gitlabUrl}/api/v4/users?username=${state.user.username}`);
@@ -48,7 +48,11 @@ const UserLoginMenuContainer = (props) => {
           }
         }        
         setDropdownClass(cls);              
-      }
+  }
+
+      
+  console.log(props.metamenuTheme)
+  console.log(props.siteTheme)
 
   return (
     <li id="user-login-menu-container" ref={toggleEl}>
@@ -99,12 +103,23 @@ const UserLoginMenuContainer = (props) => {
             </li>
 
             <li className="user-settings-item">
-             <span className="user-settings-item-title">Metaheader</span>
-               <SwitchItem onSwitchStyle={props.onSwitchStyle}
-                        onSwitchStyleChecked={props.onSwitchStyleChecked}/>
+             <span className="user-settings-item-title">Theme</span>
+               <SwitchItem 
+                onSwitchStyle={e => props.onSwitchStyle(e)}
+                onSwitchStyleChecked={props.siteTheme === true ? true : false}
+              />
               <span className="user-settings-item-title">dark</span>
             </li>
-            
+
+            <li className="user-settings-item">
+             <span className="user-settings-item-title">Metaheader</span>
+               <SwitchItem 
+                onSwitchStyle={e => props.onSwitchMetaHeaderStyle(e)}
+                onSwitchStyleChecked={props.metamenuTheme === "metamenu-theme-dark" ? true : false}
+              />
+              <span className="user-settings-item-title">dark</span>
+            </li>
+
             <li className="buttons">
               <a href={state.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
               <a href={state.baseUrl + "/settings/profile"} className="btn btn-default btn-metaheader"><span>Profile</span></a>

@@ -12,7 +12,9 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
+  const initialMetamenuTheme = state.metamenuTheme ? state.metamenuTheme : '';
+  const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuTheme);
+  const [siteTheme, setSiteTheme ] = useState(false);
 
   useEffect(() => {   
     updateDimensions(); 
@@ -44,9 +46,20 @@ const MetaHeaderComponent = (props) => {
     let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
     Axios.get(url)
-      .then(result => {               
-        setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
+      .then(result => {      
+        if (isChecked === true){
+          $( "body" ).addClass( "dark-theme" );
+        } else {
+          $( "body" ).removeClass( "dark-theme" );
+        }
       })
+  }
+
+  const onSwitchMetaHeaderStyle = evt => {
+    console.log('meta menu header theme - ' + metamenuTheme);
+    console.log('on switch metaheader style');
+    const isChecked = evt.target.checked;    
+    setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '');
   }
 
   let domainsMenuDisplay;
@@ -61,6 +74,9 @@ const MetaHeaderComponent = (props) => {
           device={device}
           onSwitchStyle={onSwitchStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
+          onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
+          metamenuTheme={metamenuTheme}
+          siteTheme={siteTheme}
         />
       )
     }
@@ -78,7 +94,9 @@ const MetaHeaderComponent = (props) => {
               device={device}              
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
-              
+              onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
+              metamenuTheme={metamenuTheme}
+              siteTheme={siteTheme}
             />
             <SearchForm />
           </div>
