@@ -349,6 +349,20 @@ if($this->cat_id>0)
     var json_serverUrl = <?php echo Zend_Json::encode($serverUrl); ?>;
     var json_baseurl = <?php echo  Zend_Json::encode($baseurl);?>;
     var json_baseurlStore = <?php echo  Zend_Json::encode($baseurlStore);?>;
+    
+    <?php
+    $contentTheme = '';
+    if (Zend_Auth::getInstance()->hasIdentity()){
+        $identity = Zend_Auth::getInstance()->getStorage()->read();
+        $settingmodel = new Default_Model_MemberSettingValue();
+        $result = $settingmodel->fetchMemberSettingItem($identity->member_id,2);
+        if($result && $result['value']==1)
+        {
+            $contentTheme = 'content-theme-dark';
+        }
+    }
+    ?>
+    var json_content_theme = <?php echo  Zend_Json::encode($contentTheme);?>;    
   
     var json_searchbaseurl = <?php echo  Zend_Json::encode($searchbaseurl);?>;    
     var json_sname =  <?php echo  Zend_Json::encode($sname);?>;
