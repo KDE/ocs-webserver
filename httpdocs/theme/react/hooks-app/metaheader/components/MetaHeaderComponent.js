@@ -28,6 +28,7 @@ const MetaHeaderComponent = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log('on site theme change')
     if (siteTheme === 'content-theme-dark'){
       $( "body" ).addClass( "dark-theme" );
     } else {
