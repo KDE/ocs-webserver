@@ -54,6 +54,7 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchMetaHeaderStyle = evt => {
+    console.log('meta menu header theme - ' + metamenuTheme);
     console.log('on switch metaheader style');
     const isChecked = evt.target.checked;    
     setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '');
