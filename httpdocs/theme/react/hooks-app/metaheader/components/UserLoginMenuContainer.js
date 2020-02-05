@@ -28,14 +28,12 @@ const UserLoginMenuContainer = (props) => {
      loadData();
   },[]);
 
-  function onUserThemeSwitch(){
-    console.log('on user theme switch');
-    props.onSwitchStyleChecked()
+  function onUserThemeSwitch(e){
+    props.onSwitchStyleChecked(e)
   }
 
-  function onUserSwitch(){
-    console.log('on user switch');
-    props.onSwitchStyle();
+  function onUserSwitch(e){
+    props.onSwitchStyle(e);
   }
 
   const loadData = async () => {

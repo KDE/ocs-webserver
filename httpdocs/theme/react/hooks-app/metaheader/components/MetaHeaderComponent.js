@@ -44,8 +44,13 @@ const MetaHeaderComponent = (props) => {
     let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
     Axios.get(url)
-      .then(result => {               
-        setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
+      .then(result => {      
+        if (isChecked === true){
+          $( "body" ).addClass( "dark-theme" );
+        } else {
+          $( "body" ).removeClass( "dark-theme" );
+        }
+        //setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
       })
   }
 
