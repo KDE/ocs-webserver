@@ -110,8 +110,10 @@ const UserLoginMenuContainer = (props) => {
 
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader</span>
-               <SwitchItem onSwitchStyle={onUserSwitch}
-                        onSwitchStyleChecked={onUserThemeSwitch}/>
+               <SwitchItem 
+                onSwitchStyle={e => onUserSwitch(e)}
+                onSwitchStyleChecked={e => onUserThemeSwitch(e)}
+              />
               <span className="user-settings-item-title">dark</span>
             </li>
             
