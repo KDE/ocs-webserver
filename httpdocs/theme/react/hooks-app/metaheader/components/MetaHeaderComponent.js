@@ -27,6 +27,14 @@ const MetaHeaderComponent = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (siteTheme === 'content-theme-dark'){
+      $( "body" ).addClass( "dark-theme" );
+    } else {
+      $( "body" ).removeClass( "dark-theme" );
+    }
+  },[siteTheme])
+
   const updateDimensions = e => {
     
     const width = window.innerWidth;
@@ -49,12 +57,8 @@ const MetaHeaderComponent = (props) => {
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {
-        console.log(result);
-        if (isChecked === true){
-          $( "body" ).addClass( "dark-theme" );
-      } else {
-          $( "body" ).removeClass( "dark-theme" );
-      }
+        console.log(result); 
+        setSiteTheme(isChecked ? 'content-dark-theme': '');
     })
   }
 
