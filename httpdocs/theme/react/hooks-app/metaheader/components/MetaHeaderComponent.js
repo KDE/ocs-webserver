@@ -50,8 +50,13 @@ const MetaHeaderComponent = (props) => {
         } else {
           $( "body" ).removeClass( "dark-theme" );
         }
-        //setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
       })
+  }
+
+  const onSwitchMetaHeaderStyle = evt => {
+    console.log('on switch metaheader style');
+    const isChecked = evt.target.checked;    
+    setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '');
   }
 
   let domainsMenuDisplay;
@@ -66,6 +71,7 @@ const MetaHeaderComponent = (props) => {
           device={device}
           onSwitchStyle={onSwitchStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
+          onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
         />
       )
     }
@@ -83,7 +89,7 @@ const MetaHeaderComponent = (props) => {
               device={device}              
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
-              
+              onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
             />
             <SearchForm />
           </div>
