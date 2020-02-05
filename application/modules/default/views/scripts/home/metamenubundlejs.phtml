@@ -145,6 +145,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
 
 $user = null;
 $metamenuTheme = '';
+$contentTheme = '';
 if (Zend_Auth::getInstance()->hasIdentity()){
     $identity = Zend_Auth::getInstance()->getStorage()->read();
     $helperImage = new Default_View_Helper_Image();
@@ -165,7 +166,11 @@ if (Zend_Auth::getInstance()->hasIdentity()){
     {
         $metamenuTheme = 'metamenu-theme-dark';
     }
-
+    $result = $settingmodel->fetchMemberSettingItem($identity->member_id,2);
+    if($result && $result['value']==1)
+    {
+        $contentTheme = 'content-theme-dark';
+    }
 
 }
 
@@ -192,6 +197,7 @@ $response = array(
     "logoutUrl" => $url_logout,
     "sName" => $sname,
     "metamenuTheme" => $metamenuTheme,
+    "contentTheme" => $contentTheme,
     "target" => $targetObject,
     "store" => null
 );
