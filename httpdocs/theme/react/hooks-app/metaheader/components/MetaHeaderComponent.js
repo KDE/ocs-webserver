@@ -15,6 +15,7 @@ const MetaHeaderComponent = (props) => {
   const initialMetamenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
   const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuThemeValue);
   console.log(window.json_content_theme)
+  console.log(props.config);
   const initialSiteThemeValue = window.json_content_theme ? window.json_content_theme : '';
   const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
 
