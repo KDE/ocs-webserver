@@ -12,9 +12,10 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const initialMetamenuTheme = state.metamenuTheme ? state.metamenuTheme : '';
-  const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuTheme);
-  const [siteTheme, setSiteTheme ] = useState(false);
+  const initialMetamenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
+  const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuThemeValue);
+  const initialSiteThemeValue = json_content_theme ? json_content_theme : '';
+  const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
 
   useEffect(() => {   
     updateDimensions(); 
@@ -43,23 +44,25 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchStyle = evt => {    
-    let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');    
+    let url = state.baseUrl+'/membersetting/setsettings/itemid/2/itemvalue/'+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {      
         if (isChecked === true){
           $( "body" ).addClass( "dark-theme" );
-        } else {
+      } else {
           $( "body" ).removeClass( "dark-theme" );
-        }
-      })
+      }
+    })
   }
 
-  const onSwitchMetaHeaderStyle = evt => {
-    console.log('meta menu header theme - ' + metamenuTheme);
-    console.log('on switch metaheader style');
+  const onSwitchMetaHeaderStyle = evt => {     
+    let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
-    setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '');
+    Axios.get(url)
+      .then(result => {
+        setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '')
+    })
   }
 
   let domainsMenuDisplay;

@@ -106,7 +106,7 @@ const UserLoginMenuContainer = (props) => {
              <span className="user-settings-item-title">Theme</span>
                <SwitchItem 
                 onSwitchStyle={e => props.onSwitchStyle(e)}
-                onSwitchStyleChecked={props.siteTheme === true ? true : false}
+                onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
               />
               <span className="user-settings-item-title">dark</span>
             </li>
