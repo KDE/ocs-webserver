@@ -120,7 +120,9 @@ if ($isExternal) {
             }
         }
         
-        if(!inIframe) {
+        console.log('In Frmae: ' + inIframe());
+        
+        if(!inIframe()) {
             window.location.href = "<?= "/p/". $this->project_id ?>";
         }
 
