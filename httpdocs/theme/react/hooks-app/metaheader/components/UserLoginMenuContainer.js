@@ -26,7 +26,17 @@ const UserLoginMenuContainer = (props) => {
       })
       */
      loadData();
-  },[])
+  },[]);
+
+  function onUserThemeSwitch(){
+    console.log('on user theme switch');
+    props.onSwitchStyleChecked()
+  }
+
+  function onUserSwitch(){
+    console.log('on user switch');
+    props.onSwitchStyle();
+  }
 
   const loadData = async () => {
     const data = await fetch(`${state.gitlabUrl}/api/v4/users?username=${state.user.username}`);
@@ -100,8 +110,8 @@ const UserLoginMenuContainer = (props) => {
 
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader</span>
-               <SwitchItem onSwitchStyle={props.onSwitchStyle}
-                        onSwitchStyleChecked={props.onSwitchStyleChecked}/>
+               <SwitchItem onSwitchStyle={onUserSwitch}
+                        onSwitchStyleChecked={onUserThemeSwitch}/>
               <span className="user-settings-item-title">dark</span>
             </li>
             

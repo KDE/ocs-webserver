@@ -6771,3 +6771,79 @@ main#plings-page{
     }
   }
 }
+
+
+
+/*******************************************************/
+/*************** DARK THEME ****************************/
+/*******************************************************/
+
+.dark-theme {
+  @black:#121212;
+  @black2:#232323;
+  @black3:#343434;
+  
+  background-color: @black;
+
+  #metaheader {
+
+
+    .metamenu {
+      background-color: @black3 !important;
+      color: white !important;
+
+      a {
+        color: white;        
+      }
+    }
+
+    .dropdown-menu {
+      background-color: @black !important;
+
+      li {
+
+        a {
+
+          color: white !important;
+        }
+      }
+
+      li>a:hover, 
+      .active>a, 
+      .active>a:hover {
+        color: @black3 !important;
+      }
+    }
+
+    #metaheader-nav {
+
+      ul.metaheader-menu {
+
+        >li>a {
+          color: white !important;
+        }
+    
+        >li.active {
+          background-color: @black !important;
+        }
+    
+        >li .dropdown-menu::before {
+          border-bottom-color:@black !important;
+        }
+    
+        >li .dropdown-menu::before {
+          border-bottom-color:@black !important;
+        }
+
+      }
+    }
+  }
+
+  #explore-content {
+
+    #category-tree #category-tree-header a {
+      background-color: @black3;
+      color: white;
+    }
+  }
+}
