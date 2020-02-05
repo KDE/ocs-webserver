@@ -121,7 +121,7 @@ if ($isExternal) {
         }
         
         if(!inIframe) {
-            top.location.href = <?= "/p/". $this->project_id ?>;
+            window.location.href = "<?= "/p/". $this->project_id ?>";
         }
 
         function viewport() {
