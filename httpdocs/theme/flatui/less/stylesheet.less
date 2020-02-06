@@ -6786,6 +6786,16 @@ main#plings-page{
 
 #metaheader {
 
+  #user-context-menu-container .user-dropdown .dropdown-menu li a span, 
+  #about-menu-container .user-dropdown .dropdown-menu li a span, 
+  #development-app-menu-container .user-dropdown .dropdown-menu li a span {
+    color:white;
+  }
+
+  #development-app-menu-container .user-dropdown .dropdown-menu li:hover {
+    background-color: @black3;
+  }
+
   #metaheader-nav {
 
     .metamenu-theme-dark {
@@ -6814,17 +6824,13 @@ main#plings-page{
         }
     
         >li .dropdown-menu::before {
-          border-bottom-color:@black !important;
-        }
-    
-        >li .dropdown-menu::before {
-          border-bottom-color:@black !important;
+          border-bottom-color:@black2 !important;
         }
   
       }
     
       #user-login-menu-container .user-dropdown .dropdown-menu #user-info-section {
-        background-color: @black;
+        background-color: @black2;
   
         .user-details #user-details-username,
         .user-details #user-details-email {
@@ -6837,7 +6843,7 @@ main#plings-page{
       }
   
       #user-login-menu-container .user-dropdown .dropdown-menu li.buttons {
-        background-color: @black;
+        background-color: @black2;
   
         ul li {
           &:hover {
@@ -6853,11 +6859,11 @@ main#plings-page{
   
       .user-dropdown .dropdown-menu li.buttons .btn {
         color: white !important;
-        background-color: @black2 !important;
-        border: 1px solid black !important;
+        background-color: @black3 !important;
+        border: 1px solid @black4 !important;
   
         &:hover {
-          background: @black3 !important;
+          background: @black4 !important;
         }
       }
       
@@ -6880,8 +6886,8 @@ main#plings-page{
         }
     
         .user-settings-item  {
-          background-color: @black;
-          border-bottom: 1px solid @black3;
+          background-color: @black2;
+          border-bottom: 0 !important;
         }
       }
     
@@ -6897,13 +6903,12 @@ main#plings-page{
   
       #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
         background-color: @black !important;
-      }
 
-      #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item + .user-settings-item {
-        border-bottom: 1px solid @black3 !important;
-        background-color: @black !important;
+        span {
+          display: inline-block;
+          color: white;
+        }
       }
-      
     
       #development-app-menu-container .user-dropdown .dropdown-menu li {
         border: 1px solid transparent;

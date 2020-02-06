@@ -90,6 +90,8 @@ const MetaHeaderComponent = (props) => {
           onSwitchStyle={onSwitchStyle}
           onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
+          siteTheme={siteTheme}
+          metamenuTheme={metamenuTheme}
         />
       )
     }
@@ -108,6 +110,8 @@ const MetaHeaderComponent = (props) => {
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
               onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
+              siteTheme={siteTheme}
+              metamenuTheme={metamenuTheme}
             />
             <SearchForm />
           </div>
