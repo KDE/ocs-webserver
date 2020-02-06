@@ -45,6 +45,16 @@ const Gitlab = (props) => {
                 projects.slice(0, 5).map((p,index) =>       
             <li key={index}>                
                 <div className="title">
+                {p.avatar_url ? (
+                    <img src={p.avatar_url} style={{width:'40px', height:'40px'}}></img>
+                ) : (
+                    <div style={{width:'40px',height:'40px',background:'#EEEEEE',fontSize:'16px'
+                                ,lineHeight:'38px', textAlign:'center',color:'#555555'
+                                ,display: 'block', float: 'left',marginRight: '10px'
+                                }}>
+                    {p.name.substr(0,1)}</div>
+                )}
+
                 <a href={p.http_url_to_repo}>
                 {p.name+' '+p.description+p.last_activity_at}
                 </a>
