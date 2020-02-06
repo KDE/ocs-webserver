@@ -41,7 +41,7 @@ class Backend_PploadController extends Local_Controller_Action_CliAbstract
         SELECT 
             collection_id, count(*) as amount
         FROM
-            ppload.ppload_files_downloaded as ppfd
+            ppload.ppload_files_downloaded_unique as ppfd
         WHERE 
 	        ppfd.downloaded_timestamp > DATE_ADD(CURDATE(), INTERVAL - 3 MONTH)
         GROUP BY ppfd.collection_id
