@@ -55,8 +55,9 @@ const MetaHeaderComponent = (props) => {
     Axios.get(url)
       .then(result => {
         console.log(result); 
-        setSiteTheme(isChecked ? 'content-dark-theme': '');
-        if (siteTheme === 'content-theme-dark'){
+        const newSiteTheme = isChecked ? 'content-dark-theme': '';
+        setSiteTheme(newSiteTheme);
+        if (newSiteTheme === 'content-theme-dark'){
           $( "body" ).addClass( "dark-theme" );
         } else {
           $( "body" ).removeClass( "dark-theme" );
