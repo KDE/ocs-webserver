@@ -21,6 +21,8 @@ const MetaHeaderComponent = (props) => {
     updateDimensions(); 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange",updateDimensions);
+    $( "body" ).addClass( "theme" );
+
     if (siteTheme === 'content-theme-dark'){
       $( "body" ).addClass( "dark-theme" );
     } else {
