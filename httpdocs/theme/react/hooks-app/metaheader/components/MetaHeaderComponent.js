@@ -12,9 +12,9 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const initialMetaMenuThemeValue = state.metamenuTheme ? site.metamenuTheme : '';
-  const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
-  const initialSiteThemeValue = state.contentTheme ? site.contentTheme : '';
+  const initialMetaMenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
+  const [metamenuTheme, setMetamenuTheme] = useState(initialMetaMenuThemeValue);
+  const initialSiteThemeValue = state.contentTheme ? state.contentTheme : '';
   const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
 
   useEffect(() => {   
