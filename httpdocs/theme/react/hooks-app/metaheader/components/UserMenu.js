@@ -14,8 +14,8 @@ const UserMenu = (props) => {
         onSwitchStyle={props.onSwitchStyle}
         onSwitchStyleChecked={props.onSwitchStyleChecked}
         onSwitchMetaHeaderStyle={props.onSwitchMetaHeaderStyle}
-        siteTheme={siteTheme}
-        metamenuTheme={metamenuTheme}
+        siteTheme={props.siteTheme}
+        metamenuTheme={props.metamenuTheme}
       />
     );
 
