@@ -50,16 +50,19 @@ const UserLoginMenuContainer = (props) => {
         setDropdownClass(cls);              
   }
   
-  let sitethemeSwitchDisplay = (
-    <li className="user-settings-item">
-    <span className="user-settings-item-title">Theme</span>
-      <SwitchItem 
-       onSwitchStyle={e => props.onSwitchStyle(e)}
-       onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
-     />
-     <span className="user-settings-item-title">dark</span>
-   </li>
-  )
+  let sitethemeSwitchDisplay;
+  if (state.isAdmin === true){ 
+    sitethemeSwitchDisplay = (
+      <li className="user-settings-item">
+      <span className="user-settings-item-title">Theme</span>
+        <SwitchItem 
+        onSwitchStyle={e => props.onSwitchStyle(e)}
+        onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
+      />
+      <span className="user-settings-item-title">dark</span>
+    </li>
+    )
+  }
 
   return (
     <li id="user-login-menu-container" ref={toggleEl}>
