@@ -28,8 +28,8 @@ class JsonController extends Zend_Controller_Action
     const chat_roomPublicUrl = 'https://chat.opendesktop.org/_matrix/client/unstable/publicRooms';
     const chat_roomsUrl = 'https://chat.opendesktop.org/_matrix/client/unstable/rooms/';
     const chat_roomUrl = 'https://chat.opendesktop.org/#/room/';
-
     const chat_userProfileUrl = 'https://chat.opendesktop.org/_matrix/client/r0/profile/';
+    const chat_userPresense = 'https://chat.opendesktop.org/_matrix/client/r0/presence/';
     protected $_format = 'json';
     public function init()
     {
@@ -126,6 +126,19 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($rooms, $this->_format);
     }
 
+    private function curlRiot($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $results = json_decode($data);  
+        return $results;
+    }
 
     public function riotAction()
     {
@@ -135,19 +148,12 @@ class JsonController extends Zend_Controller_Action
         $access_token = $config->riot_access_token;
         $p_username = $this->getParam('username');
         $member_data = $this->getUserData($p_username);
-
         $urlProfile = JsonController::chat_userProfileUrl.'@'.$member_data['username'].':'.$chatServer.'?access_token=' . $access_token;
-        //https://chat.opendesktop.org/_matrix/client/r0/profile/@rvs75:chat.opendesktop.org?access_token=
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $urlProfile);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        $results = json_decode($data);   
-        $resonse=array("user" => $results);     
+        //https://chat.opendesktop.org/_matrix/client/r0/profile/@rvs75:chat.opendesktop.org?access_token=       
+        $results = $this->curlRiot($urlProfile);   
+        $urlPresense = JsonController::chat_userPresense.'@'.$member_data['username'].':'.$chatServer.'/status?access_token=' . $access_token;
+        $status =  $this->curlRiot($urlPresense);   
+        $resonse=array("user" => $results,"status" => $status);     
         $this->_sendResponse($resonse, $this->_format);
     }
 

@@ -20,6 +20,11 @@
   height: 50px;
   margin-left: 5px;
 }
+#main-content-portal .sub-system-container .icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+}
 #main-content-portal .sub-system-container ul li .productrow {
   padding-bottom: 5px;
   padding-top: 5px;

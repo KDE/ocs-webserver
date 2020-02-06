@@ -33,7 +33,7 @@ const Owncloud = (props) => {
         {
             userdefault.displayname &&
             <>            
-            <img src={imgpath+userdefault.id+'/50'}></img>
+            <img  src={imgpath+userdefault.id+'/50'}></img>
             </>
         }
         
@@ -48,11 +48,15 @@ const Owncloud = (props) => {
 
             users.map((p,index) =>       
             <li key={index}>          
-                <img src={imgpath+p.id+'/50'}></img>          
+                <img className="icon" src={imgpath+p.id+'/50'}></img>          
                 <div className="title">                
-                <span>{'id:'+p.id+' displayname:'+p.displayname+' email:'+p.email+' backend:'+p.backend}
-                </span>
-                     
+                <ul>
+                    <li>{'id:'+p.id}</li>
+                    <li>{'email:'+p.email}</li>
+                    <li>{'displayname:'+p.displayname}</li>
+                    <li>{'backend:'+p.backend}</li>
+                </ul>
+          
                 </div>
             </li>
             )
