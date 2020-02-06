@@ -21,20 +21,16 @@ const MetaHeaderComponent = (props) => {
     updateDimensions(); 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange",updateDimensions);
-    return () => {
-      window.removeEventListener("resize", updateDimensions);
-      window.removeEventListener("orientationchange", updateDimensions);
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log('on site theme change')
     if (siteTheme === 'content-theme-dark'){
       $( "body" ).addClass( "dark-theme" );
     } else {
       $( "body" ).removeClass( "dark-theme" );
     }
-  },[siteTheme])
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      window.removeEventListener("orientationchange", updateDimensions);
+    };
+  }, []);
 
   const updateDimensions = e => {
     
@@ -60,6 +56,11 @@ const MetaHeaderComponent = (props) => {
       .then(result => {
         console.log(result); 
         setSiteTheme(isChecked ? 'content-dark-theme': '');
+        if (siteTheme === 'content-theme-dark'){
+          $( "body" ).addClass( "dark-theme" );
+        } else {
+          $( "body" ).removeClass( "dark-theme" );
+        }
     })
   }
 
