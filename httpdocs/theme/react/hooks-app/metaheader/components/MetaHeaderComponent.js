@@ -12,10 +12,7 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const initialMetamenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
-  const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuThemeValue);
-  const initialSiteThemeValue = state.contentTheme ? state.contentTheme : '';
-  const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
+  const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
 
   useEffect(() => {   
     updateDimensions(); 
@@ -72,10 +69,9 @@ const MetaHeaderComponent = (props) => {
     console.log(url);  
     const isChecked = evt.target.checked;    
     Axios.get(url)
-      .then(result => {
-        console.log(result)
-        setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '')
-    })
+      .then(result => {               
+        setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
+      })
   }
 
   let domainsMenuDisplay;
@@ -90,9 +86,6 @@ const MetaHeaderComponent = (props) => {
           device={device}
           onSwitchStyle={onSwitchStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
-          onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
-          metamenuTheme={metamenuTheme}
-          siteTheme={siteTheme}
         />
       )
     }
@@ -110,9 +103,7 @@ const MetaHeaderComponent = (props) => {
               device={device}              
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
-              onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
-              metamenuTheme={metamenuTheme}
-              siteTheme={siteTheme}
+              
             />
             <SearchForm />
           </div>

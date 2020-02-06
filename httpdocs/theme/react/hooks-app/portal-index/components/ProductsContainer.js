@@ -23,7 +23,7 @@ class ProductsContainer extends React.Component {
     }
     return (
       <div className="panelContainer">
-        {header}
+       
         {container}
       </div>
     )
