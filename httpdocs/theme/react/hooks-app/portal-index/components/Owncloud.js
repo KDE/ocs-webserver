@@ -3,7 +3,7 @@ import React ,{useState,useEffect} from 'react'
 const Owncloud = (props) => {
     const [users, setUsers] = useState([]);
     const [userdefault, setUserdefault] = useState({'displayname':''});
-    const [imgpath,setImgpath] = useState('https://my.opendesktop.cc/avatar/');
+    const [imgpath,setImgpath] = useState(window.config.myopendesktopUrl+'/avatar/');
     const [isloading, setIsloading] = useState(true);
     useEffect(() => {                 
         loadData();

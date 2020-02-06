@@ -5,10 +5,10 @@ import MetaheaderContextProvider from '../contexts/MetaheaderContext';
 import MetaHeaderComponent from "./MetaHeaderComponent";
 
 const MetaHeader = (props) => {
-  console.log(props);
+  
   return (      
     <MetaheaderContextProvider {...props}>      
-      <MetaHeaderComponent {...props} />  
+      <MetaHeaderComponent />  
     </MetaheaderContextProvider>
     
   )
