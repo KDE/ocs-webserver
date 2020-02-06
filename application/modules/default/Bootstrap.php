@@ -701,14 +701,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'action'     => 'saveproduct'
         )));
 
-        /**
-         * portal
-         */
-        $router->addRoute('portal_user', new Zend_Controller_Router_Route('/portal/:username/', array(
-            'module'     => 'portal',
-            'controller' => 'index',
-            'action'     => 'index'
-        )));
+        
 
 
 

@@ -40,4 +40,22 @@ class Portal_Bootstrap extends Zend_Application_Module_Bootstrap
         )));
     }
 
+
+    protected function _initRouter()
+    {
+        $frontController = Zend_Controller_Front::getInstance();
+        /** @var $router Zend_Controller_Router_Rewrite */
+        $router = $frontController->getRouter();
+
+        /**
+         * portal
+         */
+        $router->addRoute('portal_user', new Zend_Controller_Router_Route('/portal/:username/', array(
+            'module'     => 'portal',
+            'controller' => 'index',
+            'action'     => 'index'
+        )));
+                
+        return $router;
+    }
 }
