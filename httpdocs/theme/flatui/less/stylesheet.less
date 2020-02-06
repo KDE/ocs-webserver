@@ -6786,20 +6786,33 @@ main#plings-page{
 
 #metaheader {
 
-  #user-context-menu-container .user-dropdown .dropdown-menu li a span, 
-  #about-menu-container .user-dropdown .dropdown-menu li a span, 
-  #development-app-menu-container .user-dropdown .dropdown-menu li a span {
-    color:white !important;
-  }
-
-  #development-app-menu-container .user-dropdown .dropdown-menu li:hover {
-    background-color: @black3 !important;
-    color: white !important;
-  }
 
   #metaheader-nav {
 
     .metamenu-theme-dark {
+
+
+      #user-context-menu-container .user-dropdown .dropdown-menu li a span, 
+      #about-menu-container .user-dropdown .dropdown-menu li a span, 
+      #development-app-menu-container .user-dropdown .dropdown-menu li a span {
+        color:white !important;
+      }
+    
+      #development-app-menu-container .user-dropdown .dropdown-menu li:hover a {
+        background-color: @black3 !important;
+        color: white !important;
+      }
+    
+      .metamenu-theme-dark #user-login-menu-container .user-dropdown .dropdown-menu {
+        .user-settings-item {
+          padding-bottom: 0;
+        }
+
+        .user-settings-item +  .user-settings-item {
+          padding-top: 0;
+
+        }
+      }
 
       &.metamenu {
         background-color: @black3 !important;
@@ -6889,11 +6902,14 @@ main#plings-page{
         .user-settings-item  {
           background-color: @black2;
           border-bottom: 0 !important;
+
+          &:last-of-type {
+            border-bottom: 1px solid !important;
+            border-color: @black3;
+          }
         }
 
-        .user-settings-item + .user-settings-item {
-          border-bottom: 1px solid !important;
-          border-color: @black3;
+        .user-settings-item {
         }
       }
     
