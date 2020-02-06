@@ -12,8 +12,8 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const initialMetamenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
-  const [metamenuTheme, setMetamenuTheme] = useState(initialMetamenuThemeValue);
+  const initialMetaMenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
+  const [metamenuTheme, setMetamenuTheme] = useState(initialMetaMenuThemeValue);
   const initialSiteThemeValue = state.contentTheme ? state.contentTheme : '';
   const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
 
@@ -23,7 +23,7 @@ const MetaHeaderComponent = (props) => {
     window.addEventListener("orientationchange",updateDimensions);
     $( "body" ).addClass( "theme" );
 
-    if (siteTheme === 'content-dark-theme'){
+    if (state.contentTheme === 'content-theme-dark'){
       $( "body" ).addClass( "dark-theme" );
     } else {
       $( "body" ).removeClass( "dark-theme" );
@@ -57,9 +57,9 @@ const MetaHeaderComponent = (props) => {
     Axios.get(url)
       .then(result => {
         console.log(result); 
-        const newSiteTheme = isChecked ? 'content-dark-theme': '';
+        const newSiteTheme = isChecked ? 'content-theme-dark': '';
         setSiteTheme(newSiteTheme);
-        if (newSiteTheme === 'content-dark-theme'){
+        if (newSiteTheme === 'content-theme-dark'){
           $( "body" ).addClass( "dark-theme" );
         } else {
           $( "body" ).removeClass( "dark-theme" );
@@ -72,10 +72,9 @@ const MetaHeaderComponent = (props) => {
     console.log(url);  
     const isChecked = evt.target.checked;    
     Axios.get(url)
-      .then(result => {
-        console.log(result)
-        setMetamenuTheme(isChecked ? 'metamenu-theme-dark' : '')
-    })
+      .then(result => {               
+        setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
+      })
   }
 
   let domainsMenuDisplay;
@@ -89,10 +88,10 @@ const MetaHeaderComponent = (props) => {
         <DomainsMenu
           device={device}
           onSwitchStyle={onSwitchStyle}
-          onSwitchStyleChecked={metamenuTheme?true:false}
           onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
-          metamenuTheme={metamenuTheme}
+          onSwitchStyleChecked={metamenuTheme?true:false}
           siteTheme={siteTheme}
+          metamenuTheme={metamenuTheme}
         />
       )
     }
@@ -111,8 +110,8 @@ const MetaHeaderComponent = (props) => {
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
               onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
-              metamenuTheme={metamenuTheme}
               siteTheme={siteTheme}
+              metamenuTheme={metamenuTheme}
             />
             <SearchForm />
           </div>

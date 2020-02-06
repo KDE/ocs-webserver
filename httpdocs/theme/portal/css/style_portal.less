@@ -9,6 +9,7 @@
         display: block;
         float: left;
         min-height: 500px;
+        
         .header{
             height: 50px;
             background-color: #286090;
@@ -22,8 +23,106 @@
                 margin-left: 5px;               
             }
         }
-        .title{
-                                                
+        .icon{
+            width:50px;
+            height: 50px;
+            border-radius: 999px;
+            
+          
+        }
+
+        ul li{
+            .productrow
+            {
+               padding-bottom: 5px;
+               padding-top: 5px;
+               font-size: small;
+
+               .rating
+                {
+                      width: 60px;
+                }
+                .time
+                {
+                      font-size: smaller;
+                }
+              .cntComments
+                 {
+                    font-size: smaller;
+                    display: block;
+                    padding-top: 5px;
+
+                }
+                .defaultProjectAvatar{
+                  width: 50px;
+                  height: 50px;
+                  color: #3B658A;
+                  line-height: 50px;
+                  text-align: center;
+                  background-color: #e8eaf6;
+                }
+                .productimg
+                    {
+                        width:50px;
+                        height:50px;
+                    }
+                .product-user{
+                  width: 42px;
+                  height: 42px;
+                  border-radius: 100%;
+                }
+                .commenttext{
+                  padding-left: 20px;
+
+                }
+                .product-info {
+                    span {
+                      display: block;
+                      float: left;
+                      width: 100%;
+                      line-height: 14px;
+                      height: auto;
+
+                      &.product-info-title {
+                        color: #444444;
+                        font-size: 10pt;
+                        font-weight: bold;
+                        display: block;
+                      }
+                      &.product-info-date{
+                        padding-top: 10px;
+                      }
+
+
+                      &.product-info-user {
+                        color: #666;
+                      }
+                    }
+                  }
+                .score-info {
+                  text-align: center;
+                  width: 80%;
+                  .score-number {
+                    width: 100%;
+                    text-align: center;
+                    margin-bottom: 0px;
+                    font-size: 8pt;
+                  }
+
+                  .score-bar-container {
+                    width: 100%;
+                    height: 10px;
+                    background: #ccc;
+                    margin-bottom: 5px;
+
+                    .score-bar {
+                      height: 9px;
+                      background-color: #30c830;
+                      border-bottom: 1px solid darken( #30c830,5%);
+                    }
+                  }
+                }
+            }
         }
         
     }

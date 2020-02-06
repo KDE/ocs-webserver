@@ -54,7 +54,7 @@ class HomeMainContainer extends Component {
                 </div>
             </div>
             <div className="middle"> 
-                     
+                <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Products" products={this.state.products}/>
                 <CommentsContainer title="Last 10 comments received" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
                 <CommentsContainer title="Last 10 moderation" baseUrlStore={this.state.baseUrlStore} comments={this.state.commentsmoderation} type='moderation'/>
                 <RatingContainer title="Last 10 ratings received" baseUrlStore={this.state.baseUrlStore} votes={this.state.votes}/>

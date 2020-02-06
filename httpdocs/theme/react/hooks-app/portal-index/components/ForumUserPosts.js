@@ -4,7 +4,7 @@ const ForumUserPosts = (props) => {
     const [posts, setPosts] = useState([]);
     const [user, setUser] = useState({'username':''});
     const [forumUrl, setForumUrl] = useState(window.config.forumUrl);
-    const [baseUrl, setBaseUrl] = useState('https://www.opendesktop.cc');
+    const [baseUrl, setBaseUrl] = useState(window.config.baseUrl);
     useEffect(() => {                 
         loadData();
     },[]);
@@ -33,7 +33,7 @@ const ForumUserPosts = (props) => {
 
     return (
         <div className="sub-system-container">  
-        <div className="header">Forum : {user.username} 
+        <div className="header">Forum : <a href={forumUrl+'/u/'+user.username}>{user.username} </a>
         {
             user.avatar_template &&
             <>            

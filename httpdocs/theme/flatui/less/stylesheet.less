@@ -6784,11 +6784,30 @@ main#plings-page{
 @black3:#343434;
 @black4:#454545;
 
+
+.user-settings-item-title {
+  width:80px !important;
+}
+
 #metaheader {
+
 
   #metaheader-nav {
 
     .metamenu-theme-dark {
+
+
+      #user-context-menu-container .user-dropdown .dropdown-menu li a span, 
+      #about-menu-container .user-dropdown .dropdown-menu li a span, 
+      #development-app-menu-container .user-dropdown .dropdown-menu li a span {
+        color:white !important;
+      }
+    
+      #development-app-menu-container .user-dropdown .dropdown-menu li:hover a {
+        background-color: @black3 !important;
+        color: white !important;
+      }
+
 
       &.metamenu {
         background-color: @black3 !important;
@@ -6814,17 +6833,13 @@ main#plings-page{
         }
     
         >li .dropdown-menu::before {
-          border-bottom-color:@black !important;
-        }
-    
-        >li .dropdown-menu::before {
-          border-bottom-color:@black !important;
+          border-bottom-color:@black2 !important;
         }
   
       }
     
       #user-login-menu-container .user-dropdown .dropdown-menu #user-info-section {
-        background-color: @black;
+        background-color: @black2;
   
         .user-details #user-details-username,
         .user-details #user-details-email {
@@ -6837,7 +6852,7 @@ main#plings-page{
       }
   
       #user-login-menu-container .user-dropdown .dropdown-menu li.buttons {
-        background-color: @black;
+        background-color: @black2;
   
         ul li {
           &:hover {
@@ -6853,11 +6868,11 @@ main#plings-page{
   
       .user-dropdown .dropdown-menu li.buttons .btn {
         color: white !important;
-        background-color: @black2 !important;
-        border: 1px solid black !important;
+        background-color: @black3 !important;
+        border: 1px solid @black4 !important;
   
         &:hover {
-          background: @black3 !important;
+          background: @black4 !important;
         }
       }
       
@@ -6880,8 +6895,11 @@ main#plings-page{
         }
     
         .user-settings-item  {
-          background-color: @black;
-          border-bottom: 1px solid @black3;
+          background-color: @black2;
+          border-color: @black3;
+        }
+
+        .user-settings-item {
         }
       }
     
@@ -6896,10 +6914,13 @@ main#plings-page{
       }
   
       #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
-        border-bottom: 1px solid @black3 !important;
-        background-color: @black !important;
+        background-color: @black2 !important;
+
+        span {
+          display: inline-block;
+          color: white;
+        }
       }
-    
     
       #development-app-menu-container .user-dropdown .dropdown-menu li {
         border: 1px solid transparent;
@@ -7060,7 +7081,7 @@ main#plings-page{
   }
 
   #media-slider .swiper-wrapper .slide-item.image {
-    background-color: transparent !important;
+    background-color: @black !important;
     max-height: 100%;
   }
 
@@ -7096,4 +7117,112 @@ main#plings-page{
   #product-browse-container #product-browse-item-list .product-browse-item .wrapper {
     background-color: @black3;
   }
+
+  #plings-panel .u-wrap, #likes-panel .u-wrap {
+    background-color: @black2;
+    border-color: @black3;
+  }
+
+  .about-me-page .header .summary article {
+    background-color: @black2;
+    border-color: @black4;
+  }
+
+  .about-me-page .header .summary article .about-title {
+    background-color: @black3;
+    border-bottom: 1px solid @black4;
+  }
+
+  .about-me-page .header .summary article .about-title figure {
+    border-color: @black4;
+  }
+
+
+  .about-me-page aside .details {
+    float: left;
+    width: 100%;
+    height: auto;
+    padding: .5em;
+    background-color:@black2;
+    word-break: break-all;
+    border-color: @black4;
+  }
+
+  .about-me-page aside .details h3 {
+    color: white;
+    border-color: #454545;
+  }
+
+  .mini-card .u-wrap {
+    border: 2px solid @black4;
+    background-color: @black2;
+  }
+
+  .mini-card .u-wrap:hover {
+    border-color: #454545;
+    background: #343434;
+  }
+
+  .mini-card .u-wrap a {
+    color: white;
+  }
+
+  .mini-card .u-wrap .u-content .productCategory {
+    color: white;
+  }
+
+  #home-main-container .middle .panelContainer {
+    background: #232323 !important; 
+    border: 1px solid #343434 !important;
+    color:#c3c3c3 !important;
+  }
+
+  #home-main-container .middle .panelContainer div.title {
+    color: white;
+    border-color: @black3 !important;
+  }
+
+  #home-main-container .middle .panelContainer ul li+li, 
+  #home-main-container .middle .panelContainer ol li+li {
+    color: white;
+    border-color: @black4;
+  }
+
+  #home-main-container .top {
+    color: white;
+  }
+
+  #home-main-container .top .personal-container-top ul#personal-links-container li {
+    border: 1px solid #454545;
+
+    &:hover {
+      background-color: @black4 !important;
+    }
+  }
+
+  #home-main-container .top .personal-container-top ul#personal-links-container li a span {
+    color: white;
+  }
+
+  input, textarea, select, option {
+    background-color: @black3 !important;
+    border-color: @black4 !important;
+    color: white !important;
+  }
+
+  #media-slider {
+    background-color: transparent !important;
+  }
+
+  #book-reader-wrapper #book-pager div span {
+    margin-right: 5px;
+    color: black;
+  }
+
+  .user-admin-page .body-wrap {
+    background-color: @black !important;
+    color: white !important;
+  }
+
+  .panel {background-color: @black2 !important;}
 }

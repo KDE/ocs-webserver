@@ -4,7 +4,7 @@ import {MetaheaderContext} from '../contexts/MetaheaderContext';
 
 const UserLoginMenuContainer = (props) => {
   const {state} = useContext(MetaheaderContext);
-  
+  console.log(state);
   const [dropdownClass, setDropdownClass] = useState('');    
   const toggleEl = useRef(null);    
   const [gitlabLink, setGitlabLink] = useState(state.gitlabUrl+"/dashboard/issues?assignee_id=");
@@ -49,10 +49,20 @@ const UserLoginMenuContainer = (props) => {
         }        
         setDropdownClass(cls);              
   }
-
-      
-  console.log(props.metamenuTheme)
-  console.log(props.siteTheme)
+  
+  let sitethemeSwitchDisplay;
+  if (state.isAdmin === true){ 
+    sitethemeSwitchDisplay = (
+      <li className="user-settings-item">
+      <span className="user-settings-item-title">Theme</span>
+        <SwitchItem 
+        onSwitchStyle={e => props.onSwitchStyle(e)}
+        onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
+      />
+      <span className="user-settings-item-title">dark</span>
+    </li>
+    )
+  }
 
   return (
     <li id="user-login-menu-container" ref={toggleEl}>
@@ -102,15 +112,7 @@ const UserLoginMenuContainer = (props) => {
                 </ul>
             </li>
 
-            <li className="user-settings-item">
-             <span className="user-settings-item-title">Theme</span>
-               <SwitchItem 
-                onSwitchStyle={e => props.onSwitchStyle(e)}
-                onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
-              />
-              <span className="user-settings-item-title">dark</span>
-            </li>
-
+            {sitethemeSwitchDisplay}
             <li className="user-settings-item">
              <span className="user-settings-item-title">Metaheader</span>
                <SwitchItem 

@@ -20,3 +20,84 @@
   height: 50px;
   margin-left: 5px;
 }
+#main-content-portal .sub-system-container .icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+}
+#main-content-portal .sub-system-container ul li .productrow {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  font-size: small;
+}
+#main-content-portal .sub-system-container ul li .productrow .rating {
+  width: 60px;
+}
+#main-content-portal .sub-system-container ul li .productrow .time {
+  font-size: smaller;
+}
+#main-content-portal .sub-system-container ul li .productrow .cntComments {
+  font-size: smaller;
+  display: block;
+  padding-top: 5px;
+}
+#main-content-portal .sub-system-container ul li .productrow .defaultProjectAvatar {
+  width: 50px;
+  height: 50px;
+  color: #3B658A;
+  line-height: 50px;
+  text-align: center;
+  background-color: #e8eaf6;
+}
+#main-content-portal .sub-system-container ul li .productrow .productimg {
+  width: 50px;
+  height: 50px;
+}
+#main-content-portal .sub-system-container ul li .productrow .product-user {
+  width: 42px;
+  height: 42px;
+  border-radius: 100%;
+}
+#main-content-portal .sub-system-container ul li .productrow .commenttext {
+  padding-left: 20px;
+}
+#main-content-portal .sub-system-container ul li .productrow .product-info span {
+  display: block;
+  float: left;
+  width: 100%;
+  line-height: 14px;
+  height: auto;
+}
+#main-content-portal .sub-system-container ul li .productrow .product-info span.product-info-title {
+  color: #444444;
+  font-size: 10pt;
+  font-weight: bold;
+  display: block;
+}
+#main-content-portal .sub-system-container ul li .productrow .product-info span.product-info-date {
+  padding-top: 10px;
+}
+#main-content-portal .sub-system-container ul li .productrow .product-info span.product-info-user {
+  color: #666;
+}
+#main-content-portal .sub-system-container ul li .productrow .score-info {
+  text-align: center;
+  width: 80%;
+}
+#main-content-portal .sub-system-container ul li .productrow .score-info .score-number {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0px;
+  font-size: 8pt;
+}
+#main-content-portal .sub-system-container ul li .productrow .score-info .score-bar-container {
+  width: 100%;
+  height: 10px;
+  background: #ccc;
+  margin-bottom: 5px;
+}
+#main-content-portal .sub-system-container ul li .productrow .score-info .score-bar-container .score-bar {
+  height: 9px;
+  background-color: #30c830;
+  border-bottom: 1px solid #2bb32b;
+}

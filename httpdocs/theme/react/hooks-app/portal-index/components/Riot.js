@@ -3,6 +3,7 @@ import React ,{useState,useEffect} from 'react'
 const Riot = (props) => {
     
     const [user, setUser] = useState({'username':''});
+    const [userPresence, setUserPresence] = useState(null);
     const [imgpath,setImgpath] = useState('https://chat.opendesktop.org/_matrix/media/r0/thumbnail/');
 
     useEffect(() => {                 
@@ -11,14 +12,15 @@ const Riot = (props) => {
 
     const loadData = async () => {
         const data = await fetch(`/json/riot?username=${props.username}`);
-        const items = await data.json();        
-        
+        const items = await data.json();                
         if (items && typeof(items.user) != "undefined")   
         {
-            setUser(items.user);
+            setUser(items.user);            
+        }                
+        if (items && items.status.presence)   
+        {
+            setUserPresence(items.status.presence);            
         }
-        
-        
       }
 
     return (
@@ -31,6 +33,7 @@ const Riot = (props) => {
             </>
         }
         
+        {userPresence}
         </div>  
             
         </div>

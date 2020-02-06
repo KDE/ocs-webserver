@@ -59,13 +59,13 @@ function PersonalLinksContainer(props)
         </a>
       </li>
       <li id="pling-link-item">
-        <a href={props.baseUrlStore} >
+        <a href={props.baseUrlStore+"/u/"+props.user.username+"/products"} >
           <div className="icon"></div>
           <span>Products</span>
         </a>
       </li>
       <li id="opencode-link-item">
-        <a href={props.gitlabUrl + "/explore/projects"} >
+        <a href={props.gitlabUrl + "/dashboard/projects"} >
           <div className="icon"></div>
           <span>Projects</span>
         </a>
