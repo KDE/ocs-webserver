@@ -8,16 +8,22 @@ const Pling = (props) => {
     useEffect(() => {                 
         loadData();
     },[]);
-    const loadData = async () => {
-        const data = await fetch(`/json/pling?username=${props.username}`);
-        const items = await data.json();        
+    const loadData =  () => {
         
-        if (items && typeof(items.user) != "undefined")   
-        {
-            setUser(items.user);
-            setProducts(items.products);            
-        }
-        
+
+        fetch(`/json/pling?username=${props.username}`, {
+            mode: 'cors',
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(data => {
+                let items = data;
+                if (items && typeof(items.user) != "undefined")   
+                {
+                    setUser(items.user);
+                    setProducts(items.products);            
+                }
+          }); 
         
       }
 

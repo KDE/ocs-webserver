@@ -10,20 +10,25 @@ const Gitlab = (props) => {
         loadData();
     },[]);
 
-    const loadData = async () => {
-        const data = await fetch(`/json/gitlab?username=${props.username}`);
-        const items = await data.json();
-
-        if (items && typeof(items.projects) != "undefined")        
-        {            
-            setProjects(items.projects);      
-        }
+    const loadData =  () => {       
         
-        if (items && typeof(items.user) != "undefined")   
-        {
-            setUser(items.user);
-        }
-        
+        fetch(`/json/gitlab?username=${props.username}`, {
+            mode: 'cors',
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(data => {
+                let items = data;
+                if (items && typeof(items.projects) != "undefined")        
+                {            
+                    setProjects(items.projects);      
+                }
+                
+                if (items && typeof(items.user) != "undefined")   
+                {
+                    setUser(items.user);
+                }
+          }); 
         
       }
 

@@ -49,6 +49,7 @@ class HomeMainContainer extends Component {
                                           user ={this.state.user}
                                           baseUrlStore={this.state.baseUrlStore}
                                           gitlabUrl = {this.state.gitlabUrl}
+                                          mastodonUrl={this.state.url_mastodon}
 
                     />
                 </div>
