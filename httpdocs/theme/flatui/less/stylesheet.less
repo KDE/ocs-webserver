@@ -6896,10 +6896,14 @@ main#plings-page{
       }
   
       #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
+        background-color: @black !important;
+      }
+
+      #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item + .user-settings-item {
         border-bottom: 1px solid @black3 !important;
         background-color: @black !important;
       }
-    
+      
     
       #development-app-menu-container .user-dropdown .dropdown-menu li {
         border: 1px solid transparent;
@@ -7060,7 +7064,7 @@ main#plings-page{
   }
 
   #media-slider .swiper-wrapper .slide-item.image {
-    background-color: transparent !important;
+    background-color: @black !important;
     max-height: 100%;
   }
 
@@ -7095,5 +7099,10 @@ main#plings-page{
 
   #product-browse-container #product-browse-item-list .product-browse-item .wrapper {
     background-color: @black3;
+  }
+
+  #plings-panel .u-wrap, #likes-panel .u-wrap {
+    background-color: @black2;
+    border-color: @black3;
   }
 }

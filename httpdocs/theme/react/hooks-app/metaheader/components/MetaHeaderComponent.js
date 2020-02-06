@@ -23,7 +23,7 @@ const MetaHeaderComponent = (props) => {
     window.addEventListener("orientationchange",updateDimensions);
     $( "body" ).addClass( "theme" );
 
-    if (siteTheme === 'content-dark-theme'){
+    if (state.contentTheme === 'content-theme-dark'){
       $( "body" ).addClass( "dark-theme" );
     } else {
       $( "body" ).removeClass( "dark-theme" );
@@ -57,9 +57,9 @@ const MetaHeaderComponent = (props) => {
     Axios.get(url)
       .then(result => {
         console.log(result); 
-        const newSiteTheme = isChecked ? 'content-dark-theme': '';
+        const newSiteTheme = isChecked ? 'content-theme-dark': '';
         setSiteTheme(newSiteTheme);
-        if (newSiteTheme === 'content-dark-theme'){
+        if (newSiteTheme === 'content-theme-dark'){
           $( "body" ).addClass( "dark-theme" );
         } else {
           $( "body" ).removeClass( "dark-theme" );
