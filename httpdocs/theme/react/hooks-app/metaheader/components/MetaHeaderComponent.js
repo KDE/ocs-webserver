@@ -12,7 +12,10 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
+  const initialMetaMenuThemeValue = state.metamenuTheme ? site.metamenuTheme : '';
   const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
+  const initialSiteThemeValue = state.contentTheme ? site.contentTheme : '';
+  const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
 
   useEffect(() => {   
     updateDimensions(); 
@@ -85,6 +88,7 @@ const MetaHeaderComponent = (props) => {
         <DomainsMenu
           device={device}
           onSwitchStyle={onSwitchStyle}
+          onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
         />
       )
@@ -103,7 +107,7 @@ const MetaHeaderComponent = (props) => {
               device={device}              
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
-              
+              onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
             />
             <SearchForm />
           </div>
