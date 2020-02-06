@@ -63,11 +63,38 @@ if (Zend_Auth::getInstance()->hasIdentity()){
         "isAdmin" => $isAdmin
     );
 
+    $tableProduct = new Default_Model_Project();
+    $productsRowset = $tableProduct->fetchAllProjectsForMember($identity->member_id,5);
+    $products = array();
+    foreach ($productsRowset as $row) {
+        $products[] = $row;
+    }
+    
+    $parray=array();
+    foreach ($products as $p) {      
+      // $tmp= array('project_id'=> $p->project_id
+      // , 'image_small'=>$this->Image($p->image_small, array('width' => 200, 'height' => 200))
+      // , 'title' => $p->title
+      // ,'laplace_score' =>$p->laplace_score
+      // ,'cat_title' =>$p->cat_title
+      // ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+      // ) ; 
+
+      $tmp= array('project_id'=> $p->project_id    
+      , 'image_small'=>$this->Image($p->image_small, array('width' => 200, 'height' => 200))  
+      , 'title' => $p->title
+      ,'laplace_score' =>$p->laplace_score*10
+      ,'cat_title' =>$p->catTitle
+      ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+      ) ; 
+      $parray[] = $tmp;
+    }
+  
+
     $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
     $commentsmoderation = $modelInfo->getLastCommentsForUsersProjects($identity->member_id,10,Default_Model_DbTable_Comments::COMMENT_TYPE_MODERATOR);
     $votes = $modelInfo->getLastVotesForUsersProjects($identity->member_id);
-    $spams = $modelInfo->getLastSpamProjects($identity->member_id);
-
+    $spams = $modelInfo->getLastSpamProjects($identity->member_id);    
     foreach ($comments as &$p) {
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
       $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
@@ -90,6 +117,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
 
     $response = array(
       'user' => $user,
+      'products' => $parray,
       'supporterinfo' => $supporterinfo,
       'comments' =>$comments,
       'commentsmoderation' =>$commentsmoderation,
@@ -172,4 +200,5 @@ if (Zend_Auth::getInstance()->hasIdentity()){
         var data = <?php echo Zend_Json::encode($response)?>;
       </script>
       <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>      
+      
 </main>
