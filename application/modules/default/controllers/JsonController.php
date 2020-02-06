@@ -151,6 +151,96 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($resonse, $this->_format);
     }
 
+    private function curlOwnloud($url)
+    {
+        $config = Zend_Registry::get('config')->settings->server->owncloud;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);       
+        curl_setopt($ch, CURLOPT_USERPWD, $config->user_sodo.':'.$config->user_sodo_pw);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('OCS-APIRequest: true'));         
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $results = json_decode($data);   
+        return $results;
+    }
+    public function plingAction()
+    {
+        $p_username = $this->getParam('username');
+        $member_data = $this->getUserData($p_username);
+        if(!$member_data)
+        {
+            $this->_sendResponse(null, $this->_format);
+            return;
+        }
+
+       
+        $helpPrintDate = new Default_View_Helper_PrintDate();
+        $helperImage = new Default_View_Helper_Image();
+
+        $tableProduct = new Default_Model_Project();
+        $productsRowset = $tableProduct->fetchAllProjectsForMember($member_data['member_id'],5);
+        
+        $products = array();
+        foreach ($productsRowset as $row) {
+            $products[] = $row;
+        }
+    
+        $parray=array();
+        foreach ($products as $p) {            
+            $tmp= array('project_id'=> $p->project_id    
+                , 'image_small'=>$helperImage->Image($p->image_small, array('width' => 200, 'height' => 200))  
+                , 'title' => $p->title
+                ,'laplace_score' =>$p->laplace_score*10
+                ,'cat_title' =>$p->catTitle
+                ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+            ) ; 
+            $parray[] = $tmp;
+        }
+
+        
+        $result = array('user'=>$member_data,'products'=>$parray);
+        $this->_sendResponse($result, $this->_format);
+
+    }
+
+    public function owncloudAction()
+    {
+        
+        $config = Zend_Registry::get('config')->settings->server->owncloud;
+        
+        $p_username = $this->getParam('username');
+        $member_data = $this->getUserData($p_username);
+        if(!$member_data)
+        {
+            $this->_sendResponse(null, $this->_format);
+            return;
+        }
+        $url = $config->host."/ocs/v1.php/cloud/users?search=".$member_data['username']."&format=json";                     
+        $results = $this->curlOwnloud($url);
+        $status =$results->ocs->meta->status; 
+        $usersArray=array();
+        if($status== 'ok' && sizeof($results->ocs->data->users)>0)
+        {   
+            $users = $results->ocs->data->users;
+            foreach ($users as $user) {
+                $urlUser = $config->host."/ocs/v1.php/cloud/users/".$user."?format=json";  
+                $u = $this->curlOwnloud($urlUser);
+                if($u->ocs->meta->status=='ok')
+                {
+                    $usersArray[]= $u->ocs->data;   
+                }
+                
+            }
+        }
+        $reternUsers = array("users" => $usersArray);
+
+        $this->_sendResponse($reternUsers, $this->_format);
+    }
+
     public function forumAction()
     {
 
@@ -211,16 +301,23 @@ class JsonController extends Zend_Controller_Action
                 if($p_username && $p_username!='null')
                 {                
                     $modelMember = new Default_Model_Member();
-                    $memberId = $modelMember->fetchActiveUserByUsername($p_username);                    
-                    $member_data = array('username'=>$p_username,'member_id' =>$memberId);
+                    $memberId = $modelMember->fetchActiveUserByUsername($p_username);   
+                    if($memberId)
+                    {
+                        $member = $modelMember->fetchMemberData($memberId);                                         
+                        $member_data = array('username'=>$p_username,'member_id' =>$memberId, 'mail'=>$member->mail,'avatar'=>$member->profile_image_url);
+                    }
+                    
                 }else{
                     $authMember = $auth->getStorage()->read();                              
-                    $member_data = array('username'=>$authMember->username,'member_id' =>$authMember->member_id);    
+                    $member_data = array('username'=>$authMember->username,'member_id' =>$authMember->member_id 
+                    , 'mail'=>$authMember->mail,'avatar'=>$authMember->profile_image_url);    
                 }
             }else
             {
                 $authMember = $auth->getStorage()->read();                              
-                $member_data = array('username'=>$authMember->username,'member_id' =>$authMember->member_id);
+                $member_data = array('username'=>$authMember->username,'member_id' =>$authMember->member_id 
+                , 'mail'=>$authMember->mail,'avatar'=>$authMember->profile_image_url);
             }
         }           
         return $member_data;  

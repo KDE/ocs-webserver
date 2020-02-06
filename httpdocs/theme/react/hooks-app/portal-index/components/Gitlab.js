@@ -29,7 +29,7 @@ const Gitlab = (props) => {
 
     return (
         <div className="sub-system-container">  
-        <div className="header">Opencode : {user.username} 
+        <div className="header">Opencode :<a href={gitlabUrl+'/'+user.username}> {user.username} </a>
         {
             user.avatar_url &&
             <>            
