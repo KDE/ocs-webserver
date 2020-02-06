@@ -6789,11 +6789,12 @@ main#plings-page{
   #user-context-menu-container .user-dropdown .dropdown-menu li a span, 
   #about-menu-container .user-dropdown .dropdown-menu li a span, 
   #development-app-menu-container .user-dropdown .dropdown-menu li a span {
-    color:white;
+    color:white !important;
   }
 
   #development-app-menu-container .user-dropdown .dropdown-menu li:hover {
-    background-color: @black3;
+    background-color: @black3 !important;
+    color: white !important;
   }
 
   #metaheader-nav {
@@ -6888,6 +6889,11 @@ main#plings-page{
         .user-settings-item  {
           background-color: @black2;
           border-bottom: 0 !important;
+        }
+
+        .user-settings-item + .user-settings-item {
+          border-bottom: 1px solid !important;
+          border-color: @black3;
         }
       }
     
@@ -7182,14 +7188,19 @@ main#plings-page{
 
   #home-main-container .top .personal-container-top ul#personal-links-container li {
     border: 1px solid #454545;
+
+    &:hover {
+      background-color: @black4 !important;
+    }
   }
 
   #home-main-container .top .personal-container-top ul#personal-links-container li a span {
     color: white;
   }
 
-  input, textarea {
+  input, textarea, select, option {
     background-color: @black3 !important;
-    color: white;
+    border-color: @black4 !important;
+    color: white !important;
   }
 }
