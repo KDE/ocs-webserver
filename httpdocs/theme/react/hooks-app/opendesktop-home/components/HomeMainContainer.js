@@ -12,6 +12,7 @@ import AdminLinksContainer from '../function/AdminLinksContainer';
 import BlogFeedContainer from './BlogFeedContainer';
 import WatchlistContainer from '../function/WatchlistContainer';
 import StatisticsContainer from '../function/StatisticsContainer';
+import ProductsMyGitContainer from './ProductsMyGitContainer';
 class HomeMainContainer extends Component {
   constructor(props){
   	super(props);
@@ -56,6 +57,7 @@ class HomeMainContainer extends Component {
             </div>
             <div className="middle"> 
                 <ProductsContainer baseUrlStore={this.state.baseUrlStore} title="Products" products={this.state.products}/>
+                <ProductsMyGitContainer urlCode={this.state.gitlabUrl} user={this.state.user}/>
                 <CommentsContainer title="Last 10 comments received" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
                 <CommentsContainer title="Last 10 moderation" baseUrlStore={this.state.baseUrlStore} comments={this.state.commentsmoderation} type='moderation'/>
                 <RatingContainer title="Last 10 ratings received" baseUrlStore={this.state.baseUrlStore} votes={this.state.votes}/>
