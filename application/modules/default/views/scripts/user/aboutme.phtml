@@ -522,6 +522,10 @@ div#preloaded-images {
                             <div  role="tabpanel" class="tab-pane " id="user-unpublished">                                 
                             </div>                          
                             <?php } ?>
+                            <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' ) { ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-deleted">                                 
+                            </div>                          
+                            <?php } ?>
 
                              <?php if(count($this->rated)>0){ ?>
                             <div  role="tabpanel" class="tab-pane " id="user-rated">
