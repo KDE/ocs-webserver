@@ -243,6 +243,7 @@ class UserController extends Local_Controller_Action_DomainSwitch
             if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                 $stat['cntDuplicateSourceurl'] = $tableProject->getCountProjectsDuplicateSourceurl($this->_memberId);
                 $stat['cntUnpublished'] = $tableProject->getUnpublishedProjectsForMemberCnt($this->_memberId);
+                $stat['cntDeleted'] = $tableProject->getDeletedProjectsForMemberCnt($this->_memberId);
             }
 
             $this->view->stat = $stat;
@@ -337,6 +338,25 @@ class UserController extends Local_Controller_Action_DomainSwitch
 
         $this->view->userProducts =
             $tableProject->getUnpublishedProjectsForMember($this->_memberId, $pageLimit,
+                ($projectpage - 1) * $pageLimit);
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer('partials/aboutmeProducts');
+    }
+    
+    public function deletedAction()
+    {
+        $tableProject = new Default_Model_Project();
+                
+        $projectpage = $this->getParam('projectpage', 1);
+        $pageLimit = 1000;
+        $total_records = 1000;
+        $this->view->pageLimit = $pageLimit;
+        $this->view->projectpage = $projectpage;
+        $this->view->total_records = $total_records;
+
+        $this->view->userProducts =
+            $tableProject->getDeletedProjectsForMember($this->_memberId, $pageLimit,
                 ($projectpage - 1) * $pageLimit);
 
         $this->_helper->layout->disableLayout();
