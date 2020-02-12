@@ -28,7 +28,7 @@ const DevelopmentAppMenu = () => {
         .then(response => response.json())
         .then(data => {            
             if(data.notifications){
-              const nots = data.notifications.filter(note => note.read==false);
+              const nots = data.notifications.filter(note => note.read==false && note.notification_type==6);
               if(nots.length>0 && notification_count !== nots.length)
               {
                   setNotification(true);
