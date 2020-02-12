@@ -335,7 +335,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
                     status = 0;
                 }
                 
-                if(php_status <> status) {
+                if(php_status !== status) {
                     alert('Feature-Status wrong! PHP-Sttaus: ' + php_status + ", but HTML-Status: " + status);
                 }
             });
