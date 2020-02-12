@@ -4,7 +4,6 @@ import {MetaheaderContext} from '../contexts/MetaheaderContext';
 
 const UserLoginMenuContainer = (props) => {
   const {state} = useContext(MetaheaderContext);
-  console.log(state);
   const [dropdownClass, setDropdownClass] = useState('');    
   const toggleEl = useRef(null);    
   const [gitlabLink, setGitlabLink] = useState(state.gitlabUrl+"/dashboard/issues?assignee_id=");
