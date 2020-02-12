@@ -328,21 +328,14 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
             $(window).bind("load", function() { 
                 // Your code here.
                 var php_status = <?php echo $this->product->featured == 1 ? '1':'0'; ?>;
-                var status = 0;
-                var box = $('#feature-this-checkbox');
-                if (box.checked) {
-                    status = 1;
-                } else {
-                    status = 0;
-                }
-                
-                if(php_status !== status) {
-                    alert('Feature-Status wrong! PHP-Sttaus: ' + php_status + ", but HTML-Status: " + status);
-                }
-                
                 var ischecked = document.getElementById("feature-this-checkbox").checked;
                 if(ischecked != php_status) {
-                    alert("Is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    console.log("Is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("feature-this-checkbox").checked = false;
+                    } else {
+                        document.getElementById("feature-this-checkbox").checked = true;
+                    }
                 }
             });
             
