@@ -13,6 +13,7 @@ import BlogFeedContainer from './BlogFeedContainer';
 import WatchlistContainer from '../function/WatchlistContainer';
 import StatisticsContainer from '../function/StatisticsContainer';
 import ProductsMyGitContainer from './ProductsMyGitContainer';
+import MastodonContainer from './MastodonContainer';
 class HomeMainContainer extends Component {
   constructor(props){
   	super(props);
@@ -103,6 +104,7 @@ class HomeMainContainer extends Component {
                      <CommentsContainer title="Comments" baseUrlStore={this.state.baseUrlStore} comments={this.state.comments}/>
                      <BlogFeedContainer urlCommunity={this.state.forumUrl}/>
                      <RssNewsContainer />
+                     <MastodonContainer url_mastodon={this.state.url_mastodon}/>
                   </div>
              </div>
            )
