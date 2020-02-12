@@ -327,7 +327,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
             
             $(window).bind("load", function() { 
                 // Your code here.
-                var php_status = <?php echo $this->product->featured == 1 ? 'true':'false'; ?>;
+                var php_status = <?php echo $this->product->featured == 1 ? '1':'0'; ?>;
                 var status = 0;
                 var box = $('#feature-this-checkbox');
                 if (box.checked) {
