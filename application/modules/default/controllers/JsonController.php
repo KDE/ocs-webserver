@@ -424,7 +424,7 @@ class JsonController extends Zend_Controller_Action
     {
         $this->_initResponseHeader();
         $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__;     
+        $cacheName = __FUNCTION__.'5';     
         $cachetmp = $this->getParam('cache',null);   
         if($cachetmp)
         {
