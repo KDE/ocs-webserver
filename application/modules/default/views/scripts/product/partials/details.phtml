@@ -193,16 +193,16 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
         <div style="clear: both" class="small">(remember the cache) after you change some value below and refresh the page you may encounter some differences to your changes</div>
         <span class="page-views font-italic">
-            <input type="checkbox" id="spam-checked-checkbox" <?php echo $this->product->spam_checked == 1 ? ' checked=\'checked\' ' : ''; ?> />  spam checked
+            <input type="checkbox" id="spam-checked-checkbox" <?php echo $this->product->spam_checked == 1 ? ' checked=\'checked\' ' : ''; ?> />  spam checked (<?php echo $this->product->spam_checked == 1 ? '1' : '0'; ?>)
         </span>
         <span class="page-views font-italic">
           <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured (<?php echo $this->product->featured == 1 ? '1':'0'; ?>)
         </span>
         <span class="page-views font-italic" style="color: red;">
-            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
+            <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded (<?php echo $isGhnsExcluded == 1 ? '1' : '0'; ?>)
         </span>
         <span class="page-views font-italic" style="color: red;">
-            <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded
+            <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded (<?php echo $this->product->pling_excluded == 1 ? '1' : '0'; ?>)
         </span>
         
 
