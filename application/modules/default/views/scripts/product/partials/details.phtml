@@ -322,6 +322,24 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
                 return false;
             });
+            
+            
+            $(window).bind("load", function() { 
+                // Your code here.
+                var php_status = <?php echo $this->product->featured == 1 ? '1':'0'; ?>;
+                var status = 0;
+                var box = $('#feature-this-checkbox');
+                if (box.checked) {
+                    status = 1;
+                } else {
+                    status = 0;
+                }
+                
+                if(php_status <> status) {
+                    alert('Feature-Status wrong! PHP-Sttaus: ' + php_status + ", but HTML-Status: " + status);
+                }
+            });
+            
         </script>
 
         <span class="page-views"><input style="width: 40px;" type="text" id="project_category_id"
