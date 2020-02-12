@@ -326,15 +326,48 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
             
             
             $(window).bind("load", function() { 
-                // Your code here.
+                // Featured.
                 var php_status = <?php echo $this->product->featured == 1 ? '1':'0'; ?>;
                 var ischecked = document.getElementById("feature-this-checkbox").checked;
                 if(ischecked != php_status) {
-                    console.log("Is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    console.log("feature-this-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
                     if(php_status == 0) {
                         document.getElementById("feature-this-checkbox").checked = false;
                     } else {
                         document.getElementById("feature-this-checkbox").checked = true;
+                    }
+                }
+                // spam_checked.
+                php_status = <?php echo $this->product->spam_checked == 1 ? '1':'0'; ?>;
+                ischecked = document.getElementById("spam-checked-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("spam-checked-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("spam-checked-checkbox").checked = false;
+                    } else {
+                        document.getElementById("spam-checked-checkbox").checked = true;
+                    }
+                }
+                // ghns_excluded
+                php_status = <?php echo $isGhnsExcluded == 1 ? '1':'0'; ?>;
+                ischecked = document.getElementById("ghns_excluded-this-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("ghns_excluded-this-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("ghns_excluded-this-checkbox").checked = false;
+                    } else {
+                        document.getElementById("ghns_excluded-this-checkbox").checked = true;
+                    }
+                }
+                // pling-excluded.
+                php_status = <?php echo $this->product->pling_excluded == 1 ? '1':'0'; ?>;
+                ischecked = document.getElementById("pling-excluded-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("pling-excluded-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("pling-excluded-checkbox").checked = false;
+                    } else {
+                        document.getElementById("pling-excluded-checkbox").checked = true;
                     }
                 }
             });
