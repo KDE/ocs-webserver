@@ -327,7 +327,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
             
             $(window).bind("load", function() { 
                 // Your code here.
-                var php_status = <?php echo $this->product->featured == 1 ? '1':'0'; ?>;
+                var php_status = <?php echo $this->product->featured == 1 ? 'true':'false'; ?>;
                 var status = 0;
                 var box = $('#feature-this-checkbox');
                 if (box.checked) {
@@ -341,7 +341,9 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
                 }
                 
                 var ischecked = document.getElementById("feature-this-checkbox").checked;
-                alert("Is Checked: " + ischecked);
+                if(ischecked != php_status) {
+                    alert("Is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                }
             });
             
         </script>
