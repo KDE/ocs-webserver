@@ -196,7 +196,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
             <input type="checkbox" id="spam-checked-checkbox" <?php echo $this->product->spam_checked == 1 ? ' checked=\'checked\' ' : ''; ?> />  spam checked
         </span>
         <span class="page-views font-italic">
-          <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured
+          <input type="checkbox" id="feature-this-checkbox" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured (<?php echo $this->product->featured == 1 ? '1':'0'; ?>)
         </span>
         <span class="page-views font-italic" style="color: red;">
             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
@@ -204,6 +204,7 @@ $filterDownloadToday = $today->format("Y-m-d H:i:s");
         <span class="page-views font-italic" style="color: red;">
             <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded
         </span>
+        
 
         <script>
             $('#delete-this').on('click', function (event) {
