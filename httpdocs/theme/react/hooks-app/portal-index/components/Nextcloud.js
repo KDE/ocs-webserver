@@ -9,21 +9,26 @@ const Nextcloud = (props) => {
         loadData();
     },[]);
 
-    const loadData = async () => {
-        const data = await fetch(`/json/owncloud?username=${props.username}`);
-        const items = await data.json();        
+    const loadData =  () => {        
         
-        if (items && typeof(items.users) != "undefined")   
-        {
-            setUsers(items.users);
-            setIsloading(false);
-            if(items.users)
-            {
-                setUserdefault(items.users[0]);
-                
-            }
-        }
-        
+        fetch(`/json/owncloud?username=${props.username}`, {
+            mode: 'cors',
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(data => {
+                let items = data;
+                if (items && typeof(items.users) != "undefined")   
+                {
+                    setUsers(items.users);
+                    setIsloading(false);
+                    if(items.users)
+                    {
+                        setUserdefault(items.users[0]);
+                        
+                    }
+                }
+          }); 
         
       }
 

@@ -9,25 +9,30 @@ const ForumUserPosts = (props) => {
         loadData();
     },[]);
 
-    const loadData = async () => {
-        const data = await fetch(`/json/forumposts?username=${props.username}`);
-        const items = await data.json();
-        
-        if ( items && typeof(items.posts) != "undefined")        
-        {            
-            let posts = Object.keys(items.posts).map(function (i) {
-                return items.posts[i];
-              });
-            posts.sort(function(a, b) {
-            return a.created_at < b.created_at;
-            });
-            setPosts(posts);      
-        }
-        
-        if (items && typeof(items.user) != "undefined")   
-        {
-            setUser(items.user.user);
-        }
+    const loadData =  () => {       
+        fetch(`/json/forumposts?username=${props.username}`, {
+            mode: 'cors',
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(data => {
+                let items = data;
+                if ( items && typeof(items.posts) != "undefined")        
+                {            
+                    let posts = Object.keys(items.posts).map(function (i) {
+                        return items.posts[i];
+                    });
+                    posts.sort(function(a, b) {
+                    return a.created_at < b.created_at;
+                    });
+                    setPosts(posts);      
+                }
+                
+                if (items && typeof(items.user) != "undefined")   
+                {
+                    setUser(items.user.user);
+                }
+          }); 
         
       }
 

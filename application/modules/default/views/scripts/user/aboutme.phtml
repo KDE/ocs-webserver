@@ -422,6 +422,13 @@ div#preloaded-images {
                             </li>
                           <?php } ?>
 
+                          <?php if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') { ?>                                                     
+                            <li>
+                                <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/deleted"  href="#user-deleted" data-toggle="tab" role="tab"  aria-controls="user-deleted">
+                                    <i>Deleted (A:<?=$this->stat['cntDeleted']?>)</i>
+                                </a>
+                            </li>
+                          <?php } ?>
                         </ul>
                         </div>
                         <!-- /tabs nav -->
@@ -513,6 +520,10 @@ div#preloaded-images {
                             <?php } ?>
                             <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' ) { ?>
                             <div  role="tabpanel" class="tab-pane " id="user-unpublished">                                 
+                            </div>                          
+                            <?php } ?>
+                            <?php if( Zend_Auth::getInstance()->hasIdentity() AND  Zend_Auth::getInstance()->getIdentity()->roleName == 'admin' ) { ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-deleted">                                 
                             </div>                          
                             <?php } ?>
 

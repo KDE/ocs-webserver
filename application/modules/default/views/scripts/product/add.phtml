@@ -99,11 +99,12 @@ $this->inlineScript()->appendScript('
         - Style each label that is directly after the input
         - position: relative; will ensure that any position: absolute children will position themselves in relation to it
         */
+        /*
         input[type=checkbox] + label {
             display: block;
             border-radius: 50%;
             position: relative;
-            box-shadow: 0 0 1px #FFF; /* Soften the jagged edge */
+            box-shadow: 0 0 1px #FFF;
             background: #2184be none repeat scroll 0 0;
             border: 3px solid #9dc8e2;
             color: white;
@@ -111,6 +112,7 @@ $this->inlineScript()->appendScript('
             transition: all 0.4s ease 0s;
             width: 25px;
         }
+        */
 
         /* Provide a border when hovered and when the checkbox before it is checked */
         input[type=checkbox] + label:hover,
@@ -231,6 +233,27 @@ $this->inlineScript()->appendScript('
 
                                 </div>
                                 <?php // $this->form->title ?>
+                                
+                                
+                                <?php /*
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                        <div class="small grey bold-font pull-left margin-right-5">*</div>
+                                        <label class="form-label" for="title">Legal Uploads</label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-danger" id="banner-cc">
+                                            <span class="">
+                                                <input id="legal_uploads_only" name="legal_uploads_only" class="required form-control" type="checkbox" style="height: 10px; width: 10px"> 
+                                                Please only upload legally open source or Creative Commons content, which license does permit uploading it here.
+                                            </span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                 * 
+                                 */?>
+                                
                                 <div class="form-group">
                                     <div class="col-sm-12 margin-top-15">
                                         <div class="small grey bold-font pull-left margin-right-5">*</div>

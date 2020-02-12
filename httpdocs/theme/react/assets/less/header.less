@@ -50,6 +50,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+    float: left;
   }
 
   #siter-header-pling
@@ -119,7 +120,7 @@
                  width: 100%;
                  .pling-nav-tabs
                  {
-                    display: flex;
+                    display: block;
                  }
                  .title{
                    text-align: center;
@@ -128,10 +129,12 @@
                  }
                 .section{
                   padding: 5px;
-                  display: flex;
+                  display: block;
                   margin-bottom: 16px;
                     .section-name{
                     flex: 1;
+                    float:left;
+                    width:100px;
                     position: relative;
                      img{
                        width: 100px;
@@ -160,6 +163,9 @@
                     .section-value{
                       display: flex;
                       align-items: center;
+                      line-height: 100px;
+                      float: right;
+                  
                     }
                 }
             }
