@@ -423,6 +423,20 @@ class JsonController extends Zend_Controller_Action
     public function socialtimelineAction()
     {
         $this->_initResponseHeader();
+        $model = new Default_Model_Ocs_Mastodon();
+        $timelines = $model->getTimelines();
+      
+        $helpPrintDate = new Default_View_Helper_PrintDateSince();
+        foreach ($timelines as &$m) {                                                 
+            $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));                                  
+        }        
+        $this->_sendResponse($timelines, $this->_format);
+    }
+
+    /*
+    public function socialtimelineAction()
+    {
+        $this->_initResponseHeader();
         /*
         $cache = Zend_Registry::get('cache');
         $cacheName = __FUNCTION__.'5';     
@@ -435,7 +449,7 @@ class JsonController extends Zend_Controller_Action
         if (false !== ($news = $cache->load($cacheName))) {
             $results=$news;
         }else{
-            */
+          
             $config = Zend_Registry::get('config')->settings->client->default;
             $url_mastodon = $config->url_mastodon;
             $url = $url_mastodon.'/api/v1/timelines/public?limit=5';        
@@ -458,10 +472,10 @@ class JsonController extends Zend_Controller_Action
             /*
             $cache->save($results, $cacheName, array(), 60*60);
         }     
-        */              
+                    
         $this->_sendResponse($results, $this->_format);
     }
-
+  */
     public function newsAction()
     {
         $this->_initResponseHeader();
