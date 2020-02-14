@@ -32,19 +32,16 @@ class Default_View_Helper_IsSupporter extends Zend_View_Helper_Abstract
     	if (false !== ($issupporter = $cache->load($cacheName))) {
     	        return $issupporter;
     	}
-
-    	$tableMembers = new Default_Model_Member();
-    	//$row = $tableMembers->fetchSupporterDonationInfo($member_id);
-        $row = $tableMembers->fetchSupporterSectionInfo($member_id);
-        if($row==null || !isset($row['sections']))
+    	$tableMembers = new Default_Model_Member();    	
+        $sectionsCount = $tableMembers->fetchSupporterSectionNr($member_id);
+        if($sectionsCount==0)
         {
             $cache->save(false, $cacheName, array(), 3600);
             return false;
-        }else{                
-            $sections=explode(",", $row['sections']);
-            $cache->save(sizeof($sections), $cacheName, array(), 3600);
-            return sizeof($sections);
-        }        	        	
+        }else{
+            $cache->save($sectionsCount, $cacheName, array(), 3600);
+            return $sectionsCount;
+        }                	        	
     }
 
 } 
