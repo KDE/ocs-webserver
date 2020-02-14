@@ -52,7 +52,7 @@ function PersonalLinksContainer(props)
         </li>     
 
         <li id="mastodon-link-item">
-          <a href={props.mastodonUrl} >
+          <a href={props.mastodonUrl+'/auth/sign_in'} >
             <div className="icon"></div>
             <span style={{fontStyle:'italic'}}>Social</span>
           </a>

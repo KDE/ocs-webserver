@@ -3283,7 +3283,7 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->getResponse()->setHeader('X-FRAME-OPTIONS', 'ALLOWALL',
             true)//            ->setHeader('Last-Modified', $modifiedTime, true)
              ->setHeader('Expires', $expires, true)->setHeader('Pragma', 'no-cache', true)
-             ->setHeader('Cache-Control', 'private, no-cache, must-revalidate', true);
+             ->setHeader('Cache-Control', 'private, max-age=0, no-cache, no-store, must-revalidate', true);
     }
 
     /**

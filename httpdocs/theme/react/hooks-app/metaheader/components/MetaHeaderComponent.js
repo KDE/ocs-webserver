@@ -21,12 +21,15 @@ const MetaHeaderComponent = (props) => {
     updateDimensions(); 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange",updateDimensions);
-    $( "body" ).addClass( "theme" );
+    //$( "body" ).addClass( "theme" );
+    document.body.classList.add("theme");
 
     if (state.contentTheme === 'content-theme-dark'){
-      $( "body" ).addClass( "dark-theme" );
+      //$( "body" ).addClass( "dark-theme" );
+      document.body.classList.add("dark-theme");
     } else {
-      $( "body" ).removeClass( "dark-theme" );
+      //$( "body" ).removeClass( "dark-theme" );
+      document.body.classList.remove("dark-theme");
     }
     return () => {
       window.removeEventListener("resize", updateDimensions);
@@ -51,25 +54,26 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchStyle = evt => {    
-    let url = "https://" + window.location.hostname +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-    console.log(url);
+    let url = state.baseUrl +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
+    
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {
-        console.log(result); 
+    
         const newSiteTheme = isChecked ? 'content-theme-dark': '';
         setSiteTheme(newSiteTheme);
         if (newSiteTheme === 'content-theme-dark'){
-          $( "body" ).addClass( "dark-theme" );
+          document.body.classList.add("dark-theme");
+          //$( "body" ).addClass( "dark-theme" );
         } else {
-          $( "body" ).removeClass( "dark-theme" );
+          //$( "body" ).removeClass( "dark-theme" );
+          document.body.classList.remove("dark-theme");
         }
     })
   }
 
   const onSwitchMetaHeaderStyle = evt => {     
-    let url = "https://" + window.location.hostname +"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');
-    console.log(url);  
+    let url = state.baseUrl+"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {               
