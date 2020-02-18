@@ -157,9 +157,9 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($resonse, $this->_format);
     }
 
-    private function curlOwnloud($url)
+    private function curlNextcloud($url)
     {
-        $config = Zend_Registry::get('config')->settings->server->owncloud;
+        $config = Zend_Registry::get('config')->settings->server->nextcloud;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -213,10 +213,10 @@ class JsonController extends Zend_Controller_Action
 
     }
 
-    public function owncloudAction()
+    public function nextcloudAction()
     {
         
-        $config = Zend_Registry::get('config')->settings->server->owncloud;
+        $config = Zend_Registry::get('config')->settings->server->nextcloud;
         
         $p_username = $this->getParam('username');
         $member_data = $this->getUserData($p_username);
@@ -226,7 +226,7 @@ class JsonController extends Zend_Controller_Action
             return;
         }
         $url = $config->host."/ocs/v1.php/cloud/users?search=".$member_data['username']."&format=json";                     
-        $results = $this->curlOwnloud($url);
+        $results = $this->curlNextcloud($url);
         $status =$results->ocs->meta->status; 
         $usersArray=array();
         if($status== 'ok' && sizeof($results->ocs->data->users)>0)
@@ -234,7 +234,7 @@ class JsonController extends Zend_Controller_Action
             $users = $results->ocs->data->users;
             foreach ($users as $user) {
                 $urlUser = $config->host."/ocs/v1.php/cloud/users/".$user."?format=json";  
-                $u = $this->curlOwnloud($urlUser);
+                $u = $this->curlNextcloud($urlUser);
                 if($u->ocs->meta->status=='ok')
                 {
                     $usersArray[]= $u->ocs->data;   
