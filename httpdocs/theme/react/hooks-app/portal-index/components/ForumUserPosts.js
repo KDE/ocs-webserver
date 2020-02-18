@@ -1,5 +1,5 @@
 import React ,{useState,useEffect} from 'react'
-
+import TimeAgo from 'react-timeago'
 const ForumUserPosts = (props) => {
     const [posts, setPosts] = useState([]);
     const [user, setUser] = useState({'username':''});
@@ -53,7 +53,7 @@ const ForumUserPosts = (props) => {
             posts.slice(0, 5).map((p,index) =>       
             <li key={index}>                
                 <div className="title">
-                <a href={forumUrl+'/p/'+p.post_id}>{p.excerpt} {p.created_at}</a>
+                <a href={forumUrl+'/p/'+p.post_id}>{p.excerpt.replace(/(<([^>]+)>)/ig,"")} </a> <TimeAgo date={p.created_at} />
                 </div>
             </li>
             )

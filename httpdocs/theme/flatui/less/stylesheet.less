@@ -5991,7 +5991,34 @@ span.page-views {
   cursor: default;
 }
 
-
+.socialrow
+{
+   border-bottom:1px solid #ccd4d8 ;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    overflow: hidden;   
+    .avatar{
+      width:55px;
+      display: block;
+      float: left;
+      img{
+        width:48px;
+        height: 48px;
+        border-radius:10px;
+      }
+    }
+    span{
+      display: block;
+    }
+    span.date{
+      font-size: small;
+      padding-top: 5px;
+    }
+    &:last-child
+    {
+      border-bottom:0px solid #ccd4d8 ;
+    }
+}
 .commentstore
   {
     border-bottom:1px solid #ccd4d8 ;
@@ -7197,11 +7224,6 @@ main#plings-page{
 
     &:hover {
       background-color: @black4 !important;
-      border-color: transparent !important;
-
-      a span {
-        color: @black2;
-      }
     }
   }
 
@@ -7235,8 +7257,13 @@ main#plings-page{
   #home-main-container .middle .panelContainer ul li .title, 
   #home-main-container .middle .panelContainer ol li .title, 
   #home-main-container .middle .panelContainer ul li .info-row, 
-  #home-main-container .middle .panelContainer ol li .info-row
-   {
+  #home-main-container .middle .panelContainer ol li .info-row {
     color: #efefef;
+  }
+
+  #home-main-container a {
+    color: #efefef;
+    text-decoration: none;
+    cursor: pointer;
   }
 }

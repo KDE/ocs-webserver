@@ -5,7 +5,9 @@
   overflow: hidden;
   display: block;
   float: left;
-  min-height: 500px;
+  height: 500px;
+  max-height: 500px;
+  overflow-y: auto;
 }
 #main-content-portal .sub-system-container .header {
   height: 50px;

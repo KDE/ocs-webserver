@@ -79,7 +79,7 @@ class Support extends Component {
           <div className="header-body">
 
             <div ref={node => this.node = node} className={'supporter-container '+this.state.dropdownClass }>
-              <a className="header-supporters" >{this.props.section ? this.props.section.name:''} has {s} Supporters &#8964; </a>
+              <a className="header-supporters" >{this.props.section ? this.props.section.name:''} has {s} active Supporters &#8964; </a>
               {supporters}
             </div>
           </div>
