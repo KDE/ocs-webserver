@@ -69,13 +69,13 @@ const DevelopmentAppMenu = () => {
           <ul id="user-context-dropdown" className="dropdown-menu dropdown-menu-right">                          
           
               <MyButton id="storage-link-item"
-                      url={state.myopendesktopUrl+"/apps/files/"}
+                      url={state.myopendesktopUrl+"/files/"}
                       label="Files" />
               <MyButton id="calendar-link-item"
-                      url={state.myopendesktopUrl+"/apps/calendar/"}
+                      url={state.myopendesktopUrl+"/calendar/"}
                       label="Calendar" />
               <MyButton id="contacts-link-item"
-                      url={state.myopendesktopUrl+"/apps/contacts/"}
+                      url={state.myopendesktopUrl+"/contacts/"}
                       label="Contacts" />
                 <li id="messages-link-item">
                     <a href={state.forumUrl+"/u/"+state.user.username+"/messages"}>
@@ -95,10 +95,10 @@ const DevelopmentAppMenu = () => {
                state.isAdmin &&
                <>
                   <MyButton id="mail-link-item"
-                            url={state.myopendesktopUrl+"/apps/rainloop/"}
+                            url={state.myopendesktopUrl+"/rainloop/"}
                             label="Mail" />
                   <MyButton id="maps-link-item"
-                        url={state.myopendesktopUrl+"/apps/maps/"}
+                        url={state.myopendesktopUrl+"/maps/"}
                         label="Maps" />
                 </>
               }

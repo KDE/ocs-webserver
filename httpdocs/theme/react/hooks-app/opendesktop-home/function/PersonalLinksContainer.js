@@ -4,19 +4,19 @@ function PersonalLinksContainer(props)
   return (
     <ul id="personal-links-container">
       <li id="storage-link-item">
-        <a href={props.myopendesktopUrl+'/apps/files'}  >
+        <a href={props.myopendesktopUrl+'/files'}  >
           <div className="icon"></div>
           <span>Files</span>
         </a>
       </li>
       <li id="calendar-link-item">
-        <a href={props.myopendesktopUrl+"/apps/calendar/"} >
+        <a href={props.myopendesktopUrl+"/calendar/"} >
           <div className="icon"></div>
           <span>Calendar</span>
         </a>
       </li>
       <li id="contacts-link-item">
-        <a href={props.myopendesktopUrl+"/apps/contacts/"} >
+        <a href={props.myopendesktopUrl+"/contacts/"} >
           <div className="icon"></div>
           <span>Contacts</span>
         </a>
@@ -39,13 +39,13 @@ function PersonalLinksContainer(props)
       { props.user.isAdmin &&
         <React.Fragment>
         <li id="mail-link-item">
-          <a href={props.myopendesktopUrl+"/apps/rainloop/"} >
+          <a href={props.myopendesktopUrl+"/rainloop/"} >
             <div className="icon"></div>
             <span style={{fontStyle:'italic'}}>Mail</span>
           </a>
         </li>      
         <li id="maps-link-item">
-          <a href={props.myopendesktopUrl+"/apps/maps/"} >
+          <a href={props.myopendesktopUrl+"/maps/"} >
             <div className="icon"></div>
             <span style={{fontStyle:'italic'}}>Maps</span>
           </a>
