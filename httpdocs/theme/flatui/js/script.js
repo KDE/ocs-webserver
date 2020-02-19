@@ -1748,30 +1748,6 @@ var RssNews = (function () {
     }
 })();
 
-var Mastodon = (function () {
-    return {
-        setup: function () {
-            if($("#mastodon-toots").length==0)
-            {
-                return false;
-            }            
-            var json_url = "/json/socialtimeline";
-            $.getJSON(json_url, function (res) {
-                var crss = '';
-                $.each(res, function (i, item) {                    
-                    
-                    crss += '<div class="socialrow"><div class="avatar"><img src='+item.account.avatar+'></img></div><div><a href="' + item.url + '">' + item.account.username + '</a>'
-                            + '<span >' + item.content.replace(/(<([^>]+)>)/ig,"") + '</span>'
-                            + '<span class="date">' + item.created_at + '</span>'                        
-                        +'</div></div>';
-                });
-                $("#mastodon-toots").html(crss);
-
-            });
-        }
-
-    }
-})();
 
 var BlogJson = (function () {
     return {
@@ -2765,6 +2741,43 @@ var FilterBrowseTagGroupFn= (function () {
                       window.location.href = url;
                   });
                 
+                
+            });
+        }
+    }
+})();
+
+var PagedetailModeratorDeprecated= (function () {
+    return {
+        setup: function (project_id) {
+            if($('#product-deprecated-checkbox').length==0) return false;
+            $('body').on('click', '#product-deprecated-checkbox', function (event) {
+                event.stopPropagation();
+                var checked = $(this).is( ":checked" );
+                var status = 0;
+                if (checked) {
+                    status = 1;
+                } else {
+                    status = 0;
+                }
+                var target = "/backend/project/dodeprecated?project_id="+project_id+"&product_deprecated=" + status;
+                $.ajax({
+                    url: target,
+                    success: function (results) {
+                        if (status == 0) {
+                            alert('Project deprecated is successfully removed');
+                            $('#product-deprecated-checkbox').prop("checked", false);
+
+                        } else {
+                            alert('Project is successfully marked as deprecated');
+                            $('#product-deprecated-checkbox').prop("checked", true);
+
+                        }
+                    },
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    }
+                });
                 
             });
         }
