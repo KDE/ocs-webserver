@@ -75,7 +75,7 @@ class Default_Model_Ocs_Mastodon
      * @return bool|array
      * @throws Zend_Exception
      */
-    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null)
+    protected function httpRequest($uri, $uid, $method = Zend_Http_Client::GET, $post_param = null, $isAdmin=false)
     {
         $this->isRateLimitError = false;
         $this->rateLimitWaitSeconds = 0;
@@ -84,7 +84,16 @@ class Default_Model_Ocs_Mastodon
         try {
             $this->httpClient->setUri($uri);
             $this->httpClient->setHeaders('User-Agent', $this->config->user_agent);
+            if($isAdmin)
+            {
+                $this->httpClient->setHeaders('Authorization','Bearer '.$this->config->private_token);                
+            }            
             $this->httpClient->setMethod($method);
+
+
+            $this->httpClient->setHeaders('Content-Type', 'application/json');
+            $this->httpClient->setHeaders('Accept', 'application/json');
+
         } catch (Zend_Http_Client_Exception $e) {
             $this->messages[] = 'Request failed.(' . $uri . ') httpClient error message: ' . $e->getMessage();
 
@@ -93,18 +102,18 @@ class Default_Model_Ocs_Mastodon
             $this->messages[] = 'Request failed.(' . $uri . ') httpClient error message: ' . $e->getMessage();
 
             return false;
-        }
-        $this->httpClient->setParameterGet('api_key', $this->config->private_token);
-        $this->httpClient->setParameterGet('api_username', $this->config->user_sudo);
+        }       
         if (isset($post_param)) {
             $this->httpClient->setParameterPost($post_param);
         }
 
         try {
             $response = $this->httpClient->request();
+            
+           
         } catch (Zend_Http_Client_Exception $e) {
             $this->messages[] = 'Request failed.(' . $uri . ') httpClient error message: ' . $e->getMessage();
-
+            
             return false;
         }
         if ($response->getStatus() < 200 OR $response->getStatus() >= 500) {
@@ -199,6 +208,52 @@ class Default_Model_Ocs_Mastodon
             return false;
         }
         return $timelines;
+    }
+
+    public function getUserByUsername($username)
+    {
+        $uri = $this->config->host . "/api/v1/admin/accounts?username=".$username;
+        $method = Zend_Http_Client::GET;
+        $uid = 'getUserByUsername';
+        $user = null;
+        
+        try {
+            $user = $this->httpRequest($uri, $uid, $method,null,true);
+           
+            if (false === $user) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        return $user;
+    }
+
+    public function getUserStatuses($id)
+    {
+        $uri = $this->config->host . "/api/v1/accounts/".$id."/statuses";
+        $method = Zend_Http_Client::GET;
+        $uid = 'getUserAccount';
+        $user = null;
+        
+        try {
+            $user = $this->httpRequest($uri, $uid, $method);
+           
+            if (false === $user) {
+                $this->messages[] = "Fail ";
+
+                return false;
+            }
+        } catch (Zend_Exception $e) {
+            $this->messages[] = "Fail " . $e->getMessage();
+
+            return false;
+        }
+        return $user;
     }
    
 

@@ -1,5 +1,5 @@
 import React ,{useState,useEffect} from 'react'
-
+import TimeAgo from 'react-timeago'
 const Gitlab = (props) => {
     const [projects, setProjects] = useState([]);
     const [user, setUser] = useState({'username':''});
@@ -61,8 +61,9 @@ const Gitlab = (props) => {
                 )}
 
                 <a href={p.http_url_to_repo}>
-                {p.name+' '+p.description+p.last_activity_at}
+                {p.name+' '+p.description}
                 </a>
+                <TimeAgo date={p.last_activity_at} />
                 </div>
             </li>
             )

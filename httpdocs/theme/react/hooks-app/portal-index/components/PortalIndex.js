@@ -4,6 +4,7 @@ import Gitlab from './Gitlab'
 import Riot from './Riot';
 import Nextcloud from './Nextcloud';
 import Pling from './Pling';
+import Mastodon from './Mastodon';
 
  const PortalIndex = () => {
     const [username, setUsername] = useState(window.data.username);
@@ -14,6 +15,7 @@ import Pling from './Pling';
           <Gitlab username={username}></Gitlab>
           <Riot username={username}></Riot>
           <Nextcloud username={username}></Nextcloud>
+          <Mastodon username={username}></Mastodon>
 
         </div>
     )

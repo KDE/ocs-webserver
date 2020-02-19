@@ -2,7 +2,7 @@ import React ,{useState,useEffect} from 'react'
 
 const Nextcloud = (props) => {
     const [users, setUsers] = useState([]);
-    const [userdefault, setUserdefault] = useState({'displayname':''});
+    const [userdefault, setUserdefault] = useState({'displayname':props.username});
     const [imgpath,setImgpath] = useState(window.config.myopendesktopUrl+'/avatar/');
     const [isloading, setIsloading] = useState(true);
     useEffect(() => {                 
@@ -11,7 +11,7 @@ const Nextcloud = (props) => {
 
     const loadData =  () => {        
         
-        fetch(`/json/owncloud?username=${props.username}`, {
+        fetch(`/json/nextcloud?username=${props.username}`, {
             mode: 'cors',
             credentials: 'include'
           })
@@ -22,7 +22,7 @@ const Nextcloud = (props) => {
                 {
                     setUsers(items.users);
                     setIsloading(false);
-                    if(items.users)
+                    if(items.users && items.users.length>0)
                     {
                         setUserdefault(items.users[0]);
                         
@@ -36,12 +36,15 @@ const Nextcloud = (props) => {
         <div className="sub-system-container">  
         <div className="header">Nextcloud : {userdefault.displayname} 
         {
-            userdefault.displayname &&
+            userdefault.displayname && userdefault.id &&
             <>            
             <img  src={imgpath+userdefault.id+'/50'}></img>
             </>
         }
-        
+        {
+            userdefault.id==null && !isloading &&
+            <span style={{color:'red'}}> User {userdefault.displayname} not existing </span>
+        }
         </div>  
         
         <div>

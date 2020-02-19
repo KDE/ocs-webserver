@@ -157,9 +157,9 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($resonse, $this->_format);
     }
 
-    private function curlOwnloud($url)
+    private function curlNextcloud($url)
     {
-        $config = Zend_Registry::get('config')->settings->server->owncloud;
+        $config = Zend_Registry::get('config')->settings->server->nextcloud;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -213,10 +213,10 @@ class JsonController extends Zend_Controller_Action
 
     }
 
-    public function owncloudAction()
+    public function nextcloudAction()
     {
         
-        $config = Zend_Registry::get('config')->settings->server->owncloud;
+        $config = Zend_Registry::get('config')->settings->server->nextcloud;
         
         $p_username = $this->getParam('username');
         $member_data = $this->getUserData($p_username);
@@ -226,7 +226,7 @@ class JsonController extends Zend_Controller_Action
             return;
         }
         $url = $config->host."/ocs/v1.php/cloud/users?search=".$member_data['username']."&format=json";                     
-        $results = $this->curlOwnloud($url);
+        $results = $this->curlNextcloud($url);
         $status =$results->ocs->meta->status; 
         $usersArray=array();
         if($status== 'ok' && sizeof($results->ocs->data->users)>0)
@@ -234,7 +234,7 @@ class JsonController extends Zend_Controller_Action
             $users = $results->ocs->data->users;
             foreach ($users as $user) {
                 $urlUser = $config->host."/ocs/v1.php/cloud/users/".$user."?format=json";  
-                $u = $this->curlOwnloud($urlUser);
+                $u = $this->curlNextcloud($urlUser);
                 if($u->ocs->meta->status=='ok')
                 {
                     $usersArray[]= $u->ocs->data;   
@@ -433,49 +433,30 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($timelines, $this->_format);
     }
 
-    /*
-    public function socialtimelineAction()
+    public function socialuserstatusesAction()
     {
-        $this->_initResponseHeader();
-        /*
-        $cache = Zend_Registry::get('cache');
-        $cacheName = __FUNCTION__.'5';     
-        $cachetmp = $this->getParam('cache',null);   
-        if($cachetmp)
+        $this->_initResponseHeader();        
+        $p_username = $this->getParam('username');
+        $member_data = $this->getUserData($p_username);        
+        $result=array();
+        $model = new Default_Model_Ocs_Mastodon();
+        $user = $model->getUserByUsername($member_data['username']);        
+        if(sizeof($user)>0)
         {
-            $cacheName=__FUNCTION__.$cachetmp;
-        }
-        
-        if (false !== ($news = $cache->load($cacheName))) {
-            $results=$news;
+            $user=$user[0];
         }else{
-          
-            $config = Zend_Registry::get('config')->settings->client->default;
-            $url_mastodon = $config->url_mastodon;
-            $url = $url_mastodon.'/api/v1/timelines/public?limit=5';        
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            $data = curl_exec($ch);
-            curl_close($ch);
-            $results = json_decode($data);   
-
-
-            $helpPrintDate = new Default_View_Helper_PrintDateSince();
-            foreach ($results as &$m) {                                              
-                $m->created_at = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m->created_at, 0, 19)));                
-            }
-            
-            /*
-            $cache->save($results, $cacheName, array(), 60*60);
-        }     
-                    
-        $this->_sendResponse($results, $this->_format);
+            $user=null;
+        }
+        $result['user'] = $user;
+        $statuses=null;        
+        if($user && $user['id'])
+        {
+            $statuses = $model->getUserStatuses($user['id']);
+        }
+        $result['statuses'] = $statuses;
+        $this->_sendResponse($result, $this->_format);      
     }
-  */
+
     public function newsAction()
     {
         $this->_initResponseHeader();
