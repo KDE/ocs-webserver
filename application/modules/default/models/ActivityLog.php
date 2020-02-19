@@ -140,6 +140,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
         320 => 'backend',
         321 => 'backend',
         322 => 'backend',
+        323 => 'backend',
         401 => 'member',
         402 => 'member_email',
         410 => 'member'
