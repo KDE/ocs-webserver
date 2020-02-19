@@ -14,16 +14,9 @@ class ProductsContainer extends React.Component {
       ));
      container = <ul>{products}</ul>
     }    
-    let header;
-    if(this.props.cat)
-    {
-      header =  <div className="title"><a href={this.props.baseUrlStore+"/browse/cat/"+this.props.cat+"/order/latest/"}>{this.props.title}</a></div>
-    }else{
-      header =  <div className="title">{this.props.title}</div>
-    }
     return (
       <div className="panelContainer">
-        {header}
+        <div className="title"><a href={this.props.baseUrlStore+"/browse/cat/"+this.props.cat+"/order/latest/"}>{this.props.title}</a></div>
         {container}
       </div>
     )

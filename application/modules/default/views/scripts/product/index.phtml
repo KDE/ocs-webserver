@@ -765,7 +765,20 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                         ){  ?>    
                         <div class="tab-pane" id="tab-moderation">
                             <div class="col-lg-12">                            
+                                <?php 
+                                    if(!$isowner)
+                                    {
+                                    $modelTags = new Default_Model_Tags();
+                                    $isDeprecatedModerator = $modelTags->isProductDeprecatedModerator($this->product->project_id);
+                                ?>
+                                <div>
+                                    <input type="checkbox" id="product-deprecated-checkbox" <?php echo $isDeprecatedModerator ? ' checked=\'checked\' ' : ''; ?> />  product-deprecated
+                                </div>
+                                    <?php }?>
                              <!-- comments -->
+                                <div>
+                                    
+                                </div>
                                 <div id="product-comment-moderation" class="comment-containers">
                                         <?php
                                         $modelComments = new Default_Model_ProjectComments();
@@ -1171,6 +1184,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
             AppimagequestionOnClick.setup();
             Opendownloadfile.setup();
             CreateScoreRatingPopup.setup();
+            PagedetailModeratorDeprecated.setup('.$this->product->project_id.');
             $(\'.tooltipheart\').tooltipster({theme: [\'tooltipster-light\', \'tooltipster-light-customized\'],
                     contentCloning: true,
                     contentAsHTML: true,

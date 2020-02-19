@@ -41,22 +41,15 @@ function PersonalLinksContainer(props)
         <li id="mail-link-item">
           <a href={props.myopendesktopUrl+"/apps/rainloop/"} >
             <div className="icon"></div>
-            <span style={{fontStyle:'italic'}}>Mail</span>
+            <span>Mail</span>
           </a>
         </li>      
         <li id="maps-link-item">
           <a href={props.myopendesktopUrl+"/apps/maps/"} >
             <div className="icon"></div>
-            <span style={{fontStyle:'italic'}}>Maps</span>
+            <span>Maps</span>
           </a>
         </li>     
-
-        <li id="mastodon-link-item">
-          <a href={props.mastodonUrl+'/auth/sign_in'} >
-            <div className="icon"></div>
-            <span style={{fontStyle:'italic'}}>Social</span>
-          </a>
-        </li> 
         </React.Fragment>
       }
       <li id="chat-link-item">
@@ -66,13 +59,13 @@ function PersonalLinksContainer(props)
         </a>
       </li>
       <li id="pling-link-item">
-        <a href={props.baseUrlStore+"/u/"+props.user.username+"/products"} >
+        <a href={props.baseUrlStore} >
           <div className="icon"></div>
           <span>Products</span>
         </a>
       </li>
       <li id="opencode-link-item">
-        <a href={props.gitlabUrl + "/dashboard/projects"} >
+        <a href={props.gitlabUrl + "/explore/projects"} >
           <div className="icon"></div>
           <span>Projects</span>
         </a>

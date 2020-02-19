@@ -77,6 +77,7 @@ class Default_Model_ActivityLog extends Default_Model_DbTable_ActivityLog
     const BACKEND_USER_DELETE = 320;
     const BACKEND_USER_UNDELETE = 321;
     const BACKEND_PROJECT_DANGEROUS = 322;
+    const BACKEND_PROJECT_DEPREACTED = 323;
 
     //internal system logs
     const MEMBER_EMAIL_CONFIRMED = 401;
