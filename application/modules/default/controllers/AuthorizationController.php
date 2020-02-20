@@ -132,11 +132,18 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         if (false === empty($this->view->redirect)) {
             $redirect = $this->decodeString($this->view->redirect);
             if (false !== strpos('/register', $redirect)) {
-                $redirect = '/member/' . $userId . '/activities/';
+                
+                //20200120 ronald: redirect to www.opendesktop.org/start
+                //$redirect = '/member/' . $userId . '/activities/';
+                $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+                $redirect = $baseurl.'/start';
             }
             $this->redirect($redirect);
         } else {
-            $this->redirect('/member/' . $userId . '/activities/');
+            //20200120 ronald: redirect to www.opendesktop.org/start
+            //$redirect = '/member/' . $userId . '/activities/';
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            $redirect = $baseurl.'/start';
         }
     }
 
@@ -535,7 +542,12 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - user_id: ' . $userId . PHP_EOL . ' - redirect: empty');
 
             if ($this->_request->isXmlHttpRequest()) {
-                $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+                //20200120 ronald: redirect to www.opendesktop.org/start
+                //$redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+                $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+                $redirect_url = $this->encodeString($baseurl.'/start');
+                
+                
                 $redirect = '/home/redirectme?redirect=' . $redirect_url;
                 $this->_helper->json(array('status' => 'ok', 'redirect' => $redirect));
 
@@ -543,7 +555,10 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
             }
 
             $this->getRequest()->setParam('member_id', $userId);
-            $redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+            //20200120 ronald: redirect to www.opendesktop.org/start
+            //$redirect_url = $this->encodeString('/member/' . $userId . '/activities/');
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            $redirect_url = $this->encodeString($baseurl.'/start');
             $redirect = '/home/redirectme?redirect=' . $redirect_url;
             $this->redirect($redirect, $this->getAllParams());
 
@@ -553,7 +568,11 @@ class AuthorizationController extends Local_Controller_Action_DomainSwitch
         $redirect = $this->decodeString($this->view->redirect);
         Zend_Registry::get('logger')->info(__METHOD__ . PHP_EOL . ' - user_id: ' . $userId . PHP_EOL . ' - redirect: ' . $redirect);
         if (false !== strpos('/register', $redirect)) {
-            $redirect = '/member/' . $userId . '/activities/';
+            //20200120 ronald: redirect to www.opendesktop.org/start
+            //$redirect = '/member/' . $userId . '/activities/';
+            $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+            $redirect = $this->encodeString($baseurl.'/start');
+            
         }
 
         $redirect = '/home/redirectme?redirect=' . $this->encodeString($redirect);
