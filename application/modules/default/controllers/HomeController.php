@@ -24,10 +24,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 {
     public function indexAction()
     {
-        if (!Zend_Auth::getInstance()->hasIdentity()){
-            $this->forward('start', 'home', 'default',null);
-        }
-
+       
         /** @var Default_Model_ConfigStore $storeConfig */        
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 
@@ -45,7 +42,12 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
                     $this->view->index = $index;
                 } else {
-                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+
+                    if ($storeConfig->config_id_name=='opendesktop' && !Zend_Auth::getInstance()->hasIdentity()){
+                        $this->forward('start', 'home', 'default',null);
+                    }else{
+                        $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                    }                            
                 }
 
                 return;
