@@ -65,7 +65,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     {
         
         if (!Zend_Auth::getInstance()->hasIdentity()){
-            $this->forward('index', 'explore', 'default', $params);
+            $this->redirect('/browse');
         }
         
         /** @var Default_Model_ConfigStore $storeConfig */
