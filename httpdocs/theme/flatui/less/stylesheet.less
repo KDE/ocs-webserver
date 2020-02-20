@@ -575,7 +575,7 @@ ul.meta-nav-top
         &.profile-menu-container {
             padding-top: 0;
             padding-left: 40px;
-
+ 
             .header-profile-image {
               top: 50%;
               left: 10px;
@@ -5991,7 +5991,34 @@ span.page-views {
   cursor: default;
 }
 
-
+.socialrow
+{
+   border-bottom:1px solid #ccd4d8 ;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    overflow: hidden;   
+    .avatar{
+      width:55px;
+      display: block;
+      float: left;
+      img{
+        width:48px;
+        height: 48px;
+        border-radius:10px;
+      }
+    }
+    span{
+      display: block;
+    }
+    span.date{
+      font-size: small;
+      padding-top: 5px;
+    }
+    &:last-child
+    {
+      border-bottom:0px solid #ccd4d8 ;
+    }
+}
 .commentstore
   {
     border-bottom:1px solid #ccd4d8 ;
@@ -7225,4 +7252,83 @@ main#plings-page{
   }
 
   .panel {background-color: @black2 !important;}
+
+  #home-main-container a,
+  #home-main-container .middle .panelContainer ul li .title, 
+  #home-main-container .middle .panelContainer ol li .title, 
+  #home-main-container .middle .panelContainer ul li .info-row, 
+  #home-main-container .middle .panelContainer ol li .info-row {
+    color: #efefef;
+  }
+
+  #home-main-container a {
+    color: #efefef;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .wizard>.content {
+    background-color: transparent;
+  }
+
+  .wizard>.content>.body {
+    padding: 2.5% 0;
+  }
+
+  .user-admin-page .head-wrap .about-me-header .user-menu {
+    background-color: @black3 !important;
+    border-color: @black4 !important;
+  }
+
+  .user-admin-page .head-wrap .about-me-header figure {
+    background-color: @black3 !important;
+    border-color: @black4 !important ;
+  }
+
+  .socialrow {
+    border-color: @black4;
+  }
+
+  .about-me-page .header .summary article .about-title figure {
+    background-color: @black4;
+  }
+
+  #my-comments-tabs-content .productrow {
+    background-color: @black4;
+  }
+
+  #pling-section-content .pling-section-header {
+    background-color:@black2;
+  }
+
+  #pling-section-content .pling-section-detail .pling-section-detail-right .support-container {
+    background-color: @black3;
+    border-color: @black4;
+    margin-bottom: 20px;
+
+    h5 {
+      color: white !important;
+    }
+
+    .tiers, .tier-container {
+      border-color: @black4 !important;
+    }
+  }
+
+  .x-donation-widget {
+    border-color: @black3;
+  
+    .tabs-footer {
+      background-color: black;
+    }
+  }
+
+  .popover-title {
+    background-color: @black2 !important;
+  }
+ 
+  .popover.top>.arrow::after {
+    border-color: @black2 !important;
+    // background-color: @black2 !important;
+  }
 }
