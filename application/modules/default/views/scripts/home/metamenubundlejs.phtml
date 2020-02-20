@@ -85,7 +85,9 @@ $targetObject['logo'] = "opendesktop";
 $targetObject['logoLabel'] = "OpenDesktop";
 $targetObject['link'] = $baseurl;
 if($target == 'opendesktop') {
-    $url_login = "/login/redirect/".$filter->filter($thisurl);
+    //20200120 ronald: redirect to /start
+    //$url_login = "/login/redirect/".$filter->filter($thisurl);
+    $url_login = "/login";
     $url_logout = "/logout?redirect=".$filter->filter($thisurl);
     $isExternal = 'var isExternal = false;';
     $is_external = false;
