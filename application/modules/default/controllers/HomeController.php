@@ -64,10 +64,6 @@ class HomeController extends Local_Controller_Action_DomainSwitch
     public function startAction()
     {
         
-        if (!Zend_Auth::getInstance()->hasIdentity()){
-            $this->redirect('/browse');
-        }
-        
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 
