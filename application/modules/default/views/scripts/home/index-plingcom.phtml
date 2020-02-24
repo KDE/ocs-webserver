@@ -20,10 +20,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
-$this->headMeta()->appendProperty('og:url', 'www.pling.com');
+$this->headMeta()->appendProperty('og:url', $_SERVER['HTTP_HOST']);
 $this->headMeta()->appendProperty('og:type', 'website');
-$this->headMeta()->appendProperty('og:title', 'pling.com');
-$this->headMeta()->appendProperty('og:site_name','www.pling.com');
+$this->headMeta()->appendProperty('og:title', $_SERVER['HTTP_HOST']);
+$this->headMeta()->appendProperty('og:site_name',$_SERVER['HTTP_HOST']);
 $this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
 $this->headMeta()->appendProperty('og:image','https://www.pling.com/theme/react/assets/img/logo-pling.png');
 
