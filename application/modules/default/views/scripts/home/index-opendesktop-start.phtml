@@ -19,14 +19,18 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$config = Zend_Registry::get('config')->settings->domain->base;
+$metaDomain = $config->host;
+
 $this->headTitle($_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
-$this->headMeta()->appendProperty('og:url', 'www.opendesktop.org');
+$this->headMeta()->appendProperty('og:url', $metaDomain);
 $this->headMeta()->appendProperty('og:type', 'website');
-$this->headMeta()->appendProperty('og:title', 'opendesktop.org');
-$this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
-$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:title', $metaDomain);
+$this->headMeta()->appendProperty('og:site_name',$metaDomain);
+$this->headMeta()->appendProperty('og:description','Libre Cloud Services for users and developers. Keep your personal data save, start new projects, share apps, files and products, communicate freely with friends and colleagues.');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
+
 
 ?>
 
