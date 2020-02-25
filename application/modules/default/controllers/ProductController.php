@@ -3130,8 +3130,9 @@ class ProductController extends Local_Controller_Action_DomainSwitch
                 $this->saveMediaView($file_id, $media_view_type_id);
 
                 $mediaviewsTable = new Default_Model_DbTable_MediaViews();
+                $id = $mediaviewsTable->getNewId();
                 $data = array(
-                    'media_view_id'      => $mediaviewsTable->getNewId(),
+                    'media_view_id'      => $id,
                     'media_view_type_id' => $media_view_type_id,
                     'project_id'         => $this->_projectId,
                     'collection_id'      => $collection_id,
