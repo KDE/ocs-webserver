@@ -225,22 +225,21 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
-
-    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
+    console.log('on player time update');
+    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
+    console.log('new current track time - ' + newCurrentTrackTime);
     setCurrentTrackTime(newCurrentTrackTime);
-
     setCurrentTrackTimeSeconds(playerElement.duration);
-
     let newcurrentTrackDuration = playerElement.duration;
     if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
     newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
     setcurrentTrackDuration(newcurrentTrackDuration );
-
     const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
+    console.log('new currebt track progress - ' + newCurrentTrackProgress);
     setCurrentTrackProgress(newCurrentTrackProgress);
     
     if (playerElement.currentTime === playerElement.duration){
-      // console.log('song ended');
+      // console.log('song ended');111
       onNextTrackPlayClick();
     }
 
@@ -354,11 +353,11 @@ function usePrevious(value) {
 
 function MusicPlayerControlPanel(props){
 
-  console.log(props);
+  // console.log(props);
 
   React.useEffect(() => {
-    console.log('music player controls panel');
-    console.log(props);
+    // console.log('music player controls panel');
+    // console.log(props);
   },[])
 
   /* COMPONENT */
