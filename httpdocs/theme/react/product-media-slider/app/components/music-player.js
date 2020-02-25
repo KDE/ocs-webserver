@@ -217,8 +217,9 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(e){
+    console.log(e);
     const playerElement1 = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const playerElement = e.traget;
+    const playerElement = e.target;
     console.log(playerElement1);
     console.log(playerElement);
     console.log('on player time update');
