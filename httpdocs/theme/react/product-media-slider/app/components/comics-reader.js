@@ -108,7 +108,7 @@ function ComicBookReader(props){
     else if (val === "prev") nextPage = currentPage === 0 ? 0 : currentPage - 1;
     else if (val === "next") nextPage = currentPage === totalPages ? totalPages : currentPage + 1;
     window.comicSwiper.slideTo(nextPage)
-    onViewPage(nextPage);
+    props.onViewPage(nextPage);
   }
 
   function onBeforeFlip(page){
