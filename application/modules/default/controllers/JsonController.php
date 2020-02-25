@@ -425,7 +425,7 @@ class JsonController extends Zend_Controller_Action
         $this->_initResponseHeader();
         
         $model = new Default_Model_Ocs_Mastodon();
-        $timelines = $model->getTimelines();
+        /*$timelines = $model->getTimelines();
       
         $helpPrintDate = new Default_View_Helper_PrintDateSince();
         foreach ($timelines as &$m) {               
@@ -434,7 +434,8 @@ class JsonController extends Zend_Controller_Action
                 $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));      
             }                            
         }        
-        //$this->_sendResponse($timelines, $this->_format);
+        $this->_sendResponse($timelines, $this->_format);
+         */
         $this->_sendResponse(array(), $this->_format);
     }
 
