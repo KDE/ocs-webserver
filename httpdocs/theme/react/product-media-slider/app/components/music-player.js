@@ -90,6 +90,7 @@ function MusicPlayer(props){
       setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
       onUpdateCurrentTrackProgress(0);
+      $('.current-track-progress').find('.rc-slider-track').trigger('click');
     }
     playerElement[0].play();
     setIsPlaying(true);
