@@ -89,6 +89,7 @@ function MusicPlayer(props){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
+      onUpdateCurrentTrackProgress(0);
     }
     playerElement[0].play();
     setIsPlaying(true);
