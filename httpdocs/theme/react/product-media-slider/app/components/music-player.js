@@ -50,16 +50,7 @@ function MusicPlayer(props){
   const [ showPlaylist, setShowPlaylist ] = useState(initialShowPlaylistValue);
 
   useEffect(() => {
-      
-    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const currentSrc = props.items[playIndex].musicSrc;
-    
-    playerElement[0].src = currentSrc;
-    playerElement[0].volume = audioVolume;
-    playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
-    
     getRandomMusicsupporter();
-  
   },[])
 
   useEffect(() => {
@@ -226,11 +217,12 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(e){
-    console.log(e.traget);
-    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const playerElement1 = document.getElementById("music-player-container").getElementsByTagName('audio');
+    const playerElement = e.traget;
+    console.log(playerElement1);
+    console.log(playerElement);
     console.log('on player time update');
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
-    console.log('new current track time - ' + newCurrentTrackTime);
     setCurrentTrackTime(newCurrentTrackTime);
     setCurrentTrackTimeSeconds(playerElement.duration);
     let newcurrentTrackDuration = playerElement.duration;
@@ -238,12 +230,11 @@ function MusicPlayer(props){
     newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
     setcurrentTrackDuration(newcurrentTrackDuration );
     const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
-    console.log('new currebt track progress - ' + newCurrentTrackProgress);
     setCurrentTrackProgress(newCurrentTrackProgress);
     
     if (playerElement.currentTime === playerElement.duration){
       // console.log('song ended');111
-      onNextTrackPlayClick();
+      // onNextTrackPlayClick();
     }
 
   }
@@ -293,9 +284,16 @@ function MusicPlayer(props){
 
   const audioElVolume = isMuted === true ? 0.0 : audioVolume;
 
+  const currentSrc = props.items[playIndex].musicSrc;
+
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
-      <audio volume={audioElVolume} onTimeUpdate={(e) => onPlayerTimeUpdate(e)}  id="music-player-audio"></audio>
+      <audio 
+        volume={audioElVolume} 
+        onTimeUpdate={(e) => onPlayerTimeUpdate(e)}  
+        onLoadedMetadata={(e) => onPlayerTimeUpdate(e)}
+        src={currentSrc}
+        id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
