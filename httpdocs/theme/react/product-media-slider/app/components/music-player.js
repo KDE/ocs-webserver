@@ -78,10 +78,6 @@ function MusicPlayer(props){
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
-      // playerElement[0].ontimeupdate = function(){ 
-        // console.log('um what');
-        // onPlayerTimeUpdate(playerElement[0]) 
-      // }
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -217,12 +213,7 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(e){
-    console.log(e);
-    const playerElement1 = document.getElementById("music-player-container").getElementsByTagName('audio');
     const playerElement = e.target;
-    console.log(playerElement1);
-    console.log(playerElement);
-    console.log('on player time update');
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
     setCurrentTrackTime(newCurrentTrackTime);
     setCurrentTrackTimeSeconds(playerElement.duration);
@@ -234,8 +225,8 @@ function MusicPlayer(props){
     setCurrentTrackProgress(newCurrentTrackProgress);
     
     if (playerElement.currentTime === playerElement.duration){
-      // console.log('song ended');111
-      // onNextTrackPlayClick();
+      console.log('song ended');
+      onNextTrackPlayClick();
     }
 
   }
