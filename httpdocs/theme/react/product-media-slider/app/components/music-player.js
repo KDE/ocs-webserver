@@ -89,8 +89,8 @@ function MusicPlayer(props){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
-      onUpdateCurrentTrackProgress(0);
-      $('.current-track-progress').find('.rc-slider-track').trigger('click');
+      // onUpdateCurrentTrackProgress(0.11);
+      // $('.current-track-progress').find('.rc-slider-track').trigger('click');
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -201,6 +201,7 @@ function MusicPlayer(props){
   }
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
+    console.log(newTrackProgress);
     setCurrentTrackProgress(newTrackProgress);
     const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
@@ -353,6 +354,12 @@ function usePrevious(value) {
 }
 
 function MusicPlayerControlPanel(props){
+
+
+  React.useEffect(() => {
+    console.log('music player controls panel');
+    console.log(props);
+  },[])
 
   /* COMPONENT */
 
