@@ -29,7 +29,6 @@ function MusicPlayer(props){
   const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
   const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
   const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
-  console.log('current track progress - ' + currentTrackProgress);
   const [ theme, setTheme ] = useState('dark');
   let initialPLayedAudioArray = []
   props.items.forEach(function(i,index){
@@ -355,6 +354,7 @@ function usePrevious(value) {
 
 function MusicPlayerControlPanel(props){
 
+  console.log(props);
 
   React.useEffect(() => {
     console.log('music player controls panel');
