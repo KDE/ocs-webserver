@@ -8,7 +8,7 @@ body { font-family: 'Open Sans', sans-serif; font-size: 18px; }
 
 /* About OD page style  */
 .logo-container { margin: 0 auto; text-align: center; }
-.logo-container img { width: 100%; max-width: 72px; height: auto; }
+.logo-container img { width: 100%; max-width: 120px; height: auto; }
 .logo-container p { font-size: 2.2rem; color: #506070; }
 
 .row-medium-size { max-width: 840px; margin: 0 auto; }
