@@ -47,9 +47,9 @@ function ComicsReaderWrapper(props){
 function ComicBookReader(props){
 
   const [ loading, setLoading ] = useState(false);
-  const [ displayType, setDisplayType ] = useState("double")
-  const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType))
-  const [ currentPage, setCurrentPage ] = useState(1)
+  const [ displayType, setDisplayType ] = useState("single")
+  const [ pages, setPages ] = useState(generatePagesArray(props.pages,displayType));
+  const [ currentPage, setCurrentPage ] = useState(0)
   const [ totalPages, setTotalPages ] = useState(pages.length)
   const [ viewMode, setViewMode ] = useState('normal');
 
@@ -58,19 +58,40 @@ function ComicBookReader(props){
   },[])
 
   function initComicReader(){
-    $(function() {
-      $( '#bb-bookblock-'+props.slideIndex ).bookblock( {
-        speed : 800,
-        shadowSides : 0.8,
-        shadowFlip : 0.7,
-        onBeforeFlip: function( page ) { onBeforeFlip(page) },
-        onEndFlip	: function( page, isLimit ) {  readerOnEndFlip(page,isLimit) },
-      } );
-    })
+    const bookBlockElement = document.getElementById('bb-bookblock');
+
+    if (bookBlockElement){
+      $(document).ready(function() {
+        window.comicSwiper = new Swiper('.comic-book-reader' , {
+          speed: 400,
+          initialSlide: 0,
+          observer: true, 
+          observeParents: true,
+          preloadImages: true,
+          updateOnImagesReady: true,
+          nested:true,
+          threshold:0,
+          onSlideChangeStart: function(swiper){
+            setCurrentPage(swiper.activeIndex);
+          }
+        });
+        window.comicSwiper.update()
+      });
+    } else {
+
+      setTimeout(() => {
+        initComicReader();
+      }, 500);
+    }
   }
 
   function onComicReaderNavClick(val){
-    $( '#bb-bookblock-'+props.slideIndex).bookblock(val);
+    let nextPage;
+    if (val === "first") nextPage = 0;
+    else if (val === "last") nextPage = totalPages;
+    else if (val === "prev") nextPage = currentPage === 0 ? 0 : currentPage - 1;
+    else if (val === "next") nextPage = currentPage === totalPages ? totalPages : currentPage + 1;
+    window.comicSwiper.slideTo(nextPage) 
   }
 
   function onBeforeFlip(page){
@@ -86,25 +107,24 @@ function ComicBookReader(props){
   if (loading) comicPages = <img src="../../flatui/img/ajax-loader.gif"/>
   else {
     const comicPages = pages.map((p,index) => (
-      <div key={index} className="bb-item">
-        <img src={p[0]}/>
-        <img src={p[1]}/>
+      <div className="swiper-slide" key={index}>
+        <img src={p}/>
       </div>      
     ))
 
     comicBookDisplay = (
-      <div id={"bb-bookblock-" + props.slideIndex} className="bb-bookblock">
+      <div id="bb-bookblock" className="swiper-wrapper">
         {comicPages}
       </div>
     )
   }
 
   return (
-    <div className={"comic-book-reader " + viewMode}>
+    <div className={"comic-book-reader swiper-container " + viewMode}>
       {comicBookDisplay}
       <div className="nav-container">
         <nav>
-          <a id="bb-nav-counter">{currentPage + "/" + totalPages}</a>
+          <a id="bb-nav-counter">{ ( currentPage + 1 ) + "/" + totalPages }</a>
           <a id="bb-nav-first" onClick={() => onComicReaderNavClick('first')}><span className="glyphicon glyphicon-step-backward"></span></a>
           <a id="bb-nav-prev" onClick={() => onComicReaderNavClick('prev')}><span className="glyphicon glyphicon-triangle-left"></span></a>
           <a id="bb-nav-next" onClick={() => onComicReaderNavClick('next')}><span className="glyphicon glyphicon-triangle-right"></span></a>

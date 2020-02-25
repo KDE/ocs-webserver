@@ -69,6 +69,11 @@ class SpamController extends Local_Controller_Action_DomainSwitch
         $this->view->headTitle('Watchlist - Md5sum duplicated','SET');
     }
 
+    public function deprecatedAction()
+    {   
+        $this->view->headTitle('Watchlist - Deprecated Products','SET');
+        
+    }
 
     public function deletecommentAction()
     {
@@ -321,6 +326,55 @@ class SpamController extends Local_Controller_Action_DomainSwitch
 
     }
 
+    public function deprecatedlistAction()
+    {
+        $startIndex = (int)$this->getParam('jtStartIndex');
+        $pageSize = (int)$this->getParam('jtPageSize');
+        $sorting = $this->getParam('jtSorting');             
+
+        if(!isset($sorting))
+        {
+        	$sorting = ' tag_created desc';
+        }        
+        $sql = "
+                    select 
+                    project_id,
+                    title,
+                    username,
+                    member_id,
+                    cat_title,
+                    profile_image_url,
+                    o.tag_created created_at
+                    from 
+                    stat_projects p
+                    inner join tag_object o on p.project_id = o.tag_object_id and o.tag_id= 5589 and o.tag_group_id = 36 and is_deleted = 0 and tag_type_id = 1
+                    
+        	";   
+        
+        $sql .= ' order by ' . $sorting;
+        $sql .= ' limit ' . $pageSize;
+        $sql .= ' offset ' . $startIndex;
+        $printDateSince = new Default_View_Helper_PrintDateSince();
+        $results = Zend_Db_Table::getDefaultAdapter()->fetchAll($sql);
+        $helperImage = new Default_View_Helper_Image();
+        foreach ($results as &$value) {            
+            $value['created_at'] = $printDateSince->printDateSince($value['created_at']);
+            $value['avatar'] = $helperImage->Image($value['profile_image_url'], array('width' => '200', 'height' => '200', 'crop' => 2)); 
+        }
+		
+		$sqlall = "	select count(1) 
+                    from stat_projects p
+                    inner join tag_object o on p.project_id = o.tag_object_id and o.tag_id= 5589 and o.tag_group_id = 36 and is_deleted = 0 and tag_type_id = 1
+                    ";                            
+
+        $reportsAll = Zend_Db_Table::getDefaultAdapter()->fetchRow($sqlall);
+
+        $jTableResult = array();
+        $jTableResult['Result'] = self::RESULT_OK;
+        $jTableResult['Records'] = $results;
+        $jTableResult['TotalRecordCount'] = array_pop($reportsAll);        
+        $this->_helper->json($jTableResult);
+    }
 
     public function unpublishedproductlistAction()
     {

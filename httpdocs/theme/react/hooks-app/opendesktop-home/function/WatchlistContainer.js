@@ -71,6 +71,11 @@ function WatchlistContainer(props)
             </a>
           </li>
 
+          <li id="list-deprecated-link-item">
+            <a href={props.baseUrlStore+"/watchlist-products-deprecated"} >
+              <span>List of Deprecated Products</span>
+            </a>
+          </li>
       
         </ul>
   );

@@ -28,7 +28,7 @@ const DevelopmentAppMenu = () => {
         .then(response => response.json())
         .then(data => {            
             if(data.notifications){
-              const nots = data.notifications.filter(note => note.read==false);
+              const nots = data.notifications.filter(note => note.read==false && note.notification_type==6);
               if(nots.length>0 && notification_count !== nots.length)
               {
                   setNotification(true);
@@ -97,11 +97,15 @@ const DevelopmentAppMenu = () => {
                   <MyButton id="mail-link-item"
                             url={state.myopendesktopUrl+"/apps/rainloop/"}
                             label="Mail" />
-                  <MyButton id="maps-link-item"
-                        url={state.myopendesktopUrl+"/apps/maps/"}
-                        label="Maps" />
+                  
                 </>
               }
+              <MyButton id="maps-link-item"
+                        url={state.myopendesktopUrl+"/apps/maps/"}
+                        label="Maps" />
+              <MyButton id="mastodon-link-item"
+                      url={state.mastodonUrl}
+                      label="Social" />
           </ul>
           
         </div>

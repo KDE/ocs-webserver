@@ -118,6 +118,13 @@ function ProductMediaSlider(){
 
   // on finish slides render
   function onFinishedSlidesRender(){
+    let swiperHasComics = false;
+    const comicsItem = gallery.find((g,index) => g.type === "comics");
+    if (comicsItem) swiperHasComics = true
+    if (!swiperHasComics){
+
+    }
+    
     $(document).ready(function() {
       window.mySwiper = new Swiper('.swiper-container', {
         speed: 400,
@@ -388,7 +395,6 @@ function SlideItem(props){
     )    
   }
   else if (props.slide.type === "comics"){
-
     slideContentDisplay = (
       <ComicsReaderWrapper 
         height={props.sliderHeight}

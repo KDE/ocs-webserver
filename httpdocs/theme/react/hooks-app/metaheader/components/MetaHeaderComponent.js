@@ -12,12 +12,25 @@ const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
   const [device, setDevice] = useState('large');
-  const [metamenuTheme, setMetamenuTheme] = useState(state.metamenuTheme);
+  const initialMetaMenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
+  const [metamenuTheme, setMetamenuTheme] = useState(initialMetaMenuThemeValue);
+  const initialSiteThemeValue = state.contentTheme ? state.contentTheme : '';
+  const [siteTheme, setSiteTheme ] = useState(initialSiteThemeValue);
 
   useEffect(() => {   
     updateDimensions(); 
     window.addEventListener("resize", updateDimensions);
     window.addEventListener("orientationchange",updateDimensions);
+    //$( "body" ).addClass( "theme" );
+    document.body.classList.add("theme");
+
+    if (state.contentTheme === 'content-theme-dark'){
+      //$( "body" ).addClass( "dark-theme" );
+      document.body.classList.add("dark-theme");
+    } else {
+      //$( "body" ).removeClass( "dark-theme" );
+      document.body.classList.remove("dark-theme");
+    }
     return () => {
       window.removeEventListener("resize", updateDimensions);
       window.removeEventListener("orientationchange", updateDimensions);
@@ -41,7 +54,26 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchStyle = evt => {    
-    let url = state.baseUrl+'/membersetting/setsettings/itemid/1/itemvalue/'+ (evt.target.checked ? '1' : '0');    
+    let url = state.baseUrl +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
+    
+    const isChecked = evt.target.checked;    
+    Axios.get(url)
+      .then(result => {
+    
+        const newSiteTheme = isChecked ? 'content-theme-dark': '';
+        setSiteTheme(newSiteTheme);
+        if (newSiteTheme === 'content-theme-dark'){
+          document.body.classList.add("dark-theme");
+          //$( "body" ).addClass( "dark-theme" );
+        } else {
+          //$( "body" ).removeClass( "dark-theme" );
+          document.body.classList.remove("dark-theme");
+        }
+    })
+  }
+
+  const onSwitchMetaHeaderStyle = evt => {     
+    let url = state.baseUrl+"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {               
@@ -60,7 +92,10 @@ const MetaHeaderComponent = (props) => {
         <DomainsMenu
           device={device}
           onSwitchStyle={onSwitchStyle}
+          onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
           onSwitchStyleChecked={metamenuTheme?true:false}
+          siteTheme={siteTheme}
+          metamenuTheme={metamenuTheme}
         />
       )
     }
@@ -78,7 +113,9 @@ const MetaHeaderComponent = (props) => {
               device={device}              
               onSwitchStyle={onSwitchStyle}
               onSwitchStyleChecked={paraChecked}
-              
+              onSwitchMetaHeaderStyle={onSwitchMetaHeaderStyle}
+              siteTheme={siteTheme}
+              metamenuTheme={metamenuTheme}
             />
             <SearchForm />
           </div>

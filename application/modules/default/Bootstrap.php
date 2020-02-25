@@ -574,6 +574,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'controller' => 'spam',
             'action'     => 'product'
         )));   
+        $router->addRoute('watchlist_products_deprecated', new Zend_Controller_Router_Route('/watchlist-products-deprecated', array(
+            'module'     => 'default',
+            'controller' => 'spam',
+            'action'     => 'deprecated'
+        )));
         
         $router->addRoute('watchlist_md5sum', new Zend_Controller_Router_Route('/watchlist-md5sum-duplicated', array(
             'module'     => 'default',

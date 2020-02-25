@@ -71,10 +71,10 @@ const SearchForm = () => {
       window.location.href = state.searchbaseurl + value;
     } else {
       if (selected.type == 'project') {
-        console.log(state.baseUrlStore + '/p/' + selected.project_id);
+      
         window.location.href = state.baseUrlStore + '/p/' + selected.project_id;
       } else {
-        console.log(state.baseUrlStore + '/u/' + selected.username);
+
         window.location.href = state.baseUrlStore + '/u/' + selected.username;
       }
     }

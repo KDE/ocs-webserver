@@ -96,8 +96,9 @@ if(isset($_GET['url'])) {
    $thisurl= Zend_Controller_Front::getInstance()->getRequest()->getScheme() . '://' . Zend_Controller_Front::getInstance()->getRequest()->getHttpHost().$_SERVER["REQUEST_URI"];
 }
 
-
-$url_login = "/login/redirect/".$filter->filter($thisurl);
+//20200120 ronald: after login go to /start
+//$url_login = "/login/redirect/".$filter->filter($thisurl);
+$url_login = "/login";
 $url_logout = "/logout?redirect=".$filter->filter($thisurl);
 $isExternal = 'var isExternal = false;';
 $is_external = false;
