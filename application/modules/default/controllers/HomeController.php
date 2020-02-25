@@ -44,10 +44,9 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                 } else {
 
                     if ($storeConfig->config_id_name=='opendesktop' && !Zend_Auth::getInstance()->hasIdentity()){
-                        
-                        $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
-                    }else{
                         $this->forward('start', 'home', 'default',null);
+                    }else{
+                        $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
                     }                            
                 }
 
