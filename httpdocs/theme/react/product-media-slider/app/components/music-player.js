@@ -355,6 +355,7 @@ function MusicPlayerControlPanel(props){
   /* COMPONENT */
 
   function onChangeTrackProgressPosition(e){
+    console.log(e);
     props.onUpdateCurrentTrackProgress(e);
   }
 
