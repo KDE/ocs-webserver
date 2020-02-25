@@ -39,11 +39,12 @@ class HomeMainContainer extends Component {
                   </div>
                   <h1>
                     Hi {this.state.user.username}, good to see you!</h1>
-                  go <a href={this.state.baseUrl+'/start'}>here</a> for the startpage.
+                 
 
                   <PersonalLinksContainer myopendesktopUrl={this.state.url_myopendesktop}
                                           docsopendesktopUrl={this.state.url_docsopendesktop}
                                           riotUrl = {this.state.riotUrl}
+                                          mastodonUrl = {this.state.mastodonUrl}
                                           forumUrl ={this.state.forumUrl}
                                           musicopendesktopUrl ={this.state.url_musicopendesktop}
                                           user ={this.state.user}
