@@ -44,14 +44,21 @@ function PersonalLinksContainer(props)
             <span>Mail</span>
           </a>
         </li>      
+         
+        </React.Fragment>
+      }
         <li id="maps-link-item">
           <a href={props.myopendesktopUrl+"/apps/maps/"} >
             <div className="icon"></div>
             <span>Maps</span>
           </a>
-        </li>     
-        </React.Fragment>
-      }
+        </li>  
+        <li id="mastodon-link-item">
+        <a href={props.mastodonUrl} >
+          <div className="icon"></div>
+          <span>Social</span>
+        </a>
+      </li>
       <li id="chat-link-item">
         <a href={props.riotUrl} >
           <div className="icon"></div>

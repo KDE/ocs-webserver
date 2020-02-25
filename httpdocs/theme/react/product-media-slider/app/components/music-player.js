@@ -29,6 +29,7 @@ function MusicPlayer(props){
   const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
   const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
   const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
+  console.log('current track progress - ' + currentTrackProgress);
   const [ theme, setTheme ] = useState('dark');
   let initialPLayedAudioArray = []
   props.items.forEach(function(i,index){
@@ -88,6 +89,8 @@ function MusicPlayer(props){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
       playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
+      onUpdateCurrentTrackProgress(0);
+      $('.current-track-progress').find('.rc-slider-track').trigger('click');
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -354,6 +357,7 @@ function MusicPlayerControlPanel(props){
   /* COMPONENT */
 
   function onChangeTrackProgressPosition(e){
+    console.log(e);
     props.onUpdateCurrentTrackProgress(e);
   }
 

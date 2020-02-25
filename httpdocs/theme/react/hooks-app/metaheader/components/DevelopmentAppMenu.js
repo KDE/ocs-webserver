@@ -97,11 +97,15 @@ const DevelopmentAppMenu = () => {
                   <MyButton id="mail-link-item"
                             url={state.myopendesktopUrl+"/apps/rainloop/"}
                             label="Mail" />
-                  <MyButton id="maps-link-item"
-                        url={state.myopendesktopUrl+"/apps/maps/"}
-                        label="Maps" />
+                  
                 </>
               }
+              <MyButton id="maps-link-item"
+                        url={state.myopendesktopUrl+"/apps/maps/"}
+                        label="Maps" />
+              <MyButton id="mastodon-link-item"
+                      url={state.mastodonUrl}
+                      label="Social" />
           </ul>
           
         </div>

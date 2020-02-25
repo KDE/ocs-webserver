@@ -72,8 +72,8 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             if ($storeConfig->isShowHomepage()) {
                 //index-opendesktop-start.phtml view
                 $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name . '-start');
-
                 return;
+                
             }
         }
         $params = array('ord' => 'latest');
