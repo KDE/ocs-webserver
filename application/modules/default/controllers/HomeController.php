@@ -71,9 +71,14 @@ class HomeController extends Local_Controller_Action_DomainSwitch
             $this->view->tag_filter = Zend_Registry::isRegistered('config_store_tags') ? Zend_Registry::get('config_store_tags') : null;
             if ($storeConfig->isShowHomepage()) {
                 //index-opendesktop-start.phtml view
-                $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name . '-start');
-
-                return;
+                if (!Zend_Auth::getInstance()->hasIdentity()){
+                    $this->redirect('/login');
+                }else
+                {
+                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name . '-start');
+                    return;
+                }
+                
             }
         }
         $params = array('ord' => 'latest');
