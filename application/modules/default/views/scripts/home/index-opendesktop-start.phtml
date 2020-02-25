@@ -19,7 +19,17 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$config = Zend_Registry::get('config')->settings->domain->base;
+$metaDomain = $config->host;
 
+$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', $metaDomain);
+$this->headMeta()->appendProperty('og:type', 'website');
+$this->headMeta()->appendProperty('og:title', $metaDomain);
+$this->headMeta()->appendProperty('og:site_name',$metaDomain);
+$this->headMeta()->appendProperty('og:description','Libre Cloud Services for users and developers. Keep your personal data save, start new projects, share apps, files and products, communicate freely with friends and colleagues.');
+$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
 
 
 $modelInfo = new Default_Model_Info();
@@ -39,19 +49,6 @@ $url_musicopendesktop = $config->url_musicopendesktop;
 $url_mastodon = $config->url_mastodon;
 $url_docsopendesktop = $config->url_docsopendesktop;
 
-$config = Zend_Registry::get('config')->settings->domain->base;
-$metaDomain = $config->host;
-
-$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
-$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
-$this->headMeta()->appendProperty('og:url', $metaDomain);
-$this->headMeta()->appendProperty('og:type', 'website');
-$this->headMeta()->appendProperty('og:title', $metaDomain);
-$this->headMeta()->appendProperty('og:site_name',$metaDomain);
-$this->headMeta()->appendProperty('og:description','Libre Cloud Services for users and developers. Keep your personal data save, start new projects, share apps, files and products, communicate freely with friends and colleagues.');
-$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
-
-
 $helperUserRole = new Backend_View_Helper_UserRole();
 $userRoleName = $helperUserRole->userRole();
 $isAdmin = false;
@@ -70,10 +67,43 @@ if (Zend_Auth::getInstance()->hasIdentity()){
         "isAdmin" => $isAdmin
     );
 
+    $tableProduct = new Default_Model_Project();
+    $productsRowset = $tableProduct->fetchAllProjectsForMember($identity->member_id,5);
+    $products = array();
+    foreach ($productsRowset as $row) {
+        $products[] = $row;
+    }
+    
+    $parray=array();
+    foreach ($products as $p) {      
+      // $tmp= array('project_id'=> $p->project_id
+      // , 'image_small'=>$this->Image($p->image_small, array('width' => 200, 'height' => 200))
+      // , 'title' => $p->title
+      // ,'laplace_score' =>$p->laplace_score
+      // ,'cat_title' =>$p->cat_title
+      // ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+      // ) ; 
+
+      $tmp= array('project_id'=> $p->project_id    
+      , 'image_small'=>$this->Image($p->image_small, array('width' => 200, 'height' => 200))  
+      , 'title' => $p->title
+      ,'laplace_score' =>$p->laplace_score*10
+      ,'cat_title' =>$p->catTitle
+      ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+      ) ; 
+      $parray[] = $tmp;
+    }
+  
+
     $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
+    $commentsmoderation = $modelInfo->getLastCommentsForUsersProjects($identity->member_id,10,Default_Model_DbTable_Comments::COMMENT_TYPE_MODERATOR);
     $votes = $modelInfo->getLastVotesForUsersProjects($identity->member_id);
-    $donations = $modelInfo->getLastDonationsForUsersProjects($identity->member_id);
+    $spams = $modelInfo->getLastSpamProjects($identity->member_id);    
     foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+    foreach ($commentsmoderation as &$p) {
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
       $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
     }
@@ -81,14 +111,22 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
       $p['created_at'] = $helpPrintDate->printDate($p['created_at']);
     }
+
+    foreach ($spams as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+    }
     $tableMembers = new Default_Model_Member();
     $supporterinfo = $tableMembers->fetchSupporterDonationInfo($identity->member_id);
 
     $response = array(
       'user' => $user,
+      'products' => $parray,
       'supporterinfo' => $supporterinfo,
       'comments' =>$comments,
+      'commentsmoderation' =>$commentsmoderation,
       'votes' => $votes,
+      'spams' => $spams,
       "baseUrl" => $baseurl,
       "baseUrlStore" => $baseurlStore,
       "blogUrl" => $url_blog,
@@ -145,6 +183,7 @@ if (Zend_Auth::getInstance()->hasIdentity()){
       "url_cloudopendesktop" => $url_cloudopendesktop,
       "url_musicopendesktop" => $url_musicopendesktop,
       "url_mastodon" => $url_mastodon,
+      
     );
 
 
@@ -157,13 +196,13 @@ if (Zend_Auth::getInstance()->hasIdentity()){
           <i class="fa fa-spinner"></i>
       </span>
 </div>
-
-<main class="startpage-store-new">
+<main class="startpage-store-new">      
       <div id="main-content"></div>
       <script type="text/javascript">
         var page = "opendesktop";
         var hpVersion = 2;
         var data = <?php echo Zend_Json::encode($response)?>;
       </script>
-      <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>
+      <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>      
+      
 </main>
