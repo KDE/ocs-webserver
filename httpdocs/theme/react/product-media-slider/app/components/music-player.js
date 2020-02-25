@@ -293,7 +293,7 @@ function MusicPlayer(props){
 
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
-      <audio volume={audioElVolume} id="music-player-audio"></audio>
+      <audio volume={audioElVolume} ontimeupdate={() => onPlayerTimeUpdate(this)}  id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
