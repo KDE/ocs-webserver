@@ -1749,6 +1749,31 @@ var RssNews = (function () {
 })();
 
 
+var Mastodon = (function () {
+    return {
+        setup: function () {
+            if($("#mastodon-toots").length==0)
+            {
+                return false;
+            }            
+            var json_url = "/json/socialtimeline";
+            $.getJSON(json_url, function (res) {
+                var crss = '';
+                $.each(res, function (i, item) {                    
+                    
+                    crss += '<div class="socialrow"><div class="avatar"><img src='+item.account.avatar+'></img></div><div><a href="' + item.url + '">' + item.account.username + '</a>'
+                            + '<span >' + item.content.replace(/(<([^>]+)>)/ig,"") + '</span>'
+                            + '<span class="date">' + item.created_at + '</span>'                        
+                        +'</div></div>';
+                });
+                $("#mastodon-toots").html(crss);
+
+            });
+        }
+
+    }
+})();
+
 var BlogJson = (function () {
     return {
         setup: function () {
