@@ -42,12 +42,14 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
                     $this->view->index = $index;
                 } else {
-
-                    if ($storeConfig->config_id_name=='opendesktop' && Zend_Auth::getInstance()->hasIdentity()){
-                        $this->forward('start', 'home', 'default',null);
-                    }else{
-                        $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
-                    }                            
+                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                    // if ($storeConfig->config_id_name=='opendesktop' && Zend_Auth::getInstance()->hasIdentity()){
+                    //    // $this->forward('start', 'home', 'default',null);
+                       
+                    //    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                    // }else{
+                    //     $this->redirect('/start');
+                    // }                            
                 }
 
                 return;
@@ -63,7 +65,10 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
     public function startAction()
     {
-        
+        if (!Zend_Auth::getInstance()->hasIdentity()){
+            $this->redirect('/login');
+        }
+
         /** @var Default_Model_ConfigStore $storeConfig */
         $storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
 
