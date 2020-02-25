@@ -226,6 +226,7 @@ function MusicPlayer(props){
   // time progress bar
 
   function onPlayerTimeUpdate(playerElement){
+    console.log(playerElement);
     console.log('on player time update');
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
     console.log('new current track time - ' + newCurrentTrackTime);
@@ -293,7 +294,7 @@ function MusicPlayer(props){
 
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
-      <audio volume={audioElVolume} onTimeUpdate={() => onPlayerTimeUpdate(this)}  id="music-player-audio"></audio>
+      <audio volume={audioElVolume} onTimeUpdate={(e) => onPlayerTimeUpdate(e)}  id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
