@@ -87,9 +87,10 @@ function MusicPlayer(props){
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
-      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
-      // onUpdateCurrentTrackProgress(0.11);
-      // $('.current-track-progress').find('.rc-slider-track').trigger('click');
+      playerElement[0].ontimeupdate = function(){ 
+        console.log('um what');
+        onPlayerTimeUpdate(playerElement[0]) 
+      }
     }
     playerElement[0].play();
     setIsPlaying(true);
