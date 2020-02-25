@@ -87,10 +87,10 @@ function MusicPlayer(props){
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
-      playerElement[0].ontimeupdate = function(){ 
-        console.log('um what');
-        onPlayerTimeUpdate(playerElement[0]) 
-      }
+      // playerElement[0].ontimeupdate = function(){ 
+        // console.log('um what');
+        // onPlayerTimeUpdate(playerElement[0]) 
+      // }
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -206,7 +206,7 @@ function MusicPlayer(props){
     const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].currentTime = newCurrentTrackTime;
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    // playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
@@ -225,8 +225,9 @@ function MusicPlayer(props){
 
   // time progress bar
 
-  function onPlayerTimeUpdate(playerElement){
-    console.log(playerElement);
+  function onPlayerTimeUpdate(e){
+    console.log(e.traget);
+    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     console.log('on player time update');
     const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
     console.log('new current track time - ' + newCurrentTrackTime);
