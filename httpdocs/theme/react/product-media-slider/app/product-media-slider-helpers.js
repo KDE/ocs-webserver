@@ -1,5 +1,6 @@
 export function GenerateGalleryArray(product){
     let galleryArray = [];
+    let isComics = false;
     let noGallery = false, noLogo = false;
 
     if (window.galleryPicturesJson){
@@ -33,7 +34,10 @@ export function GenerateGalleryArray(product){
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
                     else if (f.type.indexOf('image') > -1) type = "image";
                     else if (f.type.indexOf('ogg') > -1) type = "audio";
-                    else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1) type = "comics";
+                    else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1){
+                        isComics = true;
+                        type = "comics";
+                    }
                     
                     let url_preview, url_thumb;
                     if (f.url_thumb) url_thumb = f.url_thumb.replace(/%2F/g,'/').replace(/%3A/g,':');
@@ -67,9 +71,13 @@ export function GenerateGalleryArray(product){
     }
 
     galleryArray = galleryArray.sort(function(a, b) {
-        return a.created_timestamp - b.created_timestamp;
+        if (isComics === true){
+            console.log('hel');
+            return b.created_timestamp - a.created_timestamp;
+        } else {
+            return a.created_timestamp - b.created_timestamp;
+        }
     })
-
     return galleryArray;
 }
 

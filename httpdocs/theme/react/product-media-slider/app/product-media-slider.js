@@ -395,7 +395,6 @@ function SlideItem(props){
     )    
   }
   else if (props.slide.type === "comics"){
-
     slideContentDisplay = (
       <ComicsReaderWrapper 
         height={props.sliderHeight}
