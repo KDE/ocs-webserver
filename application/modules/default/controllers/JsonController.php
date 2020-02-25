@@ -427,8 +427,11 @@ class JsonController extends Zend_Controller_Action
         $timelines = $model->getTimelines();
       
         $helpPrintDate = new Default_View_Helper_PrintDateSince();
-        foreach ($timelines as &$m) {                                                 
-            $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));                                  
+        foreach ($timelines as &$m) {               
+            if($m['created_at'])
+            {                                  
+                $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));      
+            }                            
         }        
         $this->_sendResponse($timelines, $this->_format);
     }
