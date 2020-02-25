@@ -5,9 +5,10 @@ function ComicsReaderWrapper(props){
     const [ loading, setLoading ] = useState('Loading...');
     const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
     const [ pages, setPages ] = useState([]);
+    const [ viewedPages, setViewedPages ] = useState([]);
 
     /* INIT */
-
+ 
     React.useEffect(() => {
       if (props.slideIndex === props.currentSlide){
         setComicBookInitiated(true);
@@ -15,12 +16,26 @@ function ComicsReaderWrapper(props){
       }
     },[props.slideIndex,props.currentSlide]);
 
+    React.useEffect(() => {
+      console.log(viewedPages);
+      if (viewedPages.length > 3){
+        console.log('now report on reading if its not already reported');
+      }
+    },[viewedPages])
+
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
       $.ajax({url:url}).done(function(res){
           const pages = renderPages(res.files,props.slide.file_id);
           setPages(pages);
+          const newViewedPagedArray = [...viewedPages, pages[0] ];
+          setViewedPages(newViewedPagedArray);
       });
+    }
+
+    function onViewPage(pageIndex){
+      const newViewedPagedArray = [...viewedPages, pages[pageIndex] ];
+      setViewedPages(newViewedPagedArray);
     }
 
     /* COMPONENT */
@@ -33,6 +48,7 @@ function ComicsReaderWrapper(props){
           comicsFileName={props.slide.title}
           onFullScreenToggle={props.onFullScreenToggle}
           isFullScreen={props.isFullScreen}
+          onViewPage={(page) => onViewPage(page)}
         />
       )
     }
@@ -91,7 +107,8 @@ function ComicBookReader(props){
     else if (val === "last") nextPage = totalPages;
     else if (val === "prev") nextPage = currentPage === 0 ? 0 : currentPage - 1;
     else if (val === "next") nextPage = currentPage === totalPages ? totalPages : currentPage + 1;
-    window.comicSwiper.slideTo(nextPage) 
+    window.comicSwiper.slideTo(nextPage)
+    onViewPage(nextPage);
   }
 
   function onBeforeFlip(page){
