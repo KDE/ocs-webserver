@@ -19,521 +19,190 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
+$config = Zend_Registry::get('config')->settings->domain->base;
+$metaDomain = $config->host;
+
 $this->headTitle($_SERVER['HTTP_HOST'], 'SET');
 $this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
-$this->headMeta()->appendProperty('og:url', 'www.opendesktop.org');
+$this->headMeta()->appendProperty('og:url', $metaDomain);
 $this->headMeta()->appendProperty('og:type', 'website');
-$this->headMeta()->appendProperty('og:title', 'opendesktop.org');
-$this->headMeta()->appendProperty('og:site_name','www.opendesktop.org');
-$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content');
+$this->headMeta()->appendProperty('og:title', $metaDomain);
+$this->headMeta()->appendProperty('og:site_name',$metaDomain);
+$this->headMeta()->appendProperty('og:description','Libre Cloud Services for users and developers. Keep your personal data save, start new projects, share apps, files and products, communicate freely with friends and colleagues.');
 $this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png');
+
+
+$modelInfo = new Default_Model_Info();
+$helpPrintDate = new Default_View_Helper_PrintDate();
+$helperImage = new Default_View_Helper_Image();
+
+$config = Zend_Registry::get('config')->settings->client->default;
+$baseurl = $config->baseurl;
+$baseurlStore = $config->baseurl_store;
+$url_forum = $config->url_forum;
+$url_blog = $config->url_blog;
+$url_gitlab = $config->url_gitlab;
+$url_riot = $config->url_riot;
+$url_myopendesktop = $config->url_myopendesktop;
+$url_cloudopendesktop = $config->url_cloudopendesktop;
+$url_musicopendesktop = $config->url_musicopendesktop;
+$url_mastodon = $config->url_mastodon;
+$url_docsopendesktop = $config->url_docsopendesktop;
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+if (Zend_Auth::getInstance()->hasIdentity()){
+    $identity = Zend_Auth::getInstance()->getStorage()->read();
+    $avatar = $helperImage->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "avatar" => $avatar,
+        "roleName" =>$identity->roleName,
+        "isAdmin" => $isAdmin
+    );
+
+    $tableProduct = new Default_Model_Project();
+    $productsRowset = $tableProduct->fetchAllProjectsForMember($identity->member_id,5);
+    $products = array();
+    foreach ($productsRowset as $row) {
+        $products[] = $row;
+    }
+    
+    $parray=array();
+    foreach ($products as $p) {      
+      // $tmp= array('project_id'=> $p->project_id
+      // , 'image_small'=>$this->Image($p->image_small, array('width' => 200, 'height' => 200))
+      // , 'title' => $p->title
+      // ,'laplace_score' =>$p->laplace_score
+      // ,'cat_title' =>$p->cat_title
+      // ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+      // ) ; 
+
+      $tmp= array('project_id'=> $p->project_id    
+      , 'image_small'=>$this->Image($p->image_small, array('width' => 200, 'height' => 200))  
+      , 'title' => $p->title
+      ,'laplace_score' =>$p->laplace_score*10
+      ,'cat_title' =>$p->catTitle
+      ,'updated_at' => $helpPrintDate->printDate(($p->changed_at==null?$p->created_at:$p->changed_at))
+      ) ; 
+      $parray[] = $tmp;
+    }
+  
+
+    $comments = $modelInfo->getLastCommentsForUsersProjects($identity->member_id);
+    $commentsmoderation = $modelInfo->getLastCommentsForUsersProjects($identity->member_id,10,Default_Model_DbTable_Comments::COMMENT_TYPE_MODERATOR);
+    $votes = $modelInfo->getLastVotesForUsersProjects($identity->member_id);
+    $spams = $modelInfo->getLastSpamProjects($identity->member_id);    
+    foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+    foreach ($commentsmoderation as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+    foreach ($votes as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['created_at'] = $helpPrintDate->printDate($p['created_at']);
+    }
+
+    foreach ($spams as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+    }
+    $tableMembers = new Default_Model_Member();
+    $supporterinfo = $tableMembers->fetchSupporterDonationInfo($identity->member_id);
+
+    $response = array(
+      'user' => $user,
+      'products' => $parray,
+      'supporterinfo' => $supporterinfo,
+      'comments' =>$comments,
+      'commentsmoderation' =>$commentsmoderation,
+      'votes' => $votes,
+      'spams' => $spams,
+      "baseUrl" => $baseurl,
+      "baseUrlStore" => $baseurlStore,
+      "blogUrl" => $url_blog,
+      "forumUrl" => $url_forum,
+      "mastodonUrl" => $url_mastodon,
+      "gitlabUrl" => $url_gitlab,
+      "riotUrl" => $url_riot,
+      "url_myopendesktop" => $url_myopendesktop,
+      "url_cloudopendesktop" => $url_cloudopendesktop,
+      "url_musicopendesktop" => $url_musicopendesktop,
+      "url_docsopendesktop" => $url_docsopendesktop,
+      "url_mastodon" => $url_mastodon,
+    );
+}else
+{
+
+
+    $productsAppAddons = $modelInfo->getLastProductsForHostStores(5,'152,233');
+    $productsThemes = $modelInfo->getLastProductsForHostStores(5,'148');
+    $productsMultimedia = $modelInfo->getLastProductsForHostStores(5,'586');
+    $comments = $modelInfo->getLatestComments(5);
+    foreach ($productsAppAddons as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+    }
+    foreach ($productsThemes as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+    }
+    foreach ($productsMultimedia as &$p) {
+      $p['image_small'] = $this->Image($p['image_small'], array('width' => 200, 'height' => 200));
+      $p['updated_at'] = $helpPrintDate->printDate(($p['changed_at']==null?$p['created_at']:$p['changed_at']));
+    }
+    foreach ($comments as &$p) {
+      $p['profile_image_url'] = $this->Image($p['profile_image_url'], array('width' => 200, 'height' => 200));
+      $p['comment_created_at'] = $helpPrintDate->printDate($p['comment_created_at']);
+    }
+
+
+
+    $response = array(
+      'comments' => $comments,
+      'products' => $productsAppAddons,
+      'productsThemes' => $productsThemes,
+      'productsMultimedia' => $productsMultimedia,
+      "baseUrl" => $baseurl,
+      "baseUrlStore" => $baseurlStore,
+      "blogUrl" => $url_blog,
+      "forumUrl" => $url_forum,
+      "mastodonUrl" => $url_mastodon,
+      "gitlabUrl" => $url_gitlab,
+      "riotUrl" => $url_riot,
+      "url_myopendesktop" => $url_myopendesktop,
+      "url_cloudopendesktop" => $url_cloudopendesktop,
+      "url_musicopendesktop" => $url_musicopendesktop,
+      "url_mastodon" => $url_mastodon,
+      
+    );
+
+
+}
 
 ?>
 
-<link rel="stylesheet" href="/theme/flatui/css/bootstrap/bootstrap.min.css">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-<link href="/theme/flatui/css/style_start.css" rel="stylesheet">
-
-
-<!-- Include everything inside <main>...</main> into About page -->
-<main>
-
-  <div class="container-fluid promo promo-welcome no-padding">
-    <div class="container content-medium text-center">
+<div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+</div>
+<main class="startpage-store-new">      
+      <div id="main-content"></div>
+      <script type="text/javascript">
+        var page = "opendesktop";
+        var hpVersion = 2;
+        var data = <?php echo Zend_Json::encode($response)?>;
+      </script>
+      <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>      
       
-      <div class="logo-container">
-        <img src="media/logo.png">
-        <p>Opendesktop.org</p>
-      </div>
-      
-      <h1>One account.<br>All possibilities.</h1>
-      <p>Opendesktop.org is a libre platform providing free cloud storage, online office editing, contacts & calender tools, personal chat and messaging, as well as project development and product publishing to anyone who values freedom and openness.</p>
-      <p><b><a href="https://www.opendesktop.org/register">Get a free account</a></b> to enjoy true freedom with all the services below:</p>
-    </div>
-  </div>
-  
-  <div class="container od-services">
-    <div class="row row-padding text-center">
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-products">
-          <img src="media/od-products.png">
-          <p>Products</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-projects">
-          <img src="media/od-projects.png">
-          <p>Projects</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-files">
-          <img src="media/od-files.png">
-          <p>Files</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-calendar">
-          <img src="media/od-calendar.png">
-          <p>Calendar</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-contacts">
-          <img src="media/od-contacts.png">
-          <p>Contacts</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-dm">
-          <img src="media/od-direct-messages.png">
-          <p>DM</p>
-        </a>
-      </div>
-    </div>
-    <!-- second row -->
-    <div class="row row-padding text-center">
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-music">
-          <img src="media/od-music.png">
-          <p>Music</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-chat">
-          <img src="media/od-chat.png">
-          <p>Chat</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-forums">
-          <img src="media/od-forums.png">
-          <p>Forums</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-maps">
-          <img src="media/od-maps.png">
-          <p>Maps</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="#goto-social">
-          <img src="media/od-social-alt.png">
-          <p>Social</p>
-        </a>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <img src="media/more-to-come.png">
-        <p>more to come</p>
-      </div>
-    </div>
-    <div class="container content-medium text-center promo">
-        <h2>Opendesktop.org does not sell your data.</h2>
-        <p>We value your privacy. <a href="https://www.opendesktop.org/privacy">Check our Privacy Policy</a></p>
-    </div>
-  </div>
-  
-  <!-- Pling Products -->
-  <div class="container-fluid promo no-padding service-block" id="goto-products">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-products.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Products</h2>
-          <p><b>Libre publishing for artists and creators.</b></p>
-          <p>Pling is an open store, where creators can publish their libre products and creative content. Others can support them, so they get a small compensation each time a product is downloaded.</p>
-          <p><a class="od-service-cta" href="https://pling.com">Pling.com</a></p>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-12 primary-color">ocs-webserver</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Products:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Amazon</div>
-            <div class="col-xs-6 primary-color">Store</div>
-            
-            <div class="col-xs-6 tone1">Google</div>
-            <div class="col-xs-6 primary-color">Playstore</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <img class="service-graphic" src="media/od-products-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- openCode Projects -->
-  <div class="container-fluid promo no-padding service-block canvas-bg-1" id="goto-projects">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-lg-push-8 col-md-4 col-md-push-8 col-sm-6 col-sm-push-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-projects.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Projects</h2>
-          <p><b>Create, view, and manage code and project data through powerful branching tools.</b></p>
-          <p>Web-based DevOps lifecycle tool that provides a Git-repository manager providing wiki, issue-tracking and CI/CD pipeline features, using an open-source license.</p>
-          <p><a class="od-service-cta" href="https://www.opencode.net/explore">openCode.net</a></p>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-12 primary-color">GitLab</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Projects:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Microsoft</div>
-            <div class="col-xs-6 primary-color">Github</div>
-            
-            <div class="col-xs-6 tone1">Atlassian</div>
-            <div class="col-xs-6 primary-color">Bitbucket</div>
-            
-            <div class="col-xs-6 tone1">AWS</div>
-            <div class="col-xs-6 primary-color">Elastic Beanstalk</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-lg-pull-4 col-md-8 col-md-pull-4 col-sm-6 col-sm-pull-6 col-xs-12">
-          <img class="service-graphic-even" src="media/od-projects-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Files -->
-  <div class="container-fluid promo no-padding service-block" id="goto-files">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-files.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Files</h2>
-          <p><b>An Enterprise File Sync and Share solution that keeps data under control.</b></p>
-          <p>Easy access to files, photos and documents to work and share with team members, customers and partners. Opendesktop.org Files is an open source file sync and share solution designed to be easy-to-use and highly secure.</p>
-          <p><a class="od-service-cta" href="https://my.opendesktop.org/apps/files">Opendesktop.org Files</a></p>
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Nextcloud</div>
-            <div class="col-xs-6 primary-color">Files</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Files:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Google</div>
-            <div class="col-xs-6 primary-color">Drive</div>
-            
-            <div class="col-xs-6 tone1">Microsoft</div>
-            <div class="col-xs-6 primary-color">OneDrive</div>
-            
-            <div class="col-xs-6 tone1">Dropbox</div>
-            <div class="col-xs-6 primary-color">Dropbox</div>
-            
-            <div class="col-xs-6 tone1">Box</div>
-            <div class="col-xs-6 primary-color">Box</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <img class="service-graphic" src="media/od-files-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Calendar -->
-  <div class="container-fluid promo no-padding service-block canvas-bg-1" id="goto-calendar">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-lg-push-8 col-md-4 col-md-push-8 col-sm-6 col-sm-push-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-calendar.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Calendar</h2>
-          <p><b>We’re not reinventing the wheel. Based on the popular JavaScript libraries.</b></p>
-          <p>The Calendar app is a user interface for Opendesktop's CalDAV server. Easily sync events from various devices with your Opendesktop.org and edit them online.</p>
-          <p><a class="od-service-cta" href="https://my.opendesktop.org/apps/calendar">Opendesktop.org Calendar</a></p>
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Nextcloud</div>
-            <div class="col-xs-6 primary-color">Calendar</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Contacts:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Google</div>
-            <div class="col-xs-6 primary-color">Calendar</div>
-            
-            <div class="col-xs-6 tone1">Microsoft</div>
-            <div class="col-xs-6 primary-color">Planner</div>
-            
-            <div class="col-xs-6 tone1">Telegram</div>
-            <div class="col-xs-6 primary-color">Calendar</div>
-          </div>
-        </div>
-        
-        <div class="col-lg-8 col-lg-pull-4 col-md-8 col-md-pull-4 col-sm-6 col-sm-pull-6 col-xs-12">
-          <img class="service-graphic-even" src="media/od-calendar-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contacts -->
-  <div class="container-fluid promo no-padding service-block" id="goto-contacts">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-contacts.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Contacts</h2>
-          <p><b> Sharing of Adressbooks. You want to share your contacts with your friends or coworkers? No problem!</b></p>
-          <p>The Opendesktop.org Contacts app is a user interface for Opendesktop.org's CardDAV server. Easily sync contacts from various devices with your Opendesktop.org and edit them online.</p>
-          <p><a class="od-service-cta" href="https://my.opendesktop.org/apps/contacts">Opendesktop.org Contacts</a></p>
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Nextcloud</div>
-            <div class="col-xs-6 primary-color">Contacts</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Contacts:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Google</div>
-            <div class="col-xs-6 primary-color">Contacts</div>
-            
-            <div class="col-xs-6 tone1">Microsoft</div>
-            <div class="col-xs-6 primary-color">Phonebook</div>
-            
-            <div class="col-xs-6 tone1">Telegram</div>
-            <div class="col-xs-6 primary-color">People</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <img class="service-graphic" src="media/od-contacts-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Direct messages -->
-  <div class="container-fluid promo no-padding service-block canvas-bg-1" id="goto-dm">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-lg-push-8 col-md-4 col-md-push-8 col-sm-6 col-sm-push-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-direct-messages.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Direct Messages</h2>
-          <p><b>Easy communication with Opendesktop.org members.</b></p>
-          <p>A direct message is just like a post but can only be viewed by the recipients. You can include multiple people in a private message.</p>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Discourse</div>
-            <div class="col-xs-6 primary-color">Private Messages</div>
-          </div>
-        </div>
-        
-        <div class="col-lg-8 col-lg-pull-4 col-md-8 col-md-pull-4 col-sm-6 col-sm-pull-6 col-xs-12">
-          <img class="service-graphic-even" src="media/od-dm-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Music -->
-  <div class="container-fluid promo no-padding service-block" id="goto-music">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-music.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Music</h2>
-          <p><b>Plays audio files directly in the Files view or in a separate library view.</b></p>
-          <p>Shows audio files stored in your cloud categorized by artists and albums. Supports mp3, and depending on the browser, many other audio formats too. Supports shuffle play and playlists. The Music app also allows serving audio files from your cloud to external applications which are compatible either with Ampache or Subsonic.</p>
-          <p><a class="od-service-cta" href="https://my.opendesktop.org/apps/music">Opendesktop.org Music</a></p>
-          
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <img class="service-graphic" src="media/od-music-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Chat -->
-  <div class="container-fluid promo no-padding service-block canvas-bg-1" id="goto-chat">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-lg-push-8 col-md-4 col-md-push-8 col-sm-6 col-sm-push-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-chat.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Chat</h2>
-          <p><b>Liberate your communication.</b></p>
-          <p>Communicate the way you want with Riot - a universal secure chat app entirely under your control. Keep your conversations secret. State of the art end-to-end encryption ensures that private communication stays private.</p>
-          <p><a class="od-service-cta" href="https://chat.opendesktop.org">Opendesktop.org Chat</a></p>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-6 primary-color">Riotchat</div>
-            <div class="col-xs-6 primary-color">Matrix protocol</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Chat:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Microsoft</div>
-            <div class="col-xs-6 primary-color">Skype</div>
-            
-            <div class="col-xs-6 tone1">Facebook </div>
-            <div class="col-xs-6 primary-color">Messenger</div>
-            
-            <div class="col-xs-6 tone1">Whatsapp</div>
-            <div class="col-xs-6 primary-color">Messenger</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-lg-pull-4 col-md-8 col-md-pull-4 col-sm-6 col-sm-pull-6 col-xs-12">
-          <img class="service-graphic-even" src="media/od-chat-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Forums -->
-  <div class="container-fluid promo no-padding service-block" id="goto-forums">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-forums.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Forums</h2>
-          <p><b>Open source discussion platform built for the next decade of the Internet.</b></p>
-          <p>Building friendships via publishing content, working on projects, commenting and supporting projects is at the heart of the Opendesktop.org community.</p>
-          <p>Use it as a mailing list, discussion forum, long-form chat room, and more!</p>
-          <p><a class="od-service-cta" href="https://forum.opendesktop.org/">Opendesktop.org Forums</a></p>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <img class="service-graphic" src="media/od-forums-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
- <!-- Maps -->
-  <div class="container-fluid promo no-padding service-block canvas-bg-1" id="goto-maps">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-lg-push-8 col-md-4 col-md-push-8 col-sm-6 col-sm-push-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-maps.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Maps</h2>
-          <p><b>The whole world fits inside your cloud.</b></p>
-          <p>Using OpenStreetMap and Leaflet, you can choose between standard map, satellite, topographical, dark mode or even watercolor.</p>
-          <p><a class="od-service-cta" href="https://maps.opendesktop.org">Opendesktop.org Maps</a></p>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-6 primary-color">OpenStreetMap</div>
-            <div class="col-xs-6 primary-color">Leaflet</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Maps:</b></p></div>
-            
-            <div class="col-xs-6 tone1">Google</div>
-            <div class="col-xs-6 primary-color">Maps</div>
-            
-            <div class="col-xs-6 tone1">Microsoft</div>
-            <div class="col-xs-6 primary-color">Maps</div>
-            
-            <div class="col-xs-6 tone1">Apple</div>
-            <div class="col-xs-6 primary-color">Maps</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-lg-pull-4 col-md-8 col-md-pull-4 col-sm-6 col-sm-pull-6 col-xs-12">
-          <img class="service-graphic-even" src="media/od-maps-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Social -->
-  <div class="container-fluid promo no-padding service-block" id="goto-social">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <a href="#home" class="bmup"><i class="up"></i></a>
-          <img src="media/od-social-alt.png" class="service-icon">
-          <h2><span>Opendesktop.org</span>Social networking, decentralized.</h2>
-          <p><b>Social networking, back in your hands.</b></p>
-          <p>Follow friends and discover new ones. Publish anything you want: links, pictures, text, video. All on a platform that is community-owned and ad-free.</p>
-          <p><a class="od-service-cta" href="https://social.opendesktop.org">Opendesktop.org Social</a></p>
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Based on:</b></p></div>
-            
-            <div class="col-xs-12 primary-color">Mastodon</div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-12 push-top"><p><b>Replace these services with Opendesktop.org Social:</b></p></div>
-            
-            <div class="col-xs-12 primary-color">Facebook</div>
-            
-            <div class="col-xs-12 primary-color">Twitter</div>
-            
-            <div class="col-xs-12 primary-color">Instagram</div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
-          <img class="service-graphic" src="media/od-social-screen.png">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- What you get -->
-  <div class="container-fluid promo no-padding service-block">
-    
-    <div class="container text-center">
-      <div class="row">
-        <h1 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 push-bottom-3x">What you get</h1>
-        
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <h3>Protecting your privacy.</h3>
-          <p>State of the art end-to-end encryption ensures that private communication stays private.</p>
-        </div>
-        
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <h3>Everything at your fingertips.</h3>
-          <p>Register one account to have everything in one place.</p>
-        </div>
-        
-        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <h3>Keep everything in sync.</h3>
-          <p>Use CardDAV, CalDAV, WebDAV to sync your data to your favorite apps, devices and platform.</p>
-        </div>
-      </div>
-      <a href="https://www.opendesktop.org/register" class="btn promo-btn btn-lg ">Join Opendesktop.org now</a>
-      <p class="push-top-3x">&copy; Opendesktop.org</p>
-        
-      <p class="f-social">
-        <a href="https://www.facebook.com/opendesktop.org" target="_blank" title="Facebook"><img src="media/f_icon_fb.png"></a> <a href="https://twitter.com/opendesktop" target="_blank" title="Twitter"><img src="media/f_icon_tw.png"></a>
-      </p>
-      <a href="#home" class="bmupc"><i class="up"></i></a>
-    </div>
-  </div>
-  
 </main>
-
