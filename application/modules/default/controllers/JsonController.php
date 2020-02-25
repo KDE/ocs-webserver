@@ -423,8 +423,9 @@ class JsonController extends Zend_Controller_Action
     public function socialtimelineAction()
     {
         $this->_initResponseHeader();
+        
         $model = new Default_Model_Ocs_Mastodon();
-        $timelines = $model->getTimelines();
+        /*$timelines = $model->getTimelines();
       
         $helpPrintDate = new Default_View_Helper_PrintDateSince();
         foreach ($timelines as &$m) {               
@@ -434,6 +435,8 @@ class JsonController extends Zend_Controller_Action
             }                            
         }        
         $this->_sendResponse($timelines, $this->_format);
+         */
+        $this->_sendResponse(array(), $this->_format);
     }
 
     public function socialuserstatusesAction()
