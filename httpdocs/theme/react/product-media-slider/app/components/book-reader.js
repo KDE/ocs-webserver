@@ -130,6 +130,22 @@ function BookReaderWrapper(props){
     // console.log('https://www.pling.cc/p/1304363/startmediaviewajax?collection_id=1304363&file_id=34905&type_id=3');
     console.log(props);
     // const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=3';
+    /*      $.ajax({url: audioStartUrl}).done(function(res) { 
+        //console.log('ajax res - ');
+        //console.log(res);
+        const newAudioItem = {
+          ...audioItem,
+          mediaViewId:res.MediaViewId,
+          played:audioItem.played + 1
+        }
+        const newPLayedAudioArray = [
+          ...playedAudioArray.slice(0,audioItemIndex),
+          newAudioItem,
+          ...playedAudioArray.slice(audioItemIndex + 1, playedAudioArray.length)
+        ];
+        setPlayedAudioArray(newPLayedAudioArray);
+      });
+      */
   }
 
 
