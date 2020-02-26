@@ -87,7 +87,8 @@ $targetObject['link'] = $baseurl;
 if($target == 'opendesktop') {
     //20200120 ronald: redirect to /start
     //$url_login = "/login/redirect/".$filter->filter($thisurl);
-    if($thisurl == '/') {
+    $uri = $_SERVER['REQUEST_URI'];
+    if($uri == '/' || $uri == '') {
         $url_login = "/login";
     } else {
         $url_login = "/login/redirect/".$filter->filter($thisurl);
@@ -206,7 +207,8 @@ $response = array(
     "metamenuTheme" => $metamenuTheme,
     "contentTheme" => $contentTheme,
     "target" => $targetObject,
-    "store" => null
+    "store" => null,
+    "uri" => $uri
 );
 
 echo Zend_Json::encode($response);
