@@ -29,12 +29,10 @@ function ComicsReaderWrapper(props){
       $.ajax({url:url}).done(function(res){
           const pages = renderPages(res.files,props.slide.file_id);
           setPages(pages);
-          const newViewedPagedArray = [...viewedPages, pages[0] ];
-          setViewedPages(newViewedPagedArray);
       });
     }
 
-    function onViewPage(pageIndex){
+    function onViewPage(){
       const newViewedPagedCount = viewedPagesCount + 1;
       setViewedPagesCount(newViewedPagedCount);
     }
