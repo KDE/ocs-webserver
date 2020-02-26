@@ -5,8 +5,9 @@ function ComicsReaderWrapper(props){
     const [ loading, setLoading ] = useState('Loading...');
     const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
     const [ pages, setPages ] = useState([]);
-    const [ viewedPages, setViewedPages ] = useState([]);
-
+    const [ viewedPagesCount, setViewedPagesCount ] = useState(0); 
+    const [ comicBookReadIsReported, setComicBookReadIsReported ] = useState(false);
+    
     /* INIT */
  
     React.useEffect(() => {
@@ -18,8 +19,8 @@ function ComicsReaderWrapper(props){
 
     React.useEffect(() => {
       console.log(viewedPages);
-      if (viewedPages.length > 3){
-        console.log('now report on reading if its not already reported');
+      if (viewedPagesCount > 3 && comicBookReadIsReported === false){
+        reportComicBookRead();
       }
     },[viewedPages])
 
@@ -34,10 +35,21 @@ function ComicsReaderWrapper(props){
     }
 
     function onViewPage(pageIndex){
-      const newViewedPagedArray = [...viewedPages, pages[pageIndex] ];
-      setViewedPages(newViewedPagedArray);
+      const newViewedPagedCount = viewedPagesCount + 1;
+      setViewedPagesCount(newViewedPagedCount);
     }
 
+    function reportComicBookRead(){
+      console.log('report book reading')
+      console.log(props);
+      const comicReadReportUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+props.slide.collection_id+'&file_id='+props.slide.file_id+'&type_id=3';
+      $.ajax({url: comicReadReportUrl}).done(function(res) { 
+        console.log(res);
+        setComicBookReadIsReported(true);
+      });
+    }
+  
+    
     /* COMPONENT */
     let comicsReaderDisplay = <span id="ajax-loader"></span>  
     if (pages.length > 0){

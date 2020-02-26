@@ -11,8 +11,10 @@ function BookReaderWrapper(props){
   const [ showPrevButton, setShowPrevButton ] = useState(false);
   const [ showNextButton, setShowNextButton ] = useState(false);
   const [ viewedPagesCount, setViewedPagesCount ] = useState(0);
+  const [ bookReadIsReported, setBookReadIsReported ] = useState(false);
 
   React.useEffect(() => {initBookReader()},[])
+  
   React.useEffect(() => { 
     if (window.book) window.book.destroy()
     initBookReader()
@@ -25,7 +27,7 @@ function BookReaderWrapper(props){
   },[totalPages,window.book])
 
   React.useEffect(() => {
-    if (viewedPagesCount > 3){
+    if (viewedPagesCount > 3 && bookReadIsReported === false){
       reportBookRead();
     }
   },[viewedPagesCount])
@@ -127,14 +129,13 @@ function BookReaderWrapper(props){
 
   function reportBookRead(){
     console.log('report book reading')
-    console.log('https://www.pling.cc/p/1304363/startmediaviewajax?collection_id=1304363&file_id=34905&type_id=3');
     console.log(props);
     const bookReadReportUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+props.slide.collection_id+'&file_id='+props.slide.file_id+'&type_id=3';
     $.ajax({url: bookReadReportUrl}).done(function(res) { 
       console.log(res);
+      setBookReadIsReported(true);
     });
   }
-
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;
