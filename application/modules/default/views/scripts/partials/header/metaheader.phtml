@@ -98,7 +98,12 @@ if(isset($_GET['url'])) {
 
 //20200120 ronald: after login go to /start
 //$url_login = "/login/redirect/".$filter->filter($thisurl);
-$url_login = "/login";
+$uri = $_SERVER['REQUEST_URI'];
+if($uri == '/' || $uri == '') {
+    $url_login = "/login";
+} else {
+    $url_login = "/login/redirect/".$filter->filter($thisurl);
+}
 $url_logout = "/logout?redirect=".$filter->filter($thisurl);
 $isExternal = 'var isExternal = false;';
 $is_external = false;
@@ -172,6 +177,7 @@ $response = array(
     "target" => $targetObject,
     "store" => ($storeConfig?$storeConfig->name:null),
     "storeConfig" => array("config_id_name"=>$storeConfig->config_id_name,"name" =>$storeConfig->name),
+    "uri" => $uri
 );
 
 ?>

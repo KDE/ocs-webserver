@@ -42,14 +42,13 @@ class HomeController extends Local_Controller_Action_DomainSwitch
 
                     $this->view->index = $index;
                 } else {
-                    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
-                    // if ($storeConfig->config_id_name=='opendesktop' && Zend_Auth::getInstance()->hasIdentity()){
-                    //    // $this->forward('start', 'home', 'default',null);
-                       
-                    //    $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
-                    // }else{
-                    //     $this->redirect('/start');
-                    // }                            
+                    //$this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                    if ($storeConfig->config_id_name=='opendesktop' && Zend_Auth::getInstance()->hasIdentity()){
+                            $this->redirect('/start');                           
+                        }else{
+                            $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
+                        }   
+                                      
                 }
 
                 return;
