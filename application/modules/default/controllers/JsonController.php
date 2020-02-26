@@ -423,20 +423,25 @@ class JsonController extends Zend_Controller_Action
     public function socialtimelineAction()
     {
         $this->_initResponseHeader();
+        /** @var Zend_Cache_Backend_Memcached $cache */
+        $cache = Zend_Registry::get('cache');
+        $cacheName = __FUNCTION__;
+        if (false === ($timelines = $cache->load($cacheName))) {
+
+            $model = new Default_Model_Ocs_Mastodon();
+            $timelines = $model->getTimelines();
         
-        $model = new Default_Model_Ocs_Mastodon();
-        /*$timelines = $model->getTimelines();
-      
-        $helpPrintDate = new Default_View_Helper_PrintDateSince();
-        foreach ($timelines as &$m) {               
-            if($m['created_at'])
-            {                                  
-                $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));      
-            }                            
-        }        
+            $helpPrintDate = new Default_View_Helper_PrintDateSince();
+            foreach ($timelines as &$m) {               
+                if($m['created_at'])
+                {                                  
+                    $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));      
+                }                            
+            }        
+            $cache->save($timelines, $cacheName, array(), 60 * 60);
+           
+        }
         $this->_sendResponse($timelines, $this->_format);
-         */
-        $this->_sendResponse(array(), $this->_format);
     }
 
     public function socialuserstatusesAction()
