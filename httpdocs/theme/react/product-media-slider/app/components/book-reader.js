@@ -10,6 +10,7 @@ function BookReaderWrapper(props){
   const [ showBookMenu, setShowBookMenu ] = useState(false);
   const [ showPrevButton, setShowPrevButton ] = useState(false);
   const [ showNextButton, setShowNextButton ] = useState(false);
+  const [ viewedPagesCount, setViewedPagesCount ] = useState(0);
 
   React.useEffect(() => {initBookReader()},[])
   React.useEffect(() => { 
@@ -22,6 +23,12 @@ function BookReaderWrapper(props){
         hackBookPageCount();
     }
   },[totalPages,window.book])
+
+  React.useEffect(() => {
+    if (viewedPagesCount > 3){
+      reportBookRead();
+    }
+  },[viewedPagesCount])
 
   function hackBookPageCount(){
     const newTotalPageCount = window.book.locations.total;
@@ -88,6 +95,8 @@ function BookReaderWrapper(props){
   }
 
   function goNext(){
+    const newViewedPagesCountValue = viewedPagesCount + 1;
+    setViewedPagesCount(newViewedPagesCountValue);
     renditionState.next();
   }
 
@@ -114,6 +123,13 @@ function BookReaderWrapper(props){
   function goToTocItem(item){
     renditionState.display(item.href);
     toggleMenu();
+  }
+
+  function reportBookRead(){
+    console.log('report book reading')
+    // console.log('https://www.pling.cc/p/1304363/startmediaviewajax?collection_id=1304363&file_id=34905&type_id=3');
+    console.log(props);
+    // const audioStartUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+audioItem.collection_id+'&file_id='+audioItem.file_id+'&type_id=3';
   }
 
 
