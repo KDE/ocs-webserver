@@ -25,13 +25,13 @@ const ModalFlagModification = (props) => {
                   <div>                    
                       <div className="container" style={{width:'500px'}}>  
                       <div className="row">
-                                  <div className="col-lg-12"><h6>Extern Original Url:</h6></div>
+                                  <div className="col-lg-12"><h6>URL to external product*:</h6></div>
                                   <div className="col-lg-12">
                                     <input name="externalurl" id="externalurl" value={props.externalurl} onChange={props.handleChangeExternalurl} required></input>
                                 </div>
                         </div>                                              
                         <div className="row">
-                                  <div className="col-lg-12"><h6>Additional message: </h6> </div>
+                                  <div className="col-lg-12"><h6>Message (optional): </h6> </div>
                                   <div className="col-lg-12">
                                     <textarea name="message" id="message" value={props.message} 
                                         onChange={props.handleChangeMessage}
@@ -41,8 +41,8 @@ const ModalFlagModification = (props) => {
 
                         <div className="row"> 
                         <div className="col-lg-12" style={{paddingTop:'20px'}}>
-                          <span>For pointing to an original existing product on this site
-                            , use <a onClick={props.triggerAddRelationship} style={{display: 'inherit',fontStyle:'italic',cursor:'pointer'}}>
+                          <span>*For pointing to an original product on this site, please use 
+                             use <a onClick={props.triggerAddRelationship} style={{display: 'inherit',fontStyle:'italic',cursor:'pointer'}}>
                                     Add Relationship
                                   </a> option instead. </span>                      
                           </div>

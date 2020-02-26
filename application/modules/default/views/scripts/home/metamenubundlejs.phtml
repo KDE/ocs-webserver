@@ -85,15 +85,7 @@ $targetObject['logo'] = "opendesktop";
 $targetObject['logoLabel'] = "OpenDesktop";
 $targetObject['link'] = $baseurl;
 if($target == 'opendesktop') {
-    //20200120 ronald: redirect to /start
-    //$url_login = "/login/redirect/".$filter->filter($thisurl);
-    $uri = $_SERVER['REQUEST_URI'];
-    if($uri == '/' || $uri == '') {
-        $url_login = "/login";
-    } else {
-        $url_login = "/login/redirect/".$filter->filter($thisurl);
-    }
-    
+    $url_login = "/login/redirect/".$filter->filter($thisurl);
     $url_logout = "/logout?redirect=".$filter->filter($thisurl);
     $isExternal = 'var isExternal = false;';
     $is_external = false;
@@ -207,8 +199,7 @@ $response = array(
     "metamenuTheme" => $metamenuTheme,
     "contentTheme" => $contentTheme,
     "target" => $targetObject,
-    "store" => null,
-    "uri" => $uri
+    "store" => null
 );
 
 echo Zend_Json::encode($response);
