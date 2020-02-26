@@ -430,16 +430,21 @@ class JsonController extends Zend_Controller_Action
 
             $model = new Default_Model_Ocs_Mastodon();
             $timelines = $model->getTimelines();
-        
-            $helpPrintDate = new Default_View_Helper_PrintDateSince();
-            foreach ($timelines as &$m) {               
-                if($m['created_at'])
-                {                                  
-                    $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));      
-                }                            
+            if($timelines)
+            {
+                $helpPrintDate = new Default_View_Helper_PrintDateSince();
+                foreach ($timelines as &$m) {                                   
+                    if (array_key_exists('created_at', $m) && $m['created_at'])
+                    {                                  
+                        $m['created_at'] = $helpPrintDate->printDateSince(str_replace('T', ' ', substr($m['created_at'], 0, 19)));      
+                    }                            
+                }
+            }
+            else
+            {
+                $timelines=array();
             }        
-            $cache->save($timelines, $cacheName, array(), 60 * 60);
-           
+            $cache->save($timelines, $cacheName, array(), 60 * 60);           
         }
         $this->_sendResponse($timelines, $this->_format);
     }
