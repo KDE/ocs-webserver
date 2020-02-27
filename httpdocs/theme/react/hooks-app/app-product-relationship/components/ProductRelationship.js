@@ -37,7 +37,7 @@ const ProductRelationship = () => {
        setMessage('');
        setSucceed(false);
        setResponse({status:''});
-       setRadioType = 'is-original';
+       setRadioType('is-original');
     }
 
     const handleSubmitFlagMod = event =>{
