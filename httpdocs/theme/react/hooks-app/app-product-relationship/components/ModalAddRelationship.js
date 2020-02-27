@@ -86,7 +86,7 @@ const ModalAddRelationship = (props) => {
                 </>
               
 
-              <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>              
+              <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={props.handleOnCloseModal}>Close</button>              
               {!props.succeed &&
               <button type="submit" className="btn btn-primary" >Add relationship</button>             
               }
