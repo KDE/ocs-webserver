@@ -82,7 +82,7 @@ const ModalAddRelationship = (props) => {
 
                 
                 <>
-                  {props.response.message}
+                <span dangerouslySetInnerHTML={{__html: props.response.message}}></span>                 
                 </>
               
 

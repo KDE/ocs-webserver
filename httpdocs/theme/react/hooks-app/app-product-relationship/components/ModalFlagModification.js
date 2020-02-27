@@ -60,7 +60,7 @@ const ModalFlagModification = (props) => {
             <div className="modal-footer">
 
                   <>
-                  {props.response.message}
+                  <span dangerouslySetInnerHTML={{__html: props.response.message}}></span>  
                 </>
 
               <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>              
