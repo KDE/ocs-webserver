@@ -9,7 +9,7 @@ const ProductRelationship = () => {
     const [project_id, setProjectId] = useState('');
     const [succeed, setSucceed] = useState(false);
     const [externalurl, setExternalurl] = useState('');
-    
+    const [response, setResponse] = useState({status:''});
     
     const handleSubmit =(event)=>{
       event.preventDefault();
@@ -19,10 +19,15 @@ const ProductRelationship = () => {
       params.append('pc', project_id);
       params.append('p', product.project_id);
       params.append('t', message);
+      params.append('i', radioType);
       
       Axios.post(url,params)
       .then(function (response) {
-        setSucceed(true);        
+        setResponse(response.data);        
+        if(response.data.status=='ok')
+        {
+          setSucceed(true);        
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -35,10 +40,14 @@ const ProductRelationship = () => {
       const params = new URLSearchParams();
       params.append('l', externalurl);
       params.append('p', product.project_id);
-      params.append('t', message);
+      params.append('t', message);     
       Axios.post(url,params)
       .then(function (response) {
-        setSucceed(true);        
+        setResponse(response.data);
+        if(response.data.status=='ok')
+        {
+          setSucceed(true);        
+        }        
       })
       .catch(function (error) {
         console.log(error);
@@ -54,19 +63,18 @@ const ProductRelationship = () => {
     }
    
     const handleRadioChange = event => {
-      if(event.target.value == radioType)
-      {
-        setRadioType('');      
-      }else{
-        setRadioType(event.target.value);      
-      }      
+     
+      setRadioType(event.target.value);   
     };
     
     const triggerAddRelationship=event=>{      
       $('#productFlagModificationPanel').modal('hide');
       $('#productRelationshipPanel').modal('show');
     }
-  
+    
+    const handleInputProjectIdChange = event =>{
+      setProjectId(event.target.value);  
+    }
     return (
       <>
       <a data-toggle="modal" data-target="#productRelationshipPanel" style={{display: 'inherit',fontStyle:'italic',cursor:'pointer'}}>
@@ -81,9 +89,12 @@ const ProductRelationship = () => {
           setProjectId={setProjectId} 
           message={message}
           handleChangeMessage={handleChangeMessage}
+          handleRadioChange={handleRadioChange}
           radioType={radioType}
           succeed={succeed}
           handleSubmit={handleSubmit}
+          handleInputProjectIdChange = {handleInputProjectIdChange}
+          response ={response}
           /> 
         <ModalFlagModification 
           product={product} 
@@ -95,7 +106,8 @@ const ProductRelationship = () => {
           handleSubmit={handleSubmitFlagMod}
           triggerAddRelationship={triggerAddRelationship}
           externalurl={externalurl}  
-          handleChangeExternalurl={handleChangeExternalurl}                  
+          handleChangeExternalurl={handleChangeExternalurl}   
+          response ={response}               
           /> 
             
            

@@ -30,10 +30,11 @@ const ModalAddRelationship = (props) => {
                             product ={props.product}   
                             project_id={props.project_id}                          
                             setProjectId={props.setProjectId}
+                            handleInputProjectIdChange={props.handleInputProjectIdChange}
                             />  
 
                         <div className="row">
-                                  <div className="col-lg-12"><h6>Additional message: </h6> </div>
+                                  <div className="col-lg-12"><h6>Message (optional): </h6> </div>
                                   <div className="col-lg-12">
                                     <textarea name="message" id="message" value={props.message} 
                                         onChange={props.handleChangeMessage}
@@ -43,14 +44,19 @@ const ModalAddRelationship = (props) => {
 
                         <div className="row"> 
                         <div className="col-lg-12" style={{paddingTop:'20px'}}>
-                          <span>The chosen product above </span>
+                          <span>The product above is </span>
                         <fieldset>
                             <input type="radio" id="mc" name="type" value="is-original" 
-                            checked={props.radioType === "is-original"}
-                            defaultChecked
+                            checked={props.radioType === "is-original"}                           
+                            onChange={props.handleRadioChange}
                             />
-                            <label for="mc"> Is original</label> 
-                            
+                            <label for="mc"> original </label> 
+                            <span> or </span>
+                            <input type="radio" id="mc2" name="type" value="is-clone" 
+                            checked={props.radioType === "is-clone"}   
+                            onChange={props.handleRadioChange}                         
+                            />
+                            <label for="mc2"> clone </label> 
                             {/*
                             <input type="radio" id="vi" name="type" value="is-sibling" checked={radioType === "is-sibling"}
                               onClick={handleRadioChange}
@@ -58,7 +64,7 @@ const ModalAddRelationship = (props) => {
                             <label for="vi"> Is sibling</label> 
                             */}
                             <br></br>                         
-                            <span> of product on the left.</span>
+                            <span> of the product on left side.</span>
                           </fieldset>
                           </div>
                         </div>
@@ -74,11 +80,11 @@ const ModalAddRelationship = (props) => {
             </div>
             <div className="modal-footer">
 
-                {props.succeed && 
+                
                 <>
-                  <p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p>
+                <span dangerouslySetInnerHTML={{__html: props.response.message}}></span>                 
                 </>
-                }
+              
 
               <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>              
               {!props.succeed &&
