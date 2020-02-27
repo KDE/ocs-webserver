@@ -29,7 +29,6 @@ function MusicPlayer(props){
   const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
   const [ currentTrackDuration, setcurrentTrackDuration ] = useState(0);
   const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
-  console.log('current track progress - ' + currentTrackProgress);
   const [ theme, setTheme ] = useState('dark');
   let initialPLayedAudioArray = []
   props.items.forEach(function(i,index){
@@ -51,16 +50,7 @@ function MusicPlayer(props){
   const [ showPlaylist, setShowPlaylist ] = useState(initialShowPlaylistValue);
 
   useEffect(() => {
-      
-    const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
-    const currentSrc = props.items[playIndex].musicSrc;
-    
-    playerElement[0].src = currentSrc;
-    playerElement[0].volume = audioVolume;
-    playerElement[0].onloadedmetadata = function(){ onPlayerTimeUpdate(playerElement[0]) }
-    
     getRandomMusicsupporter();
-  
   },[])
 
   useEffect(() => {
@@ -88,9 +78,6 @@ function MusicPlayer(props){
     if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true){
       playerElement[0].src = currentSrc;
       setCurrentTrackProgress(0);
-      playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) } 
-      onUpdateCurrentTrackProgress(0);
-      $('.current-track-progress').find('.rc-slider-track').trigger('click');
     }
     playerElement[0].play();
     setIsPlaying(true);
@@ -201,11 +188,12 @@ function MusicPlayer(props){
   }
 
   function onUpdateCurrentTrackProgress(newTrackProgress){
+    console.log(newTrackProgress);
     setCurrentTrackProgress(newTrackProgress);
     const newCurrentTrackTime = (currentTrackTimeSeconds / 100) * newTrackProgress;
     const playerElement = document.getElementById("music-player-container").getElementsByTagName('audio');
     playerElement[0].currentTime = newCurrentTrackTime;
-    playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
+    // playerElement[0].ontimeupdate = function(){ onPlayerTimeUpdate(playerElement[0]) }
     playerElement[0].play();
     setIsPlaying(true);
     setIsPaused(false);
@@ -224,23 +212,20 @@ function MusicPlayer(props){
 
   // time progress bar
 
-  function onPlayerTimeUpdate(playerElement){
-
-    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime)
+  function onPlayerTimeUpdate(e){
+    const playerElement = e.target;
+    const newCurrentTrackTime = millisToMinutesAndSeconds(playerElement.currentTime);
     setCurrentTrackTime(newCurrentTrackTime);
-
     setCurrentTrackTimeSeconds(playerElement.duration);
-
     let newcurrentTrackDuration = playerElement.duration;
     if (isNaN(newcurrentTrackDuration)){ newcurrentTrackDuration = 0; }
     newcurrentTrackDuration = millisToMinutesAndSeconds(newcurrentTrackDuration);
     setcurrentTrackDuration(newcurrentTrackDuration );
-
     const newCurrentTrackProgress = (playerElement.currentTime / playerElement.duration) * 100;
     setCurrentTrackProgress(newCurrentTrackProgress);
     
     if (playerElement.currentTime === playerElement.duration){
-      // console.log('song ended');
+      console.log('song ended');
       onNextTrackPlayClick();
     }
 
@@ -291,9 +276,16 @@ function MusicPlayer(props){
 
   const audioElVolume = isMuted === true ? 0.0 : audioVolume;
 
+  const currentSrc = props.items[playIndex].musicSrc;
+
   return (
     <div id="music-player-container" className={musicPlayerContainerCssClass + " " + theme} onKeyPress={(e) => handleKeyPress(e)}> 
-      <audio volume={audioElVolume} id="music-player-audio"></audio>
+      <audio 
+        volume={audioElVolume} 
+        onTimeUpdate={(e) => onPlayerTimeUpdate(e)}  
+        onLoadedMetadata={(e) => onPlayerTimeUpdate(e)}
+        src={currentSrc}
+        id="music-player-audio"></audio>
       <MusicPlayerControlPanel 
         playIndex={playIndex}
         isPlaying={isPlaying}
@@ -353,6 +345,13 @@ function usePrevious(value) {
 }
 
 function MusicPlayerControlPanel(props){
+
+  // console.log(props);
+
+  React.useEffect(() => {
+    // console.log('music player controls panel');
+    // console.log(props);
+  },[])
 
   /* COMPONENT */
 

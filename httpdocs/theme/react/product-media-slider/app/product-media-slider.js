@@ -387,6 +387,7 @@ function SlideItem(props){
         width={props.containerWidth}
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
+        product={props.product}
         cinemaMode={props.cinemaMode}
         playVideo={props.currentSlide === props.slideIndex}
         onUpdateDimensions={props.onUpdateDimensions}

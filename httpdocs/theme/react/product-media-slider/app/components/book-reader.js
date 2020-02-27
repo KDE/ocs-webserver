@@ -10,8 +10,11 @@ function BookReaderWrapper(props){
   const [ showBookMenu, setShowBookMenu ] = useState(false);
   const [ showPrevButton, setShowPrevButton ] = useState(false);
   const [ showNextButton, setShowNextButton ] = useState(false);
+  const [ viewedPagesCount, setViewedPagesCount ] = useState(0);
+  const [ bookReadIsReported, setBookReadIsReported ] = useState(false);
 
   React.useEffect(() => {initBookReader()},[])
+  
   React.useEffect(() => { 
     if (window.book) window.book.destroy()
     initBookReader()
@@ -22,6 +25,12 @@ function BookReaderWrapper(props){
         hackBookPageCount();
     }
   },[totalPages,window.book])
+
+  React.useEffect(() => {
+    if (viewedPagesCount > 3 && bookReadIsReported === false){
+      reportBookRead();
+    }
+  },[viewedPagesCount])
 
   function hackBookPageCount(){
     const newTotalPageCount = window.book.locations.total;
@@ -88,6 +97,8 @@ function BookReaderWrapper(props){
   }
 
   function goNext(){
+    const newViewedPagesCountValue = viewedPagesCount + 1;
+    setViewedPagesCount(newViewedPagesCountValue);
     renditionState.next();
   }
 
@@ -116,6 +127,15 @@ function BookReaderWrapper(props){
     toggleMenu();
   }
 
+  function reportBookRead(){
+    console.log('report book reading')
+    console.log(props);
+    const bookReadReportUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+props.slide.collection_id+'&file_id='+props.slide.file_id+'&type_id=3';
+    $.ajax({url: bookReadReportUrl}).done(function(res) { 
+      console.log(res);
+      setBookReadIsReported(true);
+    });
+  }
 
   let loadingDisplay = <div id="ajax-loader"></div>
   let bookNavigation;

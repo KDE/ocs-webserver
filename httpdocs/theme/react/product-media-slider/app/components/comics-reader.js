@@ -5,15 +5,24 @@ function ComicsReaderWrapper(props){
     const [ loading, setLoading ] = useState('Loading...');
     const [ comicBookInitiated, setComicBookInitiated ] = useState(false);
     const [ pages, setPages ] = useState([]);
-
+    const [ viewedPagesCount, setViewedPagesCount ] = useState(0); 
+    const [ comicBookReadIsReported, setComicBookReadIsReported ] = useState(false);
+    
     /* INIT */
-
+ 
     React.useEffect(() => {
       if (props.slideIndex === props.currentSlide){
         setComicBookInitiated(true);
         initComicBook();
       }
     },[props.slideIndex,props.currentSlide]);
+
+    React.useEffect(() => {
+      console.log(viewedPages);
+      if (viewedPagesCount > 3 && comicBookReadIsReported === false){
+        reportComicBookRead();
+      }
+    },[viewedPages])
 
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
@@ -23,6 +32,22 @@ function ComicsReaderWrapper(props){
       });
     }
 
+    function onViewPage(){
+      const newViewedPagedCount = viewedPagesCount + 1;
+      setViewedPagesCount(newViewedPagedCount);
+    }
+
+    function reportComicBookRead(){
+      console.log('report book reading')
+      console.log(props);
+      const comicReadReportUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+props.slide.collection_id+'&file_id='+props.slide.file_id+'&type_id=3';
+      $.ajax({url: comicReadReportUrl}).done(function(res) { 
+        console.log(res);
+        setComicBookReadIsReported(true);
+      });
+    }
+  
+    
     /* COMPONENT */
     let comicsReaderDisplay = <span id="ajax-loader"></span>  
     if (pages.length > 0){
@@ -33,6 +58,7 @@ function ComicsReaderWrapper(props){
           comicsFileName={props.slide.title}
           onFullScreenToggle={props.onFullScreenToggle}
           isFullScreen={props.isFullScreen}
+          onViewPage={(page) => onViewPage(page)}
         />
       )
     }
@@ -91,7 +117,8 @@ function ComicBookReader(props){
     else if (val === "last") nextPage = totalPages;
     else if (val === "prev") nextPage = currentPage === 0 ? 0 : currentPage - 1;
     else if (val === "next") nextPage = currentPage === totalPages ? totalPages : currentPage + 1;
-    window.comicSwiper.slideTo(nextPage) 
+    window.comicSwiper.slideTo(nextPage)
+    props.onViewPage(nextPage);
   }
 
   function onBeforeFlip(page){
