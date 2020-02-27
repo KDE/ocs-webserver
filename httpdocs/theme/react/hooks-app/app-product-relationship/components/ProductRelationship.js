@@ -33,6 +33,12 @@ const ProductRelationship = () => {
         console.log(error);
       });     
     }
+    const handleOnCloseModal = event=>{
+       setMessage('');
+       setSucceed(false);
+       setResponse({status:''});
+       setRadioType = 'is-original';
+    }
 
     const handleSubmitFlagMod = event =>{
       event.preventDefault();
@@ -95,6 +101,7 @@ const ProductRelationship = () => {
           handleSubmit={handleSubmit}
           handleInputProjectIdChange = {handleInputProjectIdChange}
           response ={response}
+          handleOnCloseModal = {handleOnCloseModal}
           /> 
         <ModalFlagModification 
           product={product} 
@@ -107,7 +114,8 @@ const ProductRelationship = () => {
           triggerAddRelationship={triggerAddRelationship}
           externalurl={externalurl}  
           handleChangeExternalurl={handleChangeExternalurl}   
-          response ={response}               
+          response ={response}              
+          handleOnCloseModal = {handleOnCloseModal} 
           /> 
             
            
