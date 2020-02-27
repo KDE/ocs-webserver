@@ -192,9 +192,9 @@ class ReportController extends Zend_Controller_Action
 
         $this->_helper->json(array(
             'status'  => 'ok',
-            'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p><div class="modal-footer">
-                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
-                                        </div>',
+            'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p>
+                                           
+                                       ',
             'data'    => $params
         ));
     }
@@ -203,12 +203,24 @@ class ReportController extends Zend_Controller_Action
     {                   
         $this->_helper->layout()->disableLayout();
         $params = $this->getAllParams();
+        $productInfo=null;
         if ((APPLICATION_ENV != 'searchbotenv') AND (false == SEARCHBOT_DETECTED)) {
 
                     $project_clone = $this->getParam('p');
                     $text = $this->getParam('t');
                     $project_id = $this->getParam('pc');
-                  
+                    $type = $this->getParam('i');
+                    
+                    $modelProduct = new Default_Model_Project();
+                    $productInfo = $modelProduct->fetchProductInfo($project_id);
+                    if (empty($productInfo)) {
+                        $this->_helper->json(array(
+                            'status'  => 'err',            
+                            'message' => 'Please input a valid project ID from pling. ',
+                            'data'    => $params
+                        ));
+                        return;
+                    }
                     if($project_id)
                     {
                         $text = $text . ' '.$project_id;
@@ -220,21 +232,28 @@ class ReportController extends Zend_Controller_Action
                     if (Zend_Auth::getInstance()->hasIdentity()) {
                         $reported_by = (int)Zend_Auth::getInstance()->getStorage()->read()->member_id;
                         $reportProducts = new Default_Model_DbTable_ProjectClone();                 
-                        $reportProducts->save(array('project_id' => $project_clone, 'member_id' => $reported_by,'text' => $text, 'project_id_parent' =>$project_id));                             
+                        if($type=='is-original')
+                        {
+                            $reportProducts->save(array('project_id' => $project_clone
+                            ,'member_id' => $reported_by
+                            ,'text' => $text
+                            ,'project_id_parent' =>$project_id));                             
+                        }else{
+                            $reportProducts->save(array('project_id' => $project_id
+                            ,'member_id' => $reported_by
+                            ,'text' => $text
+                            ,'project_id_parent' =>$project_clone));                             
+                        }
+                        
                     }                                                                                               
         }
 
         $this->_helper->json(array(
-            'status'  => 'ok',
-            'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p><div class="modal-footer">
-                                            <button type="button" style="border:none;background: transparent;color: #2673b0;" class="small close" data-dismiss="modal" > Close</button>
-                                        </div>',
-            'data'    => $params
+            'status'  => 'ok',            
+            'message' => '<p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p>
+                        '
+            
         ));
     }
-
-  /*  public function memberAction()
-    {
-    }*/
 
 }
