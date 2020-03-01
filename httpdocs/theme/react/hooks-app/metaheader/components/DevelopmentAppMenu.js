@@ -89,14 +89,17 @@ const DevelopmentAppMenu = () => {
                   
                 <MyButton id="music-link-item"
                               url={state.musicopendesktopUrl}
-                              label="Music" />
+                              label="Music"
+                               />
              
              { 
                state.isAdmin &&
                <>
                   <MyButton id="mail-link-item"
                             url={state.myopendesktopUrl+"/apps/rainloop/"}
-                            label="Mail" />
+                            label="Mail" 
+                            fontStyleItalic="1"
+                            />
                   
                 </>
               }

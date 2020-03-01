@@ -38,7 +38,7 @@ function PersonalLinksContainer(props)
 
       { props.user.isAdmin &&
         <React.Fragment>
-        <li id="mail-link-item">
+        <li id="mail-link-item" style={{fontStyle:'italic'}}>
           <a href={props.myopendesktopUrl+"/apps/rainloop/"} >
             <div className="icon"></div>
             <span>Mail</span>
