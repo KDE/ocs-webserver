@@ -105,11 +105,13 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         $today = (new DateTime())->modify('-1 day');
         $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
-        $sql = "    SELECT COUNT(1) AS cnt
+        $sql = "    SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ;
+                    SELECT COUNT(1) AS cnt
                     FROM ppload.ppload_files_downloaded f
                     WHERE f.collection_id = " . $collection_id . " 
                     AND f.downloaded_timestamp >= '" . $filterDownloadToday . "'               
-                   ";        
+                    ;
+                    SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
     }  
@@ -123,11 +125,13 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         $today = (new DateTime())->modify('-1 day');
         $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
-        $sql = "    SELECT COUNT(1) AS cnt
+        $sql = "    SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ;
+                    SELECT COUNT(1) AS cnt
                     FROM ppload.ppload_files_downloaded_unique f
                     WHERE f.collection_id = " . $collection_id . " 
                     AND f.downloaded_timestamp >= '" . $filterDownloadToday . "'               
-                   ";        
+                    ;
+                    SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";        
         $result = $this->_db->query($sql)->fetchAll();      
         return $result[0]['cnt'];
     }
