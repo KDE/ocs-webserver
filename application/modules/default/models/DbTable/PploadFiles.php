@@ -130,7 +130,7 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         $today = (new DateTime())->modify('-1 day');
         $filterDownloadToday = $today->format("Y-m-d H:i:s");
 
-        $this->_db->query("SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")->execute();
+        $this->_db->query("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED")->execute();
 
         $this->_db->beginTransaction();
         
