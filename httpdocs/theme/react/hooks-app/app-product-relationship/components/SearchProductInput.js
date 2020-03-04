@@ -117,11 +117,15 @@ const SearchProductInput = (props) => {
 
         <div className="autosuggest">
            <div className="row">
-             <div className="col-lg-12"><h6>ID of the Original on opendesktop:</h6> </div>
+             <div className="col-lg-12"><h6>ID of product on pling:</h6> </div>
              <div className="col-lg-12">               
               <div style={{display:'flex'}}>
                   <div>
-                  <input required name="project_id" id="project_id" value={props.project_id} style={{width:'100px',marginRight:'10px'}}></input>
+                  <input required name="project_id" id="project_id" 
+                  value={props.project_id} 
+                  style={{width:'100px',marginRight:'10px'}}
+                  onChange={props.handleInputProjectIdChange}
+                  ></input>
                   </div>
                   <div>
                   <Autosuggest               

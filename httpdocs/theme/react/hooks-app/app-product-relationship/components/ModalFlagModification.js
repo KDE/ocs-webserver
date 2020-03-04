@@ -58,11 +58,10 @@ const ModalFlagModification = (props) => {
 
             </div>
             <div className="modal-footer">
-                {props.succeed && 
-                <>
-                  <p>Thank you. The credits have been submitted.</p><p>It can take some time to appear while we verify it.</p>
+
+                  <>
+                  <span dangerouslySetInnerHTML={{__html: props.response.message}}></span>  
                 </>
-                }
 
               <button type="button" className="btn btn-primary" data-dismiss="modal">Close</button>              
               {!props.succeed &&
