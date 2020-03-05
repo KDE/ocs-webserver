@@ -64,7 +64,7 @@ if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
                     <p style="position: absolute; top:25px;">
                         <small class="small"> Add a comment</small>
                     </p>
-                    <div class="collapse in" id="add-comment" style="padding-top: 8px;">
+                    <div class="collapse in" id="add-comment" style="padding-top: 8px;padding-bottom:8px">
                         <form class="full-width product-add-comment-moderation" action="/productcomment/addreply" >
                             <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
                             <input type="hidden" name="m" value="<?= $identity->member_id ?>">

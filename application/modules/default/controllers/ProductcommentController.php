@@ -65,6 +65,8 @@ class ProductcommentController extends Local_Controller_Action_DomainSwitch
         if($this->getParam('t'))
         {
             $data['comment_type'] =(int)$this->getParam('t');
+        }else{
+            $data['comment_type']= 0;
         }
         
         $data['comment_text'] = Default_Model_HtmlPurify::purify($this->getParam('msg'));

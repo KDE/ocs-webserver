@@ -523,8 +523,8 @@ class ProductController extends Local_Controller_Action_DomainSwitch
         $this->view->related_siblings = null;
         $this->view->related_parents = null;
         $this->view->related_children = null;
-        $this->view->related_children2 = null;
-        $this->view->related_children3 = null;
+        // $this->view->related_children2 = null;
+        // $this->view->related_children3 = null;
         if ($ancesters && strlen($ancesters) > 0) {
             $pts = $modelProduct->fetchProjects($ancesters);
             $this->view->related_ancesters = sizeof($pts) == 0 ? null : $pts;
@@ -545,16 +545,16 @@ class ProductController extends Local_Controller_Action_DomainSwitch
             $this->view->related_children = sizeof($pts) == 0 ? null : $pts;
             $cntRelatedProducts += sizeof($pts);
         }
-        if ($childrens2 && strlen($childrens2) > 0) {
-            $pts = $modelProduct->fetchProjects($childrens2);
-            $this->view->related_children2 = sizeof($pts) == 0 ? null : $pts;
-            $cntRelatedProducts += sizeof($pts);
-        }
-        if ($childrens3 && strlen($childrens3) > 0) {
-            $pts = $modelProduct->fetchProjects($childrens3);
-            $this->view->related_children3 = sizeof($pts) == 0 ? null : $pts;
-            $cntRelatedProducts += sizeof($pts);
-        }
+        // if ($childrens2 && strlen($childrens2) > 0) {
+        //     $pts = $modelProduct->fetchProjects($childrens2);
+        //     $this->view->related_children2 = sizeof($pts) == 0 ? null : $pts;
+        //     $cntRelatedProducts += sizeof($pts);
+        // }
+        // if ($childrens3 && strlen($childrens3) > 0) {
+        //     $pts = $modelProduct->fetchProjects($childrens3);
+        //     $this->view->related_children3 = sizeof($pts) == 0 ? null : $pts;
+        //     $cntRelatedProducts += sizeof($pts);
+        // }
 
         $this->view->cntRelatedProducts = $cntRelatedProducts;
 
