@@ -210,19 +210,14 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
                 }
                 ?>
             </div>          
-            <?php } ?>
-
-            <span class="newsTitle"> Social </span>
-            <div class="prod-widget-box right bgwhite " id="mastodon-toots" style="border:1px solid #ccd4d8 !important"> </div>    
-
+            <?php } ?>           
             
         </div>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
                 RssNews.setup();   
-                BlogJson.setup(); 
-                Mastodon.setup();  
+                BlogJson.setup();             
                 GitlabNewProjectsJson.setup("'.$git_url.'");   
             });
         ');
