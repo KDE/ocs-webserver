@@ -141,7 +141,19 @@ export function ProductBrowseItem(props){
                 </div>
             </div>
         )
-    }    
+    }
+
+    else if (browseListType === "skills") {
+        console.log(p);
+        itemInfoDisplay = (
+            <div className="product-browse-item-info browse-type-skills">
+                <h2>{p.title}</h2>
+                <span>by <b>{p.username}</b></span>
+                <span>{p.description}</span>
+            </div>
+        )
+    }
+
     else if (browseListType === "favorites"){
 
         itemInfoHeight = props.imgHeight;
