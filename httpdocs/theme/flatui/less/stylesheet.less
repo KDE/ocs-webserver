@@ -6818,7 +6818,9 @@ main#plings-page{
 
 #metaheader {
 
-
+  #metaheader-nav #site-header-search-form #search-form input[type="text"] {
+    background-color: @black4;
+  }
   #metaheader-nav {
 
     .metamenu-theme-dark {
@@ -6960,6 +6962,15 @@ main#plings-page{
 
     }
 
+  }
+
+  .react-autosuggest__suggestions-container--open {
+    background-color:@black2;
+    border-color: @black4;
+
+    .react-autosuggest__suggestion--highlighted {
+      background-color:  @black3 !important;
+    }
   }
 }
 
