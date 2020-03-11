@@ -6,7 +6,8 @@ import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth, ConvertObjectToArray} from './product-browse-helpers';
 
 function ProductBrowse(){
-    
+    console.log('browse list type:');
+    console.log(browseListType);
     return (
         <StoreContextProvider>
             <div id="product-browse">
