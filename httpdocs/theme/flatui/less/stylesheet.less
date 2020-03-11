@@ -6818,12 +6818,15 @@ main#plings-page{
 
 #metaheader {
 
-
   #metaheader-nav {
 
     .metamenu-theme-dark {
-
-
+      #site-header-search-form #search-form input[type="text"] {
+        background-color: @black4 !important;
+      }      
+      #user-login-menu-container .user-dropdown .dropdown-menu .user-settings-item {
+        border-bottom: 1px solid #454545 !important;
+      }    
       #user-context-menu-container .user-dropdown .dropdown-menu li a span, 
       #about-menu-container .user-dropdown .dropdown-menu li a span, 
       #development-app-menu-container .user-dropdown .dropdown-menu li a span {
@@ -6922,11 +6925,8 @@ main#plings-page{
         }
     
         .user-settings-item  {
-          background-color: @black2;
-          border-color: @black3;
-        }
-
-        .user-settings-item {
+          background-color: @black2 !important;
+          border-color: @black3 !important;
         }
       }
     
@@ -6960,6 +6960,15 @@ main#plings-page{
 
     }
 
+  }
+
+  .react-autosuggest__suggestions-container--open {
+    background-color:@black2;
+    border-color: @black4;
+
+    .react-autosuggest__suggestion--highlighted {
+      background-color:  @black3 !important;
+    }
   }
 }
 
