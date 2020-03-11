@@ -98,10 +98,6 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
     
     public function fetchCountDownloadsTodayForProject($collection_id)
     {
-        
-        return 0;
-        
-        /*
         if(empty($collection_id)) {
             return 0;
         }
@@ -123,8 +119,6 @@ class Default_Model_DbTable_PploadFiles extends Local_Model_Table
         $this->_db->commit();
         
         return $result[0]['cnt'];
-         * 
-         */
     }  
     
     public function fetchCountDownloadsTodayForProjectNew($collection_id)
