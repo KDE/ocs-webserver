@@ -1,6 +1,9 @@
 export function getNumberOfItemsPerRow(browseListType,isMobile,containerWidth){
     let itemsPerRow;
-    if (isMobile) itemsPerRow = 2;
+    if (isMobile){ 
+        if (browseListType === "skills") itemsPerRow = 1;
+        else itemsPerRow = 2;
+    }
     else {
         if (browseListType === "music" || browseListType === "music-test") itemsPerRow = getAdujustItemsPerRow(7,containerWidth,160 + 14)
         else if (browseListType === "books") itemsPerRow = getAdujustItemsPerRow(6,containerWidth,180 + 14) 
