@@ -393,8 +393,6 @@ if($this->cat_id>0)
     var json_isShowAddProduct = <?php echo $this->showAddProduct && $category_id>0 ? '1': '0'; ?>;
     var json_is_show_real_domain_as_url = <?php echo $is_show_real_domain_as_url;?>;
     
-    var json_header_links = "";
-    
     var json_header_links = <?php echo Zend_Json::encode($header_links); ?>;
 
     var json_server_images = <?php echo Zend_Json::encode(IMAGES_MEDIA_SERVER); ?>;
