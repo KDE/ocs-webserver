@@ -87,8 +87,9 @@ class SiteHeader extends Component {
 
     let headerLinksDisplay;
     console.log(json_header_links);
-    if (this.state.json_header_links) headerLinksDisplay = this.state.json_header_links.json_header_links;
-
+    if (this.state.json_header_links) headerLinksDisplay = (
+      <div className="header-links-display" dangerouslySetInnerHTML={{__html:this.state.json_header_links}}/>
+    )
     let HeaderDisplay;
     if (this.state.device !== "tablet"){     
       let logoStyle = this.state.template['header-logo'];
