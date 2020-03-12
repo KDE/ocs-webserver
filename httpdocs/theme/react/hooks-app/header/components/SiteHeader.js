@@ -102,8 +102,8 @@ class SiteHeader extends Component {
                 <img src={this.state.template['header-logo']['image-src']}/>
               </a>
             </div>
-            {headerLinksDisplay}
             {siteHeaderStoreNameDisplay}
+            {headerLinksDisplay}
           </div>
           
 
