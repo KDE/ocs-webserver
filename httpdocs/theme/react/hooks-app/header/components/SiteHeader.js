@@ -64,6 +64,11 @@ class SiteHeader extends Component {
       logoLink += "/s/" + this.state.store.name;
     }
 
+    let headerLinksDisplay;
+    if (this.state.json_header_links) headerLinksDisplay = (
+      <div className="header-links-display" dangerouslySetInnerHTML={{__html:this.state.json_header_links}}/>
+    )
+
     let siteHeaderStoreNameDisplay;
     if (this.state.is_show_title === "1"){
       siteHeaderStoreNameDisplay = (
@@ -71,6 +76,7 @@ class SiteHeader extends Component {
           <a href={logoLink}>
             {this.state.store.name}
           </a>
+          {headerLinksDisplay}
         </div>
       );
     }
@@ -85,11 +91,6 @@ class SiteHeader extends Component {
             </div>
     }
 
-    let headerLinksDisplay;
-    console.log(json_header_links);
-    if (this.state.json_header_links) headerLinksDisplay = (
-      <div className="header-links-display" dangerouslySetInnerHTML={{__html:this.state.json_header_links}}/>
-    )
     let HeaderDisplay;
     if (this.state.device !== "tablet"){     
       let logoStyle = this.state.template['header-logo'];
@@ -103,13 +104,11 @@ class SiteHeader extends Component {
               </a>
             </div>
             {siteHeaderStoreNameDisplay}
-            {headerLinksDisplay}
           </div>
           
 
           <div id="site-header-right">
             <div id="site-header-right-top" className={siteHeaderTopRightCssClass}>
-               
                 { PlingDisplay }
             </div>
 
