@@ -11,6 +11,7 @@ import {MetaheaderContext} from '../contexts/MetaheaderContext';
 const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
+  console.log(state);
   const [device, setDevice] = useState('large');
   const initialMetaMenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
   const [metamenuTheme, setMetamenuTheme] = useState(initialMetaMenuThemeValue);
@@ -97,6 +98,7 @@ const MetaHeaderComponent = (props) => {
           onSwitchStyleChecked={metamenuTheme?true:false}
           siteTheme={siteTheme}
           metamenuTheme={metamenuTheme}
+          config={props.config}
         />
       )
     }

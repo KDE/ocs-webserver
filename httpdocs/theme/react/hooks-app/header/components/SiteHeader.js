@@ -30,6 +30,7 @@ class SiteHeader extends Component {
       cat_id:window.json_cat_id,
       isShowAddProject: window.json_isShowAddProduct,
       baseurlStore:window.json_baseurlStore,
+      json_header_links:window.json_header_links
     };
     this.updateDimensions = this.updateDimensions.bind(this);
   }
@@ -84,6 +85,10 @@ class SiteHeader extends Component {
             </div>
     }
 
+    let headerLinksDisplay;
+    console.log(json_header_links);
+    if (this.state.json_header_links) headerLinksDisplay = this.state.json_header_links.json_header_links;
+
     let HeaderDisplay;
     if (this.state.device !== "tablet"){     
       let logoStyle = this.state.template['header-logo'];
@@ -96,6 +101,7 @@ class SiteHeader extends Component {
                 <img src={this.state.template['header-logo']['image-src']}/>
               </a>
             </div>
+            {headerLinksDisplay}
             {siteHeaderStoreNameDisplay}
           </div>
           

@@ -37,8 +37,7 @@ const DomainsMenu = (props) => {
               <a id="opendesktop-logo-single" href={state.baseUrl} >
                 <img src={state.baseUrl + "/images/system/ocs-logo-rounded-16x16.png"} className="logo" />
                 {opendesktopLabel} 
-              </a>            
-                       
+              </a>
             </li>            
             <li><a href={state.gitlabUrl + "/explore/projects"}>{opencodeLabel}</a></li>
             <li><a href={state.baseUrlStore}>{plingLabel}</a></li>
