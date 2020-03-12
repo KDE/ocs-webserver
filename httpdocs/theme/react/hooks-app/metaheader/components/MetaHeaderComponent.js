@@ -74,7 +74,7 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchMetaHeaderStyle = evt => {     
-    let url = state.baseUrl+"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
+    let url =  "https://" + window.location.hostname +"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {               
