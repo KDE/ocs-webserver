@@ -128,6 +128,7 @@ class SiteHeader extends Component {
           store={this.state.store}
           redirectString={this.state.redirectString}
           section={this.state.section}
+          jsonHeaderLunks={this.state.json_header_links}
         />
       )
     }
