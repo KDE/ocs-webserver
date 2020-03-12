@@ -59,6 +59,16 @@ $store_name = $store_config->name;
 $is_show_title = $store_config->is_show_title;
 $last_char_store_order = substr($store_order, -1);
 
+//Is stayInContext and in Teamplate is set a Footer Header == show the text from tmeplate in page header
+$stay_in_context = $store_config->stay_in_context;
+$header_links = $this->template['trademark']['text'];
+$show_header_links = false;
+if($stay_in_context == 1 && $header_links != '') {
+    $show_header_links = true;
+} else {
+    $header_links = "";
+}
+
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
@@ -124,6 +134,8 @@ echo $this->render('partials/header/metaheader.phtml');
     var json_logoWidth = <?php echo  Zend_Json::encode($logoWidth);?>;
     var json_cat_title_left = <?php echo  Zend_Json::encode($cat_title_left);?>;
     var json_tabs_left = <?php echo  Zend_Json::encode($tabs_left);?>;
+    
+    var json_header_links = <?php echo Zend_Json::encode($header_links); ?>;
     
     <?php
     $contentTheme = '';
