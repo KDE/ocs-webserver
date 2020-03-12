@@ -69,17 +69,23 @@ class SiteHeader extends Component {
       <div className="header-links-display" dangerouslySetInnerHTML={{__html:this.state.json_header_links}}/>
     )
 
-    let siteHeaderStoreNameDisplay;
-    if (this.state.is_show_title === "1"){
-      siteHeaderStoreNameDisplay = (
+    let siteTitleDisplay;
+    if (this.state.is_show_title === "1") {
+      siteTitleDisplay = (
+        <a href={logoLink}>
+          {this.state.store.name}
+        </a>
+      )
+    }
+
+
+    const siteHeaderStoreNameDisplay = (
         <div id="site-header-store-name-container" style={{"margin-left":"80px"}}>
-          <a href={logoLink}>
-            {this.state.store.name}
-          </a>
+          {siteTitleDisplay}
           {headerLinksDisplay}
         </div>
       );
-    }
+    
     let PlingDisplay;
     if(this.state.section)
     {
@@ -127,7 +133,7 @@ class SiteHeader extends Component {
           store={this.state.store}
           redirectString={this.state.redirectString}
           section={this.state.section}
-          jsonHeaderLunks={this.state.json_header_links}
+          jsonHeaderLinks={this.state.json_header_links}
         />
       )
     }

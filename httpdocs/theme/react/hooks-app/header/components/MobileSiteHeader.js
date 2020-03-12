@@ -94,6 +94,11 @@ class MobileSiteHeader extends React.Component {
       logoElementCssClass += " mini-version";
     }
 
+    let headerLinksDisplay;
+    if (this.props.jsonHeaderLinks) headerLinksDisplay = (
+      <div className="header-links-display" dangerouslySetInnerHTML={{__html:this.props.jsonHeaderLinks}}/>
+    )
+
     return(
       <section id="mobile-site-header">
         <div id="mobile-site-header-logo" className={logoElementCssClass}>
@@ -101,6 +106,7 @@ class MobileSiteHeader extends React.Component {
             <img src={this.props.template['header-logo']['image-src']}/>
           </a>
         </div>
+        {headerLinksDisplay}
         <div id="mobile-site-header-menus-container">
           {mobileMenuDisplay}
         </div>
