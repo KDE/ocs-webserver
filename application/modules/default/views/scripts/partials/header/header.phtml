@@ -71,6 +71,7 @@ $is_show_title = $store_config->is_show_title;
 $last_char_store_order = substr($store_order, -1);
 $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
 
+
 $url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
 $url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
 $url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
@@ -111,6 +112,16 @@ $tabs_left += $cat_title_length*10;
 //$userRoleName = $helperUserRole->userRole();
 //$forum_url_postfix = Zend_Auth::getInstance()->hasIdentity() ? '/session/sso' : '';
 
+
+//Is stayInContext and in Teamplate is set a Footer Header == show the text from tmeplate in page header
+$stay_in_context = $store_config->stay_in_context;
+$header_links = $this->template['trademark']['text'];
+$show_header_links = false;
+if($stay_in_context == 1 && $header_links != '') {
+    $show_header_links = true;
+} else {
+    $header_links = "";
+}
 
 $j_section = null;
 if($this->cat_id>0)
@@ -381,6 +392,8 @@ if($this->cat_id>0)
     var json_store_for_tree = <?php echo $json_tree; ?>;
     var json_isShowAddProduct = <?php echo $this->showAddProduct && $category_id>0 ? '1': '0'; ?>;
     var json_is_show_real_domain_as_url = <?php echo $is_show_real_domain_as_url;?>;
+    
+    var json_header_links = <?php echo Zend_Json::encode($header_links); ?>;
 
     var json_server_images = <?php echo Zend_Json::encode(IMAGES_MEDIA_SERVER); ?>;
     var json_server_videos = <?php echo Zend_Json::encode(VIDEOS_MEDIA_SERVER); ?>;
