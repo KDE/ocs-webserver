@@ -467,11 +467,11 @@
                     width: 100%;
                     position: relative;
                     padding: 15px;
-                    box-shadow: 0px 0px 1px rgba(0,0,0,0.5);
+                    border: 1px solid #e8e8e8;
                     .transition();
 
                     &:hover, &:active {
-                        box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                        border-color: darken(#e8e8e8,10%);
                     }
 
                     .product-browse-image {
@@ -492,9 +492,12 @@
                             font-size: 1.2rem !important;
                             text-align: left !important;
                             margin-top: 8px;
-                            height: 14px;
+                            height: 20px;
+                            line-height: 16px;
+                            white-space: nowrap;
                             overflow: hidden;
                             display: block;
+                            text-overflow: ellipsis;
                         }
                     }
                 }
