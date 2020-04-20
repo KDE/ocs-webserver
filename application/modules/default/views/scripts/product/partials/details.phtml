@@ -33,12 +33,16 @@ if(isset($tagsArray) && (count($tagsArray) == 1)) {
 }
 
 $filesTable = new Default_Model_DbTable_PploadFiles();
-$countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
-$countDownloadsTodayUk = $filesTable->fetchCountDownloadsTodayForProjectNew($this->product->ppload_collection_id);
-
 $mediaViewsTable = new Default_Model_DbTable_MediaViews();
+
+$countDownloadsToday = 0;
+$countMediaViewsAlltime = 0;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $countDownloadsToday = $filesTable->fetchCountDownloadsTodayForProject($this->product->ppload_collection_id);
+    $countMediaViewsAlltime = $mediaViewsTable->fetchCountViewsForProjectAllTime($this->product->project_id);
+}
+$countDownloadsTodayUk = $filesTable->fetchCountDownloadsTodayForProjectNew($this->product->ppload_collection_id);
 $countMediaViewsToday = $mediaViewsTable->fetchCountViewsTodayForProject($this->product->project_id);
-$countMediaViewsAlltime = $mediaViewsTable->fetchCountViewsForProjectAllTime($this->product->project_id);
 
 $countPageviews = $this->projectDetailCounts($this->product->project_id);
 $countPageviewsTotal = 0;
