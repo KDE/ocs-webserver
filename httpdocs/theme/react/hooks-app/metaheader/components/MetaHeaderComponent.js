@@ -57,7 +57,7 @@ const MetaHeaderComponent = (props) => {
   const onSwitchStyle = evt => {    
 
     let url = "https://" + window.location.hostname  +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-    
+    console.log(url);
     const isChecked = evt.target.checked;    
     Axios.get(url)
       .then(result => {
@@ -76,7 +76,8 @@ const MetaHeaderComponent = (props) => {
 
   const onSwitchMetaHeaderStyle = evt => {     
     let url =  "https://" + window.location.hostname +"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-    const isChecked = evt.target.checked;    
+    console.log(url);
+    const isChecked = evt.target.checked;
     Axios.get(url)
       .then(result => {               
         setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
