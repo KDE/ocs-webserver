@@ -58,7 +58,8 @@ const MetaHeaderComponent = (props) => {
 
     let url = "https://" + window.location.hostname  +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
     console.log(url);
-    const isChecked = evt.target.checked;    
+    const isChecked = evt.target.checked;
+    console.log('is checked - ' + isChecked)
     Axios.get(url)
       .then(result => {
     
