@@ -50,7 +50,7 @@ const UserLoginMenuContainer = (props) => {
   }
   
   let sitethemeSwitchDisplay;
-  if (state.isAdmin === true){ 
+  if (state.isAdmin === true && state.isExternal === false){ 
     sitethemeSwitchDisplay = (
       <li className="user-settings-item">
       <span className="user-settings-item-title">Theme</span>
@@ -60,6 +60,20 @@ const UserLoginMenuContainer = (props) => {
       />
       <span className="user-settings-item-title">dark</span>
     </li>
+    )
+  }
+
+  let metaHeaderThemeSwitchDisplay;
+  if (state.isExternal === false){
+    metaHeaderThemeSwitchDisplay = (
+      <li className="user-settings-item">
+        <span className="user-settings-item-title">Metaheader</span>
+          <SwitchItem 
+          onSwitchStyle={e => props.onSwitchMetaHeaderStyle(e)}
+          onSwitchStyleChecked={props.metamenuTheme === "metamenu-theme-dark" ? true : false}
+        />
+        <span className="user-settings-item-title">dark</span>
+      </li>
     )
   }
 
@@ -112,14 +126,7 @@ const UserLoginMenuContainer = (props) => {
             </li>
 
             {sitethemeSwitchDisplay}
-            <li className="user-settings-item">
-             <span className="user-settings-item-title">Metaheader</span>
-               <SwitchItem 
-                onSwitchStyle={e => props.onSwitchMetaHeaderStyle(e)}
-                onSwitchStyleChecked={props.metamenuTheme === "metamenu-theme-dark" ? true : false}
-              />
-              <span className="user-settings-item-title">dark</span>
-            </li>
+            {metaHeaderThemeSwitchDisplay}
 
             <li className="buttons">
               <a href={state.baseUrl + "/settings/"} className="btn btn-default btn-metaheader"><span>Settings</span></a>
