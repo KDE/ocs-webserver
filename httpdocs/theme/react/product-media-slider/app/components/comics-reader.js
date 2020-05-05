@@ -18,11 +18,11 @@ function ComicsReaderWrapper(props){
     },[props.slideIndex,props.currentSlide]);
 
     React.useEffect(() => {
-      console.log(viewedPages);
+      console.log(viewedPagesCount);
       if (viewedPagesCount > 3 && comicBookReadIsReported === false){
         reportComicBookRead();
       }
-    },[viewedPages])
+    },[viewedPagesCount])
 
     function initComicBook(){
       const url = json_server_comics + "/api/files/toc?id="+props.slide.file_id+"&format=json";
