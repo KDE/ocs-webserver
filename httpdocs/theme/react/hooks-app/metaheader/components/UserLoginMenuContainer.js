@@ -48,23 +48,22 @@ const UserLoginMenuContainer = (props) => {
         }        
         setDropdownClass(cls);              
   }
-  
+  console.log('is external - ' + state.isExternal);
   let sitethemeSwitchDisplay;
-  if (state.isAdmin === true && state.isExternal === false){ 
-    sitethemeSwitchDisplay = (
-      <li className="user-settings-item">
-      <span className="user-settings-item-title">Theme</span>
-        <SwitchItem 
-        onSwitchStyle={e => props.onSwitchStyle(e)}
-        onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
-      />
-      <span className="user-settings-item-title">dark</span>
-    </li>
-    )
-  }
-
   let metaHeaderThemeSwitchDisplay;
   if (state.isExternal === false){
+    if (state.isAdmin === true){ 
+      sitethemeSwitchDisplay = (
+        <li className="user-settings-item">
+        <span className="user-settings-item-title">Theme</span>
+          <SwitchItem 
+          onSwitchStyle={e => props.onSwitchStyle(e)}
+          onSwitchStyleChecked={props.siteTheme === "content-theme-dark" ? true : false}
+        />
+        <span className="user-settings-item-title">dark</span>
+      </li>
+      )
+    }
     metaHeaderThemeSwitchDisplay = (
       <li className="user-settings-item">
         <span className="user-settings-item-title">Metaheader</span>
