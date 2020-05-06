@@ -1,7 +1,7 @@
 module.exports = {
   entry: {
-          //'metaheader':'./metaheader/entry-metaheader.js',
-          'metaheader-local':'./metaheader/entry-metaheader-local.js',  
+          'metaheader':'./metaheader/entry-metaheader.js',
+          //'metaheader-local':'./metaheader/entry-metaheader-local.js',  
           //'home-main-container':'./opendesktop-home/entry-home-main-container.js',
           //'header':'./header/entry-header.js',       
           //'category-tree':'./category-tree/entry-category-tree.js',   
