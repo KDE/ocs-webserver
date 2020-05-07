@@ -11,7 +11,7 @@ import {MetaheaderContext} from '../contexts/MetaheaderContext';
 const MetaHeaderComponent = (props) => {
   
   const {state, setState} = useContext(MetaheaderContext);
-  console.log(state);
+
   const [device, setDevice] = useState('large');
   const initialMetaMenuThemeValue = state.metamenuTheme ? state.metamenuTheme : '';
   const [metamenuTheme, setMetamenuTheme] = useState(initialMetaMenuThemeValue);
@@ -57,9 +57,9 @@ const MetaHeaderComponent = (props) => {
   const onSwitchStyle = evt => {    
 
     let url = "https://" + window.location.hostname  +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-    console.log(url);
+
     const isChecked = evt.target.checked;
-    console.log('is checked - ' + isChecked)
+
     Axios.get(url)
       .then(result => {
     
@@ -77,7 +77,7 @@ const MetaHeaderComponent = (props) => {
 
   const onSwitchMetaHeaderStyle = evt => {     
     let url =  "https://" + window.location.hostname +"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-    console.log(url);
+
     const isChecked = evt.target.checked;
     Axios.get(url)
       .then(result => {               
