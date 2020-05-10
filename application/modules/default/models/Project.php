@@ -2097,8 +2097,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function validateDeleteProjectFromSpam($project_id)
     {
-      //produkt ist ueber 6 monate alt oder produkt hat ueber 5 kommentare oder produkt hat minimum 1 pling
-      // darf nicht gelöscht werden
+      // A product older than 6 months, with more than 5 comments or with at least 1 pling can not be deleted.
       $sql ='select count_comments
             ,created_at
             , (created_at+ INTERVAL 6 MONTH < NOW()) is_old

@@ -124,10 +124,10 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $this->view->info = "Erfolgreich geladen aus DB";
             $countProjects = $count;
         } catch (Exception $e) {
-            Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . "Fehler bei fetchCountProjects");
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - ' . "Error in fetchCountProjects");
             Zend_Registry::get('logger')->err(__METHOD__ . ' - ' . print_r($e, true));
 
-            $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info = "Error while loading from the database:" . $e->getMessage();
             $countProjects = 0;
         }
 
@@ -140,9 +140,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         $contentTable = new Default_Model_DbTable_HiveContent();
         try {
             $catArray = $contentTable->fetchHiveCategories();
-            $this->view->info = "Erfolgreich geladen aus DB";
+            $this->view->info = "Successfully loaded from the database";
         } catch (Exception $e) {
-            $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info = "Error while loading from the database:" . $e->getMessage();
             $catArray = null;
         }
 
@@ -159,9 +159,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $count = $contentTable->fetchCountProjectsForCategory($cat_id);
 
             $cat = $contentTable->fetchHiveCategory($cat_id);
-            $this->view->info = "Erfolgreich geladen aus DB";
+            $this->view->info .= "Successfully loaded from the database";
         } catch (Exception $e) {
-            $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info .= "Error while loading from the database:" . $e->getMessage();
             $cat = null;
             $count = 0;
         }
@@ -172,9 +172,9 @@ class Backend_HiveController extends Local_Controller_Action_Backend
 
         try {
             $catArray = $contentTable->fetchOcsCategories();
-            $this->view->info = "Erfolgreich geladen aus DB";
+            $this->view->info = "Successfully loaded from the database";
         } catch (Exception $e) {
-            $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info = "Error while loading from the database:" . $e->getMessage();
             $catArray = null;
         }
 
@@ -191,26 +191,26 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         try {
             $count = $contentTable->fetchCountProjectsForCategory($cat_id);
             $cat = $contentTable->fetchHiveCategory($cat_id);
-            $this->view->info .= "Erfolgreich geladen aus DB";
+            $this->view->info .= "Successfully loaded from the database";
             $this->view->cat_id = $cat['id'];
             $this->view->cat_desc = $cat['desc'];
             $this->view->count = $count;
 
             $ocs_cat = $contentTable->fetchOcsCategory($ocs_cat_id);
-            $this->view->info .= "Erfolgreich geladen aus DB";
+            $this->view->info .= "Successfully loaded from the database";
             $this->view->ocs_cat_id = $ocs_cat['id'];
             $this->view->ocs_cat_desc = $ocs_cat['desc'];
         } catch (Exception $e) {
-            $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info = "Error while loading from the database:" . $e->getMessage();
             $cat = null;
             $count = 0;
         }
 
         try {
             $catArray = $contentTable->fetchOcsCategories();
-            $this->view->info .= "Erfolgreich geladen aus DB";
+            $this->view->info .= "Successfully loaded from the database";
         } catch (Exception $e) {
-            $this->view->info .= "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info .= "Error while loading from the database:" . $e->getMessage();
             $catArray = null;
         }
 
@@ -244,12 +244,12 @@ class Backend_HiveController extends Local_Controller_Action_Backend
         try {
             if (isset($cat_ids)) {
                 $catArray = $contentTable->fetchHiveCategories($cat_ids);
-                $this->view->info = "Erfolgreich geladen aus DB";
+                $this->view->info = "Successfully loaded from the database";
             } else {
-                $this->view->info = "Keine Kategorien anegeben!";
+                $this->view->info = "No category selected!";
             }
         } catch (Exception $e) {
-            $this->view->info = "Fehler bei laden aus DB:" . $e->getMessage();
+            $this->view->info = "Error while loading from the database:" . $e->getMessage();
             $catArray = null;
         }
 
@@ -458,7 +458,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             $_is_import_done = true;
 
             $result['Result'] = self::RESULT_ERROR;
-            $result['Message'] = "Fehler bei laden aus DB:" . $e->getMessage();
+            $result['Message'] = "Error while loading from database:" . $e->getMessage();
         }
 
         $count = $contentTable->fetchCountProjectsForCategory($cat_id);
@@ -535,7 +535,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
              * $cnFileUrl = str_replace('/cache/120x96-2', '', $cnFileUrl);
              * }
              **/
-            $info .= "ImageUpload successfull: " . $cnFileUrl;
+            $info .= "ImageUpload successful: " . $cnFileUrl;
         } else {
             $path = 'https://cn.opendesktop.org/img/hive/content-pre2/' . $hiveProjectId . '-2.';
             $fileUrl = null;
@@ -595,7 +595,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                  * $cnFileUrl = str_replace('/cache/120x96-2', '', $cnFileUrl);
                  * }
                  **/
-                $info .= "ImageUpload successfull: " . $cnFileUrl;
+                $info .= "ImageUpload successful: " . $cnFileUrl;
             } else {
                 $path = 'https://cn.opendesktop.org/img/hive/content-pre3/' . $hiveProjectId . '-3.';
                 $fileUrl = null;
@@ -655,7 +655,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                      * $cnFileUrl = str_replace('/cache/120x96-2', '', $cnFileUrl);
                      * }
                      **/
-                    $info .= "ImageUpload successfull: " . $cnFileUrl;
+                    $info .= "ImageUpload successful: " . $cnFileUrl;
                 } else {
                     $info .= "No preview pic";
                 }
@@ -800,7 +800,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
 
                 //update project
                 $updateCount = $projectTable->update($projectObj, "project_id = " . $projectId);
-                $info .= "Update Project successfull: Updated rows: " . $updateCount;
+                $info .= "Update Project successful: Updated rows: " . $updateCount;
 
                 //update changelog?
                 if (isset($project['changelog']) && $project['changelog'] != '') {
@@ -836,7 +836,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
             try {
                 //Create new project
                 $newProjectObj = $projectTable->save($projectObj);
-                $info .= "Create Project successfull: " . $newProjectObj['project_id'];
+                $info .= "Create Project successful: " . $newProjectObj['project_id'];
                 $projectId = $newProjectObj['project_id'];
 
                 $votingTable = new Default_Model_DbTable_ProjectRating();
@@ -936,7 +936,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'], $project['licensetype'],
                         base64_encode($project['license']), $downloadCounter,
                         $this->_HIVE_BASE_URL . '/CONTENT/content-files/' . $file1);
-                    $info .= "Upload file successfull: " . $uploadFileResult;
+                    $info .= "Upload file successful: " . $uploadFileResult;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
                     } else {
@@ -960,7 +960,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname1'], $project['licensetype'],
                         base64_encode($project['license']), 0, $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1,
                         $linkName1);
-                    $info .= "Upload file successfull: " . $uploadFileResult;
+                    $info .= "Upload file successful: " . $uploadFileResult;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
                     }
@@ -984,7 +984,7 @@ class Backend_HiveController extends Local_Controller_Action_Backend
                     $uploadFileResult = $this->saveFileInPpload($projectId, $project['downloadname' . $i], $project['licensetype'],
                         base64_encode($project['license']), 0, $this->_HIVE_BASE_URL . '/CONTENT/content-files/link', $link1,
                         $linkName1);
-                    $info .= "Upload file successfull: " . $link1;
+                    $info .= "Upload file successful: " . $link1;
                     if ($uploadFileResult == true) {
                         $_import_file_counter++;
                     }
