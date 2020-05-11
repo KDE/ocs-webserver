@@ -1,12 +1,13 @@
 module.exports = {
   entry: {
           //'metaheader':'./metaheader/entry-metaheader.js',
-          'metaheader-local':'./metaheader/entry-metaheader-local.js',  
+          //'metaheader-local':'./metaheader/entry-metaheader-local.js',  
           //'home-main-container':'./opendesktop-home/entry-home-main-container.js',
           //'header':'./header/entry-header.js',       
           //'category-tree':'./category-tree/entry-category-tree.js',   
           //'pling-section':'./pling-section/entry-pling-section.js'
-          //'app-supporters':'./app-supporters/entry-app-supporters.js'
+          //'app-supporters':'./app-supporters/entry-app-supporters.js',
+          'product-media-slider':'./product-media-slider/entry-product-media-slider.js'
          },
   output: {
      path: `${__dirname}/../bundle`,
