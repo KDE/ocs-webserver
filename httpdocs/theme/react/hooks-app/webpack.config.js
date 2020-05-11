@@ -8,7 +8,8 @@ module.exports = {
           //'pling-section':'./pling-section/entry-pling-section.js'
           //'app-supporters':'./app-supporters/entry-app-supporters.js',
           //'product-media-slider':'./product-media-slider/entry-product-media-slider.js',
-          'category-tree':'./category-tree/entry-category-tree.js'
+          //'category-tree':'./category-tree/entry-category-tree.js',
+          'product-browse':'./product-browse/entry-product-browse.js'
          },
   output: {
      path: `${__dirname}/../bundle`,

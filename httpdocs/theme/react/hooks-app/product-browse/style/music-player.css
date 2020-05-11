@@ -189,7 +189,7 @@
 .rc-slider-tooltip-zoom-down-leave {
   animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
 }
-@keyframes rcSliderTooltipZoomDownIn {
+/*@keyframes rcSliderTooltipZoomDownIn {
   0% {
     opacity: 0;
     transform-origin: 50% 100%;
@@ -210,7 +210,7 @@
     transform-origin: 50% 100%;
     transform: scale(0, 0);
   }
-}
+}*/
 .rc-slider-tooltip {
   position: absolute;
   left: -9999px;
@@ -429,11 +429,11 @@
 .react-jinke-music-player-main .scale {
   animation: scaleTo 350ms cubic-bezier(0.43, -0.1, 0.16, 1.1) forwards;
 }
-@keyframes playing {
+/*@keyframes playing {
   to {
     transform: rotateX(360deg);
   }
-}
+}*/
 @keyframes audioLoading {
   from {
     transform: rotate(0deg);
@@ -442,7 +442,7 @@
     transform: rotate(360deg);
   }
 }
-@keyframes scale {
+/*@keyframes scale {
   from {
     transform: scale(0);
   }
@@ -474,8 +474,8 @@
     transform: scale(0);
     opacity: 0;
   }
-}
-@keyframes imgRotate {
+}*/
+/*@keyframes imgRotate {
   from {
     transform: rotate(0deg);
   }
@@ -526,7 +526,7 @@
     transform: translate3d(-100%, 0, 0);
     opacity: 0;
   }
-}
+}*/
 .react-jinke-music-player-main .img-rotate-pause {
   animation-play-state: paused !important;
 }
@@ -711,7 +711,7 @@
   animation: fromDown 350ms cubic-bezier(0.43, -0.1, 0.16, 1.1) forwards;
 }
 .react-jinke-music-player-mobile-toggle {
-  padding: 7px 0;
+  padding: 17px 0;
 }
 .react-jinke-music-player-mobile-toggle .group {
   cursor: pointer;
@@ -895,7 +895,6 @@
   overflow-x: hidden;
   overflow-y: auto;
   height: 359px;
-  padding-bottom: 118px;
 }
 @media screen and (max-width: 767px) {
   .audio-lists-panel-content {
@@ -1070,7 +1069,7 @@
 }
 .react-jinke-music-player-main .react-jinke-music-player-play-icon,
 .react-jinke-music-player-main .react-jinke-music-player-pause-icon {
-  /*animation: imgRotate 350ms cubic-bezier(0.43, -0.1, 0.16, 1.1);*/
+  animation: imgRotate 350ms cubic-bezier(0.43, -0.1, 0.16, 1.1);
 }
 .react-jinke-music-player-main .react-jinke-music-player-mode-icon {
   animation: scaleTo 350ms cubic-bezier(0.43, -0.1, 0.16, 1.1);
@@ -1217,7 +1216,6 @@
   -ms-flex-preferred-size: 15%;
       flex-basis: 15%;
 }
-
 .react-jinke-music-player-main .music-player-panel .panel-content .player-content > .group {
   text-align: center;
   -ms-flex: 1;
