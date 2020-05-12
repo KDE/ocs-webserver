@@ -9,8 +9,9 @@ module.exports = {
           //'app-supporters':'./app-supporters/entry-app-supporters.js',
           //'product-media-slider':'./product-media-slider/entry-product-media-slider.js',
           //'category-tree':'./category-tree/entry-category-tree.js',
-          'product-browse':'./product-browse/entry-product-browse.js'
-         },
+          //'product-browse':'./product-browse/entry-product-browse.js',
+          'category-blocks':'./category-blocks/entry-category-blocks.js'
+        },
   output: {
      path: `${__dirname}/../bundle`,
     filename: '[name]-bundle.js'
