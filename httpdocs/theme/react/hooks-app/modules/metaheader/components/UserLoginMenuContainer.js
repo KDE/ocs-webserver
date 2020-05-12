@@ -48,7 +48,7 @@ const UserLoginMenuContainer = (props) => {
         }        
         setDropdownClass(cls);              
   }
-  console.log('is external - ' + state.isExternal);
+
   let sitethemeSwitchDisplay;
   let metaHeaderThemeSwitchDisplay;
   if (state.isExternal === false){

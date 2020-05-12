@@ -3,10 +3,10 @@ module.exports = {
           //'app-product-relationship':'./modules/app-product-relationship/entry-app-product-relationship.js,
           //'app-supporters':'./modules/app-supporters/entry-app-supporters.js',
           //'category-blocks':'./modules/category-blocks/entry-category-blocks.js',
-          'header':'./modules/header/entry-header.js',
+          //'header':'./modules/header/entry-header.js',
           //'category-tree':'./modules/category-tree/entry-category-tree.js',
-          //'metaheader':'./modules/metaheader/entry-metaheader.js',
-          //'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
+          'metaheader':'./modules/metaheader/entry-metaheader.js',
+          'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
           //'home-main-container':'./modules/opendesktop-home/entry-home-main-container.js',
           //'pling-section':'./modules/pling-section/entry-pling-section.js'
           //'portal-index':'./modules/portal-index/protal-index.js,
