@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {generatePagesArray, renderPages} from '../product-media-slider-helpers';
+import './../../style/comic-reader.css';
 
 function ComicsReaderWrapper(props){
     const [ loading, setLoading ] = useState('Loading...');

@@ -7,6 +7,8 @@ import ComicsReaderWrapper from './components/comics-reader';
 
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
+import './../style/product-media-slider.css';
+
 function ProductMediaSlider(){ 
 
   /* Component */ 

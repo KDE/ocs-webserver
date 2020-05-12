@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {isMobile} from 'react-device-detect';
+import '../../style/book-reader.css';
 
 function BookReaderWrapper(props){
 
