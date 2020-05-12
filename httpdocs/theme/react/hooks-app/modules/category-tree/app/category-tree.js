@@ -8,6 +8,8 @@ import {
     getUrlContext
 } from './category-helpers';
 
+import './../style/cat-tree.css';
+
 let isShowRealDomainAsUrl = 1, showStoreListingsFirst = false;
 if (window.is_show_real_domain_as_url === 1) isShowRealDomainAsUrl = 1;
 else {

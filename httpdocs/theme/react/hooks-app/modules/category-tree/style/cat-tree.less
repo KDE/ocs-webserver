@@ -1,5 +1,4 @@
-// out: ../css/cat-tree.css, sourcemap: true, compress: true
-@import "elements.less";
+@import './../../../../assets/less/elements.less';
 
 .mobile-menu-item {
   padding: 5px; 
@@ -93,7 +92,7 @@
       right: 5px;
       height: 15px;
       width: 15px;
-      background-image: url('../img/chevron_down.png');
+      background-image: url('./img/chevron_down.png'); 
       .transition();
     }
 
@@ -119,7 +118,7 @@
     }
   }
 
-  #category-tree.tablet {
+  /*#category-tree.tablet {
     ul {
       li {
         a {
@@ -128,7 +127,7 @@
       &.main-list {
       }
     }
-  }
+  }*/
 
   #category-tree.open {
     #selected-category-tree-item {
@@ -327,7 +326,7 @@
       max-width: 100%;
       padding: 0 10px;
       position: relative;
-      display: inline-block;
+      // display: inline-block;
       float: left;
 
       span {
