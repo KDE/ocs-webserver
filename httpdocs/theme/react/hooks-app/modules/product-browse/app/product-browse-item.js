@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Context } from './context-provider.js';
 import { isMobile } from 'react-device-detect';
 import { getImageUrl } from './product-browse-helpers';
+import './../../../../assets/css/music-player.css';
 
 
 export function ProductBrowseItem(props){
@@ -498,6 +499,5 @@ function MusicPlayerControlPanel(props){
       </div>
     )
 }
-  
 
 export default ProductBrowseItem;

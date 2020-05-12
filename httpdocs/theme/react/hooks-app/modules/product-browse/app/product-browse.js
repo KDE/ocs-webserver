@@ -3,6 +3,7 @@ import {isMobile} from 'react-device-detect';
 import StoreContextProvider,{Context} from './context-provider.js';
 import {ProductBrowseItem} from './product-browse-item';
 import {getNumberOfItemsPerRow, getImageHeight, chunkArray, getItemWidth, ConvertObjectToArray} from './product-browse-helpers';
+import './../../../../assets/css/product-browse.css';
 
 function ProductBrowse(){
     return (
