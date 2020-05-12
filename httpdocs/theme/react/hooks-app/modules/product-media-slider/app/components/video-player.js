@@ -8,6 +8,8 @@ import {
     CurrentTimeDisplay,
     DurationDisplay } from 'video-react';
 
+import './../../style/video-react.css';
+
 class VideoPlayerWrapper extends React.Component {
     constructor(props, context){
         super(props, context);
