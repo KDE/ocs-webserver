@@ -215,7 +215,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 </style>
 
 
-<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
 <main id="explore-content" class="startpage-store">
   <div class="GridFlex">
     <div class="GridFlex-cell sidebar-left">
@@ -238,11 +237,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
           if ($this->featureProducts) {echo $this->render('home/partials/featured-products.phtml');}
           ?>
         </div>
-
-        <div class="row">
-            <div id="carousel-module-container"></div>                                                                                                              
-        </div>
-
 
         <div class="row blockpadding disply-flex" >
          <?php
@@ -425,7 +419,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
   var hpVersion = 2;
   var data = <?php echo Zend_Json::encode($response)?>;                                
 </script>
-<script src="/theme/react/carousel.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
