@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef} from "react";
 import Slider from 'rc-slider'; 
 import { Scrollbars } from 'react-custom-scrollbars';
+import './../../style/rc-slider.css';
 import './../../style/music-player.css';
 
 function MusicPlayerWrapper(props){
