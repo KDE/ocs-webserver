@@ -1,0 +1,36 @@
+body {
+  padding-top: 34px;
+  /*&#body-user, &#body-public {
+     opendesktop-metaheader {
+       position: relative !important;
+       #metaheader {
+         position: relative !important;
+       }
+     }
+   }*/
+}
+body .navbar-gitlab {
+  top: 34px;
+}
+body#git-body #metaheader {
+  position: fixed !important;
+}
+body#git-body .nav-sidebar {
+  top: 88px;
+}
+body.navigation-topics #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon,
+body.category-themes-and-apps #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon,
+body.category-general #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon,
+body[class*='category-'] #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
+  margin-top: -5px;
+}
+body.docked .d-header {
+  top: 34px;
+}
+body.docked #metaheader {
+  position: fixed;
+}
+body.drawer-open {
+  height: 100%;
+  overflow: hidden;
+}
