@@ -129,11 +129,11 @@ function BookReaderWrapper(props){
   }
 
   function reportBookRead(){
-    console.log('report book reading')
-    console.log(props);
+    // console.log('report book reading')
+    // console.log(props);
     const bookReadReportUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+props.slide.collection_id+'&file_id='+props.slide.file_id+'&type_id=3';
     $.ajax({url: bookReadReportUrl}).done(function(res) { 
-      console.log(res);
+      // console.log(res);
       setBookReadIsReported(true);
     });
   }

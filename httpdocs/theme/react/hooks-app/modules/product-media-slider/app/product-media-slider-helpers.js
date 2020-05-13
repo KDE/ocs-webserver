@@ -72,7 +72,6 @@ export function GenerateGalleryArray(product){
 
     galleryArray = galleryArray.sort(function(a, b) {
         if (isComics === true){
-            console.log('hel');
             return b.created_timestamp - a.created_timestamp;
         } else {
             return a.created_timestamp - b.created_timestamp;

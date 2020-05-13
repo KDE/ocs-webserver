@@ -19,7 +19,6 @@ function ComicsReaderWrapper(props){
     },[props.slideIndex,props.currentSlide]);
 
     React.useEffect(() => {
-      console.log(viewedPagesCount);
       if (viewedPagesCount > 3 && comicBookReadIsReported === false){
         reportComicBookRead();
       }
@@ -39,7 +38,7 @@ function ComicsReaderWrapper(props){
     }
 
     function reportComicBookRead(){
-      console.log('report book reading')
+      console.log('report comic book reading')
       console.log(props);
       const comicReadReportUrl = "https://" + window.location.hostname + "/p/" + props.product.project_id + '/startmediaviewajax?collection_id='+props.slide.collection_id+'&file_id='+props.slide.file_id+'&type_id=3';
       $.ajax({url: comicReadReportUrl}).done(function(res) { 
