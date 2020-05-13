@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import MobileSiteHeader from './MobileSiteHeader';
 import Support from './Support';
+
+import './../style/header.css';
+
 class SiteHeader extends Component {
   constructor(props){
   	super(props);

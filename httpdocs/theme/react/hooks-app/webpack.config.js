@@ -4,9 +4,9 @@ module.exports = {
           //'app-supporters':'./modules/app-supporters/entry-app-supporters.js',
           //'category-blocks':'./modules/category-blocks/entry-category-blocks.js',
           //'category-tree':'./modules/category-tree/entry-category-tree.js',
-          //'header':'./modules/header/entry-header.js',
-          'metaheader':'./modules/metaheader/entry-metaheader.js',
-          'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
+          'header':'./modules/header/entry-header.js',
+          //'metaheader':'./modules/metaheader/entry-metaheader.js',
+          //'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
           //'home-main-container':'./modules/opendesktop-home/entry-home-main-container.js',
           //'pling-section':'./modules/pling-section/entry-pling-section.js'
           //'portal-index':'./modules/portal-index/protal-index.js,
