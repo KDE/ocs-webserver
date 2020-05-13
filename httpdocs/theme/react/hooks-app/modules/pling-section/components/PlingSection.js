@@ -5,6 +5,8 @@ import Support from './Support';
 import Supporters from './Supporters';
 import Header from './Header';
 
+import './../style/pling-section.css';
+
 const PlingSection = () => {
   const [state, setState] = useState(window.data);
   const [products, setProducts] = useState(window.data.products);
