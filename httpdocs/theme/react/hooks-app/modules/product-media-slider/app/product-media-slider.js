@@ -403,6 +403,7 @@ function SlideItem(props){
         width={props.containerWidth}
         onCinemaModeClick={props.onCinemaModeClick}
         slide={props.slide}
+        product={props.product}
         slideIndex={props.slideIndex}
         currentSlide={props.currentSlide}
         cinemaMode={props.cinemaMode}
