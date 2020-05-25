@@ -352,7 +352,7 @@ function SlideItem(props){
   }
   else if (props.slide.type === "video") {
     slideContentDisplay = (
-      <Suspense fallback={<LoadingContainer msg={"Loading Video..."}/>}>
+      <Suspense fallback={'Loading Video...'}>
       <VideoPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
