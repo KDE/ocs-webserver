@@ -48,10 +48,10 @@ module.exports = {
         test: /\.(png|jpg|gif|svg)$/i,
         use: [
           {
-            loader: 'file-loader?name=[name].[ext]'
+            loader: 'file-loader'
           },
         ],
-      },{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000&name=[name].[ext]' }
+      },{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' }
     ]
   }
 };

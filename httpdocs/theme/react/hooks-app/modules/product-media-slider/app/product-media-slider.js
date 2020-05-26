@@ -8,7 +8,6 @@ const ComicsReaderWrapper = lazy(() => import('./components/comics-reader'));
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
 import './../style/product-media-slider.css';
-import ajaxLoader from './../style/img/ajax-loader.gif';
 
 function ProductMediaSlider(){ 
 
@@ -353,7 +352,7 @@ function SlideItem(props){
   }
   else if (props.slide.type === "video") {
     slideContentDisplay = (
-      <Suspense fallback={<img src={ajaxLoader}/>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <VideoPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -371,7 +370,7 @@ function SlideItem(props){
   else if (props.slide.type === "audio"){
 
     slideContentDisplay = (
-      <Suspense fallback={<img src={ajaxLoader}/>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <MusicPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -388,7 +387,7 @@ function SlideItem(props){
   }
   else if (props.slide.type === "book"){
     slideContentDisplay = (
-      <Suspense fallback={<img src={ajaxLoader}/>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <BookReaderWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -405,7 +404,7 @@ function SlideItem(props){
   }
   else if (props.slide.type === "comics"){
     slideContentDisplay = (
-      <Suspense fallback={<img src={ajaxLoader}/>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <ComicsReaderWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
