@@ -44,13 +44,13 @@
 # Define binary file attributes.
 # - Do not treat them as text.
 # - Include binary diff in patches instead of "binary files differ."
-*.gif    -text eol=crlf diff
-*.gz     -text eol=crlf diff
-*.ico    -text eol=crlf diff
-*.jpeg   -text eol=crlf diff
-*.jpg    -text eol=crlf diff
-*.png    -text eol=crlf diff
-*.phar   -text eol=crlf diff
-*.exe    -text eol=crlf diff
-*.svgz   -text eol=crlf diff
-*.ttf    -text eol=crlf diff
+*.gif    -text eol=lf diff
+*.gz     -text eol=lf diff
+*.ico    -text eol=lf diff
+*.jpeg   -text eol=lf diff
+*.jpg    -text eol=lf diff
+*.png    -text eol=lf diff
+*.phar   -text eol=lf diff
+*.exe    -text eol=lf diff
+*.svgz   -text eol=lf diff
+*.ttf    -text eol=lf diff

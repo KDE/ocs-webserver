@@ -1,13 +1,14 @@
 import React, { useState, Suspense, lazy } from 'react';
 import {isMobile} from 'react-device-detect';
 const VideoPlayerWrapper = lazy(() => import('./components/video-player'));
-import BookReaderWrapper from './components/book-reader';
-import MusicPlayerWrapper from './components/music-player';
-import ComicsReaderWrapper from './components/comics-reader';
+const BookReaderWrapper = lazy(() => import('./components/book-reader'));
+const MusicPlayerWrapper = lazy(() => import('./components/music-player'));
+const ComicsReaderWrapper = lazy(() => import('./components/comics-reader'));
 
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
 import './../style/product-media-slider.css';
+import ajaxLoader from './../style/img/ajax-loader.gif';
 
 function ProductMediaSlider(){ 
 
@@ -352,7 +353,7 @@ function SlideItem(props){
   }
   else if (props.slide.type === "video") {
     slideContentDisplay = (
-      <Suspense fallback={'Loading Video...'}>
+      <Suspense fallback={<img src={ajaxLoader}/>}>
       <VideoPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -370,6 +371,7 @@ function SlideItem(props){
   else if (props.slide.type === "audio"){
 
     slideContentDisplay = (
+      <Suspense fallback={<img src={ajaxLoader}/>}>
       <MusicPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -381,10 +383,12 @@ function SlideItem(props){
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
       />
+      </Suspense>
     )    
   }
   else if (props.slide.type === "book"){
     slideContentDisplay = (
+      <Suspense fallback={<img src={ajaxLoader}/>}>
       <BookReaderWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -396,10 +400,12 @@ function SlideItem(props){
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
       />
+      </Suspense>            
     )    
   }
   else if (props.slide.type === "comics"){
     slideContentDisplay = (
+      <Suspense fallback={<img src={ajaxLoader}/>}>
       <ComicsReaderWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -416,6 +422,7 @@ function SlideItem(props){
         onFullScreenToggle={props.onFullScreenToggle}
         isFullScreen={props.isFullScreen}
       />
+      </Suspense>
     )
 
   }
