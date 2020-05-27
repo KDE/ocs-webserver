@@ -15,6 +15,7 @@ function ComicsReaderWrapper(props){
       if (props.slideIndex === props.currentSlide){
         setComicBookInitiated(true);
         initComicBook();
+        console.log(props);
       }
     },[props.slideIndex,props.currentSlide]);
 
