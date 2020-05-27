@@ -101,12 +101,21 @@ function ComicBookReader(props){
             setCurrentPage(swiper.activeIndex);
           }
         });
-        window.comicSwiper.update()
+        onUpdateComicSwiper();
       });
     } else {
-
       setTimeout(() => {
         initComicReader();
+      }, 500);
+    }
+  }
+
+  function onUpdateComicSwiper(){
+    if (window.comicSwiper){
+      window.comicSwiper.update()
+    } else {
+      setTimeout(() => {
+        onUpdateComicSwiper();
       }, 500);
     }
   }
