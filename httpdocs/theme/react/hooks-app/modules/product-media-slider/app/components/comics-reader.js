@@ -12,6 +12,7 @@ function ComicsReaderWrapper(props){
     /* INIT */
  
     React.useEffect(() => {
+      console.log(props);
       if (props.slideIndex === props.currentSlide){
         setComicBookInitiated(true);
         initComicBook();
@@ -81,7 +82,6 @@ function ComicBookReader(props){
 
   React.useEffect(() => { 
     initComicReader()
-    console.log(props);
   },[])
 
   function initComicReader(){
@@ -102,21 +102,12 @@ function ComicBookReader(props){
             setCurrentPage(swiper.activeIndex);
           }
         });
-        onUpdateComicSwiper();
+        window.comicSwiper.update()
       });
     } else {
+
       setTimeout(() => {
         initComicReader();
-      }, 500);
-    }
-  }
-
-  function onUpdateComicSwiper(){
-    if (window.comicSwiper){
-      window.comicSwiper.update()
-    } else {
-      setTimeout(() => {
-        onUpdateComicSwiper();
       }, 500);
     }
   }
