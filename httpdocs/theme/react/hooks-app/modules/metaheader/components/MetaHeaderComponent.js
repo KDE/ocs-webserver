@@ -54,32 +54,33 @@ const MetaHeaderComponent = (props) => {
     setDevice(device);    
   }
 
-  const onSwitchStyle = evt => {    
-
-    let url = "https://" + window.location.hostname  +"/membersetting/setsettings/itemid/2/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-
+  const onSwitchStyle = evt => {        
+    let url = state.baseUrl+"/membersetting/setsettings";           
     const isChecked = evt.target.checked;
-
-    Axios.get(url)
-      .then(result => {
-    
-        const newSiteTheme = isChecked ? 'content-theme-dark': '';
-        setSiteTheme(newSiteTheme);
-        if (newSiteTheme === 'content-theme-dark'){
-          document.body.classList.add("dark-theme");
-          //$( "body" ).addClass( "dark-theme" );
-        } else {
-          //$( "body" ).removeClass( "dark-theme" );
-          document.body.classList.remove("dark-theme");
-        }
-    })
+    let formData = new FormData();
+    formData.set('itemid', 1);
+    formData.set('itemvalue',evt.target.checked ? '1' : '0');
+    Axios.post(url,formData)
+      .then(result => {               
+          const newSiteTheme = isChecked ? 'content-theme-dark': '';
+          setSiteTheme(newSiteTheme);
+          if (newSiteTheme === 'content-theme-dark'){
+            document.body.classList.add("dark-theme");
+            //$( "body" ).addClass( "dark-theme" );
+          } else {
+            //$( "body" ).removeClass( "dark-theme" );
+            document.body.classList.remove("dark-theme");
+          }
+      });   
   }
 
-  const onSwitchMetaHeaderStyle = evt => {     
-    let url =  "https://" + window.location.hostname +"/membersetting/setsettings/itemid/1/itemvalue/"+ (evt.target.checked ? '1' : '0');    
-
-    const isChecked = evt.target.checked;
-    Axios.get(url)
+  const onSwitchMetaHeaderStyle = evt => {    
+    let url = state.baseUrl+"/membersetting/setsettings";         
+    const isChecked = evt.target.checked;    
+    let formData = new FormData();
+    formData.set('itemid', 1);
+    formData.set('itemvalue',evt.target.checked ? '1' : '0');
+    Axios.post(url,formData)
       .then(result => {               
         setMetamenuTheme(isChecked?'metamenu-theme-dark':'');
       })

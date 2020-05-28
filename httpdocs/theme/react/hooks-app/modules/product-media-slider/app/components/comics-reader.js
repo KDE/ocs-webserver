@@ -12,6 +12,7 @@ function ComicsReaderWrapper(props){
     /* INIT */
  
     React.useEffect(() => {
+      console.log(props);
       if (props.slideIndex === props.currentSlide){
         setComicBookInitiated(true);
         initComicBook();
