@@ -51,7 +51,14 @@ module.exports = {
             loader: 'ignore-loader'
           },
         ],
-      },{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' }
+      },{ 
+        test: /\.(woff|woff2|eot|ttf|svg)$/, 
+        use: [
+          {
+            loader: 'ignore-loader'
+          },
+        ],
+      }
     ]
   }
 };
