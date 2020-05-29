@@ -7,7 +7,7 @@ const entries = {
   //'metaheader':'./modules/metaheader/entry-metaheader.js',
   'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
   //'home-main-container':'./modules/opendesktop-home/entry-home-main-container.js',
-  //'pling-section':'./modules/pling-section/entry-pling-section.js'
+  // 'pling-section':'./modules/pling-section/entry-pling-section.js'
   //'portal-index':'./modules/portal-index/protal-index.js,
   //'product-browse':'./modules/product-browse/entry-product-browse.js',
   //'product-media-slider':'./modules/product-media-slider/entry-product-media-slider.js',
@@ -48,14 +48,24 @@ module.exports = {
         test: /\.(png|jpg|gif|svg)$/i,
         use: [
           {
-            loader: 'ignore-loader'
-          },
+            loader: "ignore-loader",
+            options: {
+              // Here!!!
+              esModule: false,
+              outputPath: "images",
+              publicPath: "images",
+              name: "[name].[ext]"
+            }
+          }
         ],
       },{ 
-        test: /\.(woff|woff2|eot|ttf|svg)$/, 
+        test: /\.(woff|woff2|eot|ttf)$/, 
         use: [
           {
-            loader: 'ignore-loader'
+            loader: 'ignore-loader',
+            options: {
+              esModule: false,
+            },
           },
         ],
       }
