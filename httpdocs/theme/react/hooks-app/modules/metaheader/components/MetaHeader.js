@@ -8,7 +8,7 @@ import '../style/metaheader.css';
 import '../style/metaheader-extra.css';
 
 const MetaHeader = (props) => {
-  
+  console.log('meta header module');
   return (      
     <MetaheaderContextProvider {...props}>      
       <MetaHeaderComponent />  
