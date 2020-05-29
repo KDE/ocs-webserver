@@ -4,9 +4,6 @@ import React from 'react'
 import MetaheaderContextProvider from '../contexts/MetaheaderContext';
 import MetaHeaderComponent from "./MetaHeaderComponent";
 
-import '../style/metaheader.css';
-import '../style/metaheader-extra.css';
-
 const MetaHeader = (props) => {
   console.log('meta header module');
   return (      
