@@ -67,7 +67,7 @@ customElements.define('opendesktop-metaheader', class extends HTMLElement {
     // else{
     //    stylesheetElement.href = 'https://www.opendesktop.org/theme/react/assets/css/metaheader.css';
     // }
-    // this.appendChild(stylesheetElement);
+    this.appendChild(stylesheetElement);
 
     const metaheaderElement = document.createElement('div');
     metaheaderElement.id = 'metaheader';
