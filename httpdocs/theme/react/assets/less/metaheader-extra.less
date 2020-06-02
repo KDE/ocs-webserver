@@ -1,51 +1,52 @@
+// out: ../css/metaheader-extra.css, sourcemap: true, compress: true
 body {
-   padding-top: 34px;
+  padding-top: 34px;
 
-   .navbar-gitlab {
-     top: 34px;
-   }
+  .navbar-gitlab {
+    top: 34px;
+  }
 
-   &#git-body {
-     #metaheader {
-       position: fixed !important;
-     }
-     .nav-sidebar {
-       top:88px;
-     }
-   }
+  &#git-body {
+    #metaheader {
+      position: fixed !important;
+    }
+    .nav-sidebar {
+      top:88px;
+    }
+  }
 
-   /*&#body-user, &#body-public {
-     opendesktop-metaheader {
-       position: relative !important;
-       #metaheader {
-         position: relative !important;
-       }
-     }
-   }*/
+  /*&#body-user, &#body-public {
+    opendesktop-metaheader {
+      position: relative !important;
+      #metaheader {
+        position: relative !important;
+      }
+    }
+  }*/
 
-   &.navigation-topics,
-   &.category-themes-and-apps,
-   &.category-general,
-   &[class*='category-'] {
-     #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
-       margin-top: -5px;
-     }
-     #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
-       // margin-top: -7px;
-     }
-   }
+  &.navigation-topics,
+  &.category-themes-and-apps,
+  &.category-general,
+  &[class*='category-'] {
+    #metaheader #metaheader-nav #user-context-menu-container .user-dropdown .th-icon {
+      margin-top: -5px;
+    }
+    #metaheader #metaheader-nav #user-login-menu-container .user-dropdown .dropdown-toggle img {
+      // margin-top: -7px;
+    }
+  }
 
-   &.docked {
-     .d-header {
-       top: 34px;
-     }
-     #metaheader {
-       position: fixed;
-     }
-   }
+  &.docked { 
+    .d-header {
+      top: 34px;
+    }
+    #metaheader {
+      position: fixed;
+    }
+  }
 
-   &.drawer-open {
-     height: 100%;
-     overflow: hidden;
-   }
- }
+  &.drawer-open {
+    height: 100%;
+    overflow: hidden;
+  }
+}

@@ -58,7 +58,7 @@ const MetaHeaderComponent = (props) => {
     let url = state.baseUrl+"/membersetting/setsettings";           
     const isChecked = evt.target.checked;
     let formData = new FormData();
-    formData.set('itemid', 1);
+    formData.set('itemid', 2);
     formData.set('itemvalue',evt.target.checked ? '1' : '0');
     Axios.post(url,formData)
       .then(result => {               
