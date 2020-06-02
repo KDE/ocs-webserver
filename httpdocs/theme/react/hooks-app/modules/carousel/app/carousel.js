@@ -4,13 +4,13 @@ TimeAgo.addLocale(en);
 
 function CarouselsModule(){
 
-  const [ loading, setLoading ] = useState(true);
-  const [ device, setDevice ] = useState();
-  const [ env, setEnv ] = useState();
-  const [ productGroupsArray, setProductGroupsArray ] = useState();
+  const [ loading, setLoading ] = React.useState(true);
+  const [ device, setDevice ] = React.useState();
+  const [ env, setEnv ] = React.useState();
+  const [ productGroupsArray, setProductGroupsArray ] = React.useState();
 
   
-  useEffect(() => {
+  React.useEffect(() => {
     updateDimensions();
     initCarouselModule();
     return () => {
@@ -84,18 +84,18 @@ function CarouselsModule(){
 function Carousel(props){
 
   const products = props.products;
-  const [ loading, setLoading ] = useState(true);
-  const [ disableLeftArrow, setDisableLeftArrow ] = useState(true);
-  const [ disableRightArrow, setDisableRightArrow ] = useState(false);
-  const [ sliderWidth, setSliderWidth ] = useState();
-  const [ sliderPosition, setSliderPosition ] = useState();
-  const [ containerWidth, setContainerWidth ] = useState();
-  const [ containerNumber, setContainerNumber ] = useState();
-  const [ itemsPerRow, setItemsPerRow ] = useState();
-  const [ itemWidth, setItemWidth ] = useState();
+  const [ loading, setLoading ] = React.useState(true);
+  const [ disableLeftArrow, setDisableLeftArrow ] = React.useState(true);
+  const [ disableRightArrow, setDisableRightArrow ] = React.useState(false);
+  const [ sliderWidth, setSliderWidth ] = React.useState();
+  const [ sliderPosition, setSliderPosition ] = React.useState();
+  const [ containerWidth, setContainerWidth ] = React.useState();
+  const [ containerNumber, setContainerNumber ] = React.useState();
+  const [ itemsPerRow, setItemsPerRow ] = React.useState();
+  const [ itemWidth, setItemWidth ] = React.useState();
 
 
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener("resize", updateDimensions);
   },[])
 
