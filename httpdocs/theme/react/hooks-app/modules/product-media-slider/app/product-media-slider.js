@@ -1,8 +1,9 @@
+import React, { useState, Suspense, lazy } from 'react';
 import {isMobile} from 'react-device-detect';
-const VideoPlayerWrapper = React.lazy(() => import('./components/video-player'));
-const BookReaderWrapper = React.lazy(() => import('./components/book-reader'));
-const MusicPlayerWrapper = React.lazy(() => import('./components/music-player'));
-const ComicsReaderWrapper = React.lazy(() => import('./components/comics-reader'));
+const VideoPlayerWrapper = lazy(() => import('./components/video-player'));
+const BookReaderWrapper = lazy(() => import('./components/book-reader'));
+const MusicPlayerWrapper = lazy(() => import('./components/music-player'));
+const ComicsReaderWrapper = lazy(() => import('./components/comics-reader'));
 
 import {GenerateGalleryArray, CheckForMultipleAudioFiles, GroupAudioFilesInGallery} from './product-media-slider-helpers';
 
@@ -12,21 +13,21 @@ function ProductMediaSlider(){
 
   /* Component */ 
 
-  const [ product, setProduct ] = React.useState(window.product);
+  const [ product, setProduct ] = useState(window.product);
   let galleryArray = GenerateGalleryArray(product);
   const audioFileIndex = galleryArray.findIndex(gf => gf.type === "audio");
   if (audioFileIndex > -1) galleryArray = GroupAudioFilesInGallery(galleryArray);
-  const [ gallery, setGallery ] = React.useState(galleryArray);
-  const [ disableGallery, setDisableGallery ] = React.useState(gallery.length > 1 ? false : true)
+  const [ gallery, setGallery ] = useState(galleryArray);
+  const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
-  const [ containerWidth, setContainerWidth ] = React.useState(parentContainerElement.offsetWidth);
-  const [ currentSlide, setCurrentSlide ] = React.useState(0);
-  const [ sliderHeight, setSliderHeight ] = React.useState(360);
-  const [ cinemaMode, setCinemaMode ] = React.useState(false);
-  const [ isFullScreen, setIsFullScreen] = React.useState(false)
-  const [ showPlaylist, setShowPlaylist ] = React.useState(false);
-  const [ showSliderArrows, setShowSliderArrows ] = React.useState(isMobile === true ? true : false);  
-  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = React.useState(true);
+  const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
+  const [ currentSlide, setCurrentSlide ] = useState(0);
+  const [ sliderHeight, setSliderHeight ] = useState(360);
+  const [ cinemaMode, setCinemaMode ] = useState(false);
+  const [ isFullScreen, setIsFullScreen] = useState(false)
+  const [ showPlaylist, setShowPlaylist ] = useState(false);
+  const [ showSliderArrows, setShowSliderArrows ] = useState(isMobile === true ? true : false);  
+  const [ sliderFadeControlsMode, setSliderFadeControlsMode ] = useState(true);
 
   let sliderFadeControlTimeOut;
 
@@ -281,8 +282,8 @@ function ProductMediaSlider(){
 
 function SlideItem(props){
 
-  const [ mediaStyle, setMediaStyle ] = React.useState();
-  const [ itemSetHeight, setItemSetHeight ] = React.useState();
+  const [ mediaStyle, setMediaStyle ] = useState();
+  const [ itemSetHeight, setItemSetHeight ] = useState();
 
   React.useEffect(() => {
     if (props.gallery && props.gallery.length === props.slideIndex + 1) props.onFinishedSlidesRender();
@@ -351,7 +352,7 @@ function SlideItem(props){
   }
   else if (props.slide.type === "video") {
     slideContentDisplay = (
-      <React.Suspense fallback={<span id="ajax-loder"></span>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <VideoPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -363,13 +364,13 @@ function SlideItem(props){
         onFullScreenToggle={props.onFullScreenToggle}
         onNextSlideClick={props.onNextSlideClick}
       />
-      </React.Suspense>
+      </Suspense>
     )
   }
   else if (props.slide.type === "audio"){
 
     slideContentDisplay = (
-      <React.Suspense fallback={<span id="ajax-loder"></span>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <MusicPlayerWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -381,12 +382,12 @@ function SlideItem(props){
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
       />
-      </React.Suspense>
+      </Suspense>
     )    
   }
   else if (props.slide.type === "book"){
     slideContentDisplay = (
-      <React.Suspense fallback={<span id="ajax-loder"></span>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <BookReaderWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -398,13 +399,13 @@ function SlideItem(props){
         onUpdateDimensions={props.onUpdateDimensions}
         onFullScreenToggle={props.onFullScreenToggle}
       />
-      </React.Suspense>            
+      </Suspense>            
     )    
   }
   else if (props.slide.type === "comics"){
     console.log(props.currentSlide);
     slideContentDisplay = (
-      <React.Suspense fallback={<span id="ajax-loder"></span>}>
+      <Suspense fallback={<span id="ajax-loder"></span>}>
       <ComicsReaderWrapper 
         height={props.sliderHeight}
         width={props.containerWidth}
@@ -421,7 +422,7 @@ function SlideItem(props){
         onFullScreenToggle={props.onFullScreenToggle}
         isFullScreen={props.isFullScreen}
       />
-      </React.Suspense>
+      </Suspense>
     )
 
   }
