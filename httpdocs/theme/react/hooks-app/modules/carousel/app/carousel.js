@@ -2,7 +2,7 @@ import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 TimeAgo.addLocale(en);
 
-function CarouselsModule(){
+function CarouselsModule(props){
 
   const [ loading, setLoading ] = React.useState(true);
   const [ device, setDevice ] = React.useState();
@@ -310,7 +310,7 @@ function Carousel(props){
   
 }
 
-function CarouselItem(){
+function CarouselItem(props){
   
     let paddingTop;
     let productInfoDisplay = (
