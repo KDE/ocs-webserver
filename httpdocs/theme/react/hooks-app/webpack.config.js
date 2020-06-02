@@ -1,6 +1,7 @@
 const entries = {
   //'app-product-relationship':'./modules/app-product-relationship/entry-app-product-relationship.js,
   //'app-supporters':'./modules/app-supporters/entry-app-supporters.js',
+  //'carousel':'./modules/carousel/entry-carousel.js,
   //'category-blocks':'./modules/category-blocks/entry-category-blocks.js',
   //'category-tree':'./modules/category-tree/entry-category-tree.js',
   //'header':'./modules/header/entry-header.js',
