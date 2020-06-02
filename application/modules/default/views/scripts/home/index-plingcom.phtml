@@ -240,7 +240,6 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
 
         <div class="row">
           <div id="carousel-module-container"></div>
-          <script src="/theme/react/bundle/carousel-bundle.js" type="text/javascript"></script>
         </div>
 
         <div class="row blockpadding disply-flex" >
@@ -424,6 +423,7 @@ $helpPrintDate = new Default_View_Helper_PrintDate();
   var hpVersion = 2;
   var data = <?php echo Zend_Json::encode($response)?>;                                
 </script>
+<script src="/theme/react/bundle/carousel-bundle.js" type="text/javascript"></script>
 
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
