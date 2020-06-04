@@ -96,8 +96,11 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         $response = $client->request('POST');
 
         if ($response->getStatus() > 200) {
-            throw new Default_Model_Exception_Image('Could remove images from CD-Server: ' . $url . ' - server response: ' . $response->getBody());
+            throw new Default_Model_Exception_Image('ERROR: Could not remove images from CD-Server: ' . $url . ' - server response: ' . $response->getBody());
         }
+        
+        $this->product->image_small = $this->product->image_small.$postString;
+        $this->product->save();
         
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Result fromCN-Server: ' . $response->getBody());
     }
