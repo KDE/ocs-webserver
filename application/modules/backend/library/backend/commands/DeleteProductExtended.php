@@ -99,6 +99,7 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
             throw new Default_Model_Exception_Image('ERROR: Could not remove images from CD-Server: ' . $url . ' - server response: ' . $response->getBody());
         }
         
+        //save renamed images
         $this->product->image_small = $this->product->image_small.$postString;
         $this->product->save();
         
