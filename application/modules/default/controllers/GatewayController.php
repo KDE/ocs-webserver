@@ -91,10 +91,12 @@ class GatewayController extends Zend_Controller_Action
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process SubscriptionSignup IPN - ');
             $modelPayPal = new Default_Model_PayPal_SubscriptionSignupIpnMessage();
             $modelPayPal->processIpn($rawPostData);
-        } else if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'subscr_cancel')) {
+        } else if (isset($ipnArray['txn_type']) AND (($ipnArray['txn_type'] == 'subscr_cancel') || ($ipnArray['txn_type'] == 'subscr_failed'))) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process SubscriptionSignupCancel IPN - ');
             $modelPayPal = new Default_Model_PayPal_SubscriptionCancelIpnMessage();
             $modelPayPal->processIpn($rawPostData);
+        } else if (isset($ipnArray['txn_type']) AND (($ipnArray['txn_type'] == 'subscr_eot'))) {
+            Zend_Registry::get('logger')->info(__METHOD__ . ' - Subscription Ended Normaly, nothing to do -');
         } else if (isset($ipnArray['txn_type']) AND ($ipnArray['txn_type'] == 'subscr_payment')) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process SubscriptionPayment IPN - ');
             $modelPayPal = new Default_Model_PayPal_SubscriptionPaymentIpnMessage();

@@ -55,7 +55,8 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchStyle = evt => {        
-    let url = state.baseUrl+"/membersetting/setsettings";           
+    //let url = state.baseUrl+"/membersetting/setsettings";           
+    let url = "/membersetting/setsettings";           
     const isChecked = evt.target.checked;
     let formData = new FormData();
     formData.set('itemid', 2);
@@ -75,7 +76,8 @@ const MetaHeaderComponent = (props) => {
   }
 
   const onSwitchMetaHeaderStyle = evt => {    
-    let url = state.baseUrl+"/membersetting/setsettings";         
+    //let url = state.baseUrl+"/membersetting/setsettings";    
+    let url = "/membersetting/setsettings";      
     const isChecked = evt.target.checked;    
     let formData = new FormData();
     formData.set('itemid', 1);
