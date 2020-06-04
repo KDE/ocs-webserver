@@ -49,6 +49,7 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
     {
         $this->deleteProductFromIndex();
         $this->deleteCollectionFromPPload();
+        $this->deleteImagesFromCdn();
     }
 
     protected function deleteProductFromIndex()
@@ -79,6 +80,26 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
                 . ' response: ' . print_r($collectionResponse,
                     true));
         }
+    }
+    
+    private function deleteImagesFromCdn()
+    {
+        $config = Zend_Registry::get('config');
+        $url = $config->images->media->delete;
+        $secret = $config->images->media->privateKey;
+        
+        $imgPath = $this->product->image_small;
+        $postString = '--'.md5(rand()).md5(rand());
+        $url .= '?path='.urlencode($imgPath).'&post='.$postString.'&key='.$secret;
+        
+        $client = new Zend_Http_Client($url);
+        $response = $client->request('POST');
+
+        if ($response->getStatus() > 200) {
+            throw new Default_Model_Exception_Image('Could remove images from CD-Server: ' . $url . ' - server response: ' . $response->getBody());
+        }
+        
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Result fromCN-Server: ' . $response->getBody());
     }
 
 }
