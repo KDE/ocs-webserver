@@ -1982,7 +1982,7 @@ function (_React$Component2) {
           href: "/browse",
           className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary"
         }, "Browse all apps"), React.createElement("a", {
-          href: "https://chat.opendesktop.org/#/room/#appimagehub:chat.opendesktop.org",
+          href: "https://t.me/appimagehub",
           className: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color--primary",
           style: {
             "margin-left": "50px"
