@@ -543,7 +543,7 @@ function (_React$Component2) {
         } else {
           newSliderPosition = 0;
           /*if (!animateCarousel){
-          if (this.state.products.length >= 15 ||Â this.state.finishedProducts){
+          if (this.state.products.length >= 15 ||Ã‚ this.state.finishedProducts){
               newSliderPosition = 0;
             } else {
               this.getNextProductsBatch();
@@ -562,7 +562,7 @@ function (_React$Component2) {
         }
 
         var disableRightArrow = false;
-        /*if (this.state.sliderPosition >= endPoint &&Â this.state.finishedProducts === true){
+        /*if (this.state.sliderPosition >= endPoint &&Ã‚ this.state.finishedProducts === true){
           disableRightArrow = true;
         }*/
 
