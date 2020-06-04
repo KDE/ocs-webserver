@@ -1068,7 +1068,7 @@ class Default_Model_Project extends Default_Model_DbTable_Project
         $memberLog->logProjectAsDeleted($member_id, $id);
         
         // this will delete the product and request the ppload for deleting associated files
-        $product = $this->_model->find($id)->current();
+        $product = $this->find($id)->current();
         $command = new Backend_Commands_DeleteProductExtended($product);
         $command->doCommand();
 
