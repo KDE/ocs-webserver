@@ -91,7 +91,7 @@ class GatewayController extends Zend_Controller_Action
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process SubscriptionSignup IPN - ');
             $modelPayPal = new Default_Model_PayPal_SubscriptionSignupIpnMessage();
             $modelPayPal->processIpn($rawPostData);
-        } else if (isset($ipnArray['txn_type']) AND (($ipnArray['txn_type'] == 'subscr_cancel') || ($ipnArray['txn_type'] == 'subscr_failed'))) {
+        } else if (isset($ipnArray['txn_type']) AND (($ipnArray['txn_type'] == 'subscr_cancel') || ($ipnArray['txn_type'] == 'subscr_failed')  || ($ipnArray['txn_type'] == 'recurring_payment_suspended_due_to_max_failed_paym'))) {
             Zend_Registry::get('logger')->info(__METHOD__ . ' - Start Process SubscriptionSignupCancel IPN - ');
             $modelPayPal = new Default_Model_PayPal_SubscriptionCancelIpnMessage();
             $modelPayPal->processIpn($rawPostData);
