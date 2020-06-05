@@ -95,7 +95,7 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         
         //Remove Gallery Pics
         $galleryPictureTable = new Default_Model_DbTable_ProjectGalleryPicture();
-        $stmt = $galleryPictureTable->select()->where('project_id = ?', $projectId)->order(array('sequence'));
+        $stmt = $galleryPictureTable->select()->where('project_id = ?', $this->product->project_id)->order(array('sequence'));
 
         foreach ($galleryPictureTable->fetchAll($stmt) as $pictureRow) {
             $imgPath = $pictureRow['picture_src'];
