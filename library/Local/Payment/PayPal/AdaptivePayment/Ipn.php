@@ -52,7 +52,7 @@ abstract class Local_Payment_PayPal_AdaptivePayment_Ipn extends Local_Payment_Pa
         $this->_logger->info(__FUNCTION__ . '::_ipnMessage: ' . print_r($this->_ipnMessage, true) . "\n");
 
         if (false === $this->validateTransaction()) {
-            $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. Transaction not valid:' . $rawData);
+            $this->_logger->err(__FUNCTION__ . '::Abort IPN processing. Transaction not valid or unknown:' . $rawData);
             return;
         }
 
