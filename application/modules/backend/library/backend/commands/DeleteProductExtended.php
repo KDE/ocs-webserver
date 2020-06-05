@@ -88,7 +88,30 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         $url = $config->images->media->delete;
         $secret = $config->images->media->privateKey;
         
+        //Remove Logo
         $imgPath = $this->product->image_small;
+        $newPath = $this->deleteImageFromCdn($imgPath);
+        
+        //save renamed images
+        $this->product->image_small = $newPath;
+        $this->product->save();
+        
+        
+        //Remove Gallery Pics
+        $galleryPictureTable = new Default_Model_DbTable_ProjectGalleryPicture();
+        $stmt = $galleryPictureTable->select()->where('project_id = ?', $projectId)->order(array('sequence'));
+
+        foreach ($galleryPictureTable->fetchAll($stmt) as $pictureRow) {
+            $imgPath = $pictureRow['picture_src'];
+            $newPath = $this->deleteImageFromCdn($imgPath);
+
+            //save renamed images
+            $galleryPictureTable->update(array('picture_src' => $newPath), 'project_id = '.$pictureRow['project_id'].' AND sequence = '.$pictureRow['sequence']);
+        }
+        
+    }
+    
+    private function deleteImageFromCdn($imgPath) {
         $postString = '--'.md5(rand()).md5(rand());
         $url .= '?path='.urlencode($imgPath).'&post='.$postString.'&key='.$secret;
         
@@ -99,11 +122,10 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
             throw new Default_Model_Exception_Image('ERROR: Could not remove images from CD-Server: ' . $url . ' - server response: ' . $response->getBody());
         }
         
-        //save renamed images
-        $this->product->image_small = $this->product->image_small.$postString;
-        $this->product->save();
-        
         Zend_Registry::get('logger')->info(__METHOD__ . ' - Result fromCN-Server: ' . $response->getBody());
+        
+        //save renamed images
+        return $imgPath.$postString;
     }
 
 }
