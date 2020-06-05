@@ -84,10 +84,6 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
     
     private function deleteImagesFromCdn()
     {
-        $config = Zend_Registry::get('config');
-        $url = $config->images->media->delete;
-        $secret = $config->images->media->privateKey;
-        
         //Remove Logo
         $imgPath = $this->product->image_small;
         $newPath = $this->deleteImageFromCdn($imgPath);
@@ -112,6 +108,10 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
     }
     
     private function deleteImageFromCdn($imgPath) {
+        $config = Zend_Registry::get('config');
+        $url = $config->images->media->delete;
+        $secret = $config->images->media->privateKey;
+        
         $postString = '--'.md5(rand()).md5(rand());
         $url .= '?path='.urlencode($imgPath).'&post='.$postString.'&key='.$secret;
         
