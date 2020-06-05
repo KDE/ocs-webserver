@@ -269,11 +269,14 @@ class Default_Form_Product extends Zend_Form
 
     private function getSourceElement()
     {
+        $validatorSourceUrl = new Local_Validate_SourceUrl();
+
         return $this->createElement('text', 'source_url', array())
                     ->setRequired(false)
                     ->setFilters(array('StringTrim'))
                     ->addPrefixPath('Local_Validate', 'Local/Validate', Zend_Form_Element::VALIDATE)
                     ->addValidator('PartialUrl')
+                    ->addValidator($validatorSourceUrl)
                     ->setDecorators(array(
                         array(
                             'ViewScript',
