@@ -90,11 +90,15 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
         
         //save renamed images
         $this->product->image_small = $newPath;
-        $this->product->save();
+        $projectTable = new Default_Model_DbTable_Project();
+        $galleryPictureTable = new Default_Model_DbTable_ProjectGalleryPicture();
+
         
+        //$this->product->save();
+        $projectTable->update(array('image_small' => $newPath), "image_small = '".$imgPath."'");
+        $galleryPictureTable->update(array('picture_src' => $newPath), "picture_src = '".$imgPath."'");
         
         //Remove Gallery Pics
-        $galleryPictureTable = new Default_Model_DbTable_ProjectGalleryPicture();
         $stmt = $galleryPictureTable->select()->where('project_id = ?', $this->product->project_id)->order(array('sequence'));
 
         foreach ($galleryPictureTable->fetchAll($stmt) as $pictureRow) {
@@ -102,7 +106,9 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
             $newPath = $this->deleteImageFromCdn($imgPath);
 
             //save renamed images
-            $galleryPictureTable->update(array('picture_src' => $newPath), 'project_id = '.$pictureRow['project_id'].' AND sequence = '.$pictureRow['sequence']);
+            //$galleryPictureTable->update(array('picture_src' => $newPath), 'project_id = '.$pictureRow['project_id'].' AND sequence = '.$pictureRow['sequence']);
+            $galleryPictureTable->update(array('picture_src' => $newPath), "picture_src = '".$imgPath."'");
+            $projectTable->update(array('image_small' => $newPath), "image_small = '".$imgPath."'");
         }
         
     }
