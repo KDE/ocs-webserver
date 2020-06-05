@@ -60,7 +60,9 @@ class Local_Payment_PayPal_Response
         if ($rawResponse['transaction_subject'] == '' AND $rawResponse['payment_status'] == 'Refunded') {
             return new Local_Payment_PayPal_AdaptivePayment_ResponseChargeback($rawResponse);
         } else {
-            throw new Local_Payment_Exception('Unknown response from PayPal. Raw message:' . print_r($rawResponse, true) . "\n");
+            //Unknown response from PayPal. Raw message
+            //throw new Local_Payment_Exception('Unknown response from PayPal. Raw message:' . print_r($rawResponse, true) . "\n");
+            return null;
         }
     }
 
