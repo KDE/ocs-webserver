@@ -106,7 +106,7 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
 
             //save renamed images
             //$galleryPictureTable->update(array('picture_src' => $newPath), 'project_id = '.$pictureRow['project_id'].' AND sequence = '.$pictureRow['sequence']);
-            $galleryPictureTable->update(array('picture_src' => $newPath), "picture_src = ".$imgPath."'");
+            $galleryPictureTable->update(array('picture_src' => $newPath), "picture_src = '".$imgPath."'");
         }
         
     }
