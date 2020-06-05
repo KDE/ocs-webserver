@@ -43,16 +43,20 @@ class Default_Model_PayPal_IpnMessage extends Local_Payment_PayPal_AdaptivePayme
 
     protected function validateTransaction()
     {
-        $this->_dataIpn = $this->_tablePling->fetchPlingFromResponse($this->_ipnMessage)->toArray();
-        if (empty($this->_dataIpn)) {
-            $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
+        if(!$this->_ipnMessage) {
             return false;
+        } else {
+            $this->_dataIpn = $this->_tablePling->fetchPlingFromResponse($this->_ipnMessage)->toArray();
+            if (empty($this->_dataIpn)) {
+                $this->_logger->err(__METHOD__ . ' - ' . 'No transaction found for IPN message.' . PHP_EOL);
+                return false;
+            }
+
+            $tableProject = new Default_Model_Project();
+            $member = $tableProject->find($this->_dataIpn['project_id'])->current()->findDependentRowset('Default_Model_DbTable_Member', 'Owner')->current();
+
+            return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
         }
-
-        $tableProject = new Default_Model_Project();
-        $member = $tableProject->find($this->_dataIpn['project_id'])->current()->findDependentRowset('Default_Model_DbTable_Member', 'Owner')->current();
-
-        return $this->_checkAmount() AND $this->_checkEmail($member->paypal_mail);
     }
 
     protected function _checkAmount()
