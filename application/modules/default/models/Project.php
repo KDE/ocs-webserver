@@ -1066,6 +1066,11 @@ class Default_Model_Project extends Default_Model_DbTable_Project
 
         $memberLog = new Default_Model_MemberDeactivationLog();
         $memberLog->logProjectAsDeleted($member_id, $id);
+        
+        // this will delete the product and request the ppload for deleting associated files
+        $product = $this->find($id)->current();
+        $command = new Backend_Commands_DeleteProductExtended($product);
+        $command->doCommand();
 
         $this->setDeletedForUpdates($member_id, $id);
         $this->setDeletedForComments($member_id, $id);
@@ -2097,7 +2102,8 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function validateDeleteProjectFromSpam($project_id)
     {
-      // A product older than 6 months, with more than 5 comments or with at least 1 pling can not be deleted.
+      //produkt ist ueber 6 monate alt oder produkt hat ueber 5 kommentare oder produkt hat minimum 1 pling
+      // darf nicht gelöscht werden
       $sql ='select count_comments
             ,created_at
             , (created_at+ INTERVAL 6 MONTH < NOW()) is_old
