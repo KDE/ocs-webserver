@@ -391,4 +391,11 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function unsplashAction()
+    {
+        $command = new Backend_Commands_DeleteProductUnsplash();
+        $result = $command->doCommand();
+
+        $this->view->result = "total projects: {$result['total']} => deleted projects: " . ((int)$result['total']-(int)$result['errors']);
+    }
 } 
