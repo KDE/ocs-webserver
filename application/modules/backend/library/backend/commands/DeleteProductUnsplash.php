@@ -42,7 +42,6 @@ class Backend_Commands_DeleteProductUnsplash implements Local_Queue_CommandInter
                 FROM `project` 
                 WHERE `project`.`source_url` LIKE "%unsplash.com%" AND `project`.`status` = 20 AND `project`.`image_small` NOT LIKE "%--%"
                 ORDER BY `project`.`project_id`
-                LIMIT 1
                 ';
         $result = $projectTable->getAdapter()->fetchAll($sql);
         $count_projects = count($result);
@@ -56,8 +55,7 @@ class Backend_Commands_DeleteProductUnsplash implements Local_Queue_CommandInter
             try {
                 $currentPath = $table_row['image_small'];
                 $newPath = $this->renameImageOnCdn($currentPath);
-                $projectTable->update(array('image_small' => $newPath),
-                    "image_small = '" . $table_row['image_small'] . "'");
+                $result = $projectTable->update(array('image_small' => $newPath),"image_small = '" . $table_row['image_small'] . "'");
                 Zend_Registry::get('logger')
                              ->info(__METHOD__ . ' --> ' . $table_row['project_id'] . ' (' . $currentPath . ' => ' . $newPath . ')');
                 $this->renameGalleryImagesOnCdn($table_row['project_id']);
