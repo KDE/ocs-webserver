@@ -33,7 +33,7 @@ class Backend_View_Helper_UserRole extends Zend_View_Helper_Abstract
 
         $modelUserRoles = new Default_Model_DbTable_MemberRole();
         $roleData = $modelUserRoles->fetchRow('member_role_id = ' . $roleId);
-        if (0 >= count($roleData)) {
+        if (!$roleData || empty($roleData)) {
             return Default_Model_DbTable_MemberRole::ROLE_DEFAULT;
         }
         return $roleData->shortname;
