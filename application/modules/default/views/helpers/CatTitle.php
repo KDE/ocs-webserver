@@ -30,7 +30,7 @@ class Default_View_Helper_CatTitle extends Zend_View_Helper_Abstract
      */
     public function catTitle($catId)
     {
-        if (empty($catId) OR $catId=='' OR count($catId)==0) {
+        if (empty($catId) OR $catId=='') {
             return 'All';
         }
 
