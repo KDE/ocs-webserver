@@ -49,6 +49,7 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
     {
         $this->deleteProductFromIndex();
         $this->deleteCollectionFromPPload();
+        $this->deleteImagesFromCdn();
     }
 
     protected function deleteProductFromIndex()
@@ -79,6 +80,58 @@ class Backend_Commands_DeleteProductExtended implements Local_Queue_CommandInter
                 . ' response: ' . print_r($collectionResponse,
                     true));
         }
+    }
+    
+    private function deleteImagesFromCdn()
+    {
+        //Remove Logo
+        $imgPath = $this->product->image_small;
+        $newPath = $this->deleteImageFromCdn($imgPath);
+        
+        //save renamed images
+        $this->product->image_small = $newPath;
+        $projectTable = new Default_Model_DbTable_Project();
+        $galleryPictureTable = new Default_Model_DbTable_ProjectGalleryPicture();
+
+        
+        //$this->product->save();
+        $projectTable->update(array('image_small' => $newPath), "image_small = '".$imgPath."'");
+        $galleryPictureTable->update(array('picture_src' => $newPath), "picture_src = '".$imgPath."'");
+        
+        //Remove Gallery Pics
+        $stmt = $galleryPictureTable->select()->where('project_id = ?', $this->product->project_id)->order(array('sequence'));
+
+        foreach ($galleryPictureTable->fetchAll($stmt) as $pictureRow) {
+            $imgPath = $pictureRow['picture_src'];
+            $newPath = $this->deleteImageFromCdn($imgPath);
+
+            //save renamed images
+            //$galleryPictureTable->update(array('picture_src' => $newPath), 'project_id = '.$pictureRow['project_id'].' AND sequence = '.$pictureRow['sequence']);
+            $galleryPictureTable->update(array('picture_src' => $newPath), "picture_src = '".$imgPath."'");
+            $projectTable->update(array('image_small' => $newPath), "image_small = '".$imgPath."'");
+        }
+        
+    }
+    
+    private function deleteImageFromCdn($imgPath) {
+        $config = Zend_Registry::get('config');
+        $url = $config->images->media->delete;
+        $secret = $config->images->media->privateKey;
+        
+        $postString = '--'.md5(rand()).md5(rand());
+        $url .= '?path='.urlencode($imgPath).'&post='.$postString.'&key='.$secret;
+        
+        $client = new Zend_Http_Client($url);
+        $response = $client->request('POST');
+
+        if ($response->getStatus() > 200) {
+            throw new Default_Model_Exception_Image('ERROR: Could not remove images from CD-Server: ' . $url . ' - server response: ' . $response->getBody());
+        }
+        
+        Zend_Registry::get('logger')->info(__METHOD__ . ' - Result fromCN-Server: ' . $response->getBody());
+        
+        //save renamed images
+        return $imgPath.$postString;
     }
 
 }

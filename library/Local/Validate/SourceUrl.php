@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  ocs-webserver
  *
@@ -19,38 +20,31 @@
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
-class Default_View_Helper_CatTitle extends Zend_View_Helper_Abstract
+class Local_Validate_SourceUrl extends Zend_Validate_Abstract
 {
 
-    const PROJECT_CATEGORY_ID = 'project_category_id';
+    const INVALID_URL = 'invalidUrl';
 
-    /**
-     * @param int $catId
-     * @return string
-     */
-    public function catTitle($catId)
+    protected $_messageTemplates = array(
+        self::INVALID_URL => "'%value%' is not a valid URL. It is not possible to create products based on elements from unsplash.com, because this conflicts with their terms of service. (https://unsplash.com/terms)"
+    );
+
+    public function isValid($value)
     {
-        if (empty($catId) OR $catId=='') {
-            return 'All';
+        $this->_setValue((string)$value);
+        $search = "unsplash.com";
+
+        $isValidURL = true;
+        if(preg_match("/{$search}/i", $value)) {
+            $isValidURL = false;
         }
 
-        $id = $catId;
+        if (false == $isValidURL) {
+            $this->_error(self::INVALID_URL);
+            return false;
+        }
 
-        if (is_array($catId)) {
-            if (array_key_exists(self::PROJECT_CATEGORY_ID, $catId))
-                $id = $catId[self::PROJECT_CATEGORY_ID];
-            else
-                return null;
-        }
-        
-        $table = new Default_Model_DbTable_ProjectCategory();
-        $cat = $table->fetchActive($id);
-        
-        if (count($cat)) {
-            return $cat[0]['title'];
-        } else {
-            return '';
-        }
+        return true;
     }
 
 }

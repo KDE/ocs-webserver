@@ -39,7 +39,7 @@ class Local_Payment_PayPal_Response
         if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'subscr_signup')) {
             return new Local_Payment_PayPal_SubscriptionSignup_Response($rawResponse);
         } else    
-        if (isset($rawResponse['txn_type']) AND ($rawResponse['txn_type'] == 'subscr_cancel')) {
+        if (isset($rawResponse['txn_type']) AND (($rawResponse['txn_type'] == 'subscr_cancel') || ($rawResponse['txn_type'] == 'subscr_failed')  || ($rawResponse['txn_type'] == 'recurring_payment_suspended_due_to_max_failed_paym'))) {
             return new Local_Payment_PayPal_SubscriptionCancel_Response($rawResponse);
         } else    
         if (isset($rawResponse['responseEnvelope_ack'])) {
@@ -60,7 +60,9 @@ class Local_Payment_PayPal_Response
         if ($rawResponse['transaction_subject'] == '' AND $rawResponse['payment_status'] == 'Refunded') {
             return new Local_Payment_PayPal_AdaptivePayment_ResponseChargeback($rawResponse);
         } else {
-            throw new Local_Payment_Exception('Unknown response from PayPal. Raw message:' . print_r($rawResponse, true) . "\n");
+            //Unknown response from PayPal. Raw message
+            //throw new Local_Payment_Exception('Unknown response from PayPal. Raw message:' . print_r($rawResponse, true) . "\n");
+            return null;
         }
     }
 

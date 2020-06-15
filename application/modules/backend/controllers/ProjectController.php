@@ -192,10 +192,6 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         Default_Model_ActivityLog::logActivity($dataId, $dataId, $identity->member_id,
             Default_Model_ActivityLog::BACKEND_PROJECT_DELETE, $product);
 
-        // this will delete the product and request the ppload for deleting associated files
-        $command = new Backend_Commands_DeleteProductExtended($product);
-        $command->doCommand();
-
         $jTableResult = array();
         $jTableResult['Result'] = self::RESULT_OK;
 
@@ -395,4 +391,11 @@ class Backend_ProjectController extends Local_Controller_Action_Backend
         $this->_helper->json($jTableResult);
     }
 
+    public function unsplashAction()
+    {
+        $command = new Backend_Commands_DeleteProductUnsplash();
+        $result = $command->doCommand();
+
+        $this->view->result = "total projects: {$result['total']} => deleted projects: " . ((int)$result['total']-(int)$result['errors']);
+    }
 } 
