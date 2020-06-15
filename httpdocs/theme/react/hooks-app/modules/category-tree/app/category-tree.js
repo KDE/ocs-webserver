@@ -10,6 +10,9 @@ import {
 
 import './../style/cat-tree.css';
 
+console.log('window - ');
+console.log(window);
+
 let isShowRealDomainAsUrl = 1, showStoreListingsFirst = false;
 if (window.is_show_real_domain_as_url === 1) isShowRealDomainAsUrl = 1;
 else {

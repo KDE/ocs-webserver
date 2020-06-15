@@ -3,7 +3,7 @@ const entries = {
   //'app-supporters':'./modules/app-supporters/entry-app-supporters.js',
   //'carousel':'./modules/carousel/entry-carousel.js',
   //'category-blocks':'./modules/category-blocks/entry-category-blocks.js',
-  //'category-tree':'./modules/category-tree/entry-category-tree.js',
+  'category-tree':'./modules/category-tree/entry-category-tree.js',
   //'header':'./modules/header/entry-header.js',
   //'metaheader':'./modules/metaheader/entry-metaheader.js',
   //'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
@@ -11,7 +11,7 @@ const entries = {
   // 'pling-section':'./modules/pling-section/entry-pling-section.js'
   //'portal-index':'./modules/portal-index/protal-index.js,
   //'product-browse':'./modules/product-browse/entry-product-browse.js',
-  'product-media-slider':'./modules/product-media-slider/entry-product-media-slider.js',
+  //'product-media-slider':'./modules/product-media-slider/entry-product-media-slider.js',
   //'tag-rating':'./modules/tag-rating/entry-tag-rating.js
 }
 
