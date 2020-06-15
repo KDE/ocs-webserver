@@ -42,6 +42,8 @@ echo $this->render('statistics/headerTabs.phtml');
 <script type="application/javascript">
   var catTree = <?= $jsonTree ?>;  
   var backendView = true;  
+  window.config = {};
+  window.config.sName = "www.pling.com"
 </script>
 <script type="application/javascript" src="/theme/react/bundle/category-tree-bundle.js"></script>
 <script type="text/javascript">
