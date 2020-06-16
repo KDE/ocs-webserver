@@ -19,12 +19,13 @@ export function GenerateGalleryArray(product){
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
                 let addFileToGallery = false;
-                if (f.type.indexOf('video') > -1 || 
-                    f.type.indexOf('audio') > -1 ||
-                    f.type.indexOf('ogg') > -1 ||
+                if (f.type.indexOf('video') > -1|| 
+                    f.type.indexOf('audio') > -1||
+                    f.type.indexOf('ogg') > -1  ||
                     f.name.indexOf('.cbr') > -1 ||
                     f.name.indexOf('.cbz') > -1 ||
-                    f.type.indexOf('epub') > -1){
+                    f.type.indexOf('epub') > -1 ||
+                    f.type.indexOf('application/octet-stream') > -1 ){
                     addFileToGallery = true;
                 }
 
