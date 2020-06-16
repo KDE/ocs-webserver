@@ -12,7 +12,9 @@ export function GenerateGalleryArray(product){
         if (!product.image_small) noLogo = true;
     }
     if (product.embed_code !== null && product.embed_code.length > 0) galleryArray = [{url:product.embed_code,type:'embed'}, ... galleryArray ];
-
+    
+    console.log(window.filesJson);
+    
     if (window.filesJson) {
         window.filesJson.forEach(function(f,index){
             if (f.active === "1"){
