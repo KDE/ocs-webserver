@@ -14,10 +14,16 @@ function ProductMediaSlider(){
   /* Component */ 
 
   const [ product, setProduct ] = useState(window.product);
+  console.log('product - ');
+  console.log(product);
   let galleryArray = GenerateGalleryArray(product);
+  console.log('gallery array - ');
+  console.log(galleryArray);
   const audioFileIndex = galleryArray.findIndex(gf => gf.type === "audio");
   if (audioFileIndex > -1) galleryArray = GroupAudioFilesInGallery(galleryArray);
   const [ gallery, setGallery ] = useState(galleryArray);
+  console.log('gallery - ');
+  console.log(gallery);
   const [ disableGallery, setDisableGallery ] = useState(gallery.length > 1 ? false : true)
   const parentContainerElement = document.getElementById('product-title-div');
   const [ containerWidth, setContainerWidth ] = useState(parentContainerElement.offsetWidth);
