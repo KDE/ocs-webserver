@@ -403,7 +403,6 @@ function SlideItem(props){
     )    
   }
   else if (props.slide.type === "comics"){
-    console.log(props.currentSlide);
     slideContentDisplay = (
       <Suspense fallback={<span id="ajax-loder"></span>}>
       <ComicsReaderWrapper 
