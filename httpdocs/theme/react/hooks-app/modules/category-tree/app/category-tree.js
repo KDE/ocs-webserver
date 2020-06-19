@@ -28,7 +28,7 @@ function CategoryTree(){
 
     const [ categoryTree, setCategoryTree ] = useState(initialCatTree);    
     const [ categoryId, SetCategoryId ] = useState(window.categoryId);
-    const [ cat_tree_filter, setCat_tree_filter ] = useState(window.cat_tree_filter);
+    const [ catTreeFilter, setcatTreeFilter ] = useState(window.cat_tree_filter);
     
     const [ selectedCategory, setSelectedCategory ] = useState(GetSelectedCategory(categoryTree,categoryId));
 
@@ -171,7 +171,7 @@ function CategoryTree(){
                 onHeaderNavigationItemClick={(cvc) => onHeaderNavigationItemClick(cvc)}
                 onGoBackClick={goBack}
                 onGoForwardClick={goForward}
-                cat_tree_filter={cat_tree_filter}
+                catTreeFilter={catTreeFilter}
             />
             <CategoryPanelsContainer
                 categoryTree={categoryTree}
@@ -186,7 +186,7 @@ function CategoryTree(){
                 onSetShowBreadCrumbs={(val) => setShowBreadCrumbs(val)}
                 onSetShowBackButton={(val) => setShowBackButton(val)}
                 onSetShowForwardButton={(val) => setShowForwardButton(val)}
-                cat_tree_filter={cat_tree_filter}
+                catTreeFilter={catTreeFilter}
             />
             {tagCloudDisplay}
         </div>
@@ -215,7 +215,7 @@ function CategoryTreeHeader(props){
             if (categories.length === index + 1){
                 let catLink;                                
                 if (cvc.title !== "Search") catLink = getUrlContext(window.location.href) + ( cvc.id === "00" ? "/browse/" : "/browse/cat/"+cvc.id+"/order/latest/")
-                if(props.cat_tree_filter=='filter_favourites')
+                if(props.catTreeFilter=='filter_favourites')
                 {
                     catLink+='fav/1';
                 }
@@ -240,7 +240,7 @@ function CategoryTreeHeader(props){
                 let storeName = window.config.sName, storeHref = window.config.sName;                               
                 if (props.storeInfo.name.length > 0) storeName = props.storeInfo.name;
                 if (props.storeInfo.menuhref.length > 0) storeHref = props.storeInfo.menuhref;
-                if (props.cat_tree_filter=='filter_favourites'){
+                if (props.catTreeFilter=='filter_favourites'){
                     storeHref= storeHref+'/my-favourites';
                 } else {
                     storeHref += "/browse";
@@ -410,7 +410,7 @@ function CategoryPanelsContainer(props){
             searchPhrase={props.searchPhrase}
             onSetSliderHeight={(height) => onSetSliderHeight(height)}
             onCategorySelect={(c,catLink) => onCategorySelect(c,catLink)}
-            cat_tree_filter={props.cat_tree_filter}
+            catTreeFilter={props.catTreeFilter}
         />
     ))
 
@@ -477,7 +477,7 @@ function CategoryPanel(props){
                             onCategoryClick={(c,catLink) => props.onCategorySelect(c,catLink)}
                             searchMode={props.searchMode}
                             searchPhrase={props.searchPhrase}
-                            cat_tree_filter={props.cat_tree_filter}
+                            catTreeFilter={props.catTreeFilter}
                         />
                     )
                 }
@@ -532,7 +532,7 @@ function CategoryMenuItem(props){
 
     if (catTitle === "ALL" && props.parentCategory === -1) catLink += "/browse/";
 
-    if(props.cat_tree_filter=='filter_favourites')
+    if(props.catTreeFilter=='filter_favourites')
     {
         catLink+='fav/1';
     }

@@ -4,6 +4,7 @@ const entries = {
   //'carousel':'./modules/carousel/entry-carousel.js',
   //'category-blocks':'./modules/category-blocks/entry-category-blocks.js',
   //'category-tree':'./modules/category-tree/entry-category-tree.js',
+  //'category-tree':'./modules/category-tree-backend/category-tree-backend.js',
   //'header':'./modules/header/entry-header.js',
   //'metaheader':'./modules/metaheader/entry-metaheader.js',
   //'metaheader-local':'./modules/metaheader/entry-metaheader-local.js',  
