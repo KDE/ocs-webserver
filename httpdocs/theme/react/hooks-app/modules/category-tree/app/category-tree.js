@@ -595,7 +595,7 @@ function CategoryTagCloud(props){
     let tagsDisplay;
     if (tags){
         tagsDisplay = tags.map((t,index) => (
-            <a key={index} href={"http://" + window.location.host + "/search?projectSearchText="+t.tag_fullname+"&f=tags"}>
+            <a key={index} href={"http://" + window.location.host + "/search/projectSearchText/"+t.tag_fullname+"/f/tags"}>
                 <span className="glyphicon glyphicon-tag"></span>
                 {t.tag_name}
             </a>
