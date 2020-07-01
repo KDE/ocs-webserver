@@ -144,9 +144,9 @@ class Default_Model_Tags
         return Zend_Db_Table::getDefaultAdapter();
     }
 
-    /**
+   /**
      * @param int    $object_id
-     * @param string $tags
+     * @param string $tags 
      * @param int    $tag_type
      */
     public function deassignTags($object_id, $tags, $tag_type)
@@ -154,11 +154,13 @@ class Default_Model_Tags
         $removable_tags = array_diff(explode(',', $this->getTags($object_id, $tag_type)), explode(',', $tags));
 
         //$sql = "DELETE tag_object FROM tag_object JOIN tag ON tag.tag_id = tag_object.tag_id WHERE tag.tag_name = :name and tag_object.tag_object_id=:object_id";
-        $sql = "UPDATE `tag_object` INNER JOIN `tag` ON `tag`.`tag_id` = `tag_object`.`tag_id`  SET `tag_changed` = NOW() , `is_deleted` = 1 WHERE `tag`.`tag_name` = :name AND `tag_object`.`tag_object_id`=:object_id";
-        $this->getAdapter()->query($sql, array('tagObjectId' => $object_id, 'tagType' => $tag_type));
+        //$sql = "UPDATE `tag_object` INNER JOIN `tag` ON `tag`.`tag_id` = `tag_object`.`tag_id`  SET `tag_changed` = NOW() , `is_deleted` = 1 WHERE `tag`.`tag_name` = :name AND `tag_object`.`tag_object_id`=:object_id";
+        $sql = "UPDATE `tag_object` INNER JOIN `tag` ON `tag`.`tag_id` = `tag_object`.`tag_id`  SET `tag_changed` = NOW() , `is_deleted` = 1 
+        WHERE `tag`.`tag_name` = :name AND `tag_object`.`tag_object_id`=:object_id AND AND `tag_object`.`tag_type_id` = :tagType";
+        //$this->getAdapter()->query($sql, array('tagObjectId' => $object_id, 'tagType' => $tag_type));
 
         foreach ($removable_tags as $removable_tag) {
-            $this->getAdapter()->query($sql, array('name' => $removable_tag, 'object_id' => $object_id));
+            $this->getAdapter()->query($sql, array('name' => $removable_tag, 'object_id' => $object_id,'tagType' => $tag_type));
         }
         $this->updateChanged($object_id, $tag_type);
     }
