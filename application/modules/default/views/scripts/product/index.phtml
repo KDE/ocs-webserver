@@ -400,7 +400,7 @@ $galleryPicturesJson = Zend_Json::encode($this->galleryPictures);
                                     <?php
                                     if($this->product->amount_reports && $this->product->amount_reports>1)
                                     {
-                                        echo '<span style="color:red">('.$this->product->amount_reports.' times reported. Product will be validated from our moderators.)</span>';
+                                        echo '<span style="color:red; font-size:small">('.$this->product->amount_reports.' times reported. Product will be validated from our moderators.)</span>';
                                     }?>
                                     <?php
                                     if($isowner){
