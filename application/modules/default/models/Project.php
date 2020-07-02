@@ -1179,25 +1179,32 @@ class Default_Model_Project extends Default_Model_DbTable_Project
      */
     public function fetchProjectsByFilter($inputFilterParams, $limit = null, $offset = null)
     {
-        $cacheName = __FUNCTION__ . '_' . md5(serialize($inputFilterParams) . (string)$limit . (string)$offset);
-        /** @var Zend_Cache_Core $cache */
-        $cache = Zend_Registry::get('cache');
+        // $cacheName = __FUNCTION__ . '_' . md5(serialize($inputFilterParams) . (string)$limit . (string)$offset);
+        // /** @var Zend_Cache_Core $cache */
+        // $cache = Zend_Registry::get('cache');
 
-        if (false === ($returnValue = $cache->load($cacheName))) {
-            $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
+        // if (false === ($returnValue = $cache->load($cacheName))) {
+        //     $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
 
-            if (APPLICATION_ENV == 'development') {
-                Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
-            }
+        //     if (APPLICATION_ENV == 'development') {
+        //         Zend_Registry::get('logger')->debug(__METHOD__ . ' - ' . $statement->__toString());
+        //     }
 
-            /** @var Zend_Db_Table_Rowset $fetchedElements */
-            $fetchedElements = $this->fetchAll($statement);
-            $statement->reset('limitcount')->reset('limitoffset');
-            $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
-            $countElements = $this->fetchRow($statement);
-            $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
-            $cache->save($returnValue, $cacheName, array(), 120);
-        }
+        //     /** @var Zend_Db_Table_Rowset $fetchedElements */
+        //     $fetchedElements = $this->fetchAll($statement);
+        //     $statement->reset('limitcount')->reset('limitoffset');
+        //     $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
+        //     $countElements = $this->fetchRow($statement);
+        //     $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
+        //     $cache->save($returnValue, $cacheName, array(), 120);
+        // }
+
+        $statement = $this->generateStatement($inputFilterParams, $limit, $offset);
+        $fetchedElements = $this->fetchAll($statement);
+        $statement->reset('limitcount')->reset('limitoffset');
+        $statement->reset('columns')->columns(array('count' => new Zend_Db_Expr('count(*)')));
+        $countElements = $this->fetchRow($statement);
+        $returnValue = array('elements' => $fetchedElements, 'total_count' => $countElements->count);
 
         return $returnValue;
     }
