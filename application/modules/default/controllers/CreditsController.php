@@ -27,67 +27,67 @@ class CreditsController extends Local_Controller_Action_DomainSwitch
 
     public function indexAction()
     {
-       	$this->view->page = (int)$this->getParam('page', 1);
+        $this->view->page = (int)$this->getParam('page', 1);
     }
 
     public function deleteAction()
     {
-       	$this->_helper->layout->disableLayout();
-       	$id =  (int)$this->getParam('id');
-       	$m = new Default_Model_ProjectClone();
-       	$m->setDelete($id);
-       	$this->_helper->json(array(
-       	    'status'  => 'ok',
-       	    'message' => 'deleted',
-       	    'data'    => array()
-       	));
+        $this->_helper->layout->disableLayout();
+        $id = (int)$this->getParam('id');
+        $m = new Default_Model_ProjectClone();
+        $m->setDelete($id);
+        $this->_helper->json(array(
+            'status'  => 'ok',
+            'message' => 'deleted',
+            'data'    => array(),
+        ));
 
     }
 
-     public function validAction()
-    {
-       	$this->_helper->layout->disableLayout();
-	 $id =  (int)$this->getParam('id');
-	 $m = new Default_Model_ProjectClone();
-       	$m->setValid($id);
-       	$this->_helper->json(array(
-       	    'status'  => 'ok',
-       	    'message' => 'validated',
-       	    'data'    => array()
-       	));
-       	
-    }
-
-     public function editAction()
+    public function validAction()
     {
         $this->_helper->layout->disableLayout();
-      	$id =  (int)$this->getParam('id'); 
-      	$text =$this->getParam('t');
-      	$project_id =  (int)$this->getParam('p'); // cloneID
-      	$link =  $this->getParam('l');
-      	$m = new Default_Model_ProjectClone();
-		
-		$arr = array( 'text' => $text
-				, 'project_id' =>$project_id				  
-			);
-		if($link){
-			$arr['external_link'] = $link;
-		}
-	    $m->update($arr, 'project_clone_id='.$id);                             
-	
-       	$this->_helper->json(array(
-       	    'status'  => 'ok',
-       	    'message' => 'updated',
-       	    'data'    => array()
-       	));
-       	
+        $id = (int)$this->getParam('id');
+        $m = new Default_Model_ProjectClone();
+        $m->setValid($id);
+        $this->_helper->json(array(
+            'status'  => 'ok',
+            'message' => 'validated',
+            'data'    => array(),
+        ));
+
     }
 
-	public function modsAction()
-	{
-		$this->view->headTitle('Modifications','SET');
-		$this->view->page = (int)$this->getParam('page', 1);
-	}
+    public function editAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $id = (int)$this->getParam('id');
+        $text = $this->getParam('t');
+        $project_id = (int)$this->getParam('p'); // cloneID
+        $link = $this->getParam('l');
+        $m = new Default_Model_ProjectClone();
 
- 
+        $arr = array(
+            'text'       => $text,
+            'project_id' => $project_id,
+        );
+        if ($link) {
+            $arr['external_link'] = $link;
+        }
+        $m->update($arr, 'project_clone_id=' . $id);
+
+        $this->_helper->json(array(
+            'status'  => 'ok',
+            'message' => 'updated',
+            'data'    => array(),
+        ));
+
+    }
+
+    public function modsAction()
+    {
+        $this->view->headTitle('Modifications', 'SET');
+        $this->view->page = (int)$this->getParam('page', 1);
+    }
+
 }

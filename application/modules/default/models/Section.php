@@ -25,21 +25,13 @@
 class Default_Model_Section
 {
 
-    /**
-     * @inheritDoc
-     */
-    public function __construct()
-    {
-
-    }
-
     public function fetchSponsorHierarchy()
     {
         $sql = "
-            SELECT section.name AS section_name, sponsor.sponsor_id,sponsor.name AS sponsor_name
-            FROM section_sponsor
-            JOIN sponsor ON sponsor.sponsor_id = section_sponsor.sponsor_id
-            JOIN section ON section.section_id = section_sponsor.section_id
+            SELECT `section`.`name` AS `section_name`, `sponsor`.`sponsor_id`,`sponsor`.`name` AS `sponsor_name`
+            FROM `section_sponsor`
+            JOIN `sponsor` ON `sponsor`.`sponsor_id` = `section_sponsor`.`sponsor_id`
+            JOIN `section` ON `section`.`section_id` = `section_sponsor`.`section_id`
 
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
@@ -50,101 +42,116 @@ class Default_Model_Section
 
         return $optgroup;
     }
-    
+
+    /**
+     * @return Zend_Db_Adapter_Abstract
+     */
+    private function getAdapter()
+    {
+        return Zend_Db_Table::getDefaultAdapter();
+    }
+
     public function fetchAllSections()
     {
         $sql = "
-            SELECT section_id,name,description
-            FROM section
-            WHERE is_active = 1
-            and hide = 0
-            ORDER BY section.order
+            SELECT `section_id`,`name`,`description`
+            FROM `section`
+            WHERE `is_active` = 1
+            AND `hide` = 0
+            ORDER BY `section`.`order`
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
 
         return $resultSet;
     }
-    
+
     public function fetchAllSectionsAndCategories()
     {
         $sql = "
             SELECT 
-            s.section_id
-            ,s.name
-            ,s.description
-            ,c.project_category_id
-            ,pc.title
-            FROM section s
-            JOIN section_category c on s.section_id = c.section_id
-            join project_category pc on c.project_category_id = pc.project_category_id and pc.is_deleted = 0 and pc.is_active = 1 and pc.rgt=pc.lft+1
-            WHERE s.is_active = 1
-            order by s.name , pc.title
+            `s`.`section_id`
+            ,`s`.`name`
+            ,`s`.`description`
+            ,`c`.`project_category_id`
+            ,`pc`.`title`
+            FROM `section` `s`
+            JOIN `section_category` `c` ON `s`.`section_id` = `c`.`section_id`
+            JOIN `project_category` `pc` ON `c`.`project_category_id` = `pc`.`project_category_id` AND `pc`.`is_deleted` = 0 AND `pc`.`is_active` = 1 AND `pc`.`rgt`=`pc`.`lft`+1
+            WHERE `s`.`is_active` = 1
+            ORDER BY `s`.`name` , `pc`.`title`
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;   
+
+        return $resultSet;
     }
 
     public function fetchCategoriesWithPayout()
     {
-        $sql = " select m.section_id,m.project_category_id,SUM(m.credits_section)/100 amount, pc.title
-                from micro_payout m
-                join project_category pc on m.project_category_id = pc.project_category_id 
-                where m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
-                and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
-                and m.is_member_pling_excluded=0
-                group by project_category_id
+        $sql = "SELECT `m`.`section_id`,`m`.`project_category_id`,SUM(`m`.`credits_section`)/100 `amount`, `pc`.`title`
+                FROM `micro_payout` `m`
+                JOIN `project_category` `pc` ON `m`.`project_category_id` = `pc`.`project_category_id` 
+                WHERE `m`.`paypal_mail` IS NOT NULL AND `m`.`paypal_mail` <> '' AND (`m`.`paypal_mail` REGEXP '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')            
+                AND `m`.`yearmonth` = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  AND `m`.`is_license_missing` = 0 AND `m`.`is_source_missing`=0 AND `m`.`is_pling_excluded` = 0 
+                AND `m`.`is_member_pling_excluded`=0
+                GROUP BY `project_category_id`
                 ";
-         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
-    
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+
+        return $resultSet;
+
     }
 
     public function fetchCategoriesWithPlinged()
     {
-        $sql = " select
-                p.project_category_id, m.section_id,pc.title
-                from project_plings pl
-                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
-                inner join section_category m on p.project_category_id = m.project_category_id
-                inner join project_category pc on m.project_category_id = pc.project_category_id                
-                where pl.is_deleted = 0 and pl.is_active = 1
-                group by p.project_category_id
-                order by pc.title asc
+        $sql = "SELECT
+                `p`.`project_category_id`, `m`.`section_id`,`pc`.`title`
+                FROM `project_plings` `pl`
+                INNER JOIN `stat_projects` `p` ON `pl`.`project_id` = `p`.`project_id` AND `p`.`status` = 100
+                INNER JOIN `section_category` `m` ON `p`.`project_category_id` = `m`.`project_category_id`
+                INNER JOIN `project_category` `pc` ON `m`.`project_category_id` = `pc`.`project_category_id`                
+                WHERE `pl`.`is_deleted` = 0 AND `pl`.`is_active` = 1
+                GROUP BY `p`.`project_category_id`
+                ORDER BY `pc`.`title` ASC
                 ";
-         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
+        $resultSet = $this->getAdapter()->fetchAll($sql);
+
+        return $resultSet;
     }
+
     /** removed inner join supporters
-    public function fetchCategoriesWithPlinged()
+     * public function fetchCategoriesWithPlinged()
+     * {
+     * $sql = " select
+     * p.project_category_id, m.section_id,pc.title
+     * from project_plings pl
+     * inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
+     * inner join section_category m on p.project_category_id = m.project_category_id
+     * inner join project_category pc on m.project_category_id = pc.project_category_id
+     * inner join (
+     * select distinct su2.member_id
+     * from section_support_paypements ss
+     * JOIN support su2 ON su2.id = ss.support_id
+     * where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
+     * ) ss on pl.member_id = ss.member_id
+     * where pl.is_deleted = 0 and pl.is_active = 1
+     * group by p.project_category_id
+     * ";
+     * $resultSet = $this->getAdapter()->fetchAll($sql);
+     * return $resultSet;
+     * }
+     *
+     * @param int $section_id
+     *
+     * @return array
+     */
+    public function getNewActivePlingProduct($section_id = null)
     {
-        $sql = " select
-                p.project_category_id, m.section_id,pc.title
-                from project_plings pl
-                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
-                inner join section_category m on p.project_category_id = m.project_category_id
-                inner join project_category pc on m.project_category_id = pc.project_category_id
-                inner join (
-                    select distinct su2.member_id
-                    from section_support_paypements ss
-                    JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
-                ) ss on pl.member_id = ss.member_id
-                where pl.is_deleted = 0 and pl.is_active = 1
-                group by p.project_category_id
-                ";
-         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
-    } */
+        $sqlSection = "";
 
-    public function getNewActivePlingProduct($section_id=null)
-    {
-        if($section_id)
-        {
-            $sqlSection = " and m.section_id = ".$section_id;
-        }else
-        {
-            $sqlSection = " ";
+        if (!empty($section_id)) {
+            $sqlSection = " and m.section_id = " . $section_id;
         }
+
         $sql = "
                 select 
                 pl.member_id as pling_member_id
@@ -170,18 +177,18 @@ class Default_Model_Section
                 limit 20
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
+
+        return $resultSet;
     }
 
-    public function fetchTopProductsPerSection($section_id=null)
+    public function fetchTopProductsPerSection($section_id = null)
     {
-        if($section_id)
-        {
-            $sqlSection = " and m.section_id = ".$section_id;
-        }else
-        {
-            $sqlSection = " ";
+        $sqlSection = "";
+
+        if (!empty($section_id)) {
+            $sqlSection = " and m.section_id = " . $section_id;
         }
+
         $sql = "
             select 
             p.project_id,
@@ -200,31 +207,28 @@ class Default_Model_Section
             from stat_projects p,micro_payout m
             where p.project_id = m.project_id
             and m.paypal_mail is not null and m.paypal_mail <> '' and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-            ".$sqlSection."
+            " . $sqlSection . "
             and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
             and m.is_member_pling_excluded=0
             GROUP BY m.project_id
             order by sum(m.credits_plings) desc
             limit 20
         ";
-       
+
         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
+
+        return $resultSet;
     }
 
-
-
-    public function fetchTopPlingedProductsPerSection($section_id=null)
+    public function fetchTopPlingedProductsPerSection($section_id = null)
     {
-        if($section_id)
-        {
-            $sqlSection = " and m.section_id = ".$section_id;
-        }else
-        {
-            $sqlSection = " ";
+        $sqlSection = "";
+
+        if (!empty($section_id)) {
+            $sqlSection = " and m.section_id = " . $section_id;
         }
 
-        // ignore if supporter still active 
+        // ignore if supporter still active
         // inner join (
         //     select distinct su2.member_id
         //     from section_support_paypements ss
@@ -255,136 +259,133 @@ class Default_Model_Section
                 from project_plings pl
                 inner join stat_projects p on pl.project_id = p.project_id and p.status = 100
                 inner join section_category m on p.project_category_id = m.project_category_id
-                
-                where pl.is_deleted = 0 and pl.is_active = 1" .$sqlSection."
+                where pl.is_deleted = 0 and pl.is_active = 1 " . $sqlSection . "
                 group by pl.project_id
                 order by sum_plings desc ,sum_plings_all desc
                 limit 20        
         ";
-       
+
         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
+
+        return $resultSet;
     }
 
     /**
-     *  ignore if supporter still active 
+     *  ignore if supporter still active
      * inner join (
-                    select distinct su2.member_id
-                    from section_support_paypements ss
-                    JOIN support su2 ON su2.id = ss.support_id
-                    where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
-                ) ss on pl.member_id = ss.member_id
+     * select distinct su2.member_id
+     * from section_support_paypements ss
+     * JOIN support su2 ON su2.id = ss.support_id
+     * where yearmonth = DATE_FORMAT(NOW()- INTERVAL 1 MONTH,'%Y%m')
+     * ) ss on pl.member_id = ss.member_id
      */
     public function fetchTopPlingedProductsPerCategory($cat_id)
     {
-        $sql = "select pl.project_id
-                ,count(1) as sum_plings 
-                ,(select count(1) from project_plings pls where pls.project_id=pl.project_id and pls.is_deleted=0) as sum_plings_all
-                ,p.title
-                ,p.image_small
-                ,p.laplace_score
-                ,p.count_likes
-                ,p.count_dislikes   
-                ,p.member_id 
-                ,p.profile_image_url
-                ,p.username
-                ,p.cat_title as catTitle
-                ,p.project_changed_at
-                ,p.version
-                ,p.description
-                ,p.package_names
-                ,p.count_comments
-                ,p.changed_at
-                ,p.created_at
-                from project_plings pl
-                inner join stat_projects p on pl.project_id = p.project_id and p.status = 100                                
-                where pl.is_deleted = 0 and pl.is_active = 1 and p.project_category_id=:cat_id
-                group by pl.project_id
-                order by sum_plings desc 
-                limit 20     ";
-        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id"=>$cat_id));
-        return $resultSet;    
-    }
+        $sql = "SELECT `pl`.`project_id`
+                ,count(1) AS `sum_plings` 
+                ,(SELECT count(1) FROM `project_plings` `pls` WHERE `pls`.`project_id`=`pl`.`project_id` AND `pls`.`is_deleted`=0) AS `sum_plings_all`
+                ,`p`.`title`
+                ,`p`.`image_small`
+                ,`p`.`laplace_score`
+                ,`p`.`count_likes`
+                ,`p`.`count_dislikes`   
+                ,`p`.`member_id` 
+                ,`p`.`profile_image_url`
+                ,`p`.`username`
+                ,`p`.`cat_title` AS `catTitle`
+                ,`p`.`project_changed_at`
+                ,`p`.`version`
+                ,`p`.`description`
+                ,`p`.`package_names`
+                ,`p`.`count_comments`
+                ,`p`.`changed_at`
+                ,`p`.`created_at`
+                FROM `project_plings` `pl`
+                INNER JOIN `stat_projects` `p` ON `pl`.`project_id` = `p`.`project_id` AND `p`.`status` = 100                                
+                WHERE `pl`.`is_deleted` = 0 AND `pl`.`is_active` = 1 AND `p`.`project_category_id`=:cat_id
+                GROUP BY `pl`.`project_id`
+                ORDER BY `sum_plings` DESC 
+                LIMIT 20     ";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id" => $cat_id));
 
+        return $resultSet;
+    }
 
     public function fetchTopProductsPerCategory($cat_id)
     {
-        $sql = "select 
-                p.project_id,
-                p.member_id,
-                p.project_category_id,
-                p.title,
-                p.description,
-                p.created_at,
-                p.changed_at,
-                p.image_small,
-                p.username,
-                p.profile_image_url,
-                p.cat_title,
-                p.laplace_score,
-                sum(m.credits_plings)/100 AS probably_payout_amount
-                from stat_projects p,micro_payout m
-                where  p.project_id = m.project_id
-                     and m.paypal_mail is not null and m.paypal_mail <> ''
-                     and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                      and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
-                        and m.is_member_pling_excluded=0           
-                            and p.project_category_id = :cat_id 
-					 GROUP BY m.project_id   
-                order by sum(m.credits_plings) desc 
-                limit 20";
-        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id"=>$cat_id));
-        return $resultSet;    
+        $sql = "SELECT 
+                `p`.`project_id`,
+                `p`.`member_id`,
+                `p`.`project_category_id`,
+                `p`.`title`,
+                `p`.`description`,
+                `p`.`created_at`,
+                `p`.`changed_at`,
+                `p`.`image_small`,
+                `p`.`username`,
+                `p`.`profile_image_url`,
+                `p`.`cat_title`,
+                `p`.`laplace_score`,
+                sum(`m`.`credits_plings`)/100 AS `probably_payout_amount`
+                FROM `stat_projects` `p`,`micro_payout` `m`
+                WHERE  `p`.`project_id` = `m`.`project_id`
+                     AND `m`.`paypal_mail` IS NOT NULL AND `m`.`paypal_mail` <> ''
+                     AND (`m`.`paypal_mail` REGEXP '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
+                      AND `m`.`yearmonth` = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  AND `m`.`is_license_missing` = 0 AND `m`.`is_source_missing`=0 AND `m`.`is_pling_excluded` = 0 
+                        AND `m`.`is_member_pling_excluded`=0           
+                            AND `p`.`project_category_id` = :cat_id 
+					 GROUP BY `m`.`project_id`   
+                ORDER BY sum(`m`.`credits_plings`) DESC 
+                LIMIT 20";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id" => $cat_id));
+
+        return $resultSet;
     }
 
-    
     public function fetchProbablyPayoutLastMonth($section_id)
     {
-        if($section_id)
-        {
-            $sqlSection = " and s.section_id = ".$section_id;
-        }else
-        {
-            $sqlSection = " ";
+        $sqlSection = "";
+
+        if (!empty($section_id)) {
+            $sqlSection = " and s.section_id = " . $section_id;
         }
+
         /*
         $sql = "select  sum(probably_payout_amount) probably_payout_amount
             from member_dl_plings m, section s, section_category c
             where  s.section_id = c.section_id and c.project_category_id = m.project_category_id
            ".$sqlSection."
             and m.paypal_mail is not null and m.paypal_mail <> ''
-            and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
+            and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$')
+            and m.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')  and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0
             and m.is_member_pling_excluded=0
             ";
         */
         $sql = "SELECT s.sum_amount_payout AS probably_payout_amount FROM section_funding_stats s
                 WHERE s.yearmonth = DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m')
-               ".$sqlSection."
+               " . $sqlSection . "
                 ";
         $resultSet = $this->getAdapter()->fetchRow($sql);
-        
+
         return $resultSet['probably_payout_amount'];
 
     }
 
-    public function fetchTopPlingedCreatorPerSection($section_id=null)
+    public function fetchTopPlingedCreatorPerSection($section_id = null)
     {
-        if($section_id)
-        {
-            $sqlSection = " and mm.section_id = ".$section_id;
-        }else
-        {
-            $sqlSection = " ";
+        $sqlSection = "";
+
+        if (!empty($section_id)) {
+            $sqlSection = " and mm.section_id = " . $section_id;
         }
 
         /**
          * inner join (
-			select distinct su2.member_id
-			from section_support_paypements ss
-			JOIN support su2 ON su2.id = ss.support_id
-			where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
-		) ss on pl.member_id = ss.member_id
+         * select distinct su2.member_id
+         * from section_support_paypements ss
+         * JOIN support su2 ON su2.id = ss.support_id
+         * where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+         * ) ss on pl.member_id = ss.member_id
          */
         $sql = "select p.member_id,
         count(1) as cnt,
@@ -398,24 +399,24 @@ class Default_Model_Section
         inner join section_category mm on p.project_category_id = mm.project_category_id
         
         where p.status = 100
-        and pl.is_deleted = 0 and pl.is_active = 1 ".$sqlSection."  
+        and pl.is_deleted = 0 and pl.is_active = 1 " . $sqlSection . "  
         group by p.member_id
         order by cnt desc 
         limit 20
         ";
         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
+
+        return $resultSet;
     }
 
-    public function fetchTopCreatorPerSection($section_id=null)
+    public function fetchTopCreatorPerSection($section_id = null)
     {
-        if($section_id)
-        {
-            $sqlSection = " and s.section_id = ".$section_id;
-        }else
-        {
-            $sqlSection = " ";
+        $sqlSection = "";
+
+        if (!empty($section_id)) {
+            $sqlSection = " and s.section_id = " . $section_id;
         }
+
         $sql = "
             select                 
                 me.username,
@@ -426,7 +427,7 @@ class Default_Model_Section
                 where s.section_id = c.section_id and c.project_category_id = m.project_category_id AND me.member_id = m.member_id
                 and m.paypal_mail is not null and m.paypal_mail <> ''
                 and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                ".$sqlSection."  
+                " . $sqlSection . "  
                 and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') 
 					 and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
                 and m.is_member_pling_excluded=0
@@ -434,157 +435,148 @@ class Default_Model_Section
                 order by sum(m.credits_plings) desc
                 limit 20
         ";
-        
+
         $resultSet = $this->getAdapter()->fetchAll($sql);
-        return $resultSet;    
+
+        return $resultSet;
     }
 
     /** removed inner join suppoerts
+     * public function fetchTopPlingedCreatorPerCategory($cat_id)
+     * {
+     *
+     * $sql = "select p.member_id,
+     * count(1) as cnt,
+     * (select count(1) from project_plings pls , stat_projects ppp where pls.project_id=ppp.project_id and
+     * pls.is_deleted=0 and ppp.member_id=p.member_id) as sum_plings_all, m.username, m.profile_image_url, m.created_at
+     * from stat_projects p join project_plings pl on p.project_id = pl.project_id join member m on p.member_id =
+     * m.member_id inner join ( select distinct su2.member_id from section_support_paypements ss JOIN support su2 ON
+     * su2.id = ss.support_id where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+     * ) ss on pl.member_id = ss.member_id
+     * where p.status = 100 and p.project_category_id=:cat_id
+     * and pl.is_deleted = 0 and pl.is_active = 1
+     * group by p.member_id
+     * order by cnt desc
+     * limit 20";
+     * $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
+     * return $resultSet;
+     * }
+     */
     public function fetchTopPlingedCreatorPerCategory($cat_id)
     {
-        
-        $sql = "select p.member_id,
-                    count(1) as cnt,
-                    (select count(1) from project_plings pls , stat_projects ppp where pls.project_id=ppp.project_id and pls.is_deleted=0 and ppp.member_id=p.member_id) as sum_plings_all,
-                    m.username,
-                    m.profile_image_url,
-                    m.created_at
-                    from stat_projects p
-                    join project_plings pl on p.project_id = pl.project_id
-                    join member m on p.member_id = m.member_id                   
-                    inner join (
-                        select distinct su2.member_id
-                        from section_support_paypements ss
-                        JOIN support su2 ON su2.id = ss.support_id
-                        where yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
-                    ) ss on pl.member_id = ss.member_id
-                    where p.status = 100 and p.project_category_id=:cat_id
-                    and pl.is_deleted = 0 and pl.is_active = 1  
-                    group by p.member_id
-                    order by cnt desc 
-                    limit 20";
-        $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
-        return $resultSet;    
-    }
-    */
-    public function fetchTopPlingedCreatorPerCategory($cat_id)
-    {
-        
-        $sql = "select p.member_id,
-                    count(1) as cnt,
-                    (select count(1) from project_plings pls , stat_projects ppp where pls.project_id=ppp.project_id and pls.is_deleted=0 and ppp.member_id=p.member_id) as sum_plings_all,
-                    m.username,
-                    m.profile_image_url,
-                    m.created_at
-                    from stat_projects p
-                    join project_plings pl on p.project_id = pl.project_id
-                    join member m on p.member_id = m.member_id                                       
-                    where p.status = 100 and p.project_category_id=:cat_id
-                    and pl.is_deleted = 0 and pl.is_active = 1  
-                    group by p.member_id
-                    order by cnt desc 
-                    limit 20";
-        $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
-        return $resultSet;    
+
+        $sql = "SELECT `p`.`member_id`,
+                    count(1) AS `cnt`,
+                    (SELECT count(1) FROM `project_plings` `pls` , `stat_projects` `ppp` WHERE `pls`.`project_id`=`ppp`.`project_id` AND `pls`.`is_deleted`=0 AND `ppp`.`member_id`=`p`.`member_id`) AS `sum_plings_all`,
+                    `m`.`username`,
+                    `m`.`profile_image_url`,
+                    `m`.`created_at`
+                    FROM `stat_projects` `p`
+                    JOIN `project_plings` `pl` ON `p`.`project_id` = `pl`.`project_id`
+                    JOIN `member` `m` ON `p`.`member_id` = `m`.`member_id`                                       
+                    WHERE `p`.`status` = 100 AND `p`.`project_category_id`=:cat_id
+                    AND `pl`.`is_deleted` = 0 AND `pl`.`is_active` = 1  
+                    GROUP BY `p`.`member_id`
+                    ORDER BY `cnt` DESC 
+                    LIMIT 20";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id" => $cat_id));
+
+        return $resultSet;
     }
 
-     public function fetchTopCreatorPerCategory($cat_id)
+    public function fetchTopCreatorPerCategory($cat_id)
     {
-        
-        $sql = "select              
-                p.username,
-                p.profile_image_url,
-                p.member_id,
-                SUM(m.credits_plings)/100 probably_payout_amount
-                from stat_projects p, micro_payout m
-                where p.member_id = m.member_id and p.project_id = m.project_id
-                and m.paypal_mail is not null and m.paypal_mail <> ''
-                and (m.paypal_mail regexp '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
-                 and m.yearmonth =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') and m.is_license_missing = 0 and m.is_source_missing=0 and m.is_pling_excluded = 0 
-                and m.is_member_pling_excluded=0
-                and p.project_category_id = :cat_id
-                group by p.username,p.profile_image_url,p.member_id
-                order by sum(m.credits_plings) desc 
-                limit 20";
-        $resultSet = $this->getAdapter()->fetchAll($sql,array("cat_id"=>$cat_id));
-        return $resultSet;    
+
+        $sql = "SELECT              
+                `p`.`username`,
+                `p`.`profile_image_url`,
+                `p`.`member_id`,
+                SUM(`m`.`credits_plings`)/100 `probably_payout_amount`
+                FROM `stat_projects` `p`, `micro_payout` `m`
+                WHERE `p`.`member_id` = `m`.`member_id` AND `p`.`project_id` = `m`.`project_id`
+                AND `m`.`paypal_mail` IS NOT NULL AND `m`.`paypal_mail` <> ''
+                AND (`m`.`paypal_mail` REGEXP '^[A-Z0-9._%-]+@[A-Z0-9.-]+.[A-Z]{2,4}$') 
+                 AND `m`.`yearmonth` =  DATE_FORMAT(CURRENT_DATE() - INTERVAL 1 MONTH, '%Y%m') AND `m`.`is_license_missing` = 0 AND `m`.`is_source_missing`=0 AND `m`.`is_pling_excluded` = 0 
+                AND `m`.`is_member_pling_excluded`=0
+                AND `p`.`project_category_id` = :cat_id
+                GROUP BY `p`.`username`,`p`.`profile_image_url`,`p`.`member_id`
+                ORDER BY sum(`m`.`credits_plings`) DESC 
+                LIMIT 20";
+        $resultSet = $this->getAdapter()->fetchAll($sql, array("cat_id" => $cat_id));
+
+        return $resultSet;
     }
 
     public function fetchFirstSectionForStoreCategories($category_array)
     {
         $sql = "
             SELECT *
-            FROM section
-            JOIN section_category on section_category.section_id = section.section_id
-            WHERE is_active = 1
-            AND section_category.project_category_id in (:category_id)
+            FROM `section`
+            JOIN `section_category` ON `section_category`.`section_id` = `section`.`section_id`
+            WHERE `is_active` = 1
+            AND `section_category`.`project_category_id` IN (:category_id)
             LIMIT 1
         ";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_array));
 
         return $resultSet;
     }
-    
+
     public function fetchSectionForCategory($category_id)
     {
         $sql = "
             SELECT *
-            FROM section
-            JOIN section_category on section_category.section_id = section.section_id
-            WHERE is_active = 1
-            AND section_category.project_category_id = :category_id
+            FROM `section`
+            JOIN `section_category` ON `section_category`.`section_id` = `section`.`section_id`
+            WHERE `is_active` = 1
+            AND `section_category`.`project_category_id` = :category_id
             LIMIT 1
         ";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('category_id' => $category_id));
 
         return $resultSet;
     }
-    
-    public function isMemberSectionSupporter($section_id, $member_id) {
+
+    public function isMemberSectionSupporter($section_id, $member_id)
+    {
         $sql = "
             SELECT *
-            FROM section_support 
-            JOIN section ON section.section_id = section_support.section_id
-            JOIN support ON support.id = section_support.support_id AND support.status_id = 2
-            WHERE section_support.is_active = 1
-            AND section.section_id = :section_id
-            AND support.member_id = :member_id
+            FROM `section_support` 
+            JOIN `section` ON `section`.`section_id` = `section_support`.`section_id`
+            JOIN `support` ON `support`.`id` = `section_support`.`support_id` AND `support`.`status_id` = 2
+            WHERE `section_support`.`is_active` = 1
+            AND `section`.`section_id` = :section_id
+            AND `support`.`member_id` = :member_id
             LIMIT 1
         ";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
-        
-        if($resultSet) {
+
+        if ($resultSet) {
             return true;
         }
-        return false;
-    }
-    
-    
-    public function wasMemberSectionSupporter($section_id, $member_id) {
-        $sql = "
-            SELECT *
-            FROM section_support 
-            JOIN section ON section.section_id = section_support.section_id
-            JOIN support ON support.id = section_support.support_id AND support.status_id >= 2
-            WHERE section_support.is_active = 1
-            AND section.section_id = :section_id
-            AND support.member_id = :member_id
-            LIMIT 1
-        ";
-        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
-        
-        if($resultSet) {
-            return true;
-        }
+
         return false;
     }
 
-    /**
-     * @return Zend_Db_Adapter_Abstract
-     */
-    private function getAdapter()
+    public function wasMemberSectionSupporter($section_id, $member_id)
     {
-        return Zend_Db_Table::getDefaultAdapter();
+        $sql = "
+            SELECT *
+            FROM `section_support` 
+            JOIN `section` ON `section`.`section_id` = `section_support`.`section_id`
+            JOIN `support` ON `support`.`id` = `section_support`.`support_id` AND `support`.`status_id` >= 2
+            WHERE `section_support`.`is_active` = 1
+            AND `section`.`section_id` = :section_id
+            AND `support`.`member_id` = :member_id
+            LIMIT 1
+        ";
+        $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id, 'member_id' => $member_id));
+
+        if ($resultSet) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -594,22 +586,21 @@ class Default_Model_Section
      */
     public function fetchAllSectionStats($yearmonth = null, $isForAdmin = false)
     {
-        $sql = "SELECT * FROM section_funding_stats p
-                WHERE p.yearmonth = :yearmonth";
-        
-        if(!$isForAdmin) {
+        $sql = "SELECT * FROM `section_funding_stats` `p`
+                WHERE `p`.`yearmonth` = :yearmonth";
+
+        if (!$isForAdmin) {
             $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
         }
-        
-        if(empty($yearmonth)) {
+
+        if (empty($yearmonth)) {
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
         $resultSet = $this->getAdapter()->fetchAll($sql, array('yearmonth' => $yearmonth));
 
         return $resultSet;
     }
-    
-    
+
     /**
      * @param int $yearmonth
      *
@@ -617,39 +608,38 @@ class Default_Model_Section
      */
     public function fetchSectionStats($yearmonth = null, $section_id, $isForAdmin = false)
     {
-        $sql = "SELECT * FROM section_funding_stats p
-                WHERE p.yearmonth = :yearmonth
-                AND p.section_id = :section_id";
-        
-        if(!$isForAdmin) {
+        $sql = "SELECT * FROM `section_funding_stats` `p`
+                WHERE `p`.`yearmonth` = :yearmonth
+                AND `p`.`section_id` = :section_id";
+
+        if (!$isForAdmin) {
             $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW()),'%Y%m')";
         }
-        
-        if(empty($yearmonth)) {
+
+        if (empty($yearmonth)) {
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
         $resultSet = $this->getAdapter()->fetchRow($sql, array('yearmonth' => $yearmonth, 'section_id' => $section_id));
 
         return $resultSet;
     }
-    
+
     /**
-     * @param int $yearmonth
+     * @param int $section_id
      *
      * @return array
      */
     public function fetchSectionStatsLastMonth($section_id)
     {
-        $sql = "SELECT * FROM section_funding_stats p
-                WHERE p.yearmonth = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
-                AND p.section_id = :section_id";
-        
+        $sql = "SELECT * FROM `section_funding_stats` `p`
+                WHERE `p`.`yearmonth` = DATE_FORMAT(NOW() - INTERVAL 1 MONTH,'%Y%m')
+                AND `p`.`section_id` = :section_id";
+
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
 
         return $resultSet;
     }
-    
-    
+
     /**
      * @param int $yearmonth
      *
@@ -657,57 +647,55 @@ class Default_Model_Section
      */
     public function fetchSectionSupportStats($yearmonth = null, $section_id, $isForAdmin = false)
     {
-        $sql = "SELECT p.yearmonth, p.section_id, SUM(p.tier) AS sum_support, null AS sum_sponsor, null AS sum_dls, null AS sum_dls_payout, null AS sum_amount_payout, null AS sum_amount
-					,(SELECT COUNT(1) AS num_supporter FROM (
-						 	SELECT COUNT(1) AS num_supporter,ss.section_id, su2.member_id FROM section_support_paypements ss
-	                    JOIN support su2 ON su2.id = ss.support_id
-	                    WHERE ss.yearmonth = :yearmonth
-	                    GROUP BY ss.section_id, su2.member_id
-                    ) A
-                    WHERE A.section_id = p.section_id
-                ) AS num_supporter FROM section_support_paypements p
-					WHERE p.yearmonth = :yearmonth
-					AND p.section_id = :section_id ";
-        
-        if(!$isForAdmin) {
+        $sql = "SELECT `p`.`yearmonth`, `p`.`section_id`, SUM(`p`.`tier`) AS `sum_support`, NULL AS `sum_sponsor`, NULL AS `sum_dls`, NULL AS `sum_dls_payout`, NULL AS `sum_amount_payout`, NULL AS `sum_amount`
+					,(SELECT COUNT(1) AS `num_supporter` FROM (
+						 	SELECT COUNT(1) AS `num_supporter`,`ss`.`section_id`, `su2`.`member_id` FROM `section_support_paypements` `ss`
+	                    JOIN `support` `su2` ON `su2`.`id` = `ss`.`support_id`
+	                    WHERE `ss`.`yearmonth` = :yearmonth
+	                    GROUP BY `ss`.`section_id`, `su2`.`member_id`
+                    ) `A`
+                    WHERE `A`.`section_id` = `p`.`section_id`
+                ) AS `num_supporter` FROM `section_support_paypements` `p`
+					WHERE `p`.`yearmonth` = :yearmonth
+					AND `p`.`section_id` = :section_id ";
+
+        if (!$isForAdmin) {
             $sql .= " AND p.yearmonth >= DATE_FORMAT((NOW() - INTERVAL 1 MONTH),'%Y%m')";
         }
-        
+
         $sql .= " GROUP BY p.yearmonth, p.section_id";
-        if(empty($yearmonth)) {
+        if (empty($yearmonth)) {
             $yearmonth = "DATE_FORMAT(NOW(),'%Y%m')";
         }
         $resultSet = $this->getAdapter()->fetchRow($sql, array('yearmonth' => $yearmonth, 'section_id' => $section_id));
 
         return $resultSet;
     }
-    
-    
+
     public function fetchSection($section_id)
     {
         $sql = "
             SELECT *
-            FROM section
-            WHERE is_active = 1 and section_id = :section_id
+            FROM `section`
+            WHERE `is_active` = 1 AND `section_id` = :section_id
         ";
         $resultSet = $this->getAdapter()->fetchRow($sql, array('section_id' => $section_id));
 
         return $resultSet;
     }
-    
-    
+
     public function getAllDownloadYears($isForAdmin = false)
     {
         $sql = "
                 SELECT 
-                    SUBSTR(`member_dl_plings`.`yearmonth`,1,4) as year,
-                    MAX(`member_dl_plings`.`yearmonth`) as max_yearmonth
+                    SUBSTR(`member_dl_plings`.`yearmonth`,1,4) AS `year`,
+                    MAX(`member_dl_plings`.`yearmonth`) AS `max_yearmonth`
                 FROM
                     `member_dl_plings`";
-        if(!$isForAdmin) {
+        if (!$isForAdmin) {
             $sql .= " WHERE SUBSTR(`member_dl_plings`.`yearmonth`,1,4) = DATE_FORMAT(NOW(),'%Y')";
         }
-        
+
         $sql .= " GROUP BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4)
                 ORDER BY SUBSTR(`member_dl_plings`.`yearmonth`,1,4) DESC
             ";

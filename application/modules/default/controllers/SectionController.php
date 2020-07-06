@@ -31,7 +31,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
             $isAdmin = true;
         }
 
-        $section_id = $this->getParam('id',null);
+        $section_id = (int)$this->getParam('id',null);
 
         $products = self::fetchProducts($section_id, $isAdmin);
         $creators = self::fetchCreators($section_id, $isAdmin);
@@ -81,7 +81,7 @@ class SectionController extends Local_Controller_Action_DomainSwitch
         if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
             $isAdmin = true;
         }
-        $section_id = $this->getParam('id',null);
+        $section_id = (int)$this->getParam('id',null);
         $products = self::fetchProducts($section_id, $isAdmin);
         $creators = self::fetchCreators($section_id, $isAdmin);
         $this->_helper->json(array('status' => 'ok', 'products' => $products,'creators' => $creators));
