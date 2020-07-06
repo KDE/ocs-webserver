@@ -149,7 +149,7 @@ class SupportersController extends Local_Controller_Action_DomainSwitch
     {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        $section_id = $this->getParam('id',null);
+        $section_id = (int)$this->getParam('id',null);
         $model = new Default_Model_Section();
         $helpPrintDate = new Default_View_Helper_PrintDate();
         $helperImage = new Default_View_Helper_Image();
