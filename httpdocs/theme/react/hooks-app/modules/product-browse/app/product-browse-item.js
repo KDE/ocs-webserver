@@ -127,6 +127,7 @@ export function ProductBrowseItem(props){
                     <MusicPlayerWrapper 
                         product={p}
                         items={productFiles} 
+                        imgUrl={imgUrl}
                     />
                 )
         }
@@ -221,12 +222,13 @@ function MusicPlayerWrapper(props){
     
     return (
       <div>
-        <Suspense fallback={'...'}>
-        <MusicPlayer 
-          product={props.product}
-          items={props.items} 
-          containerWidth={props.width}
-        />
+        <Suspense fallback={''}>
+            <MusicPlayer 
+            product={props.product}
+            items={props.items} 
+            containerWidth={props.width}
+            imgUrl={props.imgUrl}
+            />
         </Suspense>
       </div>
     )

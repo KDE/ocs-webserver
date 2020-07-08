@@ -97,10 +97,11 @@ function Carousel(props){
 
   React.useEffect(() => {
     window.addEventListener("resize", updateDimensions);
+    updateDimensions(true);
   },[])
 
   function updateDimensions(animateCarousel){
-    let newItemsPerRow = 5;
+    let newItemsPerRow = 6;
     if (window.hpVersion === 2){
       if (props.device === 'large') newItemsPerRow = 6;
       else if (props.device === 'mid') newItemsPerRow = 6;
@@ -117,7 +118,7 @@ function Carousel(props){
     let newsliderPosition = 0;
     if (sliderPosition) newsliderPosition = sliderPosition;
 
-    if (window.page === "appimages" || window.page === "libreoffice") $('#carousel-module-container').width(newContainerWidth);
+    $('#carousel-module-container').width(newContainerWidth);
 
     setSliderPosition(newsliderPosition);
     setContainerWidth(newContainerWidth);
@@ -256,7 +257,7 @@ function Carousel(props){
     }
 
 
-    let hpVersionClass = "one";
+    let hpVersionClass = "two";
     let carouselWrapperStyling = {};
     let carouselArrowsMargin;
     if (window.hpVersion === 2 && itemWidth){
@@ -311,7 +312,6 @@ function Carousel(props){
 }
 
 function CarouselItem(props){
-  
     let paddingTop;
     let productInfoDisplay = (
       <div className="product-info">

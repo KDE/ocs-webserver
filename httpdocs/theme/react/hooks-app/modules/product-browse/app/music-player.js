@@ -28,7 +28,13 @@ function MusicPlayer(props){
   
     const initialIsMobileValue = props.containerWidth < 600 ? true : false;
     const [ isMobile, setIsMobile ] = useState(initialIsMobileValue);
-    
+
+    const [ localStorageAudioTrackUrl, setLocalStorageAudioTrackUrl ] = useLocalStorage('audioTrackUrl',null);
+    const [ localStorageIsPlaying, setLocalStorageIsPlaying ] = useLocalStorage('audioTrackIsPlaying',false);
+    const [ localStorageProductImage, setLocalStorageProductImage ] = useLocalStorage('audioTrackProductImage',null);
+    const [ localStorageProductInfo, setLocalStorageProductInfo ] = useLocalStorage('audioTrackProductInfo',null)
+
+
     useEffect(() => {
         const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
         const currentSrc = props.items[playIndex].musicSrc;
@@ -57,15 +63,21 @@ function MusicPlayer(props){
 
     // audio player
   
-    function onPlayClick(){ productBrowseDispatch({type:'SET_CURRENT_ITEM',itemId:props.product.project_id,pIndex:playIndex}); }
+    function onPlayClick(){ 
+      productBrowseDispatch({type:'SET_CURRENT_ITEM',itemId:props.product.project_id,pIndex:playIndex}); 
+    }
 
     function playAudio(reload,newPlayIndex){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       let pi = newPlayIndex ? newPlayIndex : playIndex;
       const currentSrc = props.items[pi].musicSrc;
       if (isPaused === false ||  playerElement[0].currentTime && playerElement[0].currentTime === 0 || reload === true) playerElement[0].src = currentSrc;
+      setLocalStorageAudioTrackUrl(currentSrc);
+      setLocalStorageProductImage(props.imgUrl);
+      setLocalStorageProductInfo(props.product);
       playerElement[0].play();
       setIsPlaying(true);
+      setLocalStorageIsPlaying(true);
       setIsPaused(false);
       onReportAudioPlay(currentSrc,newPlayIndex);
     }
@@ -76,6 +88,7 @@ function MusicPlayer(props){
       const playerElement = document.getElementById("music-player-container-"+props.product.project_id).getElementsByTagName('audio');
       playerElement[0].pause();
       setIsPlaying(false);
+      setLocalStorageIsPlaying(false);
       setIsPaused(true);
       onReportAudioStop(props.items[playIndex].musicSrc)
     }
@@ -176,7 +189,7 @@ function MusicPlayer(props){
     )
 }
 
-// Hook
+// Hook use Previous
 function usePrevious(value) {
     // The ref object is a generic container whose current property is mutable ...
     // ... and can hold any value, similar to an instance property on a class
@@ -189,6 +202,43 @@ function usePrevious(value) {
     
     // Return previous value (happens before update in useEffect above)
     return ref.current;
+}
+
+// Hook Use Local Storage
+function useLocalStorage(key, initialValue) {
+  // State to store our value
+  // Pass initial state function to useState so logic is only executed once
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      // Get from local storage by key
+      const item = window.localStorage.getItem(key);
+      // Parse stored json or if none return initialValue
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      // If error also return initialValue
+      console.log(error);
+      return initialValue;
+    }
+  });
+
+  // Return a wrapped version of useState's setter function that ...
+  // ... persists the new value to localStorage.
+  const setValue = value => {
+    try {
+      // Allow value to be a function so we have same API as useState
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+      // Save state
+      setStoredValue(valueToStore);
+      // Save to local storage
+      window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    } catch (error) {
+      // A more advanced implementation would handle the error case
+      console.log(error);
+    }
+  };
+
+  return [storedValue, setValue];
 }
 
 function MusicPlayerControlPanel(props){
@@ -223,11 +273,11 @@ function MusicPlayerControlPanel(props){
   
     let playButtonDisplay;
     if (props.isPlaying === true){
-      if (props.isMobile === true) playButtonDisplay = <span onTouchStart={() => props.onPauseClick()}>{pauseButtonElement}</span>
-      else playButtonDisplay = <span onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
+      if (props.isMobile === true) playButtonDisplay = <span className="pause-icon-wrapper" onTouchStart={() => props.onPauseClick()}>{pauseButtonElement}</span>
+      else playButtonDisplay = <span  className="pause-icon-wrapper" onClick={() => props.onPauseClick()}>{pauseButtonElement}</span>
     } else {
-      if (props.isMobile === true)  playButtonDisplay = <span onTouchStart={() => props.onPlayClick()}>{playButtonElement}</span>
-      else  playButtonDisplay = <span onClick={() => props.onPlayClick()}>{playButtonElement}</span>
+      if (props.isMobile === true)  playButtonDisplay = <span  className="play-icon-wrapper" onTouchStart={() => props.onPlayClick()}>{playButtonElement}</span>
+      else  playButtonDisplay = <span  className="play-icon-wrapper" onClick={() => props.onPlayClick()}>{playButtonElement}</span>
     }
   
     let audioControlsDisplay;
@@ -269,6 +319,5 @@ function MusicPlayerControlPanel(props){
       </div>
     )
 }
-
 
 export default MusicPlayer;
