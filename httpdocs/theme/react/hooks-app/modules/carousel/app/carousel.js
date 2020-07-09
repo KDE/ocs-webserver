@@ -30,13 +30,11 @@ function CarouselsModule(props){
   }
 
   function updateDimensions(){
-    console.log('what the fuck!!!!!');
     const width = window.innerWidth;
     let initDevice;
     if (width >= 910) initDevice = "large"
     else if (width < 910 && width >= 610) initDevice = "mid";
     else if (width < 610) initDevice = "tablet";
-    console.log(initDevice);
     setDevice(initDevice)
   }
 
