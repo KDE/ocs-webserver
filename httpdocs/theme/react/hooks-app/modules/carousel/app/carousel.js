@@ -96,16 +96,26 @@ function Carousel(props){
 
 
   React.useEffect(() => {
-    window.addEventListener("resize", updateDimensions);
+    window.addEventListener("resize", () => updateDimensions(true));
+    window.addEventListener("orientationchange",  () => updateDimensions(true));
     updateDimensions(true);
   },[])
 
   function updateDimensions(animateCarousel){
+
+    const width = window.innerWidth;
+    let device;
+    if (width >= 910) device = "large"
+    else if (width < 910 && width >= 610) device = "mid";
+    else if (width < 610) device = "tablet";
+
+    console.log(device);
+
     let newItemsPerRow = 6;
     if (window.hpVersion === 2){
-      if (props.device === 'large') newItemsPerRow = 6;
-      else if (props.device === 'mid') newItemsPerRow = 6;
-      else if (props.device === 'tablet') newItemsPerRow = 2;
+      if (device === 'large') newItemsPerRow = 6;
+      else if (device === 'mid') newItemsPerRow = 4;
+      else if (device === 'tablet') newItemsPerRow = 2;
     }
 
     let newContainerWidth;

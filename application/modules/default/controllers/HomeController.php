@@ -43,12 +43,11 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                     $this->view->index = $index;
                 } else {
                     //$this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
-                    /*if ($storeConfig->config_id_name=='opendesktop' && Zend_Auth::getInstance()->hasIdentity()){
+                    if ($storeConfig->config_id_name=='opendesktop' && Zend_Auth::getInstance()->hasIdentity()){
                             $this->redirect('/start');                           
                         }else{
                             $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
-                        }  */
-                         
+                        }   
                                       
                 }
 
