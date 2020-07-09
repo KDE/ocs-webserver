@@ -48,7 +48,7 @@ class HomeController extends Local_Controller_Action_DomainSwitch
                         }else{
                             $this->_helper->viewRenderer('index-' . $storeConfig->config_id_name);
                         }  */
-                        $this->_helper->viewRenderer('index-plingcom'); 
+                         
                                       
                 }
 
