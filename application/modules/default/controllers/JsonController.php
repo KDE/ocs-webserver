@@ -247,6 +247,32 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($reternUsers, $this->_format);
     }
 
+    public static function printDateSinceForum($last_posted_at)
+    {
+        $now = new DateTime();
+        $now->setTimezone(new DateTimeZone('UTC'));
+
+        $last_posted_at = new DateTime($last_posted_at, new DateTimeZone('UTC'));
+
+        $interval = $last_posted_at->diff($now);
+
+        $tokens = array(
+            'y' => 'year',
+            'm' => 'month',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($tokens as $unit => $text) {
+            if ($interval->$unit == 0) continue;
+
+            return $interval->$unit . ' ' . $text . (($interval->$unit > 1) ? 's' : '') . ' ago';
+        }
+
+        return null;
+    }
+
     public function forumAction()
     {
 
@@ -266,8 +292,10 @@ class JsonController extends Zend_Controller_Action
         $timeago = new Default_View_Helper_PrintDateSince();
         foreach ($results->topic_list->topics as &$t) {
 
-            $date = new DateTime($t->last_posted_at, new DateTimeZone('UTC'));
-            $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
+            $t->timeago = self::printDateSinceForum($t->last_posted_at);
+
+            // $date = new DateTime($t->last_posted_at, new DateTimeZone('UTC'));
+            // $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
             // $strTime = str_replace('T', ' ', substr($t->last_posted_at, 0, 19));
 
             // //$t->timeago = $timeago->printDateSince($strTime);
