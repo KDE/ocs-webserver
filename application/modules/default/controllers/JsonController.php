@@ -247,6 +247,32 @@ class JsonController extends Zend_Controller_Action
         $this->_sendResponse($reternUsers, $this->_format);
     }
 
+    public static function printDateSinceForum($last_posted_at)
+    {
+        $now = new DateTime();
+        $now->setTimezone(new DateTimeZone('UTC'));
+
+        $last_posted_at = new DateTime($last_posted_at, new DateTimeZone('UTC'));
+
+        $interval = $last_posted_at->diff($now);
+
+        $tokens = array(
+            'y' => 'year',
+            'm' => 'month',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($tokens as $unit => $text) {
+            if ($interval->$unit == 0) continue;
+
+            return $interval->$unit . ' ' . $text . (($interval->$unit > 1) ? 's' : '') . ' ago';
+        }
+
+        return null;
+    }
+
     public function forumAction()
     {
 
@@ -266,16 +292,9 @@ class JsonController extends Zend_Controller_Action
         $timeago = new Default_View_Helper_PrintDateSince();
         foreach ($results->topic_list->topics as &$t) {
 
-            $strTime = str_replace('T', ' ', substr($t->last_posted_at, 0, 19));
-
-            //$t->timeago = $timeago->printDateSince($strTime);
-
-            $fromFormat = 'Y-m-d H:i:s';
-            $date = DateTime::createFromFormat($fromFormat, $strTime);
-            // forum/latest.json last_posted_at is 5 hours later as server somehow.. quick workaround
-            $date->sub(new DateInterval('PT4H10M'));
-            $t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));
-            //$t->timeago =  $date->format('Y-m-d H:i:s');
+            //$date = new DateTime($t->last_posted_at, new DateTimeZone('UTC'));
+            //$t->timeago = $timeago->printDateSince($date->format('Y-m-d h:s:m'));            
+            $t->timeago = self::printDateSinceForum($t->last_posted_at);
             $r = 'Reply';
             $counts = $t->posts_count - 1;
             if ($counts == 0) {
