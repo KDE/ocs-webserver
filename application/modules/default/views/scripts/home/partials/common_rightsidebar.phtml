@@ -107,16 +107,16 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
         ?>
 
         <div class="supportDiv" >
-        <?php 
-                $config = Zend_Registry::get('config')->settings->client->default;
-                $baseurlStore = $config->baseurl_store;
-                $identity = Zend_Auth::getInstance()->getIdentity();
-                if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
-        ?>
-            <a href="<?= $baseurlStore ?>/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
-        <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
-            <a href="<?= $baseurlStore ?>/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
-        <?php   }?>
+            <?php 
+                    $config = Zend_Registry::get('config')->settings->client->default;
+                    $baseurlStore = $config->baseurl_store;
+                    $identity = Zend_Auth::getInstance()->getIdentity();
+                    if(null == $identity || (null != $identity && !$this->isSupporter($identity->member_id))) {                                                  
+            ?>
+                <a href="<?= $baseurlStore ?>/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Become a Supporter</a>
+            <?php   } else if((null != $identity && $this->isSupporter($identity->member_id))) { ?>
+                <a href="<?= $baseurlStore ?>/support" class="btn btn-primary btn-lg active btn-block" role="button" aria-pressed="true">Thank you for your support!</a>
+            <?php   }?>
         </div>
 
         <div  class="row sidebar-right-info" >       
@@ -213,7 +213,6 @@ $git_url = Zend_Registry::get('config')->settings->server->opencode->host;
             <?php } ?>           
             
         </div>
-
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){                               
                 RssNews.setup();   

@@ -291,7 +291,7 @@ $time_start = microtime(true);
               <?php } ?>
 
             </div>
-        </aside>
+          </aside>
           <?php
           $time_elapsed = microtime(true) - $time_start;
           if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
@@ -307,7 +307,6 @@ $time_start = microtime(true);
     </span>
 </div>
 </main>
-
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){
             TooltipUser.setup("tooltipuserleft","left");
