@@ -33,7 +33,7 @@ export function GenerateGalleryArray(product){
                     if (f.type.indexOf('video') > -1 || f.type.indexOf('audio') > -1 ) type = f.type.split('/')[0]
                     else if (f.type.indexOf('epub') > -1 ) type = "book";
                     else if (f.type.indexOf('image') > -1) type = "image";
-                    else if (f.type.indexOf('ogg') > -1 || f.type.indexOf('application/octet-stream') > -1 ) type = "audio";
+                    else if (f.type.indexOf('ogg') > -1) type = "audio";
                     else if (f.name.indexOf('.cbr') > -1 || f.name.indexOf('.cbz') > -1){
                         isComics = true;
                         type = "comics";

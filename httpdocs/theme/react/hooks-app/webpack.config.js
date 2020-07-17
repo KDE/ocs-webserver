@@ -13,8 +13,8 @@ const entries = {
   //'pling-section':'./modules/pling-section/entry-pling-section.js'
   //'portal-index':'./modules/portal-index/protal-index.js,
   //'product-browse':'./modules/product-browse/entry-product-browse.js',
-  'product-media-slider':'./modules/product-media-slider/entry-product-media-slider.js',
-  //'right-sidebar':'./modules/right-sidebar/entry-right-sidebar.js',
+  //'product-media-slider':'./modules/product-media-slider/entry-product-media-slider.js',
+  'right-sidebar':'./modules/right-sidebar/entry-right-sidebar.js',
   //'tag-rating':'./modules/tag-rating/entry-tag-rating.js
 }
 
