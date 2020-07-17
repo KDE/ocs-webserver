@@ -207,12 +207,13 @@ if($this->inputFilterOriginal ==1)
                 <?php } ?>
 
               </div>
-          </aside>
+            </aside>
             <?php
             $time_elapsed = microtime(true) - $time_start;
             if(Zend_Auth::getInstance()->hasIdentity() AND Zend_Auth::getInstance()->getIdentity()->roleName == 'admin') {
                 echo '<div class="alert alert-warning" role="alert"><strong>Rendering Time: </strong>'.$time_elapsed.' s</div>';
             }?>
+            <!--<div id="right-sidebar-container"></div>-->
         </div>
       </div>
       </section>
@@ -241,8 +242,8 @@ if($this->inputFilterOriginal ==1)
   var browseListType = "<?php echo $this->browseListType ?>";
 
 </script>
-<div id="app-audio-player-container"></div>
-<!--<script type="text/javascript" src="/theme/react/bundle/app-audio-player-bundle.js"></script>-->
+<!--<div id="app-audio-player-container"></div>
+<script type="text/javascript" src="/theme/react/bundle/app-audio-player-bundle.js"></script>-->
 <script type="text/javascript" src="/theme/react/bundle/product-browse-bundle.js"></script>
 <?php $this->inlineScript()->appendScript(
     '    $(document).ready(function(){

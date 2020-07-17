@@ -109,8 +109,6 @@ function Carousel(props){
     else if (width < 910 && width >= 610) device = "mid";
     else if (width < 610) device = "tablet";
 
-    console.log(device);
-
     let newItemsPerRow = 6;
     if (window.hpVersion === 2){
       if (device === 'large') newItemsPerRow = 6;

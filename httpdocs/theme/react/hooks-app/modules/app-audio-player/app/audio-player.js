@@ -26,6 +26,7 @@ class AudioPlayerWrapper extends React.Component {
     }
 
     initAudioPlayerWrapper(){
+        
         var originalSetItem = localStorage.setItem;
         localStorage.setItem = function(key, value) {
           var event = new Event('itemInserted');
@@ -35,6 +36,14 @@ class AudioPlayerWrapper extends React.Component {
           originalSetItem.apply(this, arguments);
         };
         document.addEventListener("itemInserted", this.localStorageSetHandler, false);
+        
+        if (window.localStorage.getItem('audioTrackIsPlaying') === "true"){
+            this.setState({
+                isPlaying:true,
+                productImage:window.localStorage.getItem('audioTrackProductImage'),
+                productInfo:window.localStorage.getItem('audioTrackProductInfo')
+            })
+        }
     }
     
     localStorageSetHandler(e) {
@@ -90,10 +99,10 @@ function AudioPlayer(props){
     const [ sliderPosition, setSliderPosition ] = useState(0);
     const initAudioTrackUrl = window.localStorage.getItem('audioTrackUrl').replace(/"/g, '');
     const [ audioTrackUrl, setAudioTrackUrl ] = useState(initAudioTrackUrl);
-    const [ currentTrackTime, setCurrentTrackTime ] = useState(0);
-    const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useState(0);
-    const [ currentTrackDuration, setCurrentTrackDuration ] = useState(0);
-    const [ currentTrackProgress, setCurrentTrackProgress ] = useState(0);
+    const [ currentTrackTime, setCurrentTrackTime ] = useLocalStorage('currentTrackTime');
+    const [ currentTrackTimeSeconds, setCurrentTrackTimeSeconds ] = useLocalStorage('currentTrackTimeSecons');
+    const [ currentTrackDuration, setCurrentTrackDuration ] = useLocalStorage('currentTrackDuration');
+    const [ currentTrackProgress, setCurrentTrackProgress ] = useLocalStorage('currentTrackProgress');
 
     useEffect(() => {
         initAudioPlayer();
@@ -108,6 +117,7 @@ function AudioPlayer(props){
         const playerElement = document.getElementById("app-audio-player").getElementsByTagName('audio');
         playerElement[0].src = "https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1OTQxMDQwNjgiLCJ1IjoiMjQiLCJsdCI6ImZpbGVwcmV2aWV3IiwicyI6IjMxZTEwYTM5ZDg3MTc3MjljYzQ2MGM4MmNmZDkzMTE1NGE5ZWNmOThlMjVjODM5ODU1ODdlMGI5YmU1MWNkNDUzNTgzZWY3NDlmNmQzYTBlYjNlMTQ1ZWQyMTA2YTc1ZTk5NzBmZWQ0NGMwNjY3YmJhZDRkZmJhMTgwZmZmNjM5IiwidCI6MTU5NDIwNTYzMCwic3RmcCI6IjNjZDBlMjRlNjlkMDFjM2FlYWE4ZGJkZDcxMjE5M2RhIiwic3RpcCI6IjgyLjU0LjE3NC4yMjUifQ.cHK19mb_nLwJDUNRa3CatRAs09_WpwP9RUenOo-8LLE/7Dance+rock+mp3.mp3";
         playerElement[0].currentTime = 0;
+        playerElement[0].muted = true;
         playerElement[0].volume = 0.5;
         playerElement[0].play();
     }
