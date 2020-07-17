@@ -22,8 +22,7 @@ export function GenerateGalleryArray(product){
                     f.type.indexOf('ogg') > -1  ||
                     f.name.indexOf('.cbr') > -1 ||
                     f.name.indexOf('.cbz') > -1 ||
-                    f.type.indexOf('epub') > -1 ||
-                    f.type.indexOf('application/octet-stream') > -1 ){
+                    f.type.indexOf('epub') > -1 ){
                     addFileToGallery = true;
                 }
 
