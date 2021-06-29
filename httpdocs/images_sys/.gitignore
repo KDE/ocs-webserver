@@ -1,0 +1,6 @@
+# Ignore everything in this directory
+store_*
+superstore
+about-categories
+# Except this file
+!.gitignore

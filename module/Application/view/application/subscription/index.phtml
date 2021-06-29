@@ -1,0 +1,328 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+$countActiveMembers = $this->countActiveMembers;
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}else
+{
+   $thisurl= $_SERVER["REQUEST_URI"];
+}
+
+$uri = $thisurl;
+$redirect = new \Laminas\Uri\Uri($uri);
+$redirect->setHost(null)->setScheme(null);
+$loginUrl = $this->url('application_login');
+if ($uri != '/' AND $uri != '') {
+    $loginUrl .= "redirect/" . $this->urlEncrypt($redirect->toString());
+}
+$url_login = SERVER_BASE_PATH . $loginUrl;
+
+?>
+<link href="/theme/flatui/css/support.css" rel="stylesheet">
+
+<main>
+    <section class="wrapper" id="products-wrapper">
+        <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
+                <input type="hidden" id="currency-symbol" value="$">
+                <input type="hidden" name="provider" value="paypal" id="provider">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-2"></div>
+                
+   
+                <div class="content col-md-8">
+                    <h2>Become a Supporter</h2>
+                    <p>Your donation helps support the <b> <?=$countActiveMembers?></b> creators of the platform (see <a href="/faq-pling">pling FAQ</a>).
+                    </p>
+                    <div class="x-donation-widget">
+                         <div class="row disply-flex">
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                               <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                                  <div class="header-content">                                                                                     
+                                     Select Tier
+                                 
+                                  </div>
+                                </div>                                          
+                            </div>    
+                            <div class="col-lg-4 col-md-4" >        
+                                <div class="x-tabs-header " style="padding: 0 40px;text-align:right;">
+                                  <div class="header-content">                                                                                     
+                                     Amount Monthly
+                                 
+                                  </div>
+                                </div>                                                  
+                            </div>                        
+
+                           
+                            <div class="col-lg-4 col-md-4" style="">
+                            <div class="x-tabs-header ">
+                              <div class="header-content">                                                
+                                  Payment 
+                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before next year)</span>
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                             
+                            <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
+                            <div class="x-tabs-header ">
+                              <div class="header-content" style="text-align:right;padding-right:15px;">                                                
+                                 <?php /*Supporters*/?>
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                            
+                        </div> <!--end of row-->
+                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                            
+                                      <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option5']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                                                        
+                            </div>    
+
+                            <div class="col-lg-4 col-md-4">  
+                            <?php
+                                echo $this->partial('/partials/tier.phtml',
+                                        array('tier' => '0.99'));
+                            ?>
+                            </div>
+                          
+                            <div class="col-lg-4 col-md-4">  
+                                <?php
+                                echo $this->partial('/partials/option.phtml',
+                                        $this->payment_options['Option5']
+                                );
+                            ?>                                    
+                            </div>
+                            <div class="col-lg-2 text-right" >
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount" > 
+                                            <?php /*<?php echo $modelInfo->getCountTierSupporters(0.99);?></span> */?>
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                        </div> <!--end of row-->
+
+                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                                             
+                                    <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option6']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option6']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                                                       
+                            </div>  
+
+                            <div class="col-lg-4 col-md-4">  
+                                <?php
+                                echo $this->partial('/partials/tier.phtml',
+                                        array('tier' => '2'));
+                                ?>
+                            </div>
+                           
+                            <div class="col-lg-4 col-md-4">  
+                                <?php
+                                echo $this->partial('/partials/option.phtml',
+                                        $this->payment_options['Option6']
+                                );
+                            ?>                                    
+                            </div>
+                            
+                            <div class="col-lg-2 text-right">
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount"> 
+                                            <?php /*<?php echo $modelInfo->getCountTierSupporters(2);?></span>  */?>     
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                            
+                        </div> <!--end of row-->
+                            
+                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                                                                   
+                                      <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option8']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option8']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                 
+                                                                     
+                            </div>  
+
+                            <div class="col-lg-4 col-md-4">  
+                            <?php
+                                echo $this->partial('/partials/tier.phtml',
+                                        array('tier' => '5'));
+                            ?>
+                            </div>
+                            
+                            <div class="col-lg-4 col-md-4">  
+                               
+                                 <?php
+                                echo $this->partial('/partials/option.phtml',
+                                        $this->payment_options['Option8']
+                                );
+                                 ?>                                                                    
+                                                               
+                            </div>
+                            <div class="col-lg-2 text-right">
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount"> 
+                                            <?php /*<?php echo $modelInfo->getCountTierSupporters(5);?></span> */?>      
+                                      </div>    
+                                </li>
+                                </ul>
+                            </div>
+                        </div> <!--end of row-->
+
+                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">        
+                                                                                                                   
+                                      <div class="radiocontainer">
+                                      <input class="suggested-amount mdl-radio__button" <?=$this->payment_options['Option9']['checked']?> id="sam-15" type="radio" value="<?=$this->payment_options['Option9']['name']?>" name="amount_predefined"/>
+                                    </div>
+                                                                      
+                            </div>  
+
+                            <div class="col-lg-4 col-md-4">  
+                                <?php
+                                echo $this->partial('/partials/tier.phtml',
+                                        array('tier' => '10'));
+                            ?>
+                            </div>
+                           
+
+                            <div class="col-lg-4 col-md-4">  
+                               
+                                 <?php
+                                echo $this->partial('/partials/option.phtml',
+                                        $this->payment_options['Option9']
+                                );
+                                 ?>                                                                    
+                                                               
+                            </div>
+
+                           
+                             <div class="col-lg-2 text-right">
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount"> 
+                                            <?php /*<?php echo $modelInfo->getCountTierSupporters(10);?></span>*/?>       
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                        </div> <!--end of row-->
+
+                        
+
+                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+
+                            <div class="col-lg-2" style="padding-left: 15px;">      
+
+                                    <div class="radiocontainer">
+                                      <input class="suggested-amount custom_amount_item" <?=$this->checked?> id="custom_amount_item" type="radio" value="Option7" name="amount_predefined">
+                                    </div>                        
+                            </div>  
+                            <div class="col-lg-4 col-md-4">  
+                                
+                            </div>
+                                                   
+
+                            <div class="col-lg-4 col-md-4">  
+
+                                 <ul class="x-suggested-amounts">
+                                <li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
+                                    
+                                      <div class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input id="custom_amount" min="15.01" step="any" inputmode="numeric" type="number" name="amount_handish"> </span>
+                                        <span class="desc">Enter a free amount > $15</span>
+                                      </div>
+                                    
+                                </li>
+                                </ul>
+                                                               
+                            </div>
+                            
+                        </div> <!--end of row-->
+            
+                        <div class="row disply-flex" style="border-bottom: dotted thin #E7E7E7 !important;">
+                              <div class="col-lg-12 col-md-12">  
+                                <div class="tabs-footer">
+                                    <?php if ($this->ocs_user->member_id) {?>
+                                  <button type="submit" class="dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                                    <span class="donate" id="linkButton">
+                                      <span class="amount">
+                                        <span isolate="">Donate via PayPal</span>
+                                      </span>
+                                    </span>
+                                    </button>
+                                     <?php }else{
+                                        echo "<a href='".$url_login."'>Please login to donate</a>";
+                                    }?>
+                                </div>
+                                    </div>
+                        </div> <!--end of row-->
+                    </div> <!--end of tabs-->
+                    
+                    
+                </div> <!--end of content-->
+                <div class="sidebar-right col-md-2"></div>
+                
+            </div>
+            
+        </div>
+         </form>
+    </section>
+</main>
+
+<script>
+    $(document).ready(function(){
+        $("#custom_amount").click(function(){
+            $('.mdl-radio__button').removeAttr('checked');
+            $('#custom_amount_item').prop("checked", true);            
+        });      
+
+    });
+</script>

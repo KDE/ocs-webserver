@@ -1,0 +1,11 @@
+#category-panles-container {
+  width: 100%;
+  height: calc(auto 50px);
+  overflow: hidden;
+  position: relative;
+}
+#category-panles-container #category-panels-slider {
+  transition: 0.2s;
+  position: absolute;
+  top: 0;
+}

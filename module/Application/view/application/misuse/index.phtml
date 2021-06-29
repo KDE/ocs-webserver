@@ -1,0 +1,205 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+
+use Application\Model\Service\HtmlPurifyService;
+
+$this->headTitle('Watchlist - Misuse-Reports');
+?>
+<main id="explore-content">
+    <section class="wrapper" id="products-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-2"></div>
+                <div class="content col-md-8">
+                    <h1>List of Misuse-Reports</h1>
+                    
+                    
+                    <?php
+                    
+                    if ($products->count() == 0) {
+                        echo '<div class="alert alert-success" role="alert"><p class="text-success">Congratulations. No more Misuse Projects in sight. (For the moment)</p></div>';
+                    }
+                    foreach ($products as $product) {
+                        $updateTime = $this->printDate($product['changed_at']);
+                        $reportTime = $this->printDate($product['report_created_at']);
+                        ?>
+                        <div class="explore-product col-lg-10 col-md-10 col-sm-10 col-xs-10"
+                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                <div class="rownum">
+                                    <?= intval($product['rownum']) ?>.
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+                                <figure>
+                                    <a href="<?= $this->buildProductUrl($product['project_id'],
+                                        ''); ?>">
+                                        <div class="text-center">
+                                            <img src="<?php echo $this->Image($product['image_small'],
+                                                array('width' => 167, 'height' => 167)); ?>"
+                                                 class="explore-product-image" style="max-width:95%;"/>
+                                        </div>
+                                    </a>
+                                </figure>
+                            </div>
+                            <div class="explore-product-details col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <h3>
+                                    <?php
+                                    $version = HtmlPurifyService::purify($product['version']);
+                                    ?>
+                                    <a href="<?= $this->buildProductUrl($product['project_id'],
+                                        ''); ?>"><?php echo $product['title']; ?> <span
+                                                style="font-size: smaller; padding-left: 20px"><?php echo $version ?> </span></a>
+                                </h3>
+
+                                <b style="display: block; margin-bottom: 5px"><?php echo $product['cat_title'] ?></b>
+                                <b style="display: block; margin-bottom: 5px" class="small">by 
+                                    <a href="<?php echo $this->buildMemberUrl($product['username']) ?>"><?php echo $product['username'] ?></a></b>
+                                <?php
+                                if (false === empty($product['package_names'])) {
+                                    $list_packages = explode(',', $product['package_names']);
+                                    $resultString = "";
+                                    foreach ($list_packages as $item) {
+                                        $resultString = $resultString . ' <span class="packagetypeos" > ' . stripslashes($item) . '</span>';
+                                    }
+                                    echo $resultString;
+                                }
+                              
+                                ?>
+
+                                <div class="productInfo">
+                                    <?php
+                                    $count_plingers = 0;
+                                    if(array_key_exists('count_plingers', $product)) {
+                                        $count_plingers = $product['count_plingers'];
+                                    }
+                                    $count_comments = $product['count_comments'];
+                                    echo ($count_plingers > 0 ? '<span class="cntSupporters">' . $count_plingers
+                                            . ' supporter' : '') . ($count_plingers > 1 ? 's' : '') . ($count_plingers
+                                        > 0 ? '</span>' : '');
+                                    echo ($count_comments > 0 ? '<span class="cntComments">' . $count_comments
+                                            . ' comment' : '') . ($count_comments > 1 ? 's' : '') . ($count_comments > 0
+                                            ? '</span>' : '');
+                                    ?>
+                                </div>
+                                
+                                <div style=" width: 100px; padding-top: 10px;">
+                                
+                                    <!-- RATING -->
+                                    <?php
+                                    
+                                    echo $this->partial(
+                                        'application/partials/circle.phtml', array(
+                                            "r" => 40,
+                                            "fontSize" => Application\Model\Service\ConstCircle::small40,
+                                            "score" => $product['laplace_score']/10
+                                        ) );   
+                                    ?>
+                                    <!-- /RATING -->
+
+                                </div>
+                                <div class="collected">
+                                    <span><?php echo $updateTime ?></span>
+                                </div>
+                            </div>
+                            
+                            <div class="explore-product-plings col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                
+                                <div class="reportInfo">
+                                    <b>Reported by 
+                                        <?php if(isset($product['report_member_id'])) { ?>
+                                        <a href="<?php echo $this->buildMemberUrl($product['report_username']) ?>">
+                                        <?php echo $product['report_username'] ?></a> 
+                                        <?php } else { ?>
+                                        unknown
+                                        <?php } ?>
+                                            
+                                        <?php echo $reportTime ?></b>
+                                </div>
+                                
+                                <div class="reportInfo" style="padding-top: 5px;">
+                                    <b>Report-Text:</b><br><span><?php echo $product['report_text']; ?></span>
+                                    
+                                </div>
+
+                            </div>
+                        </div><!-- END .explore-product -->
+                        
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 small text-right"
+                             style="border-top: 1px solid #ccc;font-size: 12px;padding: 10px 0;">
+                            
+                            <?php /*
+                            <a href="/backend/project/delete?project_id=<?= $product['project_id'] ?>"
+                               class="delete-this" data-title="Delete this product?">delete product</a>
+                            <hr/>
+                            <a href="/backend/user/delete?member_id=<?= $product['member_id'] ?>"
+                               class="delete-this" data-title="Delete this member and all his products and comments?">delete
+                                user</a>
+                            <hr/>
+                            */ ?>
+                            <?php //TODO missing backend ?>
+                            <a href="/backend/reportproducts/validatereport?r=<?= $product['report_id'] ?>"
+                               class="delete-this" data-title="Mark report as valid?">validate report</a>
+                            <hr/>
+                            <a href="/backend/reportproducts/deletereport?r=<?= $product['report_id'] ?>"
+                               class="delete-this" data-title="Mark report as deleted?">delete report</a>
+                        </div>
+                        <?php
+                        
+                    }
+                    ?>
+                </div>
+                <div class="sidebar-right col-md-2"></div>
+            </div>
+            <section class="explore-footer text-center">
+                <?php echo $this->paginationControl($products, 'Sliding',
+                    'application/partials/paginatorFromRoute.phtml',
+                    array('route'=>'application_misuse','params' => $this->filters, 'dom_target' => 'section#products-wrapper')); ?>
+            </section>
+        </div>
+    </section>
+</main>
+
+<script>
+    $('.delete-this').on('click', function (event) {
+        event.stopPropagation();
+        var popupText = $(this).attr('data-title');
+        var result = confirm(popupText);
+        if (result) {
+            var target = $(this).attr('href');
+            $.ajax({
+                url: target,
+                success: function (results) {
+                    location.reload();
+                    //alert('Deleted successfully');
+                },
+                error: function () {
+                    alert('Service is temporarily unavailable.');
+                }
+            });
+        }
+
+        return false;
+    });
+</script>

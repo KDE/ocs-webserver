@@ -1,0 +1,47 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$helpBuildUrl = new Default_View_Helper_BuildProductUrl();
+$helpTruncate = new Default_View_Helper_Truncate();
+$helpImage = new Default_View_Helper_Image();
+?>
+<div  style="width: 200px; background-color: #f1f1f1; float: left; border:1px solid #ddd; margin:2px; height:220px">
+    <div style="padding:5px; display: block; height: 160px; background-color: #fff;  position: relative;">
+        <div style="line-height:1.5; max-height: 145px; overflow: hidden;">
+            <a href="<?= $helpBuildUrl->buildProductUrl($this->comment['project_id']) ?>">
+                <?=$helpTruncate->truncate(\Application\Model\Service\HtmlPurifyService::purify($this->comment['comment_text']), 200, '...', false, true)?>
+            </a>
+        </div>
+			
+		<span class="small" style="position: absolute; bottom: 0px;">
+    	    <?=$helpTruncate->truncate(\Application\Model\Service\HtmlPurifyService::purify($this->comment['title']), 30, '...', false, true)?>
+		</span>
+    </div>
+     <div style="display: block; "  class="">        
+         <div class="userinfo" >
+			<a href="<?= $helpBuildUrl->buildProductUrl($this->comment['project_id']) ?>">
+			    <img src="<?= $helpImage->Image($this->comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" style="margin: 5px; width: 40px; height:40px; border-radius: 50%; float: left"/>
+				<span style="display: block;padding-top:15px;"><?= $this->comment['username'] ?></span>
+			</a>
+		</div>
+     </div>
+</div >

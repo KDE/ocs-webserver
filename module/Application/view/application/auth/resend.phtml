@@ -1,0 +1,40 @@
+<?php
+/**
+ *   ocs-webserver
+ *
+ *   Copyright 2016 by pling GmbH.
+ *
+ *     This file is part of ocs-webserver.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+?>
+<main id="resend-page">
+    <section id="form-warp" class="wrapper">
+        <div style="height: 50px;"></div>
+        <div class="panel panel-default" style="width: 75%; margin: auto;">
+            <div class="panel-heading">
+                <h3 class="panel-title">Your mail address is not validated.</h3>
+            </div>
+            <div class="panel-body">
+                Please check your mail account or click the button below to request a new validation mail.<br>
+                <form style="margin-top: 15px;" method="post" action="/register/resend">
+                    <?= $this->formElement($form->get('csrf')) ?>
+                    <button class="btn btn-native btn-min-width" type="submit">Resend</button>
+                </form>
+            </div>
+        </div>
+        <div style="height: 50px;"></div>
+    </section>
+</main>

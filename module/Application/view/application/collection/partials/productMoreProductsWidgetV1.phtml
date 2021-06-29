@@ -1,0 +1,74 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * */
+$myParams = array();
+if(strrpos($_SERVER['REQUEST_URI'],'/s/')===false) {
+    //echo('Is not a Store');
+} else {
+    //echo('Is a Store');
+    $myParams['store_id'] = $GLOBALS['ocs_store']->config->name;
+}
+?>
+<div class="prod-widget-box right moreproducts">
+
+    <div class="sidebar-content">
+        <span><?= $this->moreProductsTitle ?>: </span>
+        <div class="sidebar-content-section">
+            <div class="row product-row" style="margin-top: -20px">
+                <?php
+                foreach ($this->moreProducts as $product):
+                    $product = Application\Model\Service\Util::arrayToObject($product);
+                    $imgUrl = $this->Image($product->image_small, array('width' => 200, 'height' => 160));
+                    $title = substr($product->title, 0, 20) . ' - ' . substr($product->catTitle, 0, 20);
+                    $title = str_replace('"', '&#8221;', $title);
+                    $changed_at = $this->printDateSince($product->changed_at);
+                    ?>
+                    <!-- product item -->
+                    <div class="col-md-3 col-lg-3 col-sm-4 col-xs-3 product-thumbnail"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-html="true"
+                         data-placement="top"
+                         data-content="<div class='profile-img-product'>
+                         <img class='imgpopover'  src='<?= $imgUrl ?>'/>
+                         </div>
+                         <div class='content'>
+                         <div class='title'>
+                         <p><?= $title ?><br/>last update date: <?= $changed_at ?></p>                                                                       
+                         </div>  			                                                  
+                         </div>">
+                        <!-- product thumbnail -->
+                        <a
+                            href="<?= $this->buildCollectionUrl($product->project_id, '', $myParams) ?>"
+                            title="<?= $product->title ?>">
+                            <img src="<?= $this->Image($product->image_small, array('width' => 200, 'height' => 200)); ?>"
+                                 alt="product">
+                        </a>
+                        <!-- /product thumbnail -->
+                    </div>
+                    <!-- /product item -->
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+</div>
+

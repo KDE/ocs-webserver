@@ -1,0 +1,133 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$form->get('email')->setAttributes([
+    'class'       => 'form-control',
+    'placeholder' => 'Email or Username',
+    'required'    => true,
+    'autofocus'   => true,
+])->setLabelAttributes([
+    'class' => 'sr-only',
+]);
+
+$form->get('password')->setAttributes([
+    'class'       => 'form-control',
+    'placeholder' => 'Password',
+    'required'    => true,
+])->setLabelAttributes([
+    'class' => 'sr-only',
+]);
+
+$form->get('remember_me')->setAttributes([
+    'checked' => 'checked',
+]);
+
+?>
+<style>
+    main#reg-page section#register-wrap {
+        z-index: 1000;
+    }
+
+    div.checkbox input[type="checkbox"] {
+        margin-top: -0.2em;
+    }
+
+    div.checkbox input[type="checkbox"]:checked {
+        background-color: gray;
+    }
+
+    @media (max-width: 767px) {
+        main#reg-page section#register-wrap {
+            position: absolute;
+            top: 150px;
+            margin: 0;
+            width: 90%;
+            left: 5%;
+        }
+
+        main#reg-page section#register-wrap button#login {
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        main#reg-page section#register-wrap #register #register-box {
+            width: 100%;
+        }
+
+        main#reg-page section#register-wrap #register #social-register {
+            float: right;
+            width: 100%;
+            padding: 0;
+        }
+
+        main#reg-page section#register-wrap #register #social-register #social-login-elements {
+            margin: 0;
+        }
+    }
+
+</style>
+
+<div id="login-form-box" class="well">
+    <h3><?= $this->translate('Log into your account') ?></h3>
+
+    <div id="error" class="center text-error help-block">
+        <?php if ($this->error && isset($this->errorText)): ?>
+            <p class="errors">
+                <?= $this->translate($this->errorText) ?>
+            </p>
+        <?php endif; ?>
+    </div>
+    <form class="form-signin" method="post">
+        <h2 class="form-signin-heading"></h2>
+        <?php if ($isLoginError): ?>
+            <div class="alert alert-warning" role="alert">
+                Incorrect login and/or password.
+                <a href="<?= $this->url('application_password') ?>">Forgot password?</a>
+            </div>
+        <?php endif; ?>
+        <?= $this->formLabel($form->get('email')); ?>
+        <?= $this->formElement($form->get('email')); ?>
+        <?= $this->formLabel($form->get('password')); ?>
+        <?= $this->formElement($form->get('password')); ?>
+        <div class="checkbox">
+            <label>
+                <?= $this->formElement($form->get('remember_me')); ?> Keep me logged in
+            </label>
+        </div>
+        <?= $this->formElement($form->get('redirect_url')); ?>
+        <?= $this->formElement($form->get('csrf')) ?>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    </form>
+
+    <div class="small light lightgrey center margin-top-15">
+        <a href="<?=SERVER_BASE_PATH?>/password/request" class="lightblue"
+           rel="nofollow"><?= $this->translate('Forgot your password?') ?></a>
+    </div>
+
+    <div class="small light lightgrey margin-top-15">
+        * for github login, please use "<a href="<?=SERVER_BASE_PATH?>/password/request" class="lightblue"
+                                           rel="nofollow"><?= $this->translate('reset password') ?></a>" and then login
+        with your username and new password
+
+    </div>
+
+</div>

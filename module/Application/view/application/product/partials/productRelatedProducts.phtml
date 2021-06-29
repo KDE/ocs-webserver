@@ -1,0 +1,67 @@
+
+
+<?php
+    if($this->userProducts == null || count($this->userProducts)==0) return;
+    
+    foreach ($this->userProducts as $product): 
+        ?>
+        <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+            <div class="u-wrap">
+                <a href="<?= $this->buildProductUrl($product['project_id'], '', null, true); ?>">
+                    <figure>
+                        <img src="<?php echo $this->Image($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
+                             class="explore-product-image" width="101" height="81" />
+                    </figure>
+                    <div class="u-content">
+                        <h3><?php echo $product['title']; ?></h3>
+                        <span class="productCategory"> <?php echo $product['cat_title']; ?> </span>
+
+                        <span class="productCategory" style="width: 100%; float: left;">
+                            <?= 'by '.$product['username']?>
+                            
+                        </span>
+                        <span class="productCategory" style="width: 100%; float: left;">
+                        <?= $this->printDate($product['project_changed_at']) ?>
+                            
+                        </span>
+                        
+                    </div>
+                </a>
+                
+                
+                
+                <?php
+             
+                echo $this->partial(
+                    'application/partials/circle.phtml', array(
+                        "r" => 40,
+                        "fontSize" =>Application\Model\Service\ConstCircle::small40,
+                        "score" =>$product['laplace_score']/10
+                    ) );  
+                
+                ?>
+               
+            </div>
+        </div>
+ <?php 
+ 
+endforeach; ?>
+
+  
+
+<style type="text/css">
+        .countplings 
+        {
+            position: absolute;
+            bottom: 10px;
+            left: 8px;
+            font-size: 11px;
+
+        }
+        .countplings img
+        {
+            width: 20px;
+            height: 20px;
+        }
+
+</style>

@@ -1,0 +1,24 @@
+<ul class="x-suggested-amounts">
+<li class="amount-item <?=(isset($this->islast) ? 'last':'')?>">  
+    <?php /* <div class="radiocontainer">
+      <input class="suggested-amount mdl-radio__button" <?=$this->checked?> id="sam-15" type="radio" value="<?=$this->name?>" name="amount_predefined">
+    </div>
+     */?>
+      <div class="item-text">
+          <?php /*
+        <span class="unit-wrapper">
+          <span class="unit">$</span>
+        </span>
+        <span class="amount"><?=$this->calcDonation($this->amount*12)?> </span>
+           * 
+           */?>
+        <span class="amount">yearly <span style="font-size: x-small;">$<?=$this->calcDonation($this->amount*12)?></span></span>
+        
+        <?php /*
+        <span class="extrasmall"><?=$this->calcDonationYearlyText($this->amount)?></span>
+         * 
+         */?>
+      </div>
+    
+</li>
+</ul>

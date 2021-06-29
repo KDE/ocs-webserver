@@ -1,0 +1,23 @@
+[Unit]
+Description=OCS PHP Resque Service
+
+[Service]
+User=www-data
+# Type=simple
+Type=forking
+TimeoutSec=0
+PIDFile=/var/run/php-resque.pid
+WorkingDirectory=/usr/local/src/ocs-webserver
+ExecStart=/bin/sh -c 'cd /usr/local/src/ocs-webserver && ./vendor/bin/resque worker:start -c ./config/resque.config.yml -vvv  2>&1 > ocs-php-resque.nochein.log'
+#ExecStop=/bin/kill -HUP $MAINPID #It's the default you can change whats happens on stop command
+#ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+Restart=on-failure
+RestartSec=15s
+
+StandardOutput=/var/log/ocs-php-resque.log #If you don't want to make toms of logs you can set it null if you sent a file or some other options it will send all php output to this one.
+StandardError=/var/log/ocs-php-resque.error.log
+
+[Install]
+WantedBy=multi-user.target

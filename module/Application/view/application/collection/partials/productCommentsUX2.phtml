@@ -1,0 +1,269 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$requestUri = $this->request->getRequestUri();
+$productUrl = $this->buildCollectionUrl($this->product->project_id);
+$uri = $productUrl;
+$redirect = new \Laminas\Uri\Uri($uri);
+$redirect->setHost(null)->setScheme(null);
+$loginUrl = $this->url('application_login');
+if ($uri != '/' AND $uri != '') {
+    $loginUrl .= "redirect/" . $this->urlEncrypt($redirect->toString().'#comments_block');
+}
+//$loginUrl = '/login?redirect=' . $this->urlEncrypt($productUrl.'#comments_block', true);
+if($this->ocs_user->member_id) {
+    $identity = $this->ocs_user;
+} else {
+    $identity = null;
+}
+$pageCount = $this->comments->getTotalItemCount()/$this->comments->getItemCountPerPage();
+
+$isAdmin = false;
+if ('admin' == $identity->roleName) {
+    $isAdmin = true;
+}
+
+//$captcha = new Zend_Captcha_Image(array(
+//    'name' => 'foo',
+//    'wordLen' => 6,
+//    'timeout' => 300,
+//));
+//$captcha->setFont(APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf');
+//$captcha->generate();
+
+
+?>
+<div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="page-header relative">
+                <h3 style="line-height: 15px;">
+                    <small class="pull-right">
+                        <div class="row" style="margin:0;padding: 0;text-align: right;"><?=$this->comments->getTotalItemCount()?> comments</div>
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', '/partials/paginationControlComment.phtml',
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-comment-moderation')); ?></small>
+                    Comments
+                </h3>
+                <?php if ($identity) { ?>
+                    <p style="position: absolute; top:25px;">
+                        <small class="small"> Add a comment</small>
+                    </p>
+                    <div class="collapse in" id="add-comment" style="padding-top: 8px;padding-bottom:8px">
+                        <form class="full-width product-add-comment-moderation" action="/productcomment/addreply" >
+                            <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                            <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                            <input type="hidden" name="t" value="30">
+                            <textarea name="msg" class="full-width" required="required"></textarea>
+                            <button type="submit" style="border:none;background: transparent;color: #2673b0; float: right" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
+                        </form>
+                    </div>
+                <?php } else { ?>
+                    <p style="position: absolute; top:25px;">
+                        <small class="small"><span class="glyphicon glyphicon-share-alt"></span> Please <a href="<?=$loginUrl?>" rel="nofollow">login</a> or <a href="/register" rel="nofollow">register</a> to add a comment</a></small>
+                    </p>
+                <?php } ?>
+            </div>
+            <div class="comments-list"><a name="comments_block"></a>
+                <?php if (0 == $this->comments->getCurrentItemCount()) { ?>
+                <div>Be the first to comment</div>
+                <?php } ?>
+<?php foreach ($this->comments as $elementComment): ?>
+    <?php
+    $comment = $elementComment['comment'];
+    if (false == $comment['comment_active']) {
+        continue;
+    }
+    $age = $this->humanTiming($comment['comment_created_at']);
+//    $captcha = new Zend_Form_Element_Captcha('realHuman',array(
+//            'captcha' => array(
+//                'captcha' => 'image',
+//                'font' => APPLICATION_PATH . '/../httpdocs/theme/flatui/fonts/OpenSans-Regular.ttf',
+//                'wordLen' => 6,
+//                'timeout' => 300,
+//                'width' => 250
+//            ))
+//    );
+//    $captcha->setAttrib('placeholder', 'Please verify you\'re a human');
+//    $captcha->setAttrib('class', 'full-width');
+    ?>
+                <div class="media" style="margin-left:<?=($elementComment['level']-1) * 30?>px">
+                    
+                    <?php if ($comment['comment_type'] == Application\Model\Repository\CommentsRepository::COMMENT_TYPE_PLING) : ?>
+                        <p class="pull-right history" style="display:inline-block"><span class="glyphicon glyphicon-usd"></span></p>
+                    <?php endif ?>
+                    <a class="media-left" href="<?= $this->buildMemberUrl($comment['username']) ?>">
+                        <div class="profileimage" style="position:relative;display:inline-block;">
+                       <?php                       
+                        if($this->product->member_id == $comment['member_id']){
+                       ?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" >C</span> 
+                       <?php }?>
+
+                       <?php                       
+                        if($comment['issupporter']){
+                            $isSupporterActive = $this->isSupporterActive($comment['member_id']);
+                       ?>
+                       <span class="supporter-badge-<?=($elementComment['level']>1?2:1)?>  <?=($isSupporterActive?'':'inactive')?>" >S<?=$comment['issupporter']?></span>                       
+                       <?php }?>
+                       
+                       <?php 
+                        $modelSectionSupport = new \Application\Model\Service\SectionSupportService($this->db);
+                        $isAffiliate = $modelSectionSupport->isMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
+                        if($isAffiliate && $this->product->member_id != $comment['member_id']){
+                       ?>
+                       <span class="affiliate-badge-<?=($elementComment['level']>1?2:1)?>" >A</span> 
+                       <?php }?>
+                       
+                       <?php
+                       if(!is_null($comment['rating_member']) && $comment['rating_member']!='-1')
+                       {?>
+                       <span class="creator-badge-<?=($elementComment['level']>1?2:1)?>" style="background-color:<?=$this->fetchScoreColor($comment['rating_member'])?>; padding:3px;border-radius: 3px">
+                            <?=$comment['rating_member']?>
+                        </span> 
+                       <?php }?>
+                       
+                       <?php 
+                        $wasAffiliate = $modelSectionSupport->wasMemberAffiliateForMember($this->product->member_id, $comment['member_id']);
+                        if($wasAffiliate && $this->product->member_id != $comment['member_id']){
+                       ?>
+                       <span class="affiliate-badge-<?=($elementComment['level']>1?2:1)?>" style="background: gray !important;">A</span> 
+                       <?php }?>
+                       
+
+                        <img src="<?= $this->Image($comment['profile_image_url'], array('width' => 60, 'height' => 60)) ?>" class="img<?= $elementComment['level']?>">
+                                               
+                        </div>
+                         <?php if( $comment['roleid'] == \Application\Model\Repository\MemberRepository::ROLE_ID_MODERATOR) { ?>
+                                <div class="mod-badge-1">MOD</div>                                                  
+                        <?php }?>
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading user_name">
+                              
+                                  <a  class="tooltipuser"  data-tooltip-content="#tooltip_content" role="button" data-user="<?=$comment['member_id'] ?>" href="<?= $this->buildMemberUrl($comment['username']) ?>"> <?= $comment['username'] ?> </a>                              
+
+                                <p class="pull-right history" >
+                                    <?php if ($age['age'] > 0) { ?>
+                                    <small><?= $age['age'] ?> <span class="light"><?= $age['unit'] ?> ago</span></small>
+                                    <?php } ?>
+                                </p>
+                        </h4>
+                        
+                        <div class="text">
+                        
+                        <?php
+                            if(!is_null($comment['rating']) && $comment['rating']!='-1')
+                            { ?>                                                           
+                               <span class="rating-label" style="background-color:<?=$this->fetchScoreColor($comment['rating'])?>; "> <?=$comment['rating'] ?></span>  
+                            <?php                             
+                                /*
+                                    <span class="score label" style="margin-right:5px;background-color:<?=$this->fetchScoreColor($comment['rating'])?>; ">
+                                    <?=$comment['rating'] ?>
+                                </span> 
+                                if($comment['rating']==1){
+                                    echo '<span class="btn btn-success active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-plus" ></span></span>';
+                                }else
+                                {
+                                    echo '<span class="btn btn-danger active" style="cursor:default;line-height: 10px;padding: 3px 6px;"><span class="fa fa-minus" ></span></span>';
+                                }*/
+                                
+                            }
+                        ?>
+                        
+                        <?= nl2br(\Application\Model\Service\HtmlPurifyService::purify($comment['comment_text']),true) ?>
+
+                        </div>
+                        <p>
+                            <small class="small pull-right">
+                            <?php if ($identity) { ?>
+                                <a data-toggle="collapse" href="#reply-<?= $comment['comment_id'] ?>"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                                <span>&nbsp;</span>
+
+                                <a data-toggle="modal" data-target="#report-<?= $comment['comment_id'] ?>" role="button" href="#report-<?= $comment['comment_id'] ?>">
+                                    <span class="glyphicon glyphicon-alert"></span> Report
+                                </a>
+                            <?php }else{ ?>
+                                <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                   <span class="glyphicon glyphicon-alert"></span> Report 
+                                </a>
+                            <?php }?>
+                                
+                            </small>
+                        </p>
+                        <div id="report-<?= $comment['comment_id'] ?>" class="modal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content" style="padding: 10px 10px 0 10px;">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <form id="comment-report" class="full-width partialjson" action="/report/comment/" data-target="#report-<?= $comment['comment_id'] ?>-message">
+                                        <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
+                                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                                        <div id="report-<?= $comment['comment_id'] ?>-message">
+                                        <p>Do you really want to report this comment?</p>
+                                        <div class="modal-footer">
+                                            <button type="submit" style="border:none;background: transparent;color: #2673b0; " class="small"><span class="glyphicon glyphicon-share-alt"></span> Yes</button>
+                                        </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if ($identity) { ?>
+                        <div class="collapse" id="reply-<?= $comment['comment_id'] ?>">
+                            <form class="full-width product-add-comment-moderation" action="/productcomment/addreply" >
+                                <input type="hidden" name="i" value="<?= $comment['comment_id'] ?>">
+                                <input type="hidden" name="p" value="<?= $comment['comment_target_id'] ?>">
+                                <input type="hidden" name="m" value="<?= $identity->member_id ?>">
+                                <input type="hidden" name="t" value="30">
+                                <textarea name="msg" class="full-width" required="required"></textarea>
+                                <button type="submit" style="border:none;background: transparent;color: #2673b0; float: right" class="small"><span class="glyphicon glyphicon-send"></span> Send</button>
+                                <?php //echo $captcha->render($this); ?>
+                            </form>
+                        </div>
+                        
+                        <?php } ?>
+                    </div>
+           </div>
+<?php endforeach;?>
+            </div>
+
+                    <div class="row" >
+                        <div class="col-lg-12">
+                        <small class="pull-right">                         
+                        <?php if ($pageCount > 1) echo $this->paginationControl($this->comments, 'Sliding', 'partials/paginationControlComment.phtml',
+                            array('params' => array('project_id'=>$this->product->project_id), 'dom_target' => 'div#product-comment-moderation')); ?></small>
+                            </div>
+                    </div>
+        </div>
+    </div>
+</div>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                      
+            //AjaxForm.setup("form.product-add-comment-moderation", "div#product-comment-moderation");                            
+        });
+    ');

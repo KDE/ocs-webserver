@@ -1,0 +1,110 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+/**
+ Get the voting-data from table project for better performance
+$modelRating = new Default_Model_DbTable_ProjectRating();
+$rating = $modelRating->fetchRating($this->product->project_id);
+**/
+//$helper = new Default_View_Helper_BuildProductUrl();
+//$urlDislike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 2));
+//$urlLike = $helper->buildProductUrl($this->product->project_id, 'rating', array('rate' => 1));
+
+//$likesAndDislikes = ($this->product->count_likes == 0 and $this->product->count_dislikes == 0) ? '' : '(' . $this->product->count_likes . '/' . $this->product->count_dislikes . ')';
+//$cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
+
+// calculate colour
+$blue = $red = $green = $default=200;
+//$score = $this->product->laplace_score;
+$score = $this->scoreOld;  
+
+/*
+if($score==0)
+	$score = 50;*/
+
+if($score>50) {
+    $red=dechex($default-(($score-50)*4));
+    $green=dechex($default);
+    $blue=dechex($default-(($score-50)*4));
+}elseif($score<51) {
+    $red=dechex($default);
+    $green=dechex($default-((50-$score)*4));
+    $blue=dechex($default-((50-$score)*4));
+}
+if(strlen($green)==1) $green='0'.$green;
+if(strlen($red)==1) $red='0'.$red;
+
+
+?>
+<div id="widget-rating" class="prod-widget-box right" style="border:0px !important">
+    <!--<h4 id="extra-products-heading" class="small upcase sidebar-heading">Vote for this product</h4>-->
+
+    <table cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+        <tr>
+            <td width="10%" class="text-center">
+                <a class="btn btn-danger partialreview votedown <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_dislike']>0 ? 'active' :''?>"                
+                   role="button"
+                   style="line-height:10px;"                   
+                   data-target="#widget-rating"
+                   data-fragment="#widget-rating > *">
+                    <span class="fa fa-minus" aria-hidden="true"></span>
+                </a>
+                <?php /** <span><?= $rating['count_dislikes'] ?></span>**/?> 
+            </td>
+            <td style="padding-left:0.2em;padding-right: 0.2em;">
+                <div class="rating">
+                    <div class="rating-text">
+                        <small class="center-block text-center">Score <?= floor($score)?>% 
+                      
+                        </small>
+                    </div>
+                    <div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">
+                        <div class="progress-bar" style="background-color: #<?=$red.$green.$blue?>;width: <?= floor($score) ?>%;">
+                            
+                        </div>
+                        <div class="progress-bar" style="background-color:#eeeeee;width: <?= floor(100 - $score) ?>%;">
+                          
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td width="10%" class="text-center">
+                <a class="btn btn-success partialreview voteup <?=$this->ratingOfUser!=null && $this->ratingOfUser['user_like']>0 ? 'active' :''?> "                 
+                   role="button"
+                   style="line-height:10px;"
+                   data-target="#widget-rating"
+                   data-fragment="#widget-rating > *">
+                    <span class="fa fa-plus" aria-hidden="true"></span>
+                </a>
+               
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<?php
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){            
+            PartialsReview.setup();
+        });
+    ');

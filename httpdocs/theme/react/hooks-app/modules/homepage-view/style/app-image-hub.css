@@ -1,0 +1,57 @@
+
+    .aih-welcome {
+        padding: 7vh var(--space-large);
+        background-size: cover;
+        background-position: bottom center;
+    }
+    .aih-underline {
+        font-weight: bold;
+        border-bottom: 2px solid var(--color-primary-2);
+        padding-bottom: 2px;
+    }
+    .pui-btn-aih {
+        font-size: var(--text-large);
+        font-weight: var(--font-bold);
+        display: inline-block;
+        color: var(--color-light-1);
+        background: var(--color-primary-2);
+        border: 0;
+        border-radius: var(--space-xlarge);
+        margin: var(--space-small);
+        padding: var(--space-medium) var(--space-xlarge);
+        text-decoration: none;
+        text-align: center;
+    }
+    .pui-btn-aih:hover {
+        color: var(--color-light-1);
+        background: var(--color-dark-1);
+    }
+    .aih-welcome .pui-btn, .aih-welcome .pui-btn-aih {
+        width: 100%;
+    }
+    @media screen and (min-width: 576px) {
+        .aih-welcome .pui-btn, .aih-welcome .pui-btn-aih {
+        width: auto;
+        }
+    }
+    @media screen and (min-width: 768px)
+    {
+        .pling-welcome .container-normal {
+            grid-template-columns: 144px auto 260px;
+            padding: 0;
+            text-align: left;
+        }
+        .pling-welcome .container-normal div:nth-of-type(3){
+            text-align: center;
+        }
+        .aih-welcome h1 {
+            font-size: 3rem;
+        }
+    }
+    @media screen and (min-width: 2200px)
+    {
+        .pling-welcome .container-normal {
+            grid-template-columns: 144px auto 360px;
+            text-align: left;
+        }
+    }

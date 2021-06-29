@@ -1,0 +1,117 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->headTitle('Search: ' . $this->searchText, 'SET');
+$this->headLink()->appendStylesheet('/theme/flatui/css/explore_index.css');
+
+?>
+    <main id="explore-content" class="searchresults">
+        <section class="wrapper" id="products-wrapper">
+            <span class="glyphicon  togglesidebar" id="btnTogglesidebar"></span>
+            <div class="GridFlex">
+                <div class="GridFlex-cell sidebar-left">
+                    <?php
+                    include __DIR__ . '/searchFilter.phtml';
+                    ?>
+                </div>
+                <div class="GridFlex-cell content">
+                    <section class="explore-products" id="explore-products">
+                        <div style="display:flex;justify-content: space-between">
+                            <div><h1 class="search-heading">Search results for "<?= $this->searchText; ?>"</h1>
+                            </div>
+                            <?php if ($this->tagDescription): ?>
+                                <div style="display:block; float:right; border:1px solid #ccc; padding:5px; width:400px">
+                                    <?php
+                                    echo $this->tagDescription;
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <ul id="sort" class="nav nav-tabs">
+                            <li class="text-right" style="text-align: right; width: 50%; float: right;">
+                                <small><?= $this->result['response']['numFound'] ?> hit(s)</small>
+                            </li>
+                        </ul>
+
+                        <div class="product-list">
+                            <?php
+                            if (count($this->products) == 0) { ?>
+                                <p>Your search - <?= $this->searchText ?> - did not match any documents.</p>
+
+                                <p>Suggestions:
+                                <ul>
+                                    <li>Make sure all words are spelled correctly.</li>
+                                    <li>Try keywords which are min 3 characters long.</li>
+                                    <li>Try different keywords.</li>
+                                    <li>Try more general keywords.</li>
+                                    <li>Try fewer keywords.</li>
+                                    <li>Use key words which start without wildcard symbols like "*" or "?".</li>
+                                </ul>
+                                <?php
+                            } else {
+                                $time_start = microtime(true);
+                                include __DIR__ . '/listProducts.phtml';
+                                //echo $this->render('product/partials/listProducts.phtml');
+                                $time_elapsed = microtime(true) - $time_start;
+                            }
+                            ?>
+
+                        </div>
+                        <section class="explore-footer">
+                            <?php //echo $this->paginationControl($this->pagination, 'Sliding', 'application/partials/paginationControl.phtml', array('params' => array('projectSearchText' => $this->searchText,'domain_store_id'=>$this->store), 'dom_target' => 'section.explore-products'));
+
+                            if ($this->pagination) {
+                                echo $this->paginationControl(
+                                // the paginator object
+                                    $this->pagination, // the scrolling style
+                                    'Sliding', // the partial to use to render the control
+                                    'application/partials/paginatorSimple.phtml', // the route to link to when a user clicks a control link
+                                    array(
+                                        'route' => 'application_search_query',
+                                        'params' => $this->params
+                                    )
+                                );
+                            }
+
+                            ?>
+                        </section>
+                    </section>
+                </div>
+
+
+            </div>
+        </section>
+        <div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+        </div>
+    </main>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                               
+              
+                TooltipUser.setup("tooltipuser","right");
+                TooltipUser.setup("tooltipuserleft","left");             
+            });
+        '
+);

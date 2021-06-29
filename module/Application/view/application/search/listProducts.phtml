@@ -1,0 +1,144 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+if($this->page)
+{
+    $this->rownum = (1 + (($this->page - 1) * 10));
+}else{
+    $this->rownum = 1;
+}
+foreach ($this->products as $this->product) {
+    $updateTime = $this->printDate($this->product->changed_at, 'Y-m-d\TH:i:s\Z');  
+    $hl = $this->highlighting[$this->product->project_id];
+    if(isset($hl['description']))         
+    {
+         $this->product->description = $hl['description'][0];
+    }
+
+    $tags = '';
+    if(isset($hl['tags']))         
+    {
+         $this->product->tags = $hl['tags'][0];        
+          $tags = $tags.','.$hl['tags'][0];            
+    }
+     if(isset($hl['package_names']))         
+    {
+         $this->product->package_names = $hl['package_names'][0];
+          $tags = $tags.','.$hl['package_names'][0];                
+    }
+     if(isset($hl['arch_names']))         
+    {
+         $this->product->arch_names = $hl['arch_names'][0];
+          $tags = $tags.','.$hl['arch_names'][0];                  
+    }
+    if(isset($hl['license_names']))         
+    {
+         $this->product->license_names = $hl['license_names'][0];
+         $tags = $tags.','.$hl['license_names'][0];  
+    }
+
+?>
+
+<style type="text/css">
+        main.searchresults em{
+            background-color: #FAEED1;
+        }
+
+</style>
+<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+        <div class="rownum">
+            <?= intval($this->rownum)?>.
+        </div>        
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+        <figure>
+            <a href="<?= $this->buildProductUrl($this->product->project_id, ''); ?>">
+                <div class="text-center imageContainer_">
+                <img src="<?php echo $this->Image($this->product->image_small, array('width' => 167, 'height' => 167, 'crop' => 0)); ?>" class="explore-product-image"/>
+                </div>
+            </a>
+        </figure>
+    </div>
+    <div class="explore-product-details col-lg-7 col-md-7 col-sm-7 col-xs-7">
+        <h3>          
+            <a href="<?= $this->buildProductUrl($this->product->project_id, ''); ?>"><?= $this->product->title?> 
+            <span class="version"><?= $this->product->version ?> </span></a>
+        </h3>
+       
+       <div class="title">
+        <b><?php echo $this->product->cat_title?></b>
+        <b class="username small">by <a  href="<?php echo $this->buildMemberUrl($this->product->username)?>" 
+                    class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product->member_id?>">
+          <?php echo $this->product->username?></a>        
+          </b>          
+          
+        </div>
+        <div class="description" ><?php echo $this->truncate($this->product->description, 300)?></div>
+       
+        <div class="packagetypes" >
+         <?php
+         if (false === empty($tags)) {
+             $list_packages = explode(',', $tags);
+             $resultString = '';
+             $list_packages = array_unique($list_packages);
+             foreach ($list_packages as $item) {
+                 if(strlen($item)>0)
+                 {
+                    $resultString = $resultString . ' <span class="packagetypeos" style="color:#333" > ' . stripslashes($item) . '</span>';
+                }
+             }
+             echo $resultString;
+         }
+        ?>
+        </div>
+
+        <div class="productInfo">
+       <?php                
+                $count_comments = $this->product->count_comments;                
+                echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;
+                ?>
+        </div>            
+    </div>
+    <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+        <!-- RATING -->
+        <?php
+        
+        echo $this->partial(
+            'application/partials/circle.phtml', array(
+                "r" => 50,
+                "score" => $this->product->laplace_score/10
+            )
+        );
+        ?>
+        <!-- /RATING -->
+        
+         
+        <div class="collected">
+          
+             <span><?php echo $updateTime ?></span>
+        </div>
+        
+    </div>
+</div><!-- END .explore-product -->
+<?php
+    $this->rownum++;
+}

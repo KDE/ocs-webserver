@@ -1,0 +1,156 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of namespace',
+            sorting: true, //Enable sorting
+            defaultSorting: 'counter DESC', //Set default sorting
+            actions: {
+                listAction: '/backend/tags/list',
+                createAction: '/backend/tags/create',
+                updateAction: '/backend/tags/update',
+                deleteAction: '/backend/tags/delete'
+            },
+            fields: {
+                group_id: {
+                    title: 'Tag-Group-Id',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true
+                },
+                group_name: {
+                    title: 'Namespace',
+                    width: '30%'
+                },
+                group_display_name: {
+                    title: 'Display Name',
+                    width: '30%'
+                },
+                group_legacy_name: {
+                    title: 'Legacy Name',
+                    width: '22%'
+                },
+                is_multi_select: {
+                    title: 'Multiselect',
+                    inputTitle: 'Is Multiselect*',
+                    options: {'1': 'Yes', '0': 'No'},
+                    defaultValue: '0',
+                    width: '8%',
+                    edit: true,
+                    list: true
+                },
+                tags: {
+                    title: 'Edit Tags',
+                    width: '5%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (jTableData) {
+                        //Create an image that will be used to open child table
+                        var $img = $('<a><span class="glyphicon glyphicon-tag" aria-hidden="true"></span></a>');
+                        //Open child table when user clicks the image
+                        $img.click(function () {
+                            $('#TableContainer').jtable('openChildTable',
+                                $img.closest('tr'),
+                                {
+                                    title: 'Tags in namespace',
+                                    actions: {
+                                        listAction: '/backend/tags/childlist?GroupId=' + jTableData.record.group_id,
+                                        createAction: '/backend/tags/childcreate',
+                                        updateAction: '/backend/tags/childupdate',
+                                        deleteAction: '/backend/tags/childdelete'
+                                    },
+                                    fields: {
+                                        tag_group_item_id: {
+                                            key: true,
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
+                                        tag_group_id: {
+                                            type: 'hidden',
+                                            defaultValue: jTableData.record.group_id
+                                        },
+                                        tag_id: {
+                                            title: 'Tag ID',
+                                            create: false,
+                                            edit: false,
+                                        },
+                                        tag_name: {
+                                            title: 'Tag Name',
+                                            width: '20%'
+                                        }
+                                        ,
+                                        tag_fullname: {
+                                            title: 'Tag Fullname',
+                                            width: '20%'
+                                        }
+                                        ,
+                                        tag_description: {
+                                            title: 'Tag Description',
+                                            width: '30%',
+                                            type: 'textarea'
+                                        }
+                                         ,
+                                        is_active: {
+                                            title: 'Is active',
+                                            width: '10%',
+                                            type: 'checkbox',
+                                            values: { '0': 'No', '1': '' },
+                                            defaultValue: '1',
+                                        }
+                                    }
+                                }, function (data) { //opened handler
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+
+                }
+
+            }
+        }).jtable('load');
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+    });
+</script>

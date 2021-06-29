@@ -1,0 +1,126 @@
+@import "vars.less";
+
+/*==================*/
+/* 	    MIXINS      */
+/*==================*/
+
+
+// background images
+
+.bg_sheet {background-image:url(../img/bg_sheet.png);}
+.bg_sheet_statistics {background-image: url(../img/statistics_sheet.png);}
+
+.unstyled_list {
+	list-style-type: none;
+	padding: 0px;
+	margin:0px;
+}
+
+
+// effects
+
+.opacity (@opacity: 0.5) {
+	-webkit-opacity: 	@opacity;
+	-moz-opacity: 		@opacity;
+	opacity: 		    @opacity;
+}
+
+
+.border_radius(@radius){
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+  -webkit-background-clip: padding-box;
+     -moz-background-clip: padding;
+          background-clip: padding-box;	
+}
+
+
+.transition (@transition:@default_transition) {
+	-webkit-transition: all  @transition ease-out;
+	-moz-transition:    all  @transition ease-out;
+	-ms-transition:     all  @transition ease-out; 
+	-o-transition:      all  @transition ease-out;  
+}
+
+.box_sizing(@boxSizing:border-box){
+	-webkit-box-sizing: @boxSizing;
+	-moz-box-sizing: @boxSizing;
+	box-sizing: @boxSizing;
+}
+
+.gradient_color (@from;@to){
+	  background-image: -moz-linear-gradient(top, @from, @to);
+	  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@from), to( @to));
+	  background-image: -webkit-linear-gradient(top, @from, @to);
+	  background-image: -o-linear-gradient(top, @from, @to);
+	  background-image: linear-gradient(to bottom, @from, @to);
+	  background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@from', endColorstr='@to', GradientType=0);
+}
+
+.rotate(@deg:180deg){
+	transform: rotate(@deg);
+	-ms-transform: rotate(@deg); /* IE 9 */
+	-webkit-transform: rotate(@deg); /* Safari and Chrome */
+}
+
+// shadows
+
+.taxt_shadow (@string){
+	text-shadow:@string;
+}
+
+.box_shadow (@string) {
+	-webkit-box-shadow: @string;
+	-moz-box-shadow:    @string;
+	box-shadow:         @string;
+}
+
+.box_shadows(@first,@second){
+	-webkit-box-shadow: @first,@second;
+	-moz-box-shadow:    @first,@second;
+	box-shadow:         @first,@second;            
+}
+
+// filters
+
+.grayscale(@amount:100%){
+    filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale"); /* Firefox 10+, Firefox on Android */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(@amount);
+}
+
+.sepia(@amount:100%){
+	-webkit-filter: sepia(@amount);  
+	-moz-filter: sepia(@amount);
+	filter: sepia(@amount);
+}
+
+.blur(@pixel) {
+	-webkit-filter: blur(@pixel);  
+	-moz-filter: blur(@pixel);
+	filter: blur(@pixel);
+}
+
+// hand icons
+
+.hand-with-coin {
+	display: inline-block;
+	background-image: url('../img/new/button/hand-w-coin.png');
+	height: 61px;
+	width: 61px;
+
+	&.v-2 {
+		background-image: url('../img/new/button/hand-w-coin-2.png');		
+	}
+}
+
+.grayscale(@amount:100%) { 
+  -webkit-filter: grayscale(@amount);
+  -moz-filter: grayscale(@amount);
+  -ms-filter: grayscale(@amount);
+  -o-filter: grayscale(@amount);
+  filter: grayscale(@amount);
+  filter: url(grayscale.svg); /* Firefox 4+ */
+  filter: gray; /* IE 6-9 */
+}

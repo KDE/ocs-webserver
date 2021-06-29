@@ -1,0 +1,168 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+$countProjects = $this->countProjects;
+$countActiveMembers = $this->countActiveMembers;
+?>
+<style type="text/css">  
+   
+</style>
+<main id="community-page">
+
+    <section class="head-wrap">
+
+        <section class="wrapper">
+
+            <div class="page-title">
+                <div class="center">
+                    <div><h1>Community</h1></div>
+                </div>
+                <hr/>
+            </div>
+
+            <div class="row">
+
+                <div class="banner col-lg-5 col-md-5 col-sm-6 col-xs-8">
+                  <?php /*
+                    <div class="top">
+                        <div class="large"><?= $countActiveMembers ?></div>
+                        <div class="small margin-bottom-10">contributors added </div>
+                         <div class="large"><?= $countProjects?></div>
+                        <div class="small margin-bottom-10">products</div>
+                    </div>
+                    */?>
+
+                    <div class="bottom">
+                        <a class="btn btn-native" href="/register">Register</a> to join the community
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </section>
+
+    <section class="body-wrap">
+
+        <section class="wrapper" id="user-lists">
+
+
+            <div id="community-tabs" >
+
+                 <div class="pling-nav-tabs" >
+                  <ul class="nav nav-tabs" >
+                  <li class="active">
+                    <a class="communitytab" data-href="/community/supporters" 
+                      href="#supportersPanel" 
+                      data-toggle="tab">
+                      <?= $this->translate('Supporters') ?>                        
+                      </a>
+                  </li>
+                   <li>
+                    <a class="communitytab" data-href="/community/mostplingedcreators" 
+                      href="#mostplingedcreatorsPanel" 
+                      data-toggle="tab">
+                      <?= $this->translate('Most plinged Creators') ?>                        
+                      </a>
+                  </li>
+                   <li>
+                    <a class="communitytab" data-href="/community/mostplingedproducts" 
+                      href="#mostplingedproductsPanel" 
+                      data-toggle="tab">
+                      <?= $this->translate('Most plinged Products') ?>                        
+                      </a>
+                  </li>
+                  <li>
+                    <a class="communitytab" data-href="/community/plingedprojects" href="#plingedproductsPanel" data-toggle="tab"><?= $this->translate('Recently plinged Products ') ?></a>
+                  </li>
+
+                   <li >
+                    <a class="communitytab" data-href="/community/newmembers"  href="#newMemberPanel" data-toggle="tab"><?= $this->translate('New Members') ?></a>
+                  </li>
+
+                  <?php if($this->ocs_user->roleName == 'admin') {
+                  ?>
+                  <li>
+                    <a style="font-style: italic;" class="communitytab" data-href="/community/topmembers" href="#topMemberPanel" data-toggle="tab"><?= $this->translate('Top Members') ?></a>
+                  </li>
+
+                  
+                  <?php 
+                  }?>                                                                                   
+                 
+                  </ul>
+                </div>
+
+
+            </div>
+        
+        <div class="tab-content" id="communityPanels">           
+            <div class="row tab-pane " id="newMemberPanel" >
+                <div class="list" id="new-members">                  
+                </div>
+            </div> <!-- end row -->
+
+            <?php if($this->ocs_user->roleName == 'admin') {
+                        ?>
+            <div class="row tab-pane font-italic" id="topMemberPanel">
+                    <div class="list font-italic"> </div>
+                </div> <!-- end row -->
+
+               
+                <?php } ?>
+
+                <div class="row tab-pane active" id="supportersPanel">
+                        <div class="list "> </div>
+                </div> <!-- end row -->
+                <div class="row tab-pane active" id="mostplingedproductsPanel">
+                        <div class="list container explore-products"  > </div>
+                </div> <!-- end row -->
+                 <div class="row tab-pane active" id="mostplingedcreatorsPanel">
+                        <div class="list  container explore-products" > </div>
+                </div> <!-- end row -->
+
+                 <div class="row tab-pane" id="plingedproductsPanel">
+                        <div class="list "> </div>
+                </div> <!-- end row -->
+
+
+        </div>
+
+       
+        </section>
+
+    </section>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+</main>
+
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                                                                            
+                CommunityTab.setup();
+            });
+        ');

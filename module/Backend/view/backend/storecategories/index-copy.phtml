@@ -1,0 +1,117 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$selectOptions = '';
+foreach ($this->hostnames as $element) {
+    $selectOptions .= '<option value='.$element['Value'].'>'.$element['DisplayText'].'</option>';
+}
+?>
+
+<div class="filtering well" style="width: 95%;">
+    <form>
+        <span style="margin-right: 0.9em;">filter hostname: <select name="filter_hostname" id="filter_hostname" required="required">
+                <?php echo $selectOptions ?>
+            </select></span>
+        <div style="display:inline-block; text-align: right;width: 100%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_hostname: $('#filter_hostname').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_hostname: null,
+            });
+        });
+    </script>
+</div>
+<div id="TableContainer"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'store_id asc',
+            title: 'Table of category configuration for stores',
+            actions: {
+                listAction: '/backend/storecategories/list',
+                createAction: '/backend/storecategories/create',
+                updateAction: '/backend/storecategories/update',
+                deleteAction: '/backend/storecategories/delete'
+            },
+            fields: {
+                store_category_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                store_id: {
+                    title: 'store',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    options: function (data) {
+                        if (data.source == 'edit') {
+                            data.clearCache();
+                            return '/backend/store/hostnames';
+                        }
+                        return '/backend/store/hostnames';
+                    }
+                },
+                project_category_id: {
+                    title: 'category',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    options: function (data) {
+                        if (data.source == 'edit') {
+                            data.clearCache();
+                            return '/backend/storecategories/tree?c=-1';
+                        }
+                        return '/backend/storecategories/tree?c=-1';
+                    }
+                },
+                sort: {
+                    title: 'display order',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    edit: true
+                }
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+    });
+</script>

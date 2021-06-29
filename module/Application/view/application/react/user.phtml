@@ -1,0 +1,54 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+use Laminas\View\Helper\Doctype;
+
+$this->headTitle($this->headTitle, 'SET');
+
+$this->doctype(Doctype::XHTML1_RDFA);
+
+$desc=  isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): $this->member->username;
+$this->headMeta()->setName('description',
+    $this->truncate($desc, 200, '...', false, true))->setAutoEscape(false);
+$this->headMeta()->setName('title',
+    $this->member->username . ' - ' . $_SERVER['HTTP_HOST'])->setAutoEscape(false);
+
+$this->headMeta()->appendProperty('og:url', $this->buildMemberUrl($this->member->username))->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $this->member->username)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description',
+    $this->truncate($desc, 200, '...', false, true))->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image',
+    $this->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)))->setAutoEscape(false);
+
+$memberProfile = $this->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2));
+
+?>
+
+<!-- ADD THIS TO XHTML -->
+<div id="preloaded-images">
+   <img src="<?php echo $memberProfile?>" width="1" height="1" alt="Image 01" />
+</div>
+<div id="user-profile-container"></div>
+<script type="text/javascript">
+      var userProfileData = <?php echo json_encode($this->memberData)?>;
+</script>
+<script type="text/javascript" src="/theme/react/bundle/user-profile-bundle.js"></script>

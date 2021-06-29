@@ -1,0 +1,652 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    #dialog-form form dl dl dd {
+        margin: 0;
+        padding: 0;
+        margin-left: 10px;
+    }
+
+    #dialog-form form legend {
+        margin: 0;
+        padding: 0;
+    }
+
+    #dialog-form form dd {
+        background-color: #d9d4d7;
+    }
+
+    #dialog-form form input {
+        width: 95%;
+    }
+
+    #dialog-form form dl dd {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    #dialog-form form dl dd fieldset dl dt#logo-label {
+        display: none;
+    }
+
+    #dialog-form form dl dt#clientname-label {
+        display: none;
+    }
+
+    #dialog-form form dl dd#clientname-element {
+        display: none;
+    }
+</style>
+
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Store Config"></div>
+
+
+<div id="dialog-cat-about" title="Create/Edit Store About Page">
+    <form id="edit-cat-about" class="" action="/backend/store/saveabout" method="post">
+        <input type="hidden" value="" id="text-cat-id" name="c"/>
+        <textarea class="" id="text-cat-about" name="ca"></textarea>
+    </form>
+</div>
+
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+<script type="text/javascript">
+    $(document).on('focusin', function(e) {
+        if ($(e.target).closest(".mce-window, .moxman-window").length) {
+            e.stopImmediatePropagation();
+        }
+    });
+
+    tinymce.init({
+        selector: "#text-cat-about",
+        width: '100%',
+        height: 400,
+        autoresize_min_height: 400,
+        autoresize_max_height: 600,
+        menubar: false,
+        plugins: [
+            'autoresize advlist autolink lists link image charmap print preview anchor textcolor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table contextmenu paste code help wordcount'
+        ],
+        toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        content_css: [
+            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+            '//www.tinymce.com/css/codepen.min.css']
+    });
+
+    $("#dialog-cat-about").dialog({
+        autoOpen: false,
+        height: 480,
+        width: 640,
+        modal: true,
+        open: function (event, ui) {
+            tinymce.get("text-cat-about").load();
+        },
+        buttons: {
+            Cancel: function () {
+                $(this).dialog("close");
+            },
+            Save: function () {
+                tinymce.get("text-cat-about").save();
+                $('#edit-cat-about').submit();
+                $(this).dialog("close");
+            }
+        },
+        close: function () {
+        }
+    });
+
+    $('body').on("submit", '#edit-cat-about', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        jQuery.ajax({
+            data: $(this).serialize(),
+            url: this.action,
+            type: this.method,
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+                $(".alert-danger").alert().fadeIn('slow');
+                return false;
+            },
+            success: function (data, textStatus, jqXHR) {
+                return false;
+            }
+        });
+
+        return false;
+    });
+    
+    $('body').on("click", 'a.create-about', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var elementRecord = $(this).data("record");
+
+        jQuery.ajax({
+            data: {'c': elementRecord},
+            url: '/backend/store/readabout/',
+            type: 'post',
+            error: function (jqXHR, textStatus, errorThrown) {
+                $(".alert-danger .alert-body").empty().html('<span class="error">Operation failed.</span>');
+                $(".alert-danger").alert().fadeIn('slow');
+                return false;
+            },
+            success: function (data, textStatus, jqXHR) {
+//                    $(".alert-success .alert-body").empty().html('<span class="success">Please find the category about page in : /httpdocs/partials/category-about/'+elementRecord+'.phtml .</span>');
+//                    $(".alert-success").alert().fadeIn('slow');
+                $('#text-cat-about').val(data.CatAbout);
+                $('#text-cat-id').val(data.c);
+                $('#dialog-cat-about').dialog('open');
+                return false;
+            },
+            complete: function (data, textStatus, errorThrown) {
+                return false;
+            }
+        });
+
+        return false;
+    });
+        
+    $("#dialog-form").dialog({
+        autoOpen: false,
+        //height: 350,
+        width: 600,
+        modal: true,
+        buttons: {
+            Close: function () {
+                $(this).dialog("close");
+            },
+            Save: function () {
+                $('#dialog-form form').submit();
+                $(this).dialog("close");
+            }
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'order asc',
+            title: 'Table of stores',
+            actions: {
+                listAction: '/backend/store/list',
+                createAction: '/backend/store/create',
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/store/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
+                deleteAction: '/backend/store/delete'
+            },
+            fields: {
+                store_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    title: 'Id',
+                    width: '5%',
+                },
+                host: {
+                    title: 'Hostname',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'hostname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>'
+                },
+                mapping_id_name: {
+                    title: 'Mapping Id',
+                    width: '5%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'mapping id <small style="font-weight:normal; font-size: 0.7em">(45 chars) when set, should be unique</small>'
+                },
+                name: {
+                    title: 'Store Displayname',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'Store Displayname <small style="font-weight:normal; font-size: 0.7em">(45 chars)</small>',
+                    input: function (data) {
+                        if (data.record) {
+                            return '<input type="text" name="name" style="width:200px" value="' + data.record.name + '" pattern="[-a-zA-Z0-9_\.]+" /> <span class="small light">[-a-zA-Z0-9_.]</span>';
+                        } else {
+                            return '<input type="text" name="name" style="width:200px" pattern="[-a-zA-Z0-9_\.]+" /> <span class="small">[-a-zA-Z0-9_.]</span> ';
+                        }
+                    }
+                },
+                config_id_name: {
+                    title: 'Config Id',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: '(config id) store id name <small style="font-weight:normal; font-size: 0.7em">(used as id for config and search) (45 chars)</small>',
+                    input: function (data) {
+                        if (data.record) {
+                            return '<input type="text" name="config_id_name" style="width:200px" value="' + data.record.config_id_name + '" pattern="[-a-zA-Z0-9_]+" /> <span class="small">[-a-zA-Z0-9_]</span>';
+                        } else {
+                            return '<input type="text" name="config_id_name" style="width:200px" pattern="[-a-zA-Z0-9_]+" /> <span class="small">[-a-zA-Z0-9_]</span>';
+                        }
+                    }
+                },
+                order: {
+                    title: 'Display Order',
+                    width: '5%',
+                    list: true,
+                    create: true
+                },
+                 is_show_home: {
+                    title: 'Show a Startpage',  
+                    inputTitle: 'Startpage or Explore as default <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' the a Startpage will be shown instead of the Explore-List)</small>',
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 0
+                },
+                is_client: {
+                    title: 'Is Client Config',
+                    list: false,
+                    //type: 'checkbox',
+                    //values: { '0': 'No', '1': 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: '0',
+                    inputTitle: 'Is client <small style="font-weight:normal; font-size: 0.7em">(If \'yes\' then don\'t forget to set the <b>config id</b> to right store which config is used)</small>'
+                },
+                google_id: {
+                    title: 'Google Id',
+                    width: '5%'
+                },
+                tags_name: {
+                    title: 'Tag-Filter Names',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    width: '10%'
+                },                
+                tags_id: {
+                    title: 'Tag-Filter IDs',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    width: '30%'
+                }
+                ,
+                tags_all: {
+                    title: 'Tags Helper -> Click to Select',
+                    create: false,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/store/tagsall';
+                    }
+                },
+                groups_name: {
+                    title: 'TagGroup-Filter Names',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    width: '10%'
+                },                
+                groups_id: {
+                    title: 'TagGroup-Filter IDs',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    width: '30%'
+                }
+                ,
+                groups_all: {
+                    title: 'TagGroup Helper -> Click to Select',
+                    create: false,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/store/alltaggroups';
+                    }
+                },
+                cross_domain_login: {
+                    title: 'Cross Domain Login',
+                    list: false,
+                    //type: 'checkbox',
+                    //values: { '0': 'No', '1': 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: '0'
+                },
+                 is_show_title: {
+                    title: 'Is Title Shown',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_git_projects: {
+                    title: 'Sidebar: Show Git-Project-List',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_blog_news: {
+                    title: 'Sidebar: Show Blog-News',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_forum_news: {
+                    title: 'Sidebar: Show Last Forums-Posts',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_in_menu: {
+                    width: '8%',
+                    title: 'Show in Menu',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:true,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'1',
+                       0:'0'
+                    },
+                    defaultValue: 1
+                },
+                 is_show_real_domain_as_url: {
+                    width: '8%',
+                    title: 'Domain as URL',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:true,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'1',
+                       0:'0'
+                    },
+                    defaultValue: 1
+                },
+                stay_in_context : {
+                    title: 'Stay in Store Context with all links',                   
+                    //type: 'checkbox',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    //values: { 0: 'No', 1: 'Yes' },
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 1
+                },  
+                browse_list_type_name: {
+                    title: 'Browse-Type',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '8%'
+                }, 
+                browse_list_type: {
+                    title: 'Browse-List-Type',
+                    type: 'multiselectddl',
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/browselisttype/allbrowselisttypes';
+                    }
+                },
+/*                initSearchIndex: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<button id="create_index" title="Init Search Index" class="jtable-command-button" style="width: 15px;height: 15px;background: url(/theme/flatui/img/todo/search.png);" rel="/backend/search/init/store_id/' + data.record.store_id + '/index_id/' + data.record.config_id_name + '"><span>init search</span></button>';
+                        }
+                    }
+                }, */
+                editConfig: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            if (data.record.default == 1) {
+                                return '<a role="button" title="edit default template config" class="btn btn-primary btn-xs edit-config" style="color:white;"  data-record="' + data.record.config_id_name + '"><span>config</span></a>';
+                            } else {
+                                if (data.record.is_client == 1) {
+                                    return '<div title="config client. please edit source template." data-toggle="tooltip" data-placement="top" ><a role="button" class="btn btn-secondary btn-xs edit-config disabled" data-record="' + data.record.config_id_name + '"><span>config</span></a></div>';
+                                } else {
+                                    return '<a role="button" title="edit template config" class="btn btn-info btn-xs edit-config" style="color:white;"  data-record="' + data.record.config_id_name + '"><span>config</span></a>';
+                                }
+                            }
+                        }
+                    }
+                },
+                about: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="create/edit about page" href="javascript:return false;" class="create-about" role="button" data-record=\'' + data.record.store_id + ' \'><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span></a>';
+                        }
+                    }
+                }
+            },
+
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                $('#jtable-edit-form').find('#Edit-tags_name').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-tags_all').change(function () {
+                    var str = "";
+                    $( "select#Edit-tags_all option:selected" ).each(function() {
+                      str = $( this ).val() ;
+                    });
+
+                    var t = $('#jtable-edit-form').find('#Edit-tags_id').val();
+                    var tids ='';
+                    if($.trim(t)){
+                        tids = t+','+str;
+                    }else{
+                        tids = str;
+                    }
+                    
+                     $('#jtable-edit-form').find('#Edit-tags_id').val(tids);
+                })
+                ;
+                
+                $('#jtable-edit-form').find('#Edit-groups_name').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-groups_all').change(function () {
+                    var str = "";
+                    $( "select#Edit-groups_all option:selected" ).each(function() {
+                      str = $( this ).val() ;
+                    });
+
+                    var t = $('#jtable-edit-form').find('#Edit-groups_id').val();
+                    var tids ='';
+                    if($.trim(t)){
+                        tids = t+','+str;
+                    }else{
+                        tids = str;
+                    }
+                    
+                     $('#jtable-edit-form').find('#Edit-groups_id').val(tids);
+                })
+                ;
+                  
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+    });
+
+    $('body').on("click", 'button#create_index', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var url_string = $(this).attr('rel');
+
+        jQuery.ajax({
+            url: url_string,
+            type: 'get',
+            error: function () {
+                alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                return false;
+            },
+            success: function (results) {
+                alert('Task to create search index was added successfully to the command queue.');
+                return false;
+            }
+        });
+
+        return false;
+    });
+
+    $('body').on("click", 'a.edit-config', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var elementRecord = $(this).data("record");
+
+        jQuery.ajax({
+            data: {'c': elementRecord},
+            url: '/backend/store/loadstoreconfig/',
+            type: 'post',
+            error: function () {
+                alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                return false;
+            },
+            success: function (results) {
+                $('#dialog-form').empty().html(results.ViewRecord).dialog('open');
+                return false;
+            }
+        });
+
+        return false;
+    });
+
+    $('body').on("submit", '#dialog-form form', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        jQuery.ajax({
+            data: $(this).serialize(),
+            url: '/backend/store/savestoreconfig',
+            type: 'post',
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                return false;
+            },
+            success: function (data, textStatus, jqXHR) {
+                return false;
+            }
+        });
+
+        return false;
+    });
+
+    $('[data-toggle="popover"]').popover();
+</script>

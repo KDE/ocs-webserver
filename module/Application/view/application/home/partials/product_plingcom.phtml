@@ -1,0 +1,95 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\Model\Service\HtmlPurifyService;
+
+$productUrl;
+if($this->product['project_category_id']=='567')
+{
+    $productUrl = $this->buildCollectionUrl($this->product['project_id'],'');
+}else
+{
+    $productUrl = $this->buildProductUrl($this->product['project_id'],'');
+}
+
+?>
+<div class="productrow"><div class="row">            
+ <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">    
+        <div class="text-center">
+            <a href="<?=$productUrl?>"  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>" >
+                <img class="productimg" src="<?=$this->Image($this->product['image_small'], array('width' => 80, 'height' => 80))?>" />
+            </a>
+            
+        </div>
+ </div>
+ <div class="col-lg-7 col-md-6 col-sm-4 col-xs-4">
+        <a href="<?=$productUrl?>"   class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->product['member_id']?>"><?=$this->product['title']?>
+            <span class="version"><?=HtmlPurifyService::purify($this->product['version'])?>
+            </span>
+        </a>
+        <span style="display: block; margin-bottom: 5px"><?=$this->product['cat_title']?></span>
+        
+       
+        <div class="productInfo">
+        
+            <span class="cntComments">
+            <?php
+            
+            $count_comments = $this->product['count_comments'];            
+           
+            echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'');            
+            ?>
+            </span>
+
+          <?php   
+          
+          if (false === empty($this->product['package_names'])) {
+             $list_packages = explode(',', $this->product['package_names']);
+             $resultStringAll = '<span class="packagetypeos" >';
+             $tags = "";
+             foreach ($list_packages as $item) {
+                 $tags = $tags . '  ' . stripslashes($item);
+             }
+             $tags = $this->truncate(HtmlPurifyService::purify($tags), 30, '...', false, true);
+             $resultStringAll .= $tags.'</span>';
+             echo $resultStringAll;
+         } ?>
+        </div>
+ </div>
+ <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4 text-center">
+    
+        <?php  
+               
+                echo $this->partial(
+                        'application/partials/circle.phtml', array(
+                            "r" => 40,
+                            "fontSize" => Application\Model\Service\ConstCircle::small40,
+                            "score" => $this->product['laplace_score']/10
+                        )
+                );      
+        ?>
+    
+    <span class="time"><?=$this->printDate($this->product['changed_at']==null?$this->product['created_at']:$this->product['changed_at'])?>
+    </span>
+</div>
+</div>
+</div >

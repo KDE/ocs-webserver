@@ -1,0 +1,1287 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+//$this->os = Zend_Registry::get('application_os');
+$this->tab = 'addcollection';
+
+$this->headLink()->appendStylesheet('//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
+
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
+$this->inlineScript()->appendScript('
+    $(document).ready(function(){
+        $("select.chosen").chosen({
+        width: "100%",
+        max_selected_options: "5",
+        disable_search: "false",
+        disable_search_threshold: "5"
+        });
+    });
+');
+
+?>
+
+    <style>
+
+        .wizard, .tabcontrol {
+            overflow: visible;
+        }
+
+        .wizard > .content {
+            overflow: visible;
+        }
+
+        .wizard > .content > .body {
+            position: relative;
+        }
+
+        input[type=checkbox] {
+            /*display: none;*/
+        }
+
+        div.datafiledroparea{
+            /*overflow-x: scroll !important;
+            overflow-y: scroll !important;*/
+        }
+
+        /*
+        - Style each label that is directly after the input
+        - position: relative; will ensure that any position: absolute children will position themselves in relation to it
+        */
+        input[type=checkbox] + label {
+            display: block;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 1px #FFF; /* Soften the jagged edge */
+            background: #2184be none repeat scroll 0 0;
+            border: 3px solid #9dc8e2;
+            color: white;
+            height: 25px;
+            transition: all 0.4s ease 0s;
+            width: 25px;
+        }
+
+        /* Provide a border when hovered and when the checkbox before it is checked */
+        input[type=checkbox] + label:hover,
+        input[type=checkbox]:checked + label {
+            border: 3px solid #9dc8e2;
+            box-shadow: 0 0 1px #fff;
+        }
+
+        /*
+        - Create a pseudo element :after when checked and provide a tick
+        - Center the content
+        */
+        input[type=checkbox]:checked + label:after {
+            content: '\2714'; /*content is required, though it can be empty - content: '';*/
+            bottom: 2px;
+            color: white;
+            display: block;
+            height: 1em;
+            left: 3px;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 1em;
+        }
+
+        .add-product-page {
+            padding-top: 15px;
+        }
+
+        section.body {
+            width: 100% !important;
+        }
+
+        #is_original-element
+        {
+            width: 25px;
+            float: left;
+        }
+        
+        #is_gitlab_project
+        {
+            width: 25px;
+            float: left;
+        }
+        
+        #gitlab_project_name-element
+        {
+            width: 300px;
+            float: left;
+        }
+        
+        #gitlab_project_id
+        {
+            width: 300px;
+            float: left;
+        }
+        
+        #show_gitlab_project_issues
+        {
+            width: 25px;
+            float: left;
+        }
+        
+        #use_gitlab_project_readme
+        {
+            width: 25px;
+            float: left;
+        }
+        
+        .wizard > .content > .body ul.multiselect-container {
+            list-style: none !important;
+        }
+        
+        .wizard > .content > .body button.multiselect {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+        
+        
+        
+        .tables_ui {
+          display:inline-block;
+          /*margin:2px 2%;
+          border:2px solid #3333fe;*/
+          border-spacing:0;
+          border: 0;
+        }
+        .tables_ui ul li {
+          min-width: 200px;
+        }
+        
+        .dragging li.ui-state-hover {
+          min-width: 240px;
+        }
+        .dragging .ui-state-hover a {
+          color:green !important;
+          font-weight: bold;
+        }
+        .tables_ui th,td {
+          text-align: right;
+          padding: 2px 4px;
+        }
+        .t_sortable tr, .ui-sortable-helper {
+          cursor: move;
+          border: 1px solid;
+        }
+        
+        .t_sortable tr:first-child {
+          cursor: default;
+        }
+        .ui-sortable-placeholder {
+          background: yellow;
+        }
+        
+        .cat_title {
+            font-size: x-small;
+            font-weight: bold;
+        }
+        
+        .proj_remove {
+            color: red;
+            cursor: pointer;
+        }
+        
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active {
+            border: 1px solid #c5c5c5;
+            border-bottom-width: 1px;
+            background: #f6f6f6;
+            font-weight: normal;
+            color: #454545;
+        }
+
+        .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+            border: 1px solid #c5c5c5;
+            border-bottom-width: 1px;
+            background: #ffffff;
+            font-weight: normal;
+            color: #454545;
+        }
+        
+        .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+            color: #454545;
+            text-decoration: none;
+        }
+
+        .cls-div-collection-projects{
+            width: 550px;float: left;padding-left: 20px;border-left: 2px solid #ddd; margin-left: 30px;
+        }
+        
+    </style>
+    
+
+ 
+    
+    <main class="user-admin-page">
+
+        <?php include __DIR__ . '/../user/partials/userHeader_top.phtml'; ?>
+
+        <section class="body-wrap">
+
+            <section class="wrapper product-page">
+
+                <!-- PAGE BODY -->
+
+                <section class="my-products-page">
+
+                    <!-- NAVIGATION -->
+
+                    <?php include __DIR__ . '/../user/partials/userHeader.phtml'; ?>
+
+                    <?php echo $this->render('partials/header.phtml'); ?>
+
+                    <!-- /NAVIGATION -->
+
+                    <!-- PAGE BODY -->
+
+                    <section class="add-product-page">
+
+                        <form enctype="multipart/form-data" role="application" class="wizard clearfix" action="" method="post" id="add-product-form">
+                            <input type="hidden" id="type_id" name="type_id" value="3">
+                            <input type="hidden" id="project_category_id" name="project_category_id" value="<?= $this->collection_cat_id ?>">
+                            <?php $this->element = $form->get('project_id');?>
+                            <?php include __DIR__ .'/'. $form->getViewScriptsArray()['project_id']; ?>
+                            <h3>Basics</h3>
+                            <section id="required">
+                                <div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
+                                <div id="preview_img_msg" style="float: left;width: 100%;">
+
+                                </div>
+                                <?php // $this->form->title ?>
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                        <div class="small grey bold-font pull-left margin-right-5">*</div>
+                                        <label class="form-label" for="title">Listing Name (4 letters min.)</label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <input id="title"
+                                               class="required form-control valid"
+                                               type="text"
+                                               name="title"
+                                               pattern="[^\x22]+"
+                                               <?php //pattern="^[ .\-&_A-z0-9]{1,}$" ?>
+                                               <?php //  pattern="^[^\\'\^;*!\u0022\$]{1,}$" ?>
+                                               value="<?= $this->form->get('title')->getValue() ?>"
+                                               title="Please use only letters."
+                                               maxlength="60"
+                                               aria-required="true"
+                                               aria-invalid="false"
+                                               data-rule-minlength="4"
+                                               data-rule-maxlength="60"
+                                               data-msg-minlength="At least 4 chars"
+                                               data-msg-maxlength="At most 60 chars">
+                                        <?php if ($this->form->get('title')->getMessages()) {
+                                            $errorHtml = '';
+                                            foreach ($this->form->get('title')->getMessages() as $currentError) {
+                                                $errorHtml .= '<label id="<?=$this->form->get(\'title\')->getName()?>-error" class="error" for="<?=$this->form->get(\'title\')->getName()?>">' . $currentError . '</label>';
+                                            }
+                                            ?>
+                                            <?php echo $errorHtml ?>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                
+                                <?php $this->element = $form->get('description');?>
+                                <?php include __DIR__ .'/'. $form->getViewScriptsArray()['description']; ?>
+                                
+                                <?php $this->element = $form->get('tagsuser');?>
+                                <?php include __DIR__ .'/'. $form->getViewScriptsArray()['tagsuser']; ?>
+
+                                <?php $this->element = $form->get('image_small');?>
+                                <?php include __DIR__ .'/'. $form->getViewScriptsArray()['image_small']; ?>
+                                
+                                <?php $this->element = $form->get('image_small_upload');?>
+                                <?php include __DIR__ .'/'. $form->getViewScriptsArray()['image_small_upload']; ?>
+
+                            </section>
+                            
+                            <h3>Products</h3>
+                            <section id="products">
+                                                                                                
+                                <h3 style="margin-bottom: 30px;">Products</h3>
+                                                                                               
+                                <div id="div-projects" style="width: 550px;float: left;">
+                                    Search (includes new products every 5 minutes)
+                                    <input class="form-control" width="10" type="text" id="search_products" alt="" placeholder="Search (min 3 Chars)" autocomplete="off">
+                                    
+                                    <caption style="width: 100%;"><h4>Drag the Products from here (actively published)</h4></caption>
+                                    
+                                    
+                                    <div id="tabs">
+                                        <ul>
+                                            <li>
+                                                <a href="#tabs-1" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-1">Own Products</a>
+                                            </li>
+                                            <li>
+                                                <a href="#tabs-2" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-2">All Products</a></li>
+                                        </ul>
+                                        <div id="tabs-1" style="padding: 0 !important;">
+                                            <table class="tables_ui" id="t_draggableOwn" data-own-projects="" style="height: 600px; padding: 10px; overflow-x: auto;">
+                                                <tbody class="t_sortable">
+                                                    <tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="tabs-2" style="padding: 0 !important;">
+                                            <table class="tables_ui" id="t_draggableAll" data-all-projects="" style="height: 600px; padding: 10px; overflow-x: auto;">
+                                                <tbody class="t_sortable">
+                                                    <tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                      </div>
+                                </div> 
+
+                                
+                                <div id="div-collection-projects" class="cls-div-collection-projects" >
+                                    
+                                    <caption style="width: 100%;padding-top: 34px;"><h4>Drop the products here, sort as you like, click button to save changes.(Max.100 Products)
+                                        <button id="btnSaveCollections"> Save Changes <span id="btnSaveCollectionsInfo" style="display: none;"> <span class="glyphicon glyphicon-refresh spinning" ></span></span></button>
+                                        
+                                    </h4>                                    
+                                    
+                                     </caption>
+                                    
+                                    <table class="tables_ui" id="t_draggable1" data-collection-projects="" style="width: 500px;height: 600px; padding: 10px; overflow-x: auto;">
+                                        <tbody class="t_sortable" style="height: 50px;">
+                                            <tr>
+                                                <th colspan="2" style="min-height: 50px;">Drop the Products here</th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    
+                                </div> 
+                                <!-- products -->
+                            </section>
+                            
+                            
+                            
+                        <?php if(isset($this->project_id)) { ?>
+                            <h3>Changelog</h3>
+                            <section id="changlog">
+
+                                    <div id="modal-changlog" data-product-id="">
+                                        <div class="row">
+                                            <div class="modal-header">
+                                                <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
+                                            </div>
+                                            <div class="modal-body" style="font-size: small;">
+                                                <div role="form" class="">
+                                                    <input type="hidden" data-update-id="" id="update-id" value="">
+                                                    <div class="form-group">
+                                                      <label for="tile">Changelog Title:</label>
+                                                      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter Changelog Title">
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="text">Changelog Text:</label>
+                                                      <textarea id="update-text" data-update-text="" class="form-control input-sm" rows="3" placeholder="Enter Changelog Text"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-native" data-add-update-btn="">Save Changelog</button>
+                                                </div>
+
+                                                <h4 style="padding-top: 15px;"> Your Entries:</h4>
+                                                <article id="update-list">
+
+                                                </article>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- changlog -->
+                            </section>
+                        <?php } ?>
+
+
+                        </form>
+
+                        <!-- /PAGE BODY -->
+
+                    </section>
+
+                    <!-- /PAGE BODY -->
+
+                </section>
+
+            </section>
+        </section>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+            
+            
+            /*
+            $('.multiple').multiselect({
+                includeSelectAllOption: true
+            });
+            */
+           
+            function wait(ms){
+                var start = new Date().getTime();
+                var end = start;
+                while(end < start + ms) {
+                  end = new Date().getTime();
+                }
+            }
+           
+            function scrolify(tblAsJQueryObject, height) {
+                var oTbl = tblAsJQueryObject;
+
+                // for very large tables you can remove the four lines below
+                // and wrap the table with <div> in the mark-up and assign
+                // height and overflow property  
+                var oTblDiv = $("<div/>");
+                oTblDiv.css('height', height);
+                oTblDiv.css('overflow', 'scroll');
+                oTbl.wrap(oTblDiv);
+
+                // save original width
+                oTbl.attr("data-item-original-width", oTbl.width());
+                oTbl.find('thead tr td').each(function() {
+                  $(this).attr("data-item-original-width", $(this).width());
+                });
+                oTbl.find('tbody tr:eq(0) td').each(function() {
+                  $(this).attr("data-item-original-width", $(this).width());
+                });
+
+
+                // clone the original table
+                var newTbl = oTbl.clone();
+
+                // remove table header from original table
+                oTbl.find('thead tr').remove();
+                // remove table body from new table
+                newTbl.find('tbody tr').remove();
+
+                oTbl.parent().parent().prepend(newTbl);
+                newTbl.wrap("<div/>");
+
+                // replace ORIGINAL COLUMN width				
+                newTbl.width(newTbl.attr('data-item-original-width'));
+                newTbl.find('thead tr td').each(function() {
+                  $(this).width($(this).attr("data-item-original-width"));
+                });
+                oTbl.width(oTbl.attr('data-item-original-width'));
+                oTbl.find('tbody tr:eq(0) td').each(function() {
+                  $(this).width($(this).attr("data-item-original-width"));
+                });
+            }
+
+            var formElement = $('#add-product-form');
+            var validator = formElement.validate({
+                ignore: ":disabled,:hidden"
+            });
+            
+            
+    
+            formElement.steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                enableAllSteps: <?php echo ($this->mode == 'editcollection') ? "true" : "false"; ?>,
+                enableCancelButton: true,
+                showFinishButtonAlways: true,
+                transitionEffect: "slideLeft",
+              /* Labels */
+                labels: {
+                    cancel: "Cancel",
+                    finish: "Save"
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Allways allow previous action even if the current form is not valid!
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+                    // Needed in some cases if the user went back (clean up)
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        formElement.find(".body:eq(" + newIndex + ") label.error").remove();
+                        formElement.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+                    }
+
+                    if (currentIndex == 0) {
+                        if (ImagePreview.hasError) {
+                            return false;
+                        }
+                        //logo OR preview pic mandatory!
+                        var logoSrc = $('#product-picture-preview').attr('src');
+                        var gallery = $('.product-gallery div:first-child');
+                        var galleryPic = gallery.find('.image');
+                        
+                        getCollectionProjects();
+
+                        if (!logoSrc) {
+                            var msg = $('#preview_img_msg');
+                            msg.text('');
+                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo!</label>');
+
+                            return false;
+                        }
+
+                        if (formElement.valid()) {
+                            if (ProductForm.mode == 'addcollection' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                                var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
+                                if (result == false) {
+                                    validator.showErrors(ProductForm.errors);
+                                    return result;
+                                }
+                                formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
+                            }
+                            getCollectionProjects();
+                            getOwnProjects();
+                            
+                            initDragDrop();
+                            
+                            return true;
+                        }
+                        return false;
+                    }
+                    return formElement.valid();
+                },
+
+                onFinished: function (event, currentIndex) {
+                    //logo OR preview pic mandatory!
+                    var logoSrc = $('#product-picture-preview').attr('src');
+                    var gallery = $('.product-gallery div:first-child');
+                    var galleryPic = gallery.find('.image');
+
+                    if (!logoSrc) {
+                        var msg = $('#preview_img_msg');
+                        msg.text('');
+                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo!</label>');
+
+                        return false;
+                    }
+
+                    if (currentIndex == 0) {
+                        if (ImagePreview.hasError) {
+                            return false;
+                        }
+                        if (ProductForm.mode == 'addcollection' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                            var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
+                            if (result == false) {
+                                validator.showErrors(ProductForm.errors);
+                                return result;
+                            }
+                            formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
+                        }
+                    }
+
+
+                    $('[name=project_id]').val(ProductForm.project_id);
+                    formElement.submit();
+                },
+
+                onCanceled: function (event, currentIndex) {
+                    window.location.href = "/member/<?php echo $this->member->member_id; ?>/collections/";
+                }
+
+            });
+            
+            function throttle(f, delay){
+                var timer = null;
+                return function(){
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    timer = window.setTimeout(function(){
+                        f.apply(context, args);
+                    },
+                    delay || 700);
+                };
+            }
+            
+            $('#search_products').bind('input', throttle(function(e) {
+                e.preventDefault();
+                $(this).next();
+                $val = $(this).val(); 
+                if($val.length>=3) {
+                    getOwnProjects($val);
+                    getAllProjects($val);
+                } else {
+                    clearLists();
+                }
+            }));
+            
+            $('#search_products').bind("enterKey",function(e){
+                //do stuff here
+                e.preventDefault();
+                return false;
+            });
+            $('#search_products').keyup(function(e){
+                e.preventDefault();
+                if(e.keyCode == 13)
+                {
+                    return false;
+                }
+            });
+
+            $('#search_products').keydown(function(event){
+                if(event.keyCode == 13) {
+                  event.preventDefault();
+                  return false;
+                }
+            });
+            
+
+            $('body').on("click", "#github_picker", function (event) {
+
+                html = '<form id="get-url-form">' +
+                    '<div class="form-group">' +
+                    '<input type="url" class="form-control" id="get-url" placeholder="Enter a URL where the files can be downloaded" required="required">' +
+                    '<span id="get-url-help" class="help-block small">e.g. https://github.com/mongodb/mongo/archive/r3.5.2.tar.gz</span></div>' +
+                    '<span id="get-url-error" class="help-block small"></span></div>' +
+                    '<button type="submit" class="btn btn-native btn-sm" id="get-url-submit">Submit</button>' +
+                    '</form>';
+
+                var msgBox = $('#generic-dialog');
+                msgBox.modal('hide');
+                msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+                msgBox.find('.modal-body').empty().append(html);
+                setTimeout(function () {
+                    msgBox.modal('show');
+                }, 900);
+
+            });
+
+
+                var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+                $('button[rel="tooltip"]').tooltip();
+
+                var $divCollectionProjects = $('#div-collection-projects');
+                var $divProjects = $('#div-projects');
+                
+                var $modalChanglog = $('#modal-changlog');
+
+                function keysrt(key, asc) {
+                    if(asc) {
+                        return function(a,b){
+                            if (a[key] > b[key]) return 1;
+                            if (a[key] < b[key]) return -1;
+                            return 0;
+                        }
+                    } else {
+                        return function(a,b){
+                            if (a[key] < b[key]) return 1;
+                            if (a[key] > b[key]) return -1;
+                            return 0;
+                        }
+                    }
+                }
+                
+                String.prototype.trunc = String.prototype.trunc ||
+                    function(n){
+                        return (this.length > n) ? this.substr(0, n-1) + '&hellip;' : this;
+                    };
+                
+                function getCollectionProjects() {
+                    
+                    var prodId = ProductForm.project_id;
+                    if(!prodId) {
+                        prodId = 0;
+                    }
+                    
+                    $.ajax({
+                        url: '/c/'+prodId+'/getcollectionprojectsajax',
+                        type: 'GET',
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'success') {
+                                projects = data.projects;
+                                
+                                $divCollectionProjects.find('table[data-collection-projects] tbody').html('');
+                                
+                                tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px; min-height: 50px;'></td></tr>";
+                                
+                                $i = 1;
+                                $.each(projects, function() {
+                                    tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                    tableString += "<td style='align-content: left;text-align: left;'><span class='counter'>" + $i + ".</span></td>";
+                                    tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
+                                    tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
+                                    tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action glyphicon glyphicon-remove proj_remove'></span></td>";
+                                    tableString += "</tr>";
+                                    
+                                    $divCollectionProjects.append("<input type='hidden' class='collection_project_id_item' id='collection_project_id" + this.project_id + "' name='collection_project_id["+$i+"]' value='" + this.project_id + "'>");
+                                    $i++;
+                                    
+                                });
+                                
+                                $divCollectionProjects.find('table[data-collection-projects] tbody').append(tableString);
+                            }
+                        }
+                    })
+                    
+                }
+                
+                function clearLists() {
+                    $divProjects.find('table[data-all-projects] tbody').html('');
+                    $divProjects.find('table[data-own-projects] tbody').html('');
+                }
+                
+                function getOwnProjects(search) {
+                    var prodId = ProductForm.project_id;
+                    if(!prodId) {
+                        prodId = 0;
+                    }
+                    
+                    $divProjects.find('table[data-own-projects] tbody').html('<img src="/images/system/ajax-loader.gif">');
+                    
+                    $.ajax({
+                        url: '/c/'+prodId+'/getprojectsajax',
+                        type: 'GET',
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {search: search, search_all: false},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'success') {
+                                projects = data.projects;
+                                count = data.ResultSize;
+                                
+                                $divProjects.find('table[data-own-projects] tbody').html('');
+                                
+                                
+                                if(count == 0) {
+                                    tableString = "<tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>";
+                                } else {
+                                    tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px; min-height: 50px;'></td></tr>";
+                                    $.each(projects, function() {
+                                        tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                        tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
+                                        tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
+                                        tableString += "<td style='text-align: left; width: 90%;'>" + this.title.trim().trunc(25) + "<p class='cat_title'>" + this.cat_title +"</p></td>";
+                                        tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action'></span></td>";
+                                        tableString += "</tr>";
+                                    });
+                                }
+                                $divProjects.find('table[data-own-projects] tbody').append(tableString);
+                            }
+                        }
+                    })
+                }
+                
+                function getAllProjects(search) {
+                    var prodId = ProductForm.project_id;
+                    if(!prodId) {
+                        prodId = 0;
+                    }
+                    
+                    $divProjects.find('table[data-all-projects] tbody').html('<img src="/images/system/ajax-loader.gif">');
+                    
+                    $.ajax({
+                        url: '/c/'+prodId+'/getprojectsajax',
+                        type: 'GET',
+                        async: false,
+                        cache: false,
+                        timeout: 30000,
+                        data: {search: search, search_all: true},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'success') {
+                                projects = data.projects;
+                                count = data.ResultSize;
+                                
+                                $divProjects.find('table[data-all-projects] tbody').html('');
+                                
+                                
+                                if(count == 0) {
+                                    tableString = "<tr><td style='text-align: left; width: 440px; min-height: 50px;'>No Products found</td></tr>";
+                                } else {
+                                    tableString = "<tr><td style='align-content: center;text-align: center; width: 60px;'></td><td style='text-align: left; width: 440px; min-height: 50px;'></td></tr>";
+                                    $.each(projects, function() {
+                                        tableString += "<tr style='background-color: white;' data-project-id=" + this.project_id + ">";
+                                        tableString += "<td style='align-content: left;text-align: left;'><span class='counter'></span></td>";
+                                        tableString += "<td style='align-content: center;text-align: center; width: 10%;'><img style='height: 50px;width: 50px;' src='" + this.image_url + "'></td>";
+                                        tableString += "<td style='text-align: left; width: 90%;'>";
+                                        tableString += "<div style='float: left;'>"+this.title.trim().trunc(25)+"<p class='cat_title'>" + this.cat_title +"</p></div>";
+                                        tableString += "<div style='float: right;'> by "+this.username+"</div>";
+                                        
+                                        tableString += "</td>";
+                                        tableString += "<td style='align-content: center;text-align: center;'><span class='proj_action'></span></td>";
+                                        tableString += "</tr>";
+                                    });
+                                }
+                                
+                                $divProjects.find('table[data-all-projects] tbody').append(tableString);
+                            }
+                        }
+                    })
+                }
+                
+                
+
+                $('body').on("click", "#btnSaveCollections", function (event) {
+                        event.preventDefault();
+                        $(this).attr("disabled","disabled");
+                        $('#btnSaveCollectionsInfo').show();
+                        updateCollectionProjects();
+                    });
+                    
+                function updateCollectionProjects() {
+                    $collection_project_ids = "";
+                    var parray={};
+                    var datapids = [];
+                    $divCollectionProjects.find('table').find('tr').each(function() {
+                        if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {                            
+                            datapids.push($(this).attr('data-project-id')); 
+                        }
+                    });
+                    var uniquedatapids = [];
+                    $.each(datapids, function(i, el){
+                        if($.inArray(el, uniquedatapids) === -1) uniquedatapids.push(el);
+                    });
+                    $collection_project_ids = uniquedatapids.join(",");
+                                                        
+                    $collId = ProductForm.project_id;                   
+                    $.ajax({
+                        url: '/c/'+ $collId + '/updatecollectionprojectsajax',
+                        type: 'POST',
+                        data: {collection_project_ids: $collection_project_ids},
+                        dataType: 'json',
+                        async: false,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'ok') {
+                                $('#btnSaveCollections').removeAttr("disabled");                                            
+                                $('#btnSaveCollectionsInfo').hide();
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                }
+
+                
+                function initDragDrop() {
+                    $( "#tabs" ).tabs();
+                    
+                    var $tabsOwn = $('#t_draggableOwn');
+                    $("tbody.t_sortable").sortable({
+                      connectWith: ".t_sortable",
+                      items: "> tr:not(:first)",
+                      //appendTo: $tabsOwn,
+                      helper:"clone",
+                      zIndex: 999990,
+                      update: function (event, ui) {
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                        
+                      }   
+                    }).disableSelection();
+                    
+                    
+                    var $tabsAll = $('#t_draggableAll');
+                    $("tbody.t_sortable").sortable({
+                      connectWith: ".t_sortable",
+                      items: "> tr:not(:first)",
+                      //appendTo: $tabsAll,
+                      helper:"clone",
+                      zIndex: 999999,
+                      update: function (event, ui) {
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                        
+                      }   
+                    }).disableSelection();
+                    
+
+
+
+
+
+                    //var $tab_items = $divCollectionProjects.find('table[data-collection-projects] tbody').droppable({
+                    var $tab_items = $divCollectionProjects.find('table[data-collection-projects]').droppable({
+                      accept: ".t_sortable tr",
+                      hoverClass: "ui-state-hover",
+                      drop: function( event, ui ) { 
+                            $('.collection_project_id_item').remove();
+                            $index = -1;                            
+                            ui.draggable.find('.proj_action').removeClass('glyphicon glyphicon-remove proj_remove');
+                            ui.draggable.find('.proj_action').addClass('glyphicon glyphicon-remove proj_remove');
+                            $divCollectionProjects.find('table').find('tr').each(function() {
+                                $index = $(this).index();
+                                if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                    $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                    $(this).find('.counter').html($index+'.');
+                                }
+                            });                           
+                            
+                            $('.proj_remove').on('click', function (event) {
+                                event.preventDefault();
+
+                                $(this).parent().parent().remove();
+                                $('.collection_project_id_item').remove();
+                                $index = -1;
+                                $divCollectionProjects.find('table').find('tr').each(function() {
+                                    $index = $(this).index();
+                                    if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                        $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                        $(this).find('.counter').html($index+'.');
+                                    }
+                                });
+                            });
+                           
+                            
+                            return false; 
+                      },
+                      out: function( event, ui ) { 
+                          $divCollectionProjects.find('#collection_project_id' + ui.draggable.attr('data-project-id')).remove();                         
+                         // updateCollectionProjects();
+                          return false; 
+                      }
+                    });
+                    
+                    //scrolify($('#t_draggable1'), 500); // 160 is height
+                    //scrolify($('#t_draggable2'), 500); // 160 is height
+                    
+                    $('.proj_remove').on('click', function (event) {
+                        event.preventDefault();
+                        
+                        $(this).parent().parent().remove();
+                        $('.collection_project_id_item').remove();
+                        $index = -1;
+                        $divCollectionProjects.find('table').find('tr').each(function() {
+                            $index = $(this).index();
+                            if(null != $(this).attr('data-project-id') && $(this).attr('data-project-id') != undefined) {
+                                $divCollectionProjects.append("<input class='collection_project_id_item' type='hidden' id='collection_project_id" + $(this).attr('data-project-id') + "' name='collection_project_id["+$index+"]' value='" + $(this).attr('data-project-id') + "'>");
+                                $(this).find('.counter').html($index+'.');
+                            }
+                        });
+                      
+                    });
+                    
+                    
+                }
+
+                function getUpdates(page) {
+
+                    $modalChanglog.find('#update-list').html('');
+                    var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
+                    $.ajax({
+                        url: '<?=$this->buildCollectionUrl($this->project_id, 'getupdatesajax')?>',
+                        type: 'GET',
+                        data: {
+                            format: 'json',
+                            ignore_status_code: 1
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                            $.each(data.updates, function () {
+                                var id = '';
+                                if (this.project_update_id) {
+                                    id = this.project_update_id;
+                                }
+                                var title = '';
+                                if (this.title) {
+                                    title = this.title;
+                                }
+                                var text = '';
+                                if (this.text) {
+                                    text = this.text;
+                                }
+                                var date = '';
+                                if (this.created_at) {
+                                    date = this.created_at;
+                                }
+
+                                Changelog.setLogMsg(id, this.raw_title, this.raw_text);
+
+                                var divEl = $('<div />');
+                                divEl.attr('data-update-id', id);
+                                divEl.append(
+                                    '<a name="anker_'+id+'"></a>'
+                                    + '<h4>'+title+'</h4>'
+                                    + '<div class="small light lightgrey product-update-date">'+date+ '</div>'
+                                    + text + '<br/><br/>'
+                                );
+
+                                var btnEdit = $('<button type="submit" class="btn btn-native btn-sm" style="line-height: 10px;margin: 5px;">Edit</button>');
+                                btnEdit.attr('data-change-update-btn',id);
+                                btnEdit.attr('data-change-title',title);
+                                btnEdit.attr('data-change-text',text);
+
+
+                                var btnDelete = $('<button type="submit" class="btn btn-native btn-sm" style="line-height: 10px;margin: 5px;">Delete</button>');
+                                btnDelete.attr('data-delete-update-btn',id);
+
+                                divEl.append(btnEdit);
+                                divEl.append(btnDelete);
+                                divEl.append('<br/><br/><br/><br/>');
+
+                                $modalChanglog.find('#update-list').append(divEl);
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+
+                }
+
+                
+                function humanFileSize(bytes) {
+                    var size = '';
+                    size = (bytes / 1048576).toFixed(2) + ' MB';
+                    /*
+                     if (bytes >= 1073741824) {
+                     size = (bytes / 1073741824).toFixed(2) + 'GB';
+                     }
+                     else if (bytes >= 1048576) {
+                     size = (bytes / 1048576).toFixed(2) + 'MB';
+                     }
+                     else if (bytes >= 1024) {
+                     size = (bytes / 1024).toFixed(2) + 'KB';
+                     }
+                     else {
+                     size = bytes + 'bytes';
+                     }*/
+                    return size;
+                }
+                
+                $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
+                    var update_id = $modalChanglog.find('#update-id').val();
+                    var title = $modalChanglog.find('#update-title').val();
+                    var text = $modalChanglog.find('#update-text').val();
+                    var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
+                    event.preventDefault();
+
+                    $.ajax({
+                        url: '<?=$this->buildCollectionUrl($this->project_id, 'saveupdateajax')?>',
+                        type: 'POST',
+                        data: {title: title, text: text, update_id: update_id},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                            $modalChanglog.find('#update-title').val('');
+                            $modalChanglog.find('#update-text').val('');
+                            $modalChanglog.find('#update-id').val('');
+                            getUpdates();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+
+                });
+
+                $modalChanglog.on('click', 'button[data-delete-update-btn]', function (event) {
+                    var updateId = $(this).attr('data-delete-update-btn');
+                    var productId = <?= isset($this->project_id)?$this->project_id:0 ?>;
+                    event.preventDefault();
+
+                    $.ajax({
+                        url: '<?=$this->buildCollectionUrl($this->project_id, 'deleteupdateajax')?>',
+                        type: 'POST',
+                        data: {update_id: updateId},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                alert('Update could not be deleted!');
+                                return;
+                            }
+                            getUpdates();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+
+                });
+
+                $modalChanglog.on('click', 'button[data-change-update-btn]', function (event) {
+                    var updateId = $(this).attr('data-change-update-btn');
+                    //var title = $(this).attr('data-change-title');
+                    //var text = $(this).attr('data-change-text');
+                    var changelog = Changelog.getLogMsg(updateId);
+                    var title = changelog.msg_title;
+                    var text = changelog.msg_text;
+
+                    $modalChanglog.find('#update-title').val(title);
+                    $modalChanglog.find('#update-text').val(text);
+                    $modalChanglog.find('#update-id').val(updateId);
+
+                    $modalChanglog.find('#update-title').focus();
+
+                    event.preventDefault();
+                });
+        });
+
+
+
+        var LogCollection=function()
+        {
+            this.changelogs = {};
+
+            this.setLogMsg =
+                function(id, title, msg) {
+                    this.changelogs[id] = {msg_title:title, msg_text:msg};
+            };
+
+            this.getLogMsg =
+                function(id) {
+                    return this.changelogs[id];
+                }
+        };
+
+        var Changelog = new LogCollection();
+    </script>
+  <script>
+          $.fn.sortSelect = function() {
+              var op = this.children("option");
+              op.sort(function(a, b) {
+                  return a.text > b.text ? 1 : -1;
+              })
+              return this.empty().append(op);
+          }
+
+          $.fn.sort_select_box = function(){
+              var my_options = $("option", $(this));
+              my_options.sort(function(a,b) {
+                  if (a.text > b.text) return 1;
+                  else if (a.text < b.text) return -1;
+                  else return 0
+              });
+              $(this).empty().append(my_options);
+          }
+
+          function setSourceNeededForCategoryInfo(element_id, cat_id) {
+            $('.cat_source_info').remove();
+            jQuery.ajax({
+                data: {'cat_id': cat_id},
+                url: '/productcategory/fetchsourceneeded/',
+                type: 'get',
+                success: function (results) {
+                    var isSourceRequired = results.source_required;
+
+                    if(isSourceRequired == 1) {
+                        $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                    }
+                }
+            });
+          }
+          
+          
+          ProductForm = {
+
+              mode: "<?=$this->mode?>",
+              project_id: <?php echo ($this->mode == 'editcollection') ? $this->project_id : '$(\'#project_id\').val()'?>,
+              errors: "",
+
+              setup: function () {
+                  //this.setupCategorySelect();
+                  //this.setupCategoryAjax();
+                  //this.setGitlabProjectNameSelect();
+              },
+
+              sortOptionByValue: function(element_id) {
+                  var my_options = $("#"+element_id + " option");
+                  var selected = $("#"+element_id).val();
+
+                  my_options.sort(function(a,b) {
+                      if (a.text > b.text) return 1;
+                      else if (a.text < b.text) return -1;
+                      else return 0;
+                  })
+                  $("#"+element_id).empty().append( my_options );
+                  $("#"+element_id).val(selected);
+              },
+
+              saveSection: function (sectionId) {
+                  var pid = <?php echo ($this->mode == 'editcollection') ? $this->project_id : '$(\'#project_id\').val()'?>;
+                  if (pid != '') {
+                      return;
+                  }
+
+                  var url = '/c/save/';
+                  var data = $('#' + sectionId + ' :input').serialize();
+                  
+                  var result = false;
+
+                  jQuery.ajax({
+                      data: data,
+                      url: url,
+                      type: 'post',
+                      async: false
+                  }).done(function (data, textStatus, jqXHR) {
+                      if (data.project_id == undefined) {
+                          ProductForm.project_id = '';
+                      } else {
+                          ProductForm.project_id = data.project_id;
+                      }
+                      if (data.status == 'error') {
+                          ProductForm.errors = data.messages;
+                          result = false;
+                      } else {
+                          result = true;
+                      }
+
+                  }).fail(function (jqXHR, textStatus, errorThrown) {
+
+                  }).always(function (data, textStatus, errorThrown) {
+
+                  });
+
+                  return result;
+              },
+
+              showErrors: function () {
+                  $.each(this.errors, function (index, value) {
+                      $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
+                  });
+              }
+
+          };
+
+  </script>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ImagePreview.setup();
+            ProductForm.setup();
+            Opendownloadfile.setup();
+        });
+    ');

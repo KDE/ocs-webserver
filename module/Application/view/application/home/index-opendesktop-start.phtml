@@ -1,0 +1,48 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$config = $this->storeConfig;
+$metaDomain = $config->host;
+$this->headTitle($this->headTitle, 'SET');
+$this->doctype(Laminas\View\Helper\Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', $metaDomain)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $metaDomain)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:site_name',$metaDomain)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description','Libre Cloud Services for users and developers. Keep your personal data save, start new projects, share apps, files and products, communicate freely with friends and colleagues.')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images/system/opendesktop-logo.png')->setAutoEscape(false);
+?>
+
+<div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+</div>
+<main class="startpage-store-new">      
+      <div id="main-content"></div>
+      <script type="text/javascript">
+        var page = "opendesktop";
+        var hpVersion = 2;
+        var data = <?php echo $this->data?>;
+      </script>
+      <script src="/theme/react/bundle/home-main-container-bundle.js" type="text/javascript"></script>      
+      
+</main>

@@ -1,0 +1,87 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle('Payout Groupby amount');
+$this->tab = 'payout-groupby-amount';
+echo $this->render('headerTabs.phtml'); 
+
+?>
+<h3>Statistics: Payout group by amount </h3>
+<style type="text/css">
+		.main-container{
+			display: flex;
+			max-height: 500px;
+			float: left;
+		}
+		.main-container .container{
+			width: 100%;
+			list-style: none;
+		}
+		.main-container .container li{
+			border-bottom: 1px solid #ccc;
+		}
+		.main-container .container span.tier{
+			display: inline-block;
+			width: 100px;
+		}
+
+</style>
+<div id="linePayoutGroupbyAmountTab" class="tab-pane">  
+<div class="main-container"> 
+	<div>
+		<h3> Products
+		</h3>
+		<ul class="container">
+			
+			<?php 
+			echo '<li><span class="tier">$</span><span class="cnt"> # </li>';
+			foreach ($this->products as $p) {
+				$tmp = $p['x'] ==0?1:$p['x'];
+				echo '<li><span class="tier">'.$tmp.'->'.($p['x']+10).'</span><span class="cnt">'.$p['y'].'</li>';
+			} ?>
+		</ul>
+	</div>   
+	<div>
+		<h3> Members
+		</h3>
+		<ul class="container">
+			<?php 
+			
+			echo '<li><span class="tier">$</span><span class="cnt"> # </li>';
+			foreach ($this->member as $p) {
+				$tmp = $p['x'] ==0?1:$p['x'];
+				echo '<li><span class="tier">'.$tmp.'->'.($p['x']+10).'</span><span class="cnt">'.$p['y'].'</li>';
+			} ?>
+		</ul>
+	</div>   
+</div>
+
+    <div id="linePayoutGroupbyAmount" class="chart-wrapper" style="max-width: 1000px; height: 100%; display: block; float: left; ">            
+    </div>
+    <div id="linePayoutGroupbyAmountMember" class="chart-wrapper" style="max-width: 1000px; height: 100%; display: block; float: left; ">            
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {             
+         $.getScript("/theme/flatui/js/stati2/payoutGroupbyAmount.js");
+    });    
+</script>

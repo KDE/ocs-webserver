@@ -1,0 +1,325 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+$this->headTitle('GHNS Excluded'); 
+?>
+
+<link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+<link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+<script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+<link href="/theme/flatui/css/jtable.extra.css" rel="stylesheet">
+
+<main id="explore-content">
+  <section class="wrapper" id="products-wrapper" >
+<h1>
+    Get hot new stuff excluded  
+</h1>
+
+     <form style="margin-top: 20px; margin-bottom: 20px">
+       
+            Member :
+            
+                <select name = "filter_member_id" id="filter_member_id" >
+                    <?php
+                        echo '<option value=""></option>';
+                        foreach ($this->mlist as $m) {
+                            echo '<option value="'.$m['member_id'].'"">'.$m['username'].'</option>';        
+                        }
+                    ?>
+                </select>
+          
+         
+                <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+               
+          
+        </form>
+    </div>
+    <div id="TableContainer"></div>    
+    </section>
+
+</main>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var isadmin = <?php echo json_encode($this->isAdmin);?>;
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        var actions;
+        if(isadmin==1)
+        {
+            actions = {
+                listAction: '/moderation/list' ,
+                updateAction: '/moderation/update'
+            }
+        }else{
+            actions = {
+                listAction: '/moderation/list' 
+                
+            }
+        }
+
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,                     
+            actions: actions,
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
+            },
+            fields: {
+                 project_id: {
+                                     title: 'project_id',
+                                     key: true,
+                                     create: false,
+                                     edit: false,
+                                     list: false                   
+                                 },
+                    title: {
+                        title: 'Project ',                         
+                        create: false,
+                        edit: false,
+                        list: true,    
+                        width:'15%',                    
+                        display: function (data) {
+                            if (data.record.image_small) {
+                                var html =   ' <a href="/p/' + data.record.project_id + '/" target="_blank"><img  class="pimage" src='+data.record.image_small+' /></a><div class="ptitle">'+data.record.title+'</div>' ;
+                                var red = 200;
+                                var blue = 200;
+                                var d = 200;
+                                var green =200;
+                                var sc = data.record.laplace_score;
+                                if(sc == 0) sc = 50;
+                               
+
+                                if(sc>50) {
+                                    red=(d-((sc-50)*4)).toString(16);
+                                    green=(d).toString(16);
+                                    blue=(d-((sc-50)*4)).toString(16);
+                                }else if(sc<51) {
+                                    red=(d).toString(16);
+                                    green=(d-((50-sc)*4)).toString(16);
+                                    blue=(d-((50-sc)*4)).toString(16);
+                                }
+                                
+                                
+                                var color = red+green+blue;                                            
+                                 var t= '<div class="rating" >'+
+                                        '<div class="rating-text">'+
+                                        '<small class="center-block text-center">Score '+data.record.laplace_score+'%'+
+                                        '</small>'+
+                                    '</div>'+
+                                    '<div class="progress" style="margin-bottom: 0;height:12px;background-color: transparent; box-shadow: none; padding:2px;">'+
+                                        '<div class="progress-bar" style="background-color: #'+color+';width: '+data.record.laplace_score+'%;">'+                                            
+                                        '</div>'+
+                                        '<div class="progress-bar" style="background-color:#eeeeee;width: '+(100 -data.record.laplace_score)+'%;">'+                                          
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+                                html = html+t;
+                              
+                                return html;
+                            }
+                        }
+                    },
+
+                    cat_title:{
+                         title: 'Category',
+                         width:'5%', 
+                         list:true,
+                         edit: false
+                    },
+                    username:{
+                         title: 'Creator',
+                          width:'5%', 
+                         list:true,
+                         edit: false,
+                         display:function(data){                        
+                            var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.member_id+'" >'+data.record.username+'</a>';
+                             return html;
+                        }
+                    },
+                    project_created_at: {
+                        title: 'Created at',                       
+                        type: 'date', 
+                         width:'5%',                       
+                        edit: false,
+                        list: true
+                    },  
+                    project_changed_at: {
+                        title: 'Changed at',                       
+                        type: 'date',    
+                         width:'5%',                    
+                          edit: false,
+                        list: true
+                    },   
+                    created_at: {
+                        title: 'Excluded at',                       
+                        type: 'date',    
+                         width:'5%',
+                          edit: false,                    
+                        list: true
+                    },
+                    exclude_member_name: {
+                        title: 'Excluded by',    
+                         width:'5%',
+                          edit: false,                                                
+                        list: true,
+                        display:function(data){                        
+                            var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.created_by+'" >'+data.record.exclude_member_name+'</a>';
+                             return html;
+                        }
+                    },    
+                     note: {
+                        title: 'Reason',                                                   
+                        type: 'textarea',
+                        list: true
+                        /*,
+                        display:function(data){
+                             return data.record.note+'<a class="imghistory" data-projectid="'+data.record.project_id+'"> &nbsp;<i class="fa fa-history"></i></a>';
+                        }
+                        */
+                    },   
+                    value: {
+                        title: '',      
+                        type:'checkbox',                                             
+                        list: false,
+                        values: {'1': 'ghns excluded', '0': 'insert to ghns'}
+                    }
+            }
+        });
+
+        $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!confirm('This will toggle the active option for this product. Do you wish to proceed?')) {
+                return;
+            }
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'project_id': elementRecord},
+                url: '/backend/project/togglestatus/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.member-info', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'member_id': elementRecord},
+                url: '/backend/user/memberinfo/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').html(results.ViewRecord).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_member_id: $('#filter_member_id').val(),              
+            },function(){
+              //TooltipUser.setup("tooltipuser","right");        
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();            
+          $("#filter_member_id option[value='']").attr('selected', true)      
+            $('#TableContainer').jtable('load', {            
+                filter_member_id: null,              
+            });
+        });
+
+        // $('#TableContainer').jtable('load', {           
+        //     filter_member_id: $('#filter_member_id').val()            
+        // });
+
+          $('#TableContainer').jtable('load', {           
+            filter_member_id: $('#filter_member_id').val()            
+        },function(){
+              //TooltipUser.setup("tooltipuser","right");        
+        });
+
+        $('body').on("click", 'a.imghistory', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            console.log(this);
+            console.log($(this).attr('data-projectid'));
+
+            return false;
+        });
+
+      
+
+                
+    
+    });
+</script>
+
+     

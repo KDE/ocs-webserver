@@ -1,0 +1,72 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<div class="my-products-heading">
+    <h1 class="page-title left"><?= $this->translate('Products/Listing') ?></h1>
+</div>
+
+<div class="pling-nav-tabs">
+    <ul class="nav nav-tabs">
+
+        <li class="<?php echo $this->tab == 'products' ? 'active' : ''; ?>">
+            <a href="<?php echo $this->buildMemberUrl($this->member->username, 'products'); ?>">
+                <span class="glyphicon glyphicon-th-list"></span>
+                <?= $this->translate('Products') ?>
+            </a>
+        </li>
+
+        <li class="<?php echo $this->tab == 'collections' ? 'active' : ''; ?>">
+            <a href="<?php echo $this->buildMemberUrl($this->member->username, 'collections'); ?>">
+                <span class="glyphicon glyphicon-th-list"></span>
+                <?= $this->translate('Listing') ?>
+            </a>
+        </li>
+        <li class="header-menu-left-item <?php echo $this->tab == 'add' ? 'active' : ''; ?>">
+            <?php if ($this->mode == 'edit') : ?>
+                <a href="<?= $this->serverUrl ?>">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <?= $this->translate('Edit Product') ?>
+                </a>
+            <?php else : ?>
+                <a href="<?php echo $GLOBALS['ocs_config']->settings->client->default->baseurl_store . '/product/add'; ?>">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <?= $this->translate('Add Product') ?>
+                </a>
+            <?php endif ?>
+        </li>
+        <li class="header-menu-left-item <?php echo $this->tab == 'addcollection' ? 'active' : ''; ?>">
+            <?php if ($this->mode == 'editcollection') : ?>
+                <a href="<?= $this->serverUrl ?>">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <?= $this->translate('Edit Listing') ?>
+                </a>
+            <?php else : ?>
+                <a href="<?php echo $GLOBALS['ocs_config']->settings->client->default->baseurl_store . '/collection/add'; ?>">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <?= $this->translate('Add Listing (from existing products)') ?>
+                </a>
+            <?php endif ?>
+        </li>
+
+    </ul>
+</div>

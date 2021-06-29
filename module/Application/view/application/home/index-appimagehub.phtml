@@ -1,0 +1,60 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->headTitle($this->headTitle, 'SET');
+$this->doctype(\Laminas\View\Helper\Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.appimagehub.com')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', 'appimagehub.com')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:site_name','www.appimagehub.com')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image','https://www.appimagehub.com/images_sys/superstore/appimagehub-logo-4.png')->setAutoEscape(false);
+
+$totalProjects = $this->totalProjects;
+$response = $this->data;
+$basrUrl = $this->buildBaseUrl();
+$cat_tree = $this->cat_tree;
+?>
+
+<main id="explore-content"></main>
+<script type="text/javascript">
+  var filters = {};
+  var view = "home";
+  var hpVersion = 2;
+  var page = "appimages";
+  var data = <?php echo \Laminas\Json\Encoder::encode($response)?>;
+  var totalProjects = <?php echo $totalProjects ?>;
+  var baseUrl = <?php echo \Laminas\Json\Encoder::encode($basrUrl)?>;
+  var catTree = <?php echo \Laminas\Json\Encoder::encode($cat_tree)?>;
+  
+</script>
+
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/carousel.css"/>
+<div id="carousel-module-container" class="app-images-hub"></div>
+
+<link type="text/css" rel="stylesheet" href="/theme/react/assets/css/category-blocks.css"/>
+<div id="category-blocks-container" class="app-images-hub"></div>
+<script type="text/javascript" src="/theme/react/bundle/category-blocks-bundle.js"></script>
+
+<link href="/theme/react/lib/mdl/material.min.css" rel="stylesheet">
+<link href="/theme/react/assets/css/style.css" rel="stylesheet">
+<script type="text/javascript" src="/theme/react/bundle/appimagehub-home-bundle.js"></script>

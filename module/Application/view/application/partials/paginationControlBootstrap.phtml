@@ -1,0 +1,72 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+if (false === isset($this->params)) {
+    $this->params = array();
+}
+$serverUrl = $this->serverUrl()->setUseProxy(true);
+?>
+<span class="glyphicon glyphicon-refresh spinning" style="display: none"></span> 
+<ul class="pagination pagination-sm" style="margin: 0;padding:0;">
+    <li class="<?php echo isset($this->previous) ? '' : 'disabled' ?>">
+        <a class="<?php echo isset($this->previous) ? 'paginationPartial' : '' ?>"
+           href="<?php echo isset($this->previous) ? $serverUrl . $this->url(array_merge($this->params, array('page' => $this->previous))) : 'javascript:;'; ?>">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+    </li>
+
+    <?php foreach ($this->pagesInRange as $page): ?>
+        <?php if ($page != $this->current): ?>
+            <li><a  class="ajaxPartial paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a></li>
+        <?php else: ?>
+            <li class="active"><a class="paginationPartial" href="<?php echo $serverUrl . $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a>
+        <?php endif; ?>
+    <?php endforeach; ?>
+
+    <li class="<?php echo isset($this->next) ? '' : 'disabled' ?>">
+        <a class="<?php echo isset($this->next) ? 'paginationPartial' : ''?>"
+           href="<?php echo isset($this->next) ? $serverUrl . $this->url(array_merge($this->params, array('page' => $this->next))) : 'javascript:;'; ?>">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </li>
+</ul>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').off('click', 'ul.pagination a.paginationPartial').on('click', 'ul.pagination a.paginationPartial',function(event) {
+                event.preventDefault();
+                var target = '<?=$this->dom_target?>';            
+                var url = $(this).attr("href") + ' ' + target + ' > *';   
+                $('html, body').scrollTop($(target).offset().top);    
+                $('.glyphicon.glyphicon-refresh.spinning').show();
+                $(target).load(url, function (response, status, xhr) {
+                    if (status == "error") {
+                        $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                    }
+                    ProductDetailCommentTooltip.setup();                         
+                    myProducts.setup();
+
+                    TagingLoopMyProductsSelect2.setup();
+                });          
+                return false;
+           });         
+    });
+</script>

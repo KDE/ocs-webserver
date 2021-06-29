@@ -1,0 +1,182 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="well" style="width: 95%;">
+    <form>
+        Project ID: <input type="text" name="filter_project_id" id="filter_project_id">
+
+        <div style="display:inline-block; text-align: right;width: 100%;">
+            <button type="submit" id="LoadRecordsButton">Load records</button>
+            <button type="reset" id="RemoveFilterButton">Remove filter</button>
+        </div>
+    </form>
+</div>
+<style>
+    .jtable-toolbar-item-add-record {
+        display: none !important;
+    }
+</style>
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of Comment Reports',
+            sorting: true, //Enable sorting
+            defaultSorting: 'last_reported_at DESC', //Set default sorting
+            actions: {
+                listAction: '/backend/reportcomments/list',
+               
+            },
+            fields: {
+                report_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                project_id: {
+                    title: 'Project ID',
+                    width: '5%',
+                    edit: false
+                },
+                comment_id: {
+                    title: 'Comment ID',
+                    width: '5%',
+                    edit: false
+                },
+                comment_created_at: {
+                    title: 'Comment Created At',
+                    width: '5%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                comment_text: {
+                    title: 'Comment Text',
+                    width: '20%',
+                    edit: false
+                },
+                comment_deleted_at: {
+                    title: 'Comment Deleted At',
+                    width: '5%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                counter: {
+                    title: 'Total Reports',
+                    width: '5%',
+                    create: false,
+                    edit: false
+                },
+                last_reported_at: {
+                    title: 'Last Reported At',
+                    width: '5%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                hide: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.comment_active) {
+                            if (data.record.comment_active == 0) {
+                                btn_title = 'Show Comment';
+                            } else {
+                                btn_title = 'Hide Comment';
+                            }
+                            return '<a role="button" title="' + btn_title + ' this comment" class="btn btn-warning btn-xs toggle-status pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>' + btn_title + '</span></a>'
+                                ;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        
+        $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/reportcomments/status/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_project_id: $('#filter_project_id').val()
+            })
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#filter_project_id').val(null);
+            $('#TableContainer').jtable('load', {
+                filter_project_id: null
+            })
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_project_id: $('#filter_project_id').val()
+        });
+    });
+</script>

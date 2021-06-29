@@ -1,0 +1,1287 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * */
+
+use Application\Model\Service\HtmlPurifyService;
+use Laminas\Json\Encoder;
+use Laminas\Uri\Uri;
+use Laminas\View\Helper\Doctype;
+
+$this->headTitle($this->headTitle);
+
+$isAdmin = false;
+if ($this->ocs_user->member_id && 'admin' == $this->userRoleName) {
+    $isAdmin = true;
+}
+
+$isModerator = false;
+if ($this->ocs_user->member_id && 'moderator' == $this->userRoleName) {
+    $isModerator = true;
+}
+
+if ($this->ocs_user->member_id) {
+    $identity = $this->ocs_user;
+} else {
+    $identity = null;
+}
+
+$uri = $_SERVER['REQUEST_URI'];
+$redirect = new Uri($_SERVER['REQUEST_URI']);
+$redirect->setHost(null)->setScheme(null);
+$loginUrl = $this->url('application_login');
+if ($uri != '/' and $uri != '') {
+    $loginUrl .= "redirect/" . $this->urlEncrypt($redirect->toString());
+}
+//$loginUrl = '/login?redirect=' . $this->urlEncrypt($this->request->getUriString(), true);
+$viewSidebar = 'partials/productAboutSidebar.phtml';
+$viewClaimBox = false;
+if ($this->product->claimable == 1) {
+    $viewClaimBox = 'partials/productClaimTopHeader.phtml';
+}
+
+$this->product->title = strip_tags(HtmlPurifyService::purify($this->product->title));
+$this->product->description = Application\Model\Service\BbcodeService::renderHtml(HtmlPurifyService::purify($this->product->description));
+$description_meta = strip_tags(HtmlPurifyService::purify($this->product->description));
+$this->product->version = strip_tags(HtmlPurifyService::purify($this->product->version));
+//$this->product->embed_code =\Application\Model\Service\HtmlPurifyService::purify($this->product->embed_code,\Application\Model\Service\HtmlPurifyService::ALLOW_EMBED);
+$this->product->link_1 = HtmlPurifyService::purify($this->addDefaultScheme($this->product->link_1), HtmlPurifyService::ALLOW_URL);
+$this->product->source_url = HtmlPurifyService::purify($this->product->source_url, HtmlPurifyService::ALLOW_URL);
+$this->product->facebook_code = HtmlPurifyService::purify($this->product->facebook_code, HtmlPurifyService::ALLOW_URL);
+$this->product->twitter_code = HtmlPurifyService::purify($this->product->twitter_code, HtmlPurifyService::ALLOW_URL);
+$this->product->google_code = HtmlPurifyService::purify($this->product->google_code, HtmlPurifyService::ALLOW_URL);
+
+
+$this->doctype(Doctype::XHTML1_RDFA);
+
+$this->headMeta()->setName('description', $this->truncate($description_meta, 200, '...', false, true))
+     ->setAutoEscape(false);
+$this->headMeta()->setName('title', $this->truncate($this->product->title, 200, '...', false, true))
+     ->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:url', $this->buildProductUrl($this->product->project_id, '', null, true))
+     ->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $this->product->title)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description', $this->truncate($description_meta, 200, '...', false, true))
+     ->setAutoEscape(false);
+$this->headMeta()->appendProperty(
+        'og:image', $this->Image(
+        $this->product->image_small, array(
+        'width'  => 400,
+        'height' => 400,
+    )
+    )
+    )->setAutoEscape(false);
+
+$cntModeration = $this->cntModeration;
+$cntLicensing = $this->cntLicensing;
+
+//$productTmp = $this->product->toArray();
+//$productTmp['image_small_absolute'] = $this->Image($this->product->image_small, array('width' => 400, 'height' => 400));
+
+$productJson = $this->productJson;
+
+$filesJson = $this->filesJson;
+
+$xdgTypeJson = Encoder::encode($this->catXdgType($this->product->project_category_id));
+
+$isowner = false;
+if ($identity && $identity->member_id == $this->product->member_id) {
+    $isowner = true;
+}
+$this->isowner = $isowner;
+
+$countFiles = $this->countFiles;
+
+$pics = $this->pics;
+
+if (sizeof($pics) == 0) {
+    array_push($pics, $this->product->image_small);
+}
+$galleryPictures = array();
+foreach ($pics as $p) {
+    $galleryPictures[] = $this->Image($p, array('height' => '600'));
+}
+$galleryPicturesJson = Encoder::encode($galleryPictures);
+?>
+    <link href="/theme/react/assets/css/get-it.css" type="text/css" rel="stylesheet"/>
+
+
+    <!-- PRODUCT MEDIA SLIDER CSS -->
+
+    <link href="/theme/react/lib/swiper/swiper.min.css" type="text/css" rel="stylesheet">
+    <link href="/theme/react/lib/bookblock/css/bookblock.css" type="text/css" rel="stylesheet">
+    <style>
+        #media-slider .carousel-control {
+            /* Firefox */
+            height: -moz-calc(100% - 75px) !important;
+            /* WebKit */
+            height: -webkit-calc(100% - 75px) !important;
+            /* Opera */
+            height: -o-calc(100% - 75px) !important;
+            /* Standard */
+            height: calc(100% - 75px) !important;
+        }
+
+        .is-mobile .video-react-video {
+            height: 100% !important;
+        }
+
+    </style>
+
+    <!-- PRODUCT /MEDIA SLIDER CSS -->
+
+    <!-- facebook -->
+    <div id="fb-root"></div>
+<?php if ($identity && $identity->member_id) {
+    ?>
+    <div id="report-product-<?= $this->product->project_id ?>" class="modal report-product" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <?php //TODO ?>
+                <form id="product-report" class="full-width partialjson" action="/report/product/"
+                      data-target="#report-product-<?= $this->product->project_id ?>-message">
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                    <div id="report-product-<?= $this->product->project_id ?>-message">
+                        <p>Do you really want to report this product?</p>
+                        <div class="modal-footer">
+                            <button type="submit" class="small">
+                                <span class="glyphicon glyphicon-share-alt"></span> Yes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="report-product-fraud-<?= $this->product->project_id ?>" class="modal report-product-fraud" tabindex="-1"
+         role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="product-report-fraud" class="full-width partialjsonfraud" action="/report/productfraud/"
+                      data-target="#report-product-fraud-<?= $this->product->project_id ?>-message">
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>">
+                    <div id="report-product-fraud-<?= $this->product->project_id ?>-message" class="message"
+                         style="padding: 20px">
+                        <div>Please specify why this product is misused (min 5 chars):
+                            <textarea class="" id="report-text" name="t" cols="50" rows="3"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="small">
+                                <span class="glyphicon glyphicon-share-alt"></span> Report
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="report-product-clone-<?= $this->product->project_id ?>" class="modal report-product-clone" tabindex="-1"
+         role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <span
+                        class="modal-title">If you know another product which is original of <b><?= $this->product->title ?></b>, please fill in the ID:</span>
+                </div>
+                <form id="product-report-clone" class="full-width partialjsonclone" action="/report/productclone/"
+                      data-projectid="<?= $this->product->project_id ?>"
+                      data-target="#report-product-clone-<?= $this->product->project_id ?>-message">
+                    <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                    <input type="hidden" name="i"  value='is-original' />
+                    <div id="report-product-clone-<?= $this->product->project_id ?>-message" class="message"
+                         style="padding: 20px">
+                        <div>
+                            <label class="form-label">ID of the Original on opendesktop: </label><br/>
+                            <input name="pc" id="clonePId"/><br/><br/>
+
+                            <label class="form-label">Additional message: </label>
+                            <br/>
+                            <textarea class="" id="report-text" name="t" rows="3" style="width: 440px;"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="small" data-dismiss="modal">cancel</button>
+                            <button type="submit" class="small">
+                                <span class="glyphicon glyphicon-share-alt"></span> add credits
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>
+
+
+<?php if ($this->ocs_user->member_id) {
+    ?>
+    <div id="like-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+                <div class="modal-header">
+                    <label id="votelabel" class="modal-title"> </label>
+                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form class="full-width " action="/" method="post">
+                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                        <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                        <input type="hidden" name="pm" value="<?= $this->product->member_id ?>" id="productcreator"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?php } else {
+    ?>
+
+    <div id="like-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="min-height: 100px; ">
+                <span style="text-align: center; display: block; padding-top: 30px">Please login. <br/><a
+                        href="<?= $loginUrl ?>">Login</a></span>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>
+
+<?php if ($this->ocs_user->member_id) { ?>
+    <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+                <div class="modal-header">
+                    <label id="votelabel"> </label>
+                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <?php //TODO ?>
+                <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/"
+                      method="post">
+                    <div class="modal-body">
+
+                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>"/>
+                        <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                        <input type="hidden" name="v" value="1" id="voteup"/>
+                        <input type="hidden" name="pm" value="<?= $this->product->member_id ?>" id="productcreator"/>
+                        <input type="hidden" name="otxt"
+                               value="<?= $this->ratingOfUser != null ? $this->ratingOfUser['comment_text'] : '' ?>"
+                               id="otxt"/>
+                        <input type="hidden" name="userrate"
+                               value="<?= $this->ratingOfUser == null ? -1 : $this->ratingOfUser['user_like'] ?>"
+                               id="userrate"/>
+                        <textarea name="msg" class="full-width"
+                                  id="commenttext"><?= $this->ratingOfUser != null ? $this->ratingOfUser['comment_text'] : '' ?></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="small" data-dismiss="modal">cancel</button>
+                        <button type="submit" class="small pull-right">Rate Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="score-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+                <div class="modal-header">
+                    <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <label id="votelabel" class="modal-title"> </label>
+                </div>
+                <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/"
+                      method="post"
+                      id="reviewform">
+                    <div class="modal-body">
+                        <input type="hidden" name="p" value="<?= $this->product->project_id ?>" id="form_p"/>
+                        <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                        <input type="hidden" name="v" value="1" id="voteup"/>
+                        <input type="hidden" name="pm" value="<?= $this->product->member_id ?>" id="productcreator"/>
+                        <input type="hidden" name="otxt"
+                               value="<?= $this->ratingOfUser != null ? $this->ratingOfUser['comment_text'] : '' ?>"
+                               id="otxt"/>
+                        <input type="hidden" name="userscore"
+                               value="<?= $this->ratingOfUser == null ? -1 : $this->ratingOfUser['score'] ?>"
+                               id="userscore"/>
+                        <input type="hidden" name="s"
+                               value="<?= $this->ratingOfUser == null ? -1 : $this->ratingOfUser['score'] ?>"
+                               id="userscorevalue"/>
+                        <textarea name="msg" class="full-width"
+                                  id="commenttext"><?= $this->ratingOfUser != null ? $this->ratingOfUser['comment_text'] : '' ?></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="small" id="modal-btn-cancel" style="float: left;">Cancel</button>
+                        <button type="submit" class="small pull-right" id="modal-btn-onsubmit">Rate Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php } else { ?>
+    <div id="review-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="min-height: 150px; ">
+                <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login.
+                    <br/>
+                    <a href="<?= $loginUrl ?>" rel="nofollow"> Login </a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div id="score-product-modal" class="modal fade noid" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="min-height: 150px; ">
+                <span style="text-align: center; display: block; padding-top: 30px">
+                    Please login or register to add a comment or rating.
+                    <br/>
+                    <a href="<?= $loginUrl ?>" rel="nofollow"> Login </a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>
+
+
+    <link href="/theme/flatui/css/product-page.css" type="text/css" rel="stylesheet"/>
+
+    <main id="product-page-content">
+        <div id="product-page-view" class="disply-flex">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 sidebar-left" style="">
+                <?php //echo $this->render('../explore/partials/filter.phtml'); ?>
+                <?php include __DIR__ . '/../explore/partials/filter.phtml'; ?>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" id="product-main">
+
+                <div class="flex-row imgsmall" id="product-main-img-container">
+                    <div class="product-main-img flex-item-24" id="product-main-img">
+                        <div id="product-title-div" class="product-title-div">
+                            <div class="product-title">
+                                <div class="product-logo-container">
+                                    <img class="logo"
+                                         src="<?= $this->Image(
+                                             $this->product->image_small, array(
+                                             'width'  => 85,
+                                             'height' => 85,
+                                             'crop'   => 'crop',
+                                         )
+                                         ); ?>"/>
+                                </div>
+                                <div id="product-header-info-container">
+
+                                    <div id="product-header-title">
+                                        <?php if (false === empty($this->product->link_1)): ?><a
+                                            href="<?php echo $this->product->link_1; ?>"
+                                            target="_NEW"
+                                            title="<?php echo $this->product->link_1; ?>"
+                                            rel="nofollow"
+                                            > <?= $this->product->title; ?> <span class="fa fa-external-link"></span>
+                                            </a>
+                                        <?php else : ?>
+                                            <?= $this->product->title; ?>
+                                        <?php endif; ?>
+
+                                      
+                                        <?php
+                                        if ($this->product->amount_reports && $this->product->amount_reports > 1) {
+                                            echo '<span style="color:red; font-size:small">(' . $this->product->amount_reports . ' times reported. Product will be validated from our moderators.)</span>';
+                                        } ?>
+
+                                        <?php
+                                        if ($isowner) {
+                                            ?>
+                                            <span style="font-size: 13px;padding: .2em .6em .3em;">
+                                            <a href="/p/<?= $this->product->project_id ?>/edit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                        <?= $this->translate('Edit Product') ?>
+                                            </a>
+                                        </span>
+                                        <?php } ?>
+
+                                       
+                                        <?php
+                                        if ($this->product->featured == '1') {
+                                            ?>
+                                            <span class=" label label-info right"
+                                                  style="font-size: 13px;padding: .2em .6em .3em;"> Featured</span>
+                                        <?php } ?>
+
+                                        <?php if ($this->isProjectOriginal($this->product->project_id)) { ?>
+                                            <span class=" label label-info right"
+                                                  style="font-size: 13px;padding: .2em .6em .3em;"> Original</span>
+                                        <?php } ?>
+                                        <?php
+                                        $isMod = $this->isMod;
+                                        if ($isMod) { ?>
+                                            <span class=" label label-info right"
+                                                  style="font-size: 13px;padding: .2em .6em .3em;"> Mod</span>
+                                        <?php } ?>
+
+                                        <?php
+                                             if ($isAdmin && $this->position) {                                               
+                                                     echo '<span style="display:block;font-size:12px;font-weight:bold;color:#2673b0; font-style: italic; ">'.$this->position.'</span>';                                      
+                                             }
+                                        ?>
+                                    </div>
+
+
+                                    <p class="product_category">
+                                        <?php
+                                        echo '<a href="/browse/cat/' . $this->product->project_category_id . '/order/latest">' . $this->product->cat_title . ' </a>';
+                                        ?>
+
+                                        <?php
+                                        echo '<span class="topics">';
+
+                                        $tagsuser = $this->tagsuser;
+                                        echo '<span class="topicslink">';
+                                        if (false === empty($tagsuser)) {
+                                            foreach (explode(',', $tagsuser) as $tag) {
+                                                ?>
+                                                <a rel="nofollow" href="<?= $this->buildSearchTagUrl($tag) ?>"
+                                                   class="topic-tag topic-tag-link usertagslabel"><?= $tag ?></a>
+                                                <?php
+                                            }
+                                        }
+                                        echo '</span><!--end of topicslink-->';
+                                        if ($isowner) {
+                                            $this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
+                                            $this->headLink()
+                                                 ->appendStylesheet('/theme/flatui/css/select2.custmized.css');
+                                            $this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
+                                            ?>
+                                            <span class="tagsuserselectpanel" style="display: none; ">
+                                            <select
+                                                id="tagsuserselect"
+                                                name="tagsuser"
+                                                multiple="true"
+                                                class="taggingSelect2"
+                                                data-pid="<?php echo $this->product->project_id ?>"
+                                            >
+                                                <option value=""></option>
+    <?php
+    $element_value = $tagsuser;
+    $value = empty($element_value) ? array() : explode(',', $element_value);
+    foreach ($value as $v) {
+        echo '<option value="' . $v . '" selected="selected">' . $v . '</option>';
+    }
+    ?>
+                                            </select>
+                                        </span>
+
+                                            <button class="btn-link topic-tags-btn" type="button">Manage tags</button>
+                                            <span class="topic-tags-saved"><i class="fa fa-check"></i> Saved </span>
+                                            <?php
+                                            $this->inlineScript()->appendScript(
+                                                '    $(document).ready(function(){
+                                                        TagingProductDetail.setup();
+                                                    });
+                                                '
+                                            );
+                                        }
+                                        echo '</span>';
+                                        ?>
+
+                                    <p class="light small">
+                                        <span class="source">Source (link to git-repo or to original if based on someone elses unmodified work): </span>
+                                        <?php
+                                        if (false === empty($this->product->gitlab_project_id)) {
+                                            $url = $this->gitlab_project->web_url;
+                                            $url = str_replace("http://", "https://", $url);
+
+                                            echo '<img src="/images_sys/gitlab.png" width="15"> <a href="' . $url . '" rel="nofollow">' . $url . ' <span class="fa fa-external-link"></span></a>';
+                                        } else {
+                                            if (false === empty($this->product->source_url)) {
+                                                $target = '_blank';
+                                                if (strpos($this->product->source_url, 'opencode.net') !== false) {
+                                                    $target = '_self';
+                                                }
+                                                echo '<a target="' . $target . '" href="' . $this->product->source_url . '" rel="nofollow">' . $this->product->source_url . ' <span class="fa fa-external-link"></span>
+                                            </a>';
+
+                                                if ($isAdmin) {
+                                                    $cntSameSource = $this->cntSameSource;
+                                                    if ($cntSameSource > 1) {
+                                                        $link = '/p/' . $this->product->project_id . '/listsamesourceurl';
+                                                        echo '<span style="font-style: italic;"><a style="color:red" class="popuppanel" href="' . $link . '">
+                                                [' . $cntSameSource . ']</a></span>';
+                                                    }
+                                                }
+                                            } else {
+                                                echo '<span class="source" > Add the source-code for this project on </span><a href="https://opencode.net/' . $this->product->username . '">opencode.net</a>';
+                                            }
+                                        }
+                                        ?>
+                                </div>
+                            </div>
+
+                            <div class="product-title-right">
+                                <div class="projectdtailHeart tooltipheart" title="Become a fan">
+                                    <div id="container-follow<?= $this->product->project_id ?>" class="container-pling">
+                                        <?php
+                                        echo $this->partial(
+                                            'partials/projectlike.phtml', array(
+                                                                            "authMember" => $identity,
+                                                                            "project_id" => $this->product->project_id,
+                                                                        )
+                                        );
+                                        ?>
+                                    </div>
+                                </div>
+                                <?php /*
+                                 if ($isAdmin) { ?>
+                                    <div class="projectdetailRating" style="clear: right; width: 135px;">
+                                        <?php //echo $this->render('partials/sidebarRating.phtml'); ?>
+                                        <?php include __DIR__ . '/../partials/sidebarRating.phtml'; ?>
+                                    </div>
+                                    <div class="projectdetailRating" style="clear: right">
+                                        <?php //echo $this->render('partials/sidebarScore.phtml'); ?>
+                                        <?php include __DIR__ . '/../partials/sidebarScore.phtml'; ?>
+                                    </div>
+                                <?php } 
+                                */
+                                ?>
+                                <div class="projectdetailRating" style="clear: right">
+                                    <?php include __DIR__ . '/../partials/score.phtml'; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="product-media-slider-container" class="imgsmall"></div>
+                    </div>
+                </div>
+
+                <div class="flex-item-24" id="product-tabs-container">
+                    <!-- TABS -->
+                    <div id="product-tabs" class="pling-nav-tabs">
+                        <ul class="nav nav-tabs ">
+                            <li class="active"><a href="#about-panel" data-toggle="tab">Product</a></li>
+                            <li><a href="#files-panel" data-toggle="tab">Files <span
+                                        id="files-counter-db"><?= (!empty($countFiles) ? '(' . $countFiles . ')' : '') ?></span></a>
+                            </li>
+                            <?php if (count($this->updates) > 0) { ?>
+                                <li><a href="#updates-panel"
+                                       data-toggle="tab">Changelogs <?php echo '(' . count($this->updates) . ')'; ?></a>
+                                </li>
+                            <?php } ?>
+
+                            <?php
+                            if ($this->product->show_gitlab_project_issues) {
+                                $cntGitIssues = $this->gitlab_project->open_issues_count;
+                                ?>
+                                <li><a href="#gitlabissues-panel"
+                                       data-toggle="tab">Issues <?php echo '(' . $cntGitIssues . ')'; ?></a></li>
+                            <?php } ?>
+
+                            <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName ){  ?>
+                          <li><a href="#ratings-panel" data-toggle="tab">Ratings & Reviews <?php echo '('.$cntRatingsActive.')';  ?></a></li>
+                          <?php } */ ?>
+
+                            <li><a href="#ratings-panel2" data-toggle="tab">Ratings &
+                                    Reviews <?php echo '(' . count($this->ratings) . ')'; ?></a></li>
+
+
+                            <?php if (count($this->projectplings) > 0) { ?>
+                                <li><a href="#plings-panel"
+                                       data-toggle="tab">Plings <?php echo '(' . count($this->projectplings) . ')'; ?></a>
+                                </li>
+                            <?php } ?>
+
+                            <li><a href="#affiliates-panel"
+                                   data-toggle="tab">Affiliates <?php if ($this->projectaffiliates > 0) {
+                                        echo '(' . count($this->projectaffiliates) . ')';
+                                    } ?></a>
+                            </li>
+
+                            <?php if (count($this->likes) > 0) { ?>
+                                <li><a href="#likes-panel"
+                                       data-toggle="tab">Fans <?php echo '(' . count($this->likes) . ')'; ?></a></li>
+                            <?php } ?>
+
+
+                            <?php if ($isAdmin) { ?>
+                                <li><a href="#related-panel" data-toggle="tab"
+                                       style="font-style: italic;">Relationship<?= ' (' . $this->cntRelatedProducts . ')' ?></a>
+                                </li>
+                            <?php } ?>
+
+                            <li><a href="#tab-licensing" data-toggle="tab"
+                                   style="font-style: italic;">Licensing<?= ' (' . $cntLicensing . ')' ?></a></li>
+
+                            <?php
+                            if ($isAdmin || $isowner || $isModerator) {
+                                ?>
+                                <li><a href="#tab-moderation" data-toggle="tab"
+                                       style="font-style: italic;">Moderation<?= ' (' . $cntModeration . ')' ?></a></li>
+
+                            <?php } ?>
+
+                        </ul>
+                    </div>
+                    <!-- /TABS -->
+
+                    <!-- PANELS -->
+
+                    <div class="tab-content row" id="product-panels">
+
+                        <!-- ABOUT -->
+                        <div class="tab-pane active" id="about-panel">
+
+
+                            <div id="product-about" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                <?php 
+                                if($this->hasCategoryTagGroup){
+                                ?>
+                                <div class="compatible-tags">                                 
+                                    <span> Available as/for:</span>
+                                    <?php
+                                    if(sizeof($this->tagsCategoryTagGroup)>0)
+                                    {                                    
+                                        foreach ($this->tagsCategoryTagGroup as $value) {
+                                            echo '<span class="tags">'.$value['tag_fullname'].'</span>';
+                                        }
+                                    }else{
+                                        echo '-';
+                                    }
+                                    ?>
+                                </div>
+                                <?php }?>
+                                <div>
+                                    <?php
+                                    if ($this->product->is_gitlab_project && $this->product->use_gitlab_project_readme && null != $this->gitlab_project->readme_url) {
+                                        ?>
+                                        <div class="gitlab-readme">
+                                            <article>
+                                                <b>Description:</b> <br/><br/>
+                                                <?= $this->readme ?><br/><br/>
+                                            </article>
+                                        </div>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <article>
+                                            <b>Description:</b> <br/><br/>
+                                            <?= $this->product->description ?>
+                                        </article>
+
+                                        <?php
+                                    }
+                                    ?>
+                                    <?php
+                                    if (count($this->updates) > 0) {
+                                        $this->productUpdate = $this->updates[0];
+                                        ?>
+                                        <article class="lastchangelog">
+                                            <b>Last changelog:</b>
+
+                                            <?= $this->render('partials/productUpdatesV1.phtml'); ?>
+                                        </article>
+                                    <?php } ?>
+
+                                    <!--product category tag rating -->
+                                    <div id="prodcut-category-tag-rating-container"></div>
+
+                                    <!-- comments -->
+                                    <div id="product-discussion" class="comment-containers">
+                                        <?php
+                                        $this->comments = $this->commentsTree;
+                                        //echo $this->render('partials/productCommentsUX1.phtml');
+                                        include __DIR__ . '/partials/productCommentsUX1.phtml';
+                                        ?>
+                                    </div>
+                                    <!-- /comments -->
+                                </div>
+
+                            </div>
+
+                            <?php
+                            if ($viewClaimBox) {
+                                echo $this->partial(
+                                    $viewClaimBox, array(
+                                                     "member"  => $this->member,
+                                                     "product" => $this->product,
+                                                 )
+                                );
+                            }
+                            ?>
+                        </div>
+                        <!-- /ABOUT -->
+                        <!-- MEDIA -->
+                        <!--<div class="tab-pane" id="media-panel">
+                        <?php /* if (null != ($this->product->embed_code)): ?>
+                          <?= $this->product->embed_code ?>
+                          <?php endif; */ ?>
+                    </div>-->
+                        <!-- /MEDIA -->
+
+                        <!-- updates panel -->
+                        <?php if (count($this->updates) > 0) { ?>
+                            <div class="tab-pane" id="updates-panel">
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                    <article>
+                                        <?php
+                                        foreach ($this->updates as $this->productUpdate) {
+                                            echo $this->render('partials/productUpdatesV1.phtml');
+                                        }
+                                        ?>
+                                    </article>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($this->product->show_gitlab_project_issues) {
+                            ?>
+                            <div class="tab-pane" id="gitlabissues-panel">
+                                <div id="gitlabissues-panel-wrapper" class="col-lg-9 col-md-9 col-sm-9 col-xs-12 ">
+
+                                    <?php
+                                    $issues = $this->gitlab_project_issues;
+                                    $i = 0;
+                                    foreach ($issues as $issue) {
+                                        $date = date('Y-m-d H:i:s', strtotime($issue->created_at));
+                                        echo '<div class="commentstore"><a href="' . $issue->web_url . '"><span class="title">' . $issue->title . '</span></a><div class="newsrow"><span class="date">' . $this->printDate($date) . '</span></div></div>';
+                                        $i++;
+                                        if ($i > 5) {
+                                            break;
+                                        }
+                                    }
+                                    ?>
+                                    <span class="center showmore"><a href="<?= $this->gitlab_project_issues_url ?>"
+                                                                     target="_NEW">Show all <?= $this->gitlab_project->open_issues_count ?> Issues</a></span>
+
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <!-- ratings panel2 -->
+
+                        <div class="tab-pane" id="ratings-panel2">
+                            <div id="ratings-panel-wrapper2" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                <article>
+                                    <div id="productRatingContainer2">
+                                        <?php
+                                        echo $this->render('partials/productRating2.phtml');
+                                        ?>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+
+                        <!-- related products -->
+
+                        <div class="tab-pane" id="related-panel">
+                            <div class="col-lg-12">
+                                <article>
+                                    <div id="productRatingContainer2">
+                                        <?php
+                                        echo $this->render('partials/productRelated.phtml');
+                                        ?>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane" id="tab-licensing">
+                            <div class="col-lg-12">
+
+                                <div id="product-comment-licensing" class="comment-containers">
+                                    <?php
+                                    $this->comments = $this->commentsTreeLicensing;
+                                    echo $this->render('partials/productCommentsUX3.phtml');
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <?php
+                        if ($isAdmin || $isowner || $isModerator) {
+                            ?>
+                            <div class="tab-pane" id="tab-moderation">
+                                <div class="col-lg-12">
+                                    <?php
+                                    if (!$isowner) {
+                                        $isDeprecatedModerator = $this->isProductDeprecatedModerator;
+                                        ?>
+                                        <div>
+                                            <input type="checkbox"
+                                                   id="product-deprecated-checkbox" <?php echo $isDeprecatedModerator ? ' checked=\'checked\' ' : ''; ?> />
+                                            product-deprecated
+                                        </div>
+                                    <?php } ?>
+                                    <!-- comments -->
+                                    <div>
+
+                                    </div>
+                                    <div id="product-comment-moderation" class="comment-containers">
+                                        <?php
+                                        $this->comments = $this->commentsTreeModeration;
+                                        echo $this->render('partials/productCommentsUX2.phtml');
+                                        ?>
+                                    </div>
+                                    <!-- /comments -->
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <!-- likes panel -->
+                        <?php if (count($this->likes) > 0) { ?>
+                            <div class="tab-pane" id="likes-panel">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <article>
+                                        <div id="productLikesContainer">
+                                            <?php
+                                            echo $this->render('partials/productLikes.phtml');
+                                            ?>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <!-- plings panel -->
+                        <?php if (count($this->projectplings) > 0) { ?>
+                            <div class="tab-pane" id="plings-panel">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <article>
+                                        <div id="productPlingsContainer">
+                                            <?php
+                                            echo $this->render('partials/productPlings.phtml');
+                                            ?>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <!-- affiliates panel -->
+                        <div class="tab-pane" id="affiliates-panel">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <article>
+                                    <div id="productAffiliatesContainer">
+                                        <?php
+                                        echo $this->render('partials/productAffiliates.phtml');
+                                        ?>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="files-panel">
+                            <div class="col-lg-12">
+                                <?php
+                                echo $this->render('partials/ppload.phtml');
+                                ?>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <!-- /PANELS -->
+
+
+                </div>
+
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 flex-right" id="product-maker">
+                <div>
+                    <div class="project-share-new col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!-- Download/Install-->
+                        <div>
+                            <div class="prod-widget-box right">
+                                <div class="btn-group dropleft" style="width: 100%">
+                                    <button style="width: 100%" id="project_btn_download"
+                                            class="btn dropdown-toggle disabled"
+                                            type="button" data-toggle="dropdown">Download
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu hide" id="dropdown_downloads" style="min-width: 270px;">
+                                    </ul>
+                                </div>
+
+                                <div id="project_btn_grp_install" class="btn-group dropleft hide"
+                                     style="width: 100%; padding-top: 10px;">
+                                    <button style="width: 100%" id="project_btn_install"
+                                            class="btn btn-primary dropdown-toggle disabled hide" type="button"
+                                            data-toggle="dropdown">Install
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu hide" id="dropdown_installs"
+                                        style="min-width: 270px; top:50px">
+                                    </ul>
+                                    <span style="display: absolute; bottom:0">
+                                    *Needs <a href="https://www.opendesktop.org/p/1175480/" target="_NEW"
+                                              style="color: #0088d7;text-decoration: underline;">pling-store</a> or <a
+                                            href="https://www.opendesktop.org/p/1136805/" target="_NEW"
+                                            style="color: #0088d7;text-decoration: underline;">ocs-url</a> to install things</span>
+                                </div>
+
+                                <?php if ($isAdmin) : ?>
+                                    <div id="get-it-container" class="btn-group dropleft"
+                                         style="width: 100%; padding-top: 10px; font-style: italic;">
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- User -->
+                        <?php if (empty($this->product->claimable)) { ?>
+                            <div class="prod-widget-box prod-user right ">
+                                <div class="sidebar-content">
+                                    <div class="product-maker-sidebar">
+                                        <div class="product-maker-thumbnail relative">
+                                            <a href="<?php echo $this->buildMemberUrl($this->product->username); ?>"
+                                               title="<?= $this->product->username ?>" class="tooltipuserleft"
+                                               data-tooltip-content="#tooltip_content"
+                                               data-user="<?= $this->product->member_id ?>">
+                                                <?php
+                                                $isSupporter = $this->isSupporter($this->product->member_id);
+                                                $isSupporterActive = $this->isSupporterActive($this->product->member_id);
+                                                if ($isSupporter) {
+                                                    ?>
+                                                    <span
+                                                        class="supporter-badge <?= ($isSupporterActive ? '' : 'inactive') ?>">S<?= $isSupporter ?></span>
+                                                <?php } ?>
+                                                <img src="<?= $this->Image(
+                                                    $this->product->profile_image_url, array(
+                                                    'width'  => 80,
+                                                    'height' => 80,
+                                                )
+                                                ) ?>"
+                                                     alt="product-maker" width="15" height="15"
+                                                     class="sidebar-profile-image">
+                                            </a>
+                                        </div>
+                                        <div class="product-maker-summary">
+                                            <h5>
+                                                <a href="<?php echo $this->buildMemberUrl($this->product->username); ?>"
+                                                   class="tooltipuserleft" data-tooltip-content="#tooltip_content"
+                                                   data-user="<?= $this->product->member_id ?>">
+                                                    <?= $this->product->username; ?>
+                                                </a>
+                                            </h5>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                        <!-- Plings -->
+                        <div class="prod-widget-box right ">
+
+                            <div class="projectdtailHeart">
+
+
+                                <div id="container-pling<?= $this->product->project_id ?>" class="container-pling">
+                                    <?php
+                                    echo $this->partial(
+                                        'partials/projectplings.phtml', array(
+                                                                          "authMember"           => $identity,
+                                                                          "project_id"           => $this->product->project_id,
+                                                                          "ppload_collection_id" => $this->product->ppload_collection_id,
+                                                                          "project_category_id"  => $this->product->project_category_id,
+                                                                          "projectplings"        => count($this->projectplings),
+                                                                          "isPlinged"            => $this->isPlinged,
+                                                                      )
+                                    );
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Affiliates -->
+                        <div class="prod-widget-box right " style="height: 42px;">
+                            <div class="projectdtailHeart">
+                                <div id="container-affiliate<?= $this->product->project_id ?>" class="container-pling"
+                                     style="float: right;">
+                                    <div class="plingbartext"><span
+                                            class="plingnum"> <?= count($this->projectaffiliates) ?> Affiliate<?= count($this->projectaffiliates) == 0 ? 's' : '' ?><?= count($this->projectaffiliates) > 1 ? 's' : '' ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Support Box -->
+                        <?php
+                        /* 20200102 ronald: show allways the support box, see ticket #1553
+                          if($this->product->paypal_mail)
+                          {
+                         *
+                         */
+                        $supportboxData = array(
+                            "catId"                  => $this->project_category_id,
+                            "section"                => $this->section,
+                            "isSupporter"            => $this->isSupporter,
+                            "supportData"            => $this->supportData,
+                            "supporters"             => $this->sectionSupporters,
+                            "authMember"             => $identity,
+                            "project_id"             => $this->product->project_id,
+                            "project_title"          => $this->product->title,
+                            "ppload_collection_id"   => $this->product->ppload_collection_id,
+                            "project_category_id"    => $this->product->project_category_id,
+                            "project_category_title" => $this->product->cat_title,
+                            "isAdmin"                => $isAdmin,
+                            "baseurl_store"          => $GLOBALS['ocs_config']->baseurl_store,
+                        );
+                        echo $this->partial(
+                            'partials/support_box.phtml', $supportboxData
+                        );
+                        /* } */
+                        ?>
+
+                        <?php /* echo $this->render('partials/sidebarRating.phtml');  */ ?>
+                        <?php /*
+                      <div>
+                      <div class="prod-widget-box right">
+                      <div  class="btn-group dropleft" style="width: 100%">
+                      <button style="width: 100%" id="project_btn_download" class="btn btn-primary active" type="button">
+                      Get it
+                      </button>
+                      </div>
+                      </div>
+                      </div>
+                     */
+                        ?>
+
+                        <?php
+                        $cntCollections = $this->cntCollections;
+                        if ($cntCollections > 0) {
+                            ?>
+                            <!-- is part of collection -->
+                            <div>
+                                <?php
+                                $this->moreProducts = $this->moreCollectionProducts;
+                                $this->moreProductsTitle = 'Is part of these Collections';
+
+                                if (count($this->moreProducts) > 0) {
+                                    echo $this->render('partials/productMoreProductsWidgetV1.phtml');
+                                }
+                                ?>
+                            </div>
+                            <!-- /is part of colelction -->
+                            <?php
+                        }
+                        ?>
+
+
+                        <!-- origins-->
+                        <div>
+                            <div class="prod-widget-box right">
+                                <div>
+                                    <?php if ($isAdmin) { ?>
+                                        <div id="add-project-relationship" style="font-style: italic;"></div>
+                                    <?php } ?>
+                                    <?php if ($identity) { ?>
+                                        <a data-toggle="modal"
+                                           data-target="#report-product-clone-<?= $this->product->project_id ?>"
+                                           role="button"
+                                           href="#report-product-clone-<?= $this->product->project_id ?>">
+                                            mark this product as clone
+                                        </a>
+                                    <?php } else { ?>
+                                        <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                            mark this product as clone
+                                        </a>
+                                    <?php } ?>
+
+                                </div>
+
+                                <?php
+                                $origins = $this->origins;
+                                $this->moreProducts = $origins;
+                                $this->moreProductsTitle = 'Based on';
+                                if (count($this->moreProducts) > 0) {
+                                    echo $this->render('partials/productCloneFrom.phtml');
+                                }
+                                ?>
+
+
+                                <?php
+                                $relatednew = array();
+                                $related = $this->relatedVariants;
+                                $bflag = false;
+                                foreach ($related as $r) {
+                                    $rid = $r['project_id'];
+                                    $bflag = false;
+                                    foreach ($origins as $o) {
+                                        $oid = $o['project_id'];
+                                        if ($rid == $oid) {
+                                            $bflag = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!$bflag) {
+                                        $relatednew[] = $r;
+                                    }
+                                }
+
+                                $this->moreProducts = $relatednew;
+
+                                $this->moreProductsTitle = 'Variants';
+                                if (count($this->moreProducts) > 0) {
+                                    echo $this->render('partials/productCloneFrom.phtml');
+                                }
+                                ?>
+
+                            </div>
+                        </div>
+
+
+                        <!-- MORE PRODUCTS -->
+
+                        <div>
+                            <?php
+                            $this->moreProducts = $this->moreProductsOfUser;
+                            $this->moreProductsTitle = 'More ' . $this->product->cat_title . ' from ' . $this->product->username;
+
+                            if (count($this->moreProducts) > 0) {
+                                echo $this->render('partials/productMoreProductsWidgetV1.phtml');
+                            }
+                            ?>
+                        </div>
+
+                        <div>
+                            <?php
+                            $this->moreProducts = $this->moreProductsOfOtherUsers;
+                            $this->moreProductsTitle = 'Other ' . $this->product->cat_title;
+
+                            if (count($this->moreProducts) > 0) {
+                                echo $this->render('partials/productMoreProductsWidgetV1.phtml');
+                            }
+                            ?>
+                        </div>
+                        <!-- /MORE PRODUCTS -->
+
+
+                        <?php //TODO: echo $this->render('partials/sidebarCcLicense.phtml'); ?>
+
+                        <?php
+                        if ($this->isProjectEbook($this->product->project_id)) {
+                            echo $this->render('partials/ebook_details.phtml');
+                        }
+                        ?>
+
+                        <?php echo $this->render('partials/details.phtml'); ?>
+
+                        <?php echo $this->render('partials/tags.phtml'); ?>
+
+                        <?php echo $this->render('partials/piwik.phtml'); ?>
+
+                        <?php echo $this->render('partials/about.phtml'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tooltip_templates" style="display: none">
+        <span id="tooltip_content">
+            <i class="fa fa-spinner"></i>
+        </span>
+        </div>
+    </main>
+
+
+    <script type="application/javascript">
+        // tool tips
+        $('body').on('mouseenter', '.product-thumbnail, .supporter-thumbnail', function () {
+            $(this).popover('show');
+        });
+
+        $('body').on('mouseleave', '.product-thumbnail, .supporter-thumbnail', function () {
+            $(this).popover('hide');
+        });
+    </script>
+
+    <!-- PRODUCT MEDIA SLIDER JS -->
+
+    <script type="text/javascript">
+        // console.log('product index.phtml ')
+        var isAdmin = <?php echo json_encode($isAdmin); ?>;
+        var product = <?php echo $productJson ?>;
+        var filesJson = <?php echo $filesJson ?>;
+        var xdgTypeJson = <?php echo $xdgTypeJson ?>;
+        var galleryPicturesJson = <?php echo $galleryPicturesJson ?>;
+    </script>
+
+    <script type="text/javascript" src="/theme/react/lib/jszip/jszip.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/epub/epub.min.js"></script>
+
+    <script type="text/javascript" src="/theme/react/lib/swiper/swiper.min.js"></script>
+
+    <script type="text/javascript" src="/theme/react/lib/bookblock/js/modernizr.custom.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/bookblock/js/jquerypp.custom.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/bookblock/js/jquery.bookblock.min.js"></script>
+
+    <script type="text/javascript"
+            src="/theme/react/bundle/product-media-slider-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+
+    <!-- /PRODUCT MEDIA SLIDER JS -->
+
+    <script src="/theme/react/bundle/app-product-relationship-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+    <script src="/theme/react/bundle/tag-rating-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+
+<?php
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            InitActiveHashTab.setup();
+            PartialJson.setup();
+            PartialJsonFraud.setup();
+            PartialJsonClone.setup();
+            ProductDetailCarousel.setup();
+            PartialCommentReviewForm.setup();
+            PartialCommentReviewFormNew.setup();
+            PartialsButtonHeartDetail.setup();
+            PartialsButtonPlingProject.setup();
+            TooltipUser.setup("tooltipuserleft","left");
+            AppimagequestionOnClick.setup();
+            Opendownloadfile.setup();
+            CreateScoreRatingPopup.setup();
+            PagedetailModeratorDeprecated.setup(' . $this->product->project_id . ');
+            $(\'.tooltipheart\').tooltipster({theme: [\'tooltipster-light\', \'tooltipster-light-customized\'],
+                    contentCloning: true,
+                    contentAsHTML: true,
+                    interactive: true});
+
+        });
+    '
+);

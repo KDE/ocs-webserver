@@ -1,0 +1,136 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$cssClassPrevious = '';
+$cssClassNext = '';
+
+$i = $this->totalcount;
+$thisPage = $this->page;
+$itemsPerPage = $this->pageLimit;
+$maxPages = ceil($i / $itemsPerPage);
+
+if ($i < $itemsPerPage) {
+    $maxPages = 1;
+}
+
+$this->next = false;
+if ($thisPage < $maxPages) {
+    $this->next = $thisPage + 1;
+}
+
+$this->previous = false;
+if ($thisPage > 1) {
+    $this->previous = $thisPage - 1;
+}
+
+if (false === $this->previous) {
+    $cssClassPrevious = 'off';
+}
+if (false === $this->next) {
+    $cssClassNext = 'off';
+}
+
+
+$helperExploreUrl = new \Application\View\Helper\BuildExploreUrl($this->request);
+
+$isFromExplore = isset($this->dom_target);
+
+$myParams = $this->params;
+
+if (strpos($_SERVER['REQUEST_URI'], '/s/') !== false) {
+    $myParams['store_id'] = $GLOBALS['ocs_store']->config->name;
+}
+
+if ($isFromExplore) {
+    $urlPrevious = $helperExploreUrl->buildFromArray($myParams, array('page' => $this->previous), true);
+    $urlNext = $helperExploreUrl->buildFromArray($myParams, array('page' => $this->next), true);
+    if ($this->tag) {
+        $urlPrevious = $urlPrevious . '?tag=' . $this->tag;
+        $urlNext = $urlNext . '?tag=' . $this->tag;
+    }
+
+} else {
+    $urlPrevious = empty($this->previous) ? '' : $this->url(array_merge($this->params, array('page' => $this->previous)));
+    $urlNext = empty($this->next) ? '' : $this->url(array_merge($this->params, array('page' => $this->next)));
+}
+
+?>
+<div class="projectPaginationControl">
+    <?php if ($this->totalcount): ?>
+        <ul id="pagination-digg">
+            <?php
+            if (isset($this->previous) && $this->previous > 0): ?>
+                <li class="previous <?= $cssClassPrevious ?>">
+                    <a href="<?php echo isset($this->previous) ? $urlPrevious : 'javascript:;'; ?>">
+                        <span class="glyphicon glyphicon-chevron-left"></span> Previous
+                    </a>
+                </li>
+            <?php
+            endif;
+            $i = $this->totalcount;
+            $page = 1;
+            $thisPage = $this->page;
+            $itemsPerPage = $this->pageLimit;
+            $maxPages = ceil($i / $itemsPerPage);
+            $maxPagesView = 0;
+
+            if ($thisPage >= 6) {
+                $page = $thisPage - 4;
+            }
+
+            if ($i < $itemsPerPage) {
+                $maxPages = 1;
+            } else {
+                if ($thisPage > $maxPages - 5 && $maxPages - 9 > 0) {
+                    $page = $maxPages - 9;
+                }
+            }
+
+            while ($page <= $maxPages && $maxPagesView < 10) {
+                ?>
+                <?php if ($page != $thisPage): ?>
+                    <li>
+                        <?php if ($isFromExplore): ?>
+                            <a href="<?php echo $helperExploreUrl->buildFromArray($myParams, array('page' => $page), true) . ($this->tag ? '?tag=' . $this->tag : ''); ?>"><?php echo $page; ?></a>
+                        <?php else: ?>
+                            <a href="<?php echo $this->url(array_merge($this->params, array('page' => $page))); ?>"><?php echo $page; ?></a>
+                        <?php endif; ?>
+                    </li>
+                <?php else: ?>
+
+                    <li class="active"><?php echo $page; ?></li>
+                <?php endif; ?>
+                <?php
+                $page = $page + 1;
+                $maxPagesView = $maxPagesView + 1;
+            } ?>
+
+            <?php if (isset($this->next) && $this->next != false): ?>
+                <li class="next <?= $cssClassNext ?>">
+                    <a href="<?php echo isset($this->next) ? $urlNext : 'javascript:;'; ?>">
+                        Next <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    <?php endif; ?>
+</div>

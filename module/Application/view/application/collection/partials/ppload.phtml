@@ -1,0 +1,982 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$tagGroups = $this->tagGroupsForCategory;
+
+$isAdmin = false;
+if ($this->ocs_user->member_id && 'admin' == $this->userRoleName) {
+    $isAdmin = true;
+}
+
+$identity = false;
+if ($this->ocs_user->member_id) {
+    $identity = true;
+}
+
+?>
+
+<style>
+    
+    #product-page-content #product-panels #files-panel table.table-ocs-file td {
+        vertical-align: top !important;
+    }
+    
+    
+</style>
+
+  <!-- ppload -->
+         <?php if ($this->product->ppload_collection_id): ?>
+             <?php
+             $xdgType = $this->catXdgType($this->product->project_category_id);
+
+             $userRoleName = $this->ocs_user->roleName;
+
+             ?>
+                 <article>
+                     <div id="modal-installation-instructions"
+                          class="modal fade"
+                          role="dialog"
+                          aria-labelledby="modal-installation-instructions-label">
+                        <div class="modal-dialog content-modal" style="width: 640px; font-size: 12pt;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h3 id="modal-installation-instructions-label"><?= $this->translate('Installation Instructions') ?></h3>
+                                </div>
+                                <div class="modal-body">
+<?php /*
+                                <iframe src="https://opendesktop.github.io/ocs-url/opendesktoporg-help.html" width="100%" height="500" frameborder="0" seamless id="iframeInstallInstruction"></iframe>
+              */
+                                ?>
+                               
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+
+                     <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                          data-ppload-collection-id="<?= $this->product->ppload_collection_id ?>"
+                          data-xdg-type="<?= $xdgType ?>"
+                          style="overflow-x: auto;">
+
+                         <!--
+                         <iframe src="" width="0" height="0" frameborder="0"
+                                 data-pling-music-uri="/pling-music-html5/embed.html"
+                                 seamless></iframe>
+                         -->
+
+                         <!--table-bordered-->
+                         <table class="table table-ocs-file" data-ppload-files="">
+                             <thead>
+                             <tr>
+                                 <th><?= $this->translate('File (click to download)'); ?></th>
+                                 <th><?= $this->translate('Version'); ?></th>
+                                 <th><?= $this->translate('Description'); ?></th>
+
+                                 
+                                 <?php
+                                    //Show all Tag-Groups for this Category and show them as Dropdowns
+                                    if(!empty($tagGroups)) {
+                                        foreach ($tagGroups as $tagGroup) {
+                                            echo "<th>" . $tagGroup['group_display_name'] . "</th>";
+                                        }
+                                    }
+                                ?>
+                                 
+                                 
+                                 <?php if ($isAdmin) : ?>
+                                  <th style="text-align: right;font-style: italic;"><?= $this->translate('Downloads Old'); ?></th>
+                                 <?php endif; ?>
+                                 <?php /*if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                  <th style="text-align: right;font-style: italic;"><?= $this->translate('Downloads NoUK'); ?></th>
+                                 <?php endif; */?>
+                                  <th style="text-align: right"><?= $this->translate('Downloads'); ?></th>
+                                 
+                                  <th><?= $this->translate('Date'); ?></th>
+
+                                  <th style="text-align: right"><?= $this->translate('Filesize'); ?></th>
+
+                                  <th style="text-align: right">DL</th>
+                                  <th style="text-align: right;white-space:nowrap"><?= $this->translate('OCS-Install'); ?>
+                                     <a href="#modal-installation-instructions" role="button" data-toggle="modal"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+                                  </th>
+                                  <th style="min-width: 250px;"><?= $this->translate('MD5SUM'); ?></th>
+                                 <?php if ($isAdmin) : ?>
+                                  <th style="font-style: italic;">Compatible</th>
+                                 <?php endif; ?>
+
+                             </tr>
+                             </thead>
+                             <tbody></tbody>
+                             
+                             <tfoot>
+                             </tfoot>
+                             
+                         </table>
+
+
+                     </div>
+                 </article>
+
+
+                 <?php /*
+             <div class="item active" style="max-width: 800px; max-height: 550px; margin:0 auto; display: none" id="carouselPPlay">
+                    <div data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                          data-ppload-collection-id="<?= $this->product->ppload_collection_id ?>">
+
+                          <iframe src="" width="0" height="0" frameborder="0" id="pplayiframe"
+                                 data-pling-music-uri="/pling-music-html5/embed.html"
+                                 seamless></iframe>
+                    </div>
+             </div>
+             */?>
+
+
+             <script type="text/javascript">
+
+                 $(function () {
+                     var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}};
+
+                     var $pploadCollection = $('div[data-ppload-collection-id]');
+                     var $plingMusic = $pploadCollection.find('iframe[data-pling-music-uri]');
+                     var pploadApiUri = $pploadCollection.attr('data-ppload-api-uri');
+                     var hasFilesPanelOpened = false;
+                     var externalIcon = ' <i class="fa fa-external-link"></i>';
+                     function keysrt(key, asc) {
+                         if(asc) {
+                              return function(a,b){
+                               if (a[key] > b[key]) return 1;
+                               if (a[key] < b[key]) return -1;
+                               return 0;
+                              }
+                         } else {
+                             return function(a,b){
+                                   if (a[key] < b[key]) return 1;
+                                   if (a[key] > b[key]) return -1;
+                                   return 0;
+                             }
+                         }
+                    }
+
+                    function activeCarouselFirstImg()
+                    {
+                          $('.carousel-inner .item').first().addClass('active');
+                           $('.carousel-indicators > li').first().addClass('active');
+                           $( '.carousel-indicators > li').each(function( index ) {
+                                $( this ).attr("data-slide-to",index);
+                            });
+                    }
+
+
+                     function getPploadFiles(page) {
+                          activeCarouselFirstImg();
+
+                         var collectionId = $pploadCollection.attr('data-ppload-collection-id');
+                         if (!page) {
+                             page = 1;
+                         }
+                         $.ajax({
+                             //url: pploadApiUri + 'files/index',
+                             //TODO
+                             // what ??
+                             url: '/p/<?= $this->product->project_id ?>/getfilesajax',
+                             type: 'GET',
+                             data: {
+                                 format: 'json',
+                                 ignore_status_code: 1,
+                                 status: 'all',
+                                 collection_id: collectionId,
+                                 perpage: 1000,
+                                 page: page
+                             },
+                             dataType: 'json',
+                             success: function (data, textStatus, jqXHR) {
+                                 if (data.status != 'success') {
+                                    activeCarouselFirstImg();
+                                     return;
+                                 }
+
+                                 var isPlayable = false;
+                                 var fileSizeSum = 0;
+
+                                 var downloaded_count_total = 0;
+                                 var downloaded_count_total_live = 0;
+                                 var downloaded_count_total_uk = 0;
+                                 var firstRow = true;
+
+                                var myArray = $.map(data.files, function(entry) {
+                                    return entry;
+                                });
+
+                                //myArray = myArray.sortOn('active');
+                                myArray.sort(keysrt('active'), false);
+                                myArrayActive = [];
+                                myArrayInactive = [];
+                                $.each(myArray, function () {
+                                        if(this.active == '1') {
+                                                myArrayActive.push(this);
+                                        } else {
+                                                myArrayInactive.push(this);
+                                        }
+                                });
+
+                                //sort
+                                myArrayActive.sort(keysrt('created_timestamp'), false);
+                                myArrayInactive.sort(keysrt('created_timestamp'), false);
+
+                                var oldestFileId = null;
+                                //Active Files
+                                 $.each(myArrayActive, function () {
+                                    if(firstRow) {
+                                        //this.downloaded_count = parseInt(this.downloaded_count) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                        oldestFileId = this.id;
+                                        firstRow = false;
+                                    }
+
+                                    if(this.id < oldestFileId) {
+                                            oldestFileId = this.id;
+                                    }
+
+                                    count_downloads = this.downloaded_count || 0;
+                                    count_downloads_live = this.downloaded_count_live || 0;
+                                    count_downloads_uk = this.downloaded_count_uk || 0;
+                                    downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
+                                    downloaded_count_total_live = downloaded_count_total_live+parseInt(count_downloads_live);
+                                    downloaded_count_total_uk = downloaded_count_total_uk+parseInt(count_downloads_uk);
+                                    
+                                    var link = '';
+                                    
+                                    if (this.tags) {
+                                        fileTags = this.tags;
+
+                                        $.each(fileTags.split(','), function () {
+                                            var tagStr = this.split('##');
+                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
+                                                link = tagStr[1];
+                                            }
+                                        });
+                                    }
+                                    var isExternLink = false;
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                       isExternLink = true;
+                                    }
+
+                                    //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+                                    var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">' + this.name + '</a>';
+
+                                    /*
+                                    var fileNameBtnLink = this.name;
+                                    if(fileNameBtnLink.length > 25) {
+                                        fileNameBtnLink = fileNameBtnLink.substring(0,22) + '...';
+                                    }*/
+                                    var downloadBtnLink = downloadUrl;
+                                    var downloadLinkFilename = shortFilename(this.name);
+
+                                    
+
+                                    var fileDescription = '';
+                                    if (this.description) {
+                                        fileDescription = this.description;
+                                    }
+                                     var ocsUrl = '';
+                                     if (typeof link !== 'undefined' && link) {
+                                         ocsUrl = generateOcsUrl(
+                                             decodeURIComponent(link),
+                                             $pploadCollection.attr('data-xdg-type')
+                                         );
+                                     } else if (!link) {
+                                         ocsUrl = generateOcsUrl(
+                                             downloadUrl,
+                                             $pploadCollection.attr('data-xdg-type'),
+                                             this.name
+                                         );
+                                     }
+
+                                     var installButton = '';
+                                     var installLink = '';
+                                     var installLinkFilename = '';
+
+                                     if ( ocsUrl) {
+                                            if(this.active && this.ocs_compatible == 1){
+                                                installButton = '<a href="' + downloadUrl + '" class="opendownloadfile btn btn-native btn-min-width" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="install" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">Install</a>';
+                                                installLink = downloadUrl;
+                                                installLinkFilename = shortFilename(this.name);
+
+                                            } else {
+                                                installButton = '<a href="#" class="btn btn-min-width disabled">INCOMPATIBLE</a>';
+                                                installLink = '';
+                                                installLinkFilename = '';
+                                            }
+                                     }
+
+                                    //if(this.active == '1') {
+                                    var greyText = ' class="activerows"';
+                                    if(this.active == '0') {
+                                           greyText = ' style="color: #ccc;"';
+                                    }
+
+                                    var downloadButton = '';
+                                    downloadButton = '<a href="'+downloadUrl+'" data-username="'+username+'" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'" class="btn btn-native btn-min-width opendownloadfile" ><img src="/images/system/download.svg" alt="download" style="width:20px; height:20px"></a>' ;
+                                    
+
+                                    if(this.version==null) {version = '';} else{version = this.version;}
+                                    
+
+
+
+                                    var mnt = moment(this.created_timestamp);
+
+                                        var tableString = "";
+                                        tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
+                                        tableString += '<td>' + downloadLink + '</td>';
+                                        tableString += '<td>' + version + '</td>';
+                                        tableString += '<td>' + fileDescription + '</td>';
+
+                                        <?php
+                                            //Show all Tag-Groups for this Category and show them as Dropdowns
+                                            if(!empty($tagGroups)) {
+
+                                        ?>        
+                                        var tagGroups = this.tag_groups;
+                                        
+                                        var fileId = this.id;
+                                        $.each(tagGroups, function() {
+                                            tableString += '<td>';
+                                            for(key in this.tag_list){
+                                                if(null != this.selected_tags) {
+                                                    $tag_name = this.tag_list[key];
+                                                    $.each(this.selected_tags, function() {
+                                                        if(key == this.tag_id) {
+                                                            tableString += '<span>'+$tag_name+'</span>';
+                                                            if($tag_name.toUpperCase() == 'APPIMAGE'){
+                                                                tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
+                                                            }
+                                                            tableString += '<br>';
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        });
+                                        <?php
+                                            }
+                                        ?>
+
+                                        
+                                        <?php if ($isAdmin) : ?>
+                                        tableString += '<td style="text-align: right;font-style: italic;"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
+                                        <?php endif; ?>
+                                        <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
+                                        <?php endif; */?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
+                                        tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
+                                        tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
+                                        tableString += '<td style="text-align: right; ">' + downloadButton+ '</td>';
+                                        tableString += '<td style="text-align: right; ">' + installButton + '</td>';
+                                        if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
+                                            short = this.md5sum.substring(0, 4) + '...' + this.md5sum.substring(this.md5sum.length-4, this.md5sum.length);
+                                            tableString += '<td><div class="md5sum-text" id="md5sum-'+this.id+'" data-defaultText="' + this.md5sum + '" data-defaultTextLong="' + this.md5sum + '">' + short + '</div></td>';
+                                        } else {
+                                            tableString += '<td></td>'; 
+                                        }
+                                        <?php if ($isAdmin) : ?>
+                                        tableString += '<td style="text-align: center; font-style: italic;"><input type="checkbox" id="data-checkbox-compatible-'+this.id+'" data-is-compatible="'+this.ocs_compatible+'" ></td>';
+                                        <?php endif; ?>
+                                            
+                                        tableString += '</tr>';
+                                        $pploadCollection.find('table[data-ppload-files] tbody').append(tableString);
+
+                                        <?php /*  download/install dropdown btn  */
+                                        ?>
+                                        var username = '<?= $this->product->username?>';
+                                        $('#dropdown_downloads').append(
+                                            '<li><a data-username="' + username + '" href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" id="data-link-dl' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'"><span id="download-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + downloadLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+                                        );
+                                        $('#dropdown_downloads').addClass("active");
+                                        $('#dropdown_downloads').removeClass('hide');
+                                        $('#project_btn_download').enable();
+                                        $('#project_btn_download').removeClass('disabled');
+                                        $('#project_btn_download').addClass("active");
+                                        $('#project_btn_download').addClass("btn-primary");
+
+                                        if(ocsUrl && this.active && this.ocs_compatible == 1){
+                                            $('#dropdown_installs').addClass("active");
+                                            $('#dropdown_installs').removeClass('hide');
+                                            $('#project_btn_install').enable();
+                                            $('#project_btn_install').removeClass('disabled');
+                                            $('#project_btn_install').removeClass('hide');
+                                            $('#project_btn_install').addClass("active");
+                                            $('#project_btn_grp_install').removeClass("hide");
+
+                                            $('#dropdown_installs').append(
+                                                '<li><a href="' + downloadBtnLink + '" style="white-space: normal; color: #23527c;" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>" data-link_type="install" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'"><span id="install-link-filename' + this.id + '" style="white-space: normal; color: #23527c;">' + installLinkFilename + '</span><span class="right">&nbsp;' + humanFileSize(this.size,false) + '&nbsp;</span></a></li>'
+
+                                            );
+                                        }
+
+
+                                        if ((typeof osId != 'undefined') && (osId != "")) {
+                                            $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").attr('selected', 'selected');
+                                            $os = $("#data-updatepploadfile" + this.id + " option[value='" + osId + "']").text();
+                                            //alert("Text: " + $os);
+                                            $("#data-updatepploadfile" + this.id).hide();
+                                            $("#file-tag-os" + this.id).text($os);
+                                        }
+                                        
+                                        
+
+
+                                        if (isExternLink) {
+                                            
+                                            $fileserverLink = $("#data-link" + this.id).attr('href');
+                                            $("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                            $("#data-link" + this.id).attr('data-link-org', $fileserverLink);
+                                            $("#data-link" + this.id).attr('data-is-external-link', isExternLink);
+
+                                            $("#data-link" + this.id).attr('target','_blank');
+                                            $("#data-link" + this.id).html($("#data-link" + this.id).html()+ externalIcon );
+
+                                            /*
+                                            $("#data-link" + this.id).click(function (event) {
+                                                event.preventDefault();
+                                                $fileserverLink = $(this).attr('data-link-org');
+                                                window.open($fileserverLink, '_blank');
+                                            });
+                                            */
+
+                                            $fileserverLink = $("#data-link-dl" + this.id).attr('href');
+                                            $("#data-link-dl" + this.id).attr('href', decodeURIComponent(link));
+                                            $("#data-link-dl" + this.id).attr('data-link-org', $fileserverLink);
+                                            $("#data-link" + this.id).attr('data-is-external-link', isExternLink);
+
+                                            $("#data-link-dl" + this.id).attr('target','_blank');
+
+                                            $("#download-link-filename" + this.id).html($("#download-link-filename" + this.id).html()+ externalIcon );
+
+                                            /*
+                                            $("#data-link-dl" + this.id).click(function (event) {
+                                                event.preventDefault();
+                                                $fileserverLink = $(this).attr('data-link-org');
+                                                window.open($fileserverLink, '_blank');
+                                            });
+                                            */
+
+                                            $("#install-link-filename" + this.id).html($("#install-link-filename" + this.id).html() + externalIcon );
+                                        }
+
+
+                                        $compatibleCheckbox = $("#data-checkbox-compatible-" + this.id);
+                                        
+                                        
+                                        if(this.ocs_compatible == 1) {
+                                            $compatibleCheckbox.prop('checked', true);
+                                            
+                                        } else {
+                                            $compatibleCheckbox.prop('checked', false);
+                                        }
+
+                                        if(this.active == '0') {
+                                            $compatibleCheckbox.prop('disabled', 'disabled');
+                                        }
+
+                                        $compatibleCheckbox.click(function (event) {
+                                            event.preventDefault();
+                                            $fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                                            $isCompatible = this.checked;
+                                            updateOcsCompatible($fileId, $isCompatible);
+                                        });
+                                        
+                                        $md5sum = $('#md5sum-'+this.id);
+                                        
+                                        $md5sum.hover(
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.data('defaultText', $this.text());
+                                                $longText = $this.attr('data-defaultTextLong');
+                                                $this.text($longText);
+                                            },
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.text($this.data('defaultText'));
+                                            }
+                                        );
+
+
+                                        //fileSizeSum += parseInt(this.size);
+                                        if(parseInt(this.size)>0) {
+                                            fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                        }
+
+                                    //if (!isExternLink)
+                                    //{
+                                       //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                    //}
+
+
+                                    if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
+                                        isPlayable = true;
+                                    }
+
+                                    //}
+
+                                 });
+
+                                 //
+                                 //Inactive Fiels
+                                 //
+                                 $.each(myArrayInactive, function () {
+                                    if(null == oldestFileId) {
+                                            oldestFileId = this.id;
+                                    }
+
+                                    if(this.id < oldestFileId) {
+                                            oldestFileId = this.id;
+                                    }
+
+                                    var count_downloads = this.downloaded_count || 0;
+                                    var count_downloads_live = this.downloaded_count_live || 0;
+                                    var count_downloads_uk = this.downloaded_count_uk || 0;
+
+                                    downloaded_count_total = downloaded_count_total+parseInt(count_downloads);
+                                    downloaded_count_total_live = downloaded_count_total_live+parseInt(count_downloads_live);
+                                    downloaded_count_total_uk = downloaded_count_total_uk+parseInt(count_downloads_uk);
+                                    
+                                    var link = '';
+                                    
+                                    if (this.tags) {
+                                        fileTags = this.tags;
+
+                                        $.each(fileTags.split(','), function () {
+                                            var tagStr = this.split('##');
+                                            if (tagStr.length == 2 && tagStr[0] == 'link') {
+                                                link = tagStr[1];
+                                            }
+                                        });
+                                    }
+                                    var isExternLink = false;
+                                    if ((typeof link != 'undefined') && (link != "")) {
+                                       isExternLink = true;
+                                       downloadLink = '<a href="' + decodeURIComponent(link) + '" id="data-link' + this.id + '" style="color: #ccc;">' + this.name + '</a>';
+                                    }
+
+                                    var hash = '<?= $this->download_hash ?>';
+                                    var timetamp = '<?= $this->download_timestamp ?>';
+                                    var userid = '<?= $this->product->member_id?>';
+                                    var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->product->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size + "&url=" + encodeURIComponent(pploadApiUri + 'files/download/id/' + this.id + '/s/' + hash + '/t/' + timetamp + '/u/' + userid + '/' + this.name);
+                                    //var downloadLink = '<a class="inactiverows" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '">' + this.name + '</a>';
+                                    var downloadLink = '<a class="inactiverows opendownloadfile" style="color: #ccc; display:none;" href="' + downloadUrl + '" id="data-link' + this.id + '" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-has_torrent="' + this.has_torrent + '" data-project_id="<?= $this->product->project_id ?>"  data-link_type="download" data-is-external-link="'+isExternLink+'" data-external_link="'+link+'">' + this.name + '</a>';
+
+
+                                    var fileDescription = '';
+                                    if (this.description) {
+                                        fileDescription = this.description;
+                                    }
+                                     
+                                    
+
+
+                                    //if(this.active == '1') {
+                                    var greyText = ' class="inactiverows" style="color: #ccc; display:none;"';
+
+                                    if(this.version==null) {version = '';} else{version = this.version;}
+                                    var mnt = moment(this.created_timestamp);
+
+                                    var tableString = "";
+                                    tableString += '<tr data-ppload-file-id="' + this.id + '"' + greyText + '>';
+                                    tableString += '<td>' + downloadLink + '</td>';
+                                    tableString += '<td>' + version + '</td>';
+                                    tableString += '<td>' + fileDescription + '</td>';
+
+                                        <?php
+                                            //Show all Tag-Groups for this Category and show them as Dropdowns
+                                            if(!empty($tagGroups)) {
+
+                                        ?>        
+                                        var tagGroups = this.tag_groups;
+                                        var fileId = this.id;
+                                        $.each(tagGroups, function() {
+                                            tableString += '<td>';
+                                            for(key in this.tag_list){
+                                                if(null != this.selected_tags) {
+                                                    $tag_name = this.tag_list[key];
+                                                    $.each(this.selected_tags, function() {
+                                                        if(key == this.tag_id) {
+                                                            tableString += '<span>'+$tag_name+'</span>';
+                                                            if($tag_name.toUpperCase() == 'APPIMAGE'){
+                                                                tableString += ' <i class="fa fa-question-circle appimagequestion" style="cursor: pointer;"></i>';
+                                                            }
+                                                            tableString += '<br>';
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        });
+                                        
+                                        <?php
+                                            }
+                                        ?>
+
+                                        
+                                        
+                                        <?php if ($isAdmin) : ?>
+                                        tableString += '<td style="text-align: right;font-style: italic;"><span id="download_counter_' + this.id + '">' + count_downloads + '</td>';
+                                        <?php endif; ?>
+                                        <?php /* if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) : ?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_live_' + this.id + '">' + count_downloads_live + '</td>';
+                                        <?php endif; */?>
+                                        tableString += '<td style="text-align: right"><span id="download_counter_uk_' + this.id + '">' + count_downloads_uk + '</td>';
+                                        tableString += '<td>' +mnt.format('YYYY-MM-DD') + '</td>';
+                                        tableString += '<td style="text-align: right">' + humanFileSize(this.size,false) + '</td>';
+                                        tableString += '<td style="text-align: right; "></td>';
+                                        tableString += '<td style="text-align: right; "></td>';
+                                        if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
+                                            short = this.md5sum.substring(0, 4) + '...' + this.md5sum.substring(this.md5sum.length-4, this.md5sum.length);
+                                            tableString += '<td><div class="md5sum-text" id="md5sum-'+this.id+'" data-defaultText="' + this.md5sum + '" data-defaultTextLong="' + this.md5sum + '">' + short + '</div></td>';
+                                        } else {
+                                            tableString += '<td></td>'; 
+                                        }
+                                        tableString += '<td style="text-align: right; "></td>';
+
+                                        tableString += '</tr>';
+                                        $pploadCollection.find('table[data-ppload-files] tbody').append(tableString);
+
+                                         if (isExternLink) {
+                                            //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                                $("#data-link" + this.id).attr('target','_blank');
+                                            $("#data-link" + this.id).html($("#data-link" + this.id).html() + externalIcon );
+                                         }
+                                         
+                                         
+                                         $md5sum = $('#md5sum-'+this.id);
+                                        
+                                        $md5sum.hover(
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.data('defaultText', $this.text());
+                                                $longText = $this.attr('data-defaultTextLong');
+                                                $this.text($longText);
+                                            },
+                                            function() {
+                                                var $this = $(this); // caching $(this)
+                                                $this.text($this.data('defaultText'));
+                                            }
+                                        );
+
+
+
+                                        //fileSizeSum += parseInt(this.size);
+                                            if(parseInt(this.size)>0) {
+                                                fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                            }
+                                         //if (!isExternLink)
+                                         //{
+                                            //fileSizeSum += roundFileSizeInMB(parseInt(this.size));
+                                         //}
+
+
+                                         if (this.type == 'audio/mpeg' || this.type == 'application/ogg') {
+                                             isPlayable = true;
+                                         }
+
+                                     //}
+
+                                 });
+
+
+                                 //add old download counter
+                                 downloaded_count_total += parseInt(<?= $this->product->count_downloads_hive?>);
+                                 downloaded_count_total_live += parseInt(<?= $this->product->count_downloads_hive?>);
+                                 downloaded_count_total_uk += parseInt(<?= $this->product->count_downloads_hive?>);
+
+                                 //add old download counter to oldest file
+                                 var fileCount = $('#download_counter_'+ oldestFileId).html();
+                                 var oldNewCounter = parseInt(fileCount) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                 $('#download_counter_'+ oldestFileId).html(oldNewCounter);
+                                 
+                                 var fileCountLive = $('#download_counter_live_'+ oldestFileId).html();
+                                 var oldNewCounterLive = parseInt(fileCountLive) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                 $('#download_counter_live_'+ oldestFileId).html(oldNewCounterLive);
+                                 
+                                 var fileCountUk = $('#download_counter_uk_'+ oldestFileId).html();
+                                 var oldNewCounterUk = parseInt(fileCountUk) + parseInt(<?= $this->product->count_downloads_hive?>);
+                                 $('#download_counter_uk_'+ oldestFileId).html(oldNewCounterUk);
+
+
+
+                                //$('#downloadscnt').html(downloaded_count_total);
+                                var colsStart = 3;
+                                <?php
+                                //Show all Tag-Groups for this Category and show the saved values
+                                if(!empty($tagGroups)) {
+                                    echo "colsStart += " . count($tagGroups) . ";";
+                                }
+
+                                ?>
+                                
+                                if($pploadCollection.find('table[data-ppload-files] tfoot'))
+                                {
+                                     $pploadCollection.find('table[data-ppload-files] tfoot').append(
+                                         '<tr>'
+                                         + '<th colspan="' + colsStart + '">' + myArrayActive.length + ' <?= $this->translate("files")?> (<span style="color: #ccc;" ><a style="cursor:pointer" onclick="fnToggleInactiveFiles();return false;">'+myArrayInactive.length+' archived</a></span>)</th>'
+
+                                        <?php 
+                             
+                                            if($identity){
+                                                if ($isAdmin) { 
+                                        ?>
+                                             
+                                             + '<th style="text-align: right;font-style: italic;">' + downloaded_count_total + '</th>'
+                                             //+ '<th style="text-align: right">' + downloaded_count_total_live + '</th>'
+                                             + '<th style="text-align: right;font-style: italic;">' + downloaded_count_total_uk + '</th>'
+                                             //+ '<th style="text-align: right"></th>'
+                                        <?php 
+                             
+                                                } else if ($this->product->member_id==$idt->member_id
+                                                ) { 
+                                        ?>
+                                             + '<th style="text-align: right">' + downloaded_count_total_uk + '</th>'
+                                        <?php   } else { ?>
+                                             + '<th style="text-align: right;"></th>'
+                                        <?php 
+                                                } 
+                                            } else { ?>
+                                             + '<th style="text-align: right;"></th>'
+                                        <?php   
+                                            }
+                                        ?>
+
+                                        + '<th></th>'
+                                        + '<th style="text-align: right">' + fileSizeSum.toFixed(2) + ' MB</th>'
+                                         //+ '<th style="text-align: right">' + humanFileSize(fileSizeSum) + '</th>'
+                                        + '<th></th>'
+                                        + '<th></th>'
+                                        + '<th></th>'
+                                         + '</tr>'
+                                     );
+                                 }
+
+                                 $pploadCollection.find('a[data-ppload-download-link]').attr(
+                                     'href',
+                                     pploadApiUri + 'collections/download/id/' + collectionId
+                                 );
+
+
+                                 /*
+                                 var b= false;
+                                 if (isPlayable && !$plingMusic.attr('src')) {
+                                     $plingMusic.attr({
+                                         src: $plingMusic.attr('data-pling-music-uri')
+                                         + '?play_collection=' + collectionId,
+                                         width: '100%',
+                                         height: '550'
+                                     });
+
+                                 $('.carousel-inner').prepend($('#carouselPPlay').show());
+                                 $('.carousel-indicators').prepend('<li data-target="#myCarousel" data-slide-to="0"></li>');
+                                 $('.carousel-indicators > li').first().addClass('active');
+                                    b = true;
+                                 }
+
+                                 if(!b){
+                                   activeCarouselFirstImg();
+                                 }
+                                  */
+
+
+                                /*if (data.pagination !== 'undefined' && data.pagination.next) {
+                                    getPploadFiles(data.pagination.next);
+                                }*/
+
+                             },
+                             error: function (jqXHR, textStatus, errorThrown) {
+
+                                  activeCarouselFirstImg();
+
+
+                             }
+                         });
+                     }
+
+                     function generateOcsUrl(url, type, filename) {
+                         if (!url || !type) {
+                             return '';
+                         }
+                         if (!filename) {
+                             filename = url.split('/').pop().split('?').shift();
+                         }
+                         return 'ocs://install'
+                            + '?url=' + encodeURIComponent(url)
+                            + '&type=' + encodeURIComponent(type)
+                            + '&filename=' + encodeURIComponent(filename);
+                     }
+
+
+                     function updateOcsCompatible(fileId, isCompatible) {
+                        var $url = "/p/<?= $this->product->project_id ?>/updatepploadfile";
+
+                        if(fileId != 'undefined' && fileId != null) {
+
+                            $.ajax({
+                                url: $url,
+                                type: 'POST',
+                                data: {
+                                    file_id: fileId,
+                                    ocs_compatible: (isCompatible==true?1:0)
+                                },
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.status == 'ok') {
+                                        $("#files-panel").find('table[data-ppload-files] tbody').html('');
+                                        $('#dropdown_downloads').html('');
+                                        $("#files-panel").find('table[data-ppload-files] tfoot').html('');
+                                        getPploadFiles();
+
+                                    }
+
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    alert("Error: " + textStatus + ", " + errorThrown);
+
+                                }
+                            });
+                        }
+                    }
+
+                    function shortFilename(filename) {
+                        var returnString = filename;
+                        if(filename.length > 25) {
+                            var name = filename.substring(0,22);
+                            var fileExt = filename.split('.').pop();
+                            if(fileExt.length>3) {
+                                name = name.substring(0,(25-fileExt.length));
+                            }
+                            returnString = name + '...' + fileExt;
+                        }
+                        return returnString;
+                    }
+
+
+                     function roundFileSizeInMB(bytes)
+                     {
+                        // min size 0.01MB
+                        if(bytes>0)
+                        {
+                            var size = (bytes / 1048576).toFixed(2);
+                            if(size == '0.00')
+                            {
+                                return Number('0.01');
+                            }else
+                            {
+                                return Number(size);
+                            }
+                        }
+                     }
+
+
+
+                      fnToggleInactiveFiles = function(){
+                           $('.inactiverows').toggle();
+                      };
+
+
+
+                     function humanFileSize(bytes,isExternLink) {
+                         if(isExternLink) return '----';
+                         if(bytes>0)
+                         {
+                             var size = '';
+                             size = (bytes / 1048576).toFixed(2);
+                             if(size == '0.00')
+                             {
+                                return '0.01 MB';
+                             }else
+                             {
+                                return size+' MB';
+                             }
+                         }
+                         else
+                         {
+                            return '0.00 MB';
+                         }
+                     }
+
+                     function humanFileSize_(bytes) {
+                         if(bytes>0)
+                         {
+                             var size = '';
+                             size = (bytes / 1048576).toFixed(2);
+                             /*
+                              if (bytes >= 1073741824) {
+                              size = (bytes / 1073741824).toFixed(2) + 'GB';
+                              }
+                              else if (bytes >= 1048576) {
+                              size = (bytes / 1048576).toFixed(2) + 'MB';
+                              }
+                              else if (bytes >= 1024) {
+                              size = (bytes / 1024).toFixed(2) + 'KB';
+                              }
+                              else {
+                              size = bytes + 'bytes';
+                              }*/
+
+                             if(size == '0.00')
+                             {
+                                return '0.01 MB';
+                             }else
+                             {
+                                return size+' MB';
+                             }
+                         }
+                         else
+                         {
+                            return '0.00 MB';
+                         }
+                     }
+
+                     //$('a[href="#files-panel"][data-toggle="tab"]').on('click', function () {
+                     if (!hasFilesPanelOpened) {
+                         getPploadFiles();
+                         hasFilesPanelOpened = true;
+
+
+                     }
+                     //});
+
+                 });
+
+                $(function() {
+
+                    $('#modal-installation-instructions').on('show.bs.modal', function (e) {                                                       
+                              $.ajax({
+                                  url: '/p/<?= $this->product->project_id?>/loadinstallinstruction',
+                                  type: 'html',
+                                  success: function (results) {
+                                      var text = results.data;                                     
+                                      $('#modal-installation-instructions').find('.modal-body').html(text);
+                                  }
+                              });
+                        });
+
+                });
+             </script>
+         <?php endif; ?>
+         <!-- /ppload -->

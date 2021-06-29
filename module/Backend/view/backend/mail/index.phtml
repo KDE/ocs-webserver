@@ -1,0 +1,212 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+
+<form id="filter">
+    <fieldset>
+        <legend>Filter</legend>
+
+        <label for="filter_name">Name</label> &nbsp;
+        <input type="text" id="filter_name" value=""/>
+        <span id="filter_name_ac"></span>
+	<span id="filter_reset" class="yui-button yui-push-button">
+            <span class="first-child">
+                <button type="button">löschen!</button>
+            </span>
+	</span>
+
+    </fieldset>
+</form>
+<br/>
+<div id="mailTplTable"></div>
+<div id="paginator"></div>
+<br/><br/>
+<a href='/backend/mail/add' class="ui-state-default ui-corner-all button_normal" id="4">Mail Template hinzufügen</a>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("body").addClass("yui-skin-sam");
+
+        var mailTplColumnDefs = [
+            {key: "mail_template_id", hidden: true},
+            {key: "name", label: "Name", sortable: true},
+            {key: "subject", label: "Betreff", sortable: true},
+            {key: "text", label: "Text", hidden: true},
+            {key: "created_at", label: "Angelegt am", sortable: true},
+            {key: "changed_at", label: "Geändert am", sortable: true},
+            {
+                key: 'action', formatter: function (cell, rec, col, data) {
+                cell.innerHTML = '<button type="button" name="editData" id="editData" data-row_id="' + rec._oData.mail_template_id + '">Edit</button>';
+            }
+            }
+        ];
+
+        var mailTplFieldDefs = [
+            {key: "mail_template_id"},
+            {key: "name"},
+            {key: "subject"},
+            {key: "text"},
+            {key: "created_at", parser: "datetime"},
+            {key: "changed_at", parser: "datetime"}
+        ];
+
+        var mailTplDataSource = new YAHOO.util.XHRDataSource("/backend/mail/index-ajax");
+        mailTplDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
+        mailTplDataSource.responseSchema = {
+            fields: mailTplFieldDefs,
+            resultsList: 'results',
+            metaFields: {totalRecords: "totalRecords"}
+        };
+
+        var mailTplConfig = {
+            dynamicData: true,
+            generateRequest: function (state, table) {
+                var query = '?start=' + state.pagination.recordOffset;
+                query += '&count=' + state.pagination.rowsPerPage;
+
+                if (state.sortedBy) {
+                    query += '&sort=' + state.sortedBy.key;
+                    query += '&dir=' + state.sortedBy.dir;
+                }
+
+                // Filter
+                var name = YAHOO.util.Dom.get('filter_name').value;
+
+                if (name != '')
+                    query += '&filter[name]=' + name;
+
+                return query;
+
+            },
+            paginator: new YAHOO.widget.Paginator({
+                rowsPerPage: 20,
+                containers: 'paginator',
+                template: '<strong>Page: {CurrentPageReport}</strong> ' + '<label>Page size: {RowsPerPageDropdown}</label>' +
+                '<p class="pg-nav">' +
+                '{FirstPageLink} {PreviousPageLink} {PageLinks}' +
+                '{NextPageLink} {LastPageLink}' +
+                '</p>',
+                // Options for RowsPerPageDropdown component
+                rowsPerPageDropdownClass: "yui-pg-rpp-options", // default
+                rowsPerPageOptions: [
+                    {value: 20, text: "20"},
+                    {value: 40, text: "40"},
+                    {value: 100, text: "100"}
+                ]
+            })
+        };
+
+
+        var mailTplDataTable = new YAHOO.widget.DataTable("mailTplTable", mailTplColumnDefs, mailTplDataSource, mailTplConfig);
+
+        mailTplDataTable.handleDataReturnPayload = function (request, response, payload) {
+            if (!payload) {
+                return {
+                    totalRecords: response.meta.totalRecords,
+                    results: response.results
+                };
+            }
+
+            payload.totalRecords = response.meta.totalRecords;
+            return payload;
+        };
+
+        mailTplDataTable.set("selectionMode", "single");
+        mailTplDataTable.subscribe("rowMouseoverEvent", mailTplDataTable.onEventHighlightRow);
+        mailTplDataTable.subscribe("rowMouseoutEvent", mailTplDataTable.onEventUnhighlightRow);
+
+        mailTplDataTable.subscribe("rowDblclickEvent", function (row) {
+            var dcMember = this.getRecord(row.target);
+
+            window.location.href = '/backend/mail/edit/id/' + dcMember.getData('mail_template_id');
+        });
+
+        var mailTplFilter = function () {
+            var query = mailTplConfig.generateRequest(mailTplDataTable.getState(), mailTplDataTable);
+            mailTplDataSource.sendRequest(query, mailTplDataTable.onDataReturnInitializeTable, mailTplDataTable);
+        };
+
+        new YAHOO.widget.AutoComplete(
+            'filter_name',
+            'filter_name_ac',
+            new YAHOO.util.FunctionDataSource(mailTplFilter),
+            {minQueryLength: 0, queryDelay: 0.5}
+        );
+
+        YAHOO.util.Event.addListener('filter_reset', 'click', function () {
+            YAHOO.util.Dom.get('filter').reset();
+            mailTplFilter();
+        });
+
+
+        var onContextMenuClick = function (p_sType, p_aArgs, p_myDataTable) {
+            var task = p_aArgs[1];
+            if (task) {
+                // Extract which TR element triggered the context menu
+                var elRow = this.contextEventTarget;
+                elRow = p_myDataTable.getTrEl(elRow);
+
+                if (elRow) {
+                    var oRecord = p_myDataTable.getRecord(elRow);
+                    var itemId = oRecord.getData("mail_template_id");
+                    switch (task.index) {
+                        case 0:
+                            window.location = '/backend/mail/edit/id/' + oRecord.getData("mail_template_id");
+                            break;
+                        case 1:     // Delete row upon confirmation
+                            if (confirm("Are you shure to delete this project " +
+                                    projectId + " (" +
+                                    oRecord.getData("name") + ")?")) {
+
+                                $.post('/backend/mail/delete/', {'id': itemId}, function (result) {
+                                    p_myDataTable.deleteRow(elRow);
+                                });
+                            }
+                            break;
+                        default:
+                            alert('error: nothing to do.');
+                            break;
+                    }
+                }
+            }
+        };
+
+
+        var mailTplContextMenu = new YAHOO.widget.ContextMenu("projectcontextmenu",
+            {trigger: mailTplDataTable.getTbodyEl()});
+        mailTplContextMenu.addItem("bearbeiten");
+//    mailTplContextMenu.addItem("löschen");
+
+        // Render the ContextMenu instance to the parent container of the DataTable
+        mailTplContextMenu.render("mailTplTable");
+        mailTplContextMenu.clickEvent.subscribe(onContextMenuClick, mailTplDataTable);
+
+        $('body').on("click", '[name=editData]', function (e) {
+            e.preventDefault();
+            row_id = $(this).data('row_id');
+            window.location.href = '/backend/mail/edit/id/' + row_id;
+        });
+
+    });
+</script>

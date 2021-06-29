@@ -1,0 +1,57 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$imageHelper = new \Application\View\Helper\Image();
+
+?>
+<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12 nopaddingleftright" >
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 nopaddingleftright" >
+        <div class="rownum">
+            <?= intval($this->rownum)?>.
+        </div>        
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn nopaddingleftright" >
+        <figure>
+            <a href="<?= $this->buildProductUrl($this->product['project_id'], ''); ?>">
+               
+                <img src="<?php echo $imageHelper->Image($this->product['image_small'], array('width' => 40, 'height' => 40)); ?>" style="width: 30px; height: 30px; padding-top: 3px"/>
+               
+            </a>
+        </figure>
+    </div>
+    <div class="explore-product-details col-lg-9 col-md-9 col-sm-9 col-xs-9 nopaddingleftright" >
+         <div style="line-height: 16px">
+            <a href="<?= $this->buildProductUrl($this->product['project_id'], ''); ?>"><?php echo $this->product['title']; ?></a>
+            <span style="font-size: smaller;display: block"><?php echo $this->product['category_title']; ?></span>
+            <?php if($this->ocs_user->roleName == 'admin') {?>
+            <span style="font-size: smaller;display: block;font-style: italic; "><?php echo $this->product['amount']; ?></span>
+            <?php } ?>
+            
+        </div>               
+    </div>
+    <?php /*
+    <div class="explore-product-plings col-lg-2 col-md-2 col-sm-2 col-xs-2 nopaddingleftright" style="text-align: right">
+        <div style="line-height: 25px">
+        <?php echo $this->product['amount']; ?>
+        </div>
+    </div>
+    */ ?>
+</div><!-- END .explore-product -->

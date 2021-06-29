@@ -1,0 +1,56 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->doctype(Laminas\View\Helper\Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', $_SERVER['HTTP_HOST'])->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $_SERVER['HTTP_HOST'])->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:site_name',$_SERVER['HTTP_HOST'])->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image','https://www.pling.com/theme/react/assets/img/logo-pling.png')->setAutoEscape(false);
+
+$this->headLink()
+        ->prependStylesheet($this->basePath('/theme/flatui/css/home.css'))
+       ;            
+        
+?>
+<script type="application/javascript">
+  var page = "opendesktop";
+  var hpVersion = 2;
+  var homePageData = <?php echo json_encode($this->homeData)?>;                                  
+  var show_git = true;
+  var is_startpage = true;
+</script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+<div id="app-container"></div>
+
+<script type="text/javascript" src="/theme/react/lib/jszip/jszip.min.js"></script>
+<script type="text/javascript" src="/theme/react/lib/epub/epub.min.js"></script>
+
+<script type="text/javascript" src="/theme/react/lib/bookblock/js/modernizr.custom.js"></script>
+<script type="text/javascript" src="/theme/react/lib/bookblock/js/jquerypp.custom.js"></script>
+<script type="text/javascript" src="/theme/react/lib/bookblock/js/jquery.bookblock.min.js"></script>
+
+<script type="text/javascript" src="/theme/react/bundle/app-main-bundle.js"></script>

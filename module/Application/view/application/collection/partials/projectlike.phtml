@@ -1,0 +1,56 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+ $cntheart = $this->fetchHeartsForProject($this->project_id);
+
+$member_id = null;
+
+$isFollower = false;
+$member_id = null;
+if($this->authMember){
+  $member_id = $this->authMember->member_id;
+  $isFollower = $this->userFollowsProject($member_id, $this->project_id);
+}
+
+$heartatt = '';     
+$urlUserFollows = $this->buildCollectionUrl($this->project_id, 'followproject');
+
+$heartatt = $heartatt. 'role="button" data-fragment=""  '
+        .' data-target="#container-follow'.$this->project_id.'"'
+        .' data-href="'.$urlUserFollows.'"'                                          
+        .' data-auth="'.$member_id.'"';
+$out ='<div role="button" class="partialbuttonfollowproject" '.$heartatt.'>';
+
+//$out = $out.'<span class="likelabel">'.$cntheart.' Likes </span>';
+ if ($isFollower){         
+      $out = $out. '<i class="plingheart fa fa-heart heartproject " aria-hidden="true"></i>';      
+      $out = $out. '<div class="plingtext heartnumber  small"> '.$cntheart.' </div>';
+ } else{                  
+      $out = $out. '<i class="plingheart fa fa-heart-o heartgrey " aria-hidden="true"></i>';      
+      $out = $out. '<div class="plingtext heartnumber heartnumberpurple small"> '.$cntheart.' </div>';
+ }
+ 
+ $out = $out.'</div>';
+ echo $out;
+?>
+
+

@@ -1,0 +1,187 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelInfo = new Default_Model_Info();
+
+$this->comments = $modelInfo->getLatestComments(7);
+$this->donations = $modelInfo->getLatestPlings(10);
+$this->users = $modelInfo->getNewActiveMembers(10);
+$this->products = $modelInfo->getLastProductsForHostStores(10);
+$this->mostdownloads = $modelInfo->getMostDownloaded(7);
+$featuredProducts = $modelInfo->getFeaturedProductsForHostStores(100);
+
+if ($featuredProducts->getTotalItemCount()) {
+    /** @var Zend_Controller_Request_Http $request */
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+
+    $offset = (int)$request->getParam('page');
+    $featuredProducts->setItemCountPerPage(1);
+    $featuredProducts->setCurrentPageNumber($offset);
+    $this->featureProducts = $featuredProducts;
+}
+
+$storeCatIds = Zend_Registry::isRegistered('store_category_list') ? Zend_Registry::get('store_category_list') : null;
+$this->categories = $storeCatIds;
+
+$helperFetchCategory = new Default_View_Helper_CatTitle();
+$helperFetchCatParent = new Default_View_Helper_CatParent();
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperImage = new Default_View_Helper_Image();
+
+$auth = Zend_Auth::getInstance();
+$member = $getAuthUser->getAuthUser();
+
+?>
+
+<link href="/theme/flatui/css/style-index-common.css" rel="stylesheet">
+
+    <main id="mainpage-kde-store" class="mainpage-kde-store" >
+
+    <div style="height: 353px;  background-color: #EFF0F1; " id="featureProductsContainer">
+        
+        <?php
+        if ($this->featureProducts) {        
+                      echo $this->render('home/partials/featured-products.phtml');
+        } 
+        ?>
+       
+    </div>
+
+        <section class="wrapper-kde-store" id="intro-kde-store" >
+            <section class="container" style="height:100%; width: 100%;">                               
+                <div class="row">   
+               
+                <aside class="col-lg-2 col-md-4 col-sm-6 col-xs-12 aside" >
+                     <?php  echo $this->render('explore/partials/filter.phtml'); ?>
+                </aside>               
+                
+                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12 ">                                              
+                        <div class="newestproducts" >
+                            <div class="row">
+                                <div >
+                                    <span class="title" > New and Updated </span>
+
+                                    <div class="prod-widget-box new-products noborder"  >
+                                    <?php
+                                    $this->rownum = 1; 
+
+                                    foreach ($this->products as $this->product) {
+                                    	
+                                        echo $this->render('home/partials/product.phtml');
+                                        $this->rownum++;
+                                        if($this->rownum>7)
+                                        	break;
+                                    }           
+                                    ?>
+                                    <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mostdownloadedproducts" >
+                            <div class="row">
+                                <div>
+                                    <span class="title" > Most Downloaded</span>                                    
+
+                                    <div class="prod-widget-box new-products noborder" >
+                                    <?php
+                                    $this->rownum = 1;
+                                    foreach ($this->mostdownloads as $this->product) {
+                                        echo $this->render('home/partials/product.phtml');
+                                        $this->rownum++;                                        
+                                    } 
+                                    
+                                    ?>
+                                    <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div> 
+
+
+                        <div class="latestcomments">
+                       
+                            <div class="row">
+                                <div >
+                                    <span class="title" > Lastest Comments </span>
+                                    
+                                        
+                                    <div class="prod-widget-box " style="border:0px !important">
+                                        <?php                                                          
+                                             foreach ($this->comments as $this->comment) {
+                                                    echo $this->render('home/partials/comment.phtml');                        
+                                                }                                 
+                                         ?> 
+
+                                          <div style="clear: both"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        
+                        </div>       
+                
+                </div>
+              
+
+                </div> <!--row -->
+
+
+                 
+            </section>
+        </section>
+        
+    </main>
+
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('body').on('click', 'a.ajaxPartial', function (event) {
+            event.preventDefault();            
+            $(this).off();                  
+            var target = '#featureProductsContainer';  
+            if($(this).hasClass( "disabled" )) return false;
+            var url = $(this).attr("href");                        
+            $(target).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    $(target).empty().html('Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.');
+                }                
+            });
+            
+            return false;
+        });
+        
+    });
+</script>
+
+
+  <?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+                MenuHover.setup();                    
+                LoginContainer.update();
+
+            });
+        ');

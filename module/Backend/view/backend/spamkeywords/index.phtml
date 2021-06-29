@@ -1,0 +1,115 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
+<style>
+    .highlight {
+        background-color: #fefff3;
+    }
+</style>
+
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of Spam Keywords',
+            sorting: true, //Enable sorting
+            defaultSorting: 'spam_key_word', //Set default sorting
+            actions: {
+                listAction: '/backend/spamkeywords/list',
+                createAction: '/backend/spamkeywords/create',
+                updateAction: '/backend/spamkeywords/update',
+                deleteAction: '/backend/spamkeywords/delete'
+            },
+            fields: {
+                spam_key_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                spam_key_word: {
+                    title: 'Keyword',
+                    width: '20%',
+                    inputClass: 'validate[required]'
+                },
+                spam_key_created_at: {
+                    title: 'Created At',
+                    width: '5%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                spam_key_is_deleted: {
+                    title: 'deleted',
+                    width: '5%',
+                    options: {'0': 'Not Deleted', '1': 'Deleted'},
+                    defaultValue: '0',
+                    create: false
+                },
+                spam_key_is_active: {
+                    title: 'active',
+                    width: '5%',
+                    inputTitle: 'Status*',
+                    options: {'1': 'Active', '0': 'Inactive'},
+                    defaultValue: '1'
+                }
+            },
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.validationEngine();
+                $('#jtable-create-form').attr('style', 'padding:5%');
+            },
+            //Validate form when it is being submitted
+            formSubmitting: function (event, data) {
+                return data.form.validationEngine('validate');
+            },
+            //Dispose validation logic when form is closed
+            formClosed: function (event, data) {
+                data.form.validationEngine('hide');
+                data.form.validationEngine('detach');
+            },
+
+        });
+
+        $('#TableContainer').jtable('load');
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+    });
+</script>

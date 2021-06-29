@@ -1,0 +1,11 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!default.png
+!ibu.php
+!resize.php
+!hive/user-pics/nopic.png
+!cache/.gitignore
+!data/tmp/.gitignore
+!data/.gitignore

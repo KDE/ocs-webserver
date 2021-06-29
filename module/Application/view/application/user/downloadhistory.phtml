@@ -1,0 +1,179 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+$this->tab = 'downloadhistory';
+$identity = $this->member;
+$this->issupport = $this->isSupporter($this->member->member_id);
+//Rating for ACTIVE SUPPORTERS only
+$pageCount = $this->downloadhistory->count();
+
+?>
+<style type="text/css">
+  .rate-comment{
+    display: block;
+    clear: both;
+  }
+
+</style>
+<main class="user-admin-page">
+<?php include __DIR__.'/partials/userHeader_top.phtml';?>
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <!-- NAVIGATION -->
+                <?php include __DIR__.'/partials/userHeader.phtml';?>  
+                <!-- /NAVIGATION -->
+             
+              <div class="my-products-heading">
+                   <h1 class="page-title left"><?= $this->translate('Download History') ?></h1>                   
+               </div>
+
+
+                <div class="my-downloadshistory-list" id="my-downloadshistory-list">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                    <small class="pull-right">
+                        <div class="row totaldownloads"><?=$this->downloadhistory->getTotalItemCount()?> Downloads</div>
+                        <?php if ($pageCount > 1) 
+                        echo $this->paginationControl($this->downloadhistory
+                                            , 'Sliding'
+                                            ,'application/partials/paginatorAjax.phtml'
+                                            ,array(
+                                                     'route' => 'application_user'
+                                                    ,'action' => 'downloadhistory'
+                                                    ,'username' => $this->member->username
+                                                    ,'dom_target' => 'div#my-downloadshistory-list')); ?>
+                      </small>                    
+                    </div>
+                </div>
+
+                   <div class="row">
+                       <div class="col-lg-5">
+                       </div>
+                       <div class="col-lg-2">
+                        Downloaded at
+                       </div>
+                       <div class="col-lg-2">                        
+                       </div>
+                       <div class="col-lg-2">
+                           Ratings&Reviews
+                       </div>
+                      <div class="col-lg-1">
+                       
+                       </div>
+                        
+                   </div>
+                    <?php  
+                               
+                        $result = array();
+                        foreach ($this->downloadhistory as $element) {                                                      
+                            $result[$element['project_id']][]= $element;                            
+                        }    
+                                            
+                        foreach($result as $projectfiles){                                                            
+                            $i = 0;
+                            foreach($projectfiles as $file){                                                                                            
+                                echo $this->partial('partials/loopDownloadHistory.phtml',  array(
+                                        "file"  => (object)$file,
+                                        "isSupporter" =>$this->isSupporter,
+                                        "member_id" =>$this->member->member_id,
+                                        "authMember" =>$this->member,
+                                        "counter" => $i++
+                                    ));                                                                                                  
+                            }
+                        }
+                    ?>                                                               
+                </div>
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>
+
+
+  <?php if ($identity) { ?>
+    <div id="review-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">
+                    <label id="votelabel"> </label>
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+               </div>
+               <div class="modal-body">
+                 <form class="full-width product-add-comment-review" action="/productcomment/addreplyreview/" method="post">
+                  <input type="hidden" name="p" id="form_p"/>
+                  <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/>
+                  <input type="hidden" name="v" value="1" id="voteup"/>                                                        
+                  <textarea name="msg" class="full-width" id="commenttext"></textarea>
+                  <button type="submit" class="small pull-right">Rate Now</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+    <div id="score-product-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" style="padding-bottom: 20px">
+               <div class="modal-header">                    
+                   <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close"><span
+                               aria-hidden="true">&times;</span></button>
+                               <label id="votelabel"> </label>
+               </div>
+               <form class="full-width product-add-comment-review-new" action="/productcomment/addreplyreviewnew/" method="post" id="reviewform">
+               <div class="modal-body">
+                 
+                    <input type="hidden" name="p" id="form_p"/>
+                    <input type="hidden" name="m" value="<?= $identity->member_id ?>" id="loginuser"/> 
+                    <input type="hidden" name="s" id="userscorevalue"/>
+                    <input type="hidden" name="v" value="1" id="voteup"/>
+                    <textarea name="msg" class="full-width" id="commenttext"></textarea>
+                
+                </div>
+                 <div class="modal-footer">
+                            <button type="button" class="small" id="modal-btn-cancel" style="float: left;">Cancel</button>                             
+                            <button type="submit" class="small pull-right"  id="modal-btn-onsubmit">Rate Now</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+<?php }?>
+
+<?php
+$this->inlineScript()->appendScript(
+    '    $(document).ready(function(){                        
+             CreateScoreRatingPopup.setup();             
+             PartialCommentReviewFormNew.setup();
+             PartialsButton.setup();
+        });
+    ');

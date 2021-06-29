@@ -1,0 +1,22 @@
+<?php
+header('content-type: image/png');
+
+if (isset($_GET['k'])) {
+    $key = $_GET['k'];
+    $id = Library\LoginCookie::readJwt($key);
+    if ($id) {
+        /** @var \Laminas\Cache\Storage\Adapter\AbstractAdapter $cache */
+        $cache = $GLOBALS['ocs_cache'];
+        if ($data = $cache->getItem($id)) {
+//            $cookie_domain = \Library\Tools\ParseDomain::get_domain($_SERVER['HTTP_HOST']);
+            $cookie_params = session_get_cookie_params();
+//            setcookie($data['name'], $data['id'], $data['lifetime'], $cookie_params['path'], $cookie_domain, $cookie_params['secure'], true);
+            setcookie($data['name'], $data['id'], time() + $data['lifetime'], $cookie_params['path'], '', $cookie_params['secure'], $cookie_params['httponly']);
+            $cache->removeItem($id);
+        }
+    }
+}
+
+$imagePath = realpath(__DIR__ . "/../../../../../httpdocs/img/default.png");
+$image = file_get_contents($imagePath);
+echo $image;

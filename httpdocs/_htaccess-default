@@ -1,0 +1,51 @@
+# Settings for PHP environment
+LimitRequestBody 4294967296
+php_value upload_max_filesize 4000M
+php_value post_max_size 4000M
+php_value memory_limit 512M
+# enable PHP error logging
+#php_flag  log_errors on
+#php_value error_log  /usr/src/ocs-webserver/data/logs/php_errors.log
+
+Options -Indexes
+DirectoryIndex index.zf2.php
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/shtml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+RewriteEngine On
+# The following rule tells Apache that if the requested filename
+# exists, simply serve it.
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [L]
+
+# rewrite all requests start with old/ to the old zf1 application
+#RewriteRule ^old/(.*) /$2 [QSA]
+#RewriteRule .* index.zf1.php [NC,L]
+
+#RewriteCond %{REQUEST_URI} ^/old/(.*)$
+#RewriteRule ^.*$ index.zf1.php [L]
+
+# The following rewrites all other queries to index.php. The
+# condition ensures that if you are using Apache aliases to do
+# mass virtual hosting or installed the project in a subdirectory,
+# the base path will be prepended to allow proper resolution of
+# the index.php file; it will work in non-aliased environments
+# as well, providing a safe, one-size fits all solution.
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+RewriteRule ^(.*) - [E=BASE:%1]
+#RewriteRule ^(.*)$ %{ENV:BASE}/index.zf2.php [L]
+# The following rule ensures that some file types that cannot be found in the directory are not forwarded to the index.php.
+RewriteRule !\.(js|ico|gif|jpg|jpeg|png|css|csv|pdf|ogm|ogv|ogg|webm|weba|mp4|m4v)$ %{ENV:BASE}/index.zf2.php [NC,L]

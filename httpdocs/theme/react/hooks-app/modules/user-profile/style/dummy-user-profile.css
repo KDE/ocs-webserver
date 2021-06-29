@@ -1,0 +1,64 @@
+#dummy-user-profile .image-container {
+  width: 6.9em;
+  height: 6.9em;
+  padding: 0.3em;
+  border: 8px solid white;
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  display: inline-block;
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
+}
+#dummy-user-profile .about-title .dummy-fill.text {
+  width: 30%;
+  height: 16px;
+  float: left;
+  margin-right: 10px;
+}
+#dummy-user-profile .about-title h1 .dummy-fill.text {
+  height: 24px;
+  width: 40%;
+}
+#dummy-user-profile .about-footer .text {
+  margin-bottom: 10px;
+}
+#dummy-user-profile .about-footer .details.info .dummy-fill.text {
+  height: 12px;
+  width: 100%;
+}
+#dummy-user-profile .about-footer .details.info .dummy-fill.text:nth-child(3) {
+  width: 45%;
+}
+#dummy-user-profile .about-footer h1 {
+  padding: 0 15px;
+}
+#dummy-user-profile .about-footer h1 .text {
+  width: 15%;
+  height: 18px;
+  margin-bottom: 10px;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text {
+  height: 10px;
+  width: 30%;
+  margin-bottom: 5px;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text:nth-child(2) {
+  width: 20%;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text:nth-child(5) {
+  width: 50%;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text:nth-child(6) {
+  width: 35%;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text:nth-child(7) {
+  width: 25%;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text:nth-child(8) {
+  width: 20%;
+}
+#dummy-user-profile .about-footer .details.stat .dummy-fill.text:nth-child(9) {
+  width: 80%;
+}

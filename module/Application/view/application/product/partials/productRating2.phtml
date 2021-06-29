@@ -1,0 +1,159 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+//$options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=>'okay',7=>'good', 8=>'great', 9=>'excellent',10=>'the best');
+use Application\Model\Repository\ProjectRatingRepository;
+
+$options = ProjectRatingRepository::$options;
+?>
+<div align="right">
+    <table>
+        <tr>
+            <?php
+            foreach ($options as $key => $value) {
+                echo '<td><span class="rating-label rating-label-btn" style="margin-left:10px; background-color:' . $this->fetchScoreColor($key) . '">' . $key . '</span></td>';
+            }
+            ?>
+        </tr>
+
+        <tr>
+            <?php
+            $datagroup = array();
+            foreach ($this->ratings as $this->productRating) {
+                if ($this->productRating['rating_active'] == 0 || $this->productRating['user_like'] > 1) {
+                    continue;
+                }
+                $datagroup[$this->productRating['score']][] = $this->productRating;
+            }
+
+            foreach ($options as $key => $value) {
+                echo '<td><span class="rating-label"  style="margin-left:10px; color:' . $this->fetchScoreColor($key) . '">' . (array_key_exists($key, $datagroup) ? count($datagroup[$key]) : "") . '</span></td>';
+            }
+            ?>
+        </tr>
+    </table>
+</div>
+<?php
+$tmp = null;
+foreach ($this->ratings as $this->productRating) {
+    if ($this->productRating['user_like'] >= 6) {
+        $tmp = $this->productRating;
+    }
+    if ($this->productRating['rating_active'] == 0 || $this->productRating['user_like'] > 1) {
+        continue;
+    }
+    ?>
+    <div class="productRating-rows <?= 'product-rating-' . $this->productRating['score'] ?> ">
+        <div class="product-heading product-update-heading">
+            <a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>">
+                <img class="userimg"
+                     src="<?= $this->Image(
+                         ($this->productRating['profile_image_url'] == null) ? 'hive/user-pics/nopic.png' : $this->productRating['profile_image_url'], array(
+                                                                                                                                                         'width'  => 40,
+                                                                                                                                                         'height' => 40,
+                                                                                                                                                     )
+                     ) ?>"
+                     alt="product-maker"
+                />
+            </a>
+            <span>
+                <a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>"
+                   style="font-weight: bold;">
+                <?= $this->productRating['username'] ?>
+                </a>
+            </span>
+            <span class="small light lightgrey product-update-date">
+	  	<?= $this->printDate($this->productRating['created_at']) ?>
+	  </span>
+            <span>
+		<span class="rating-label"
+              style="background-color:<?= $this->fetchScoreColor($this->productRating['score']) ?>; ">
+			<?= $this->productRating['score'] ?>
+		</span>
+		<span
+            style="font-size: small;padding-left: 5px;"><?php echo ' ' . $options[$this->productRating['score']] ?></span>
+	  </span>
+        </div>
+        <div style="padding-left: 45px; padding-bottom: 15px;">
+            <?= $this->productRating['comment_text'] ?>
+        </div>
+    </div>
+<?php } ?>
+<?php if ($this->currentUser()->isAdmin()) { ?>
+    <?php if ($tmp) { ?>
+    <div class="productRating-rows font-italic">
+        <div class="product-heading product-update-heading">
+            <a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>">
+                <img class="userimg"
+                     src="<?= $this->Image('hive/user-pics/nopic.png', array('width' => 40, 'height' => 40)) ?>"
+                     alt="product-maker"
+                />
+            </a>
+            <span>
+		<a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>" style="font-weight: bold;">
+		<?= $this->productRating['username'] ?>
+		</a>
+		</span>
+            <span class="small light lightgrey product-update-date">
+		  	<?= $this->printDate($this->productRating['created_at']) ?>
+		  </span>
+            <span>
+			<span class="score label" style="background-color:<?= $this->fetchScoreColor(5) ?>; ">
+				Count:<?php echo $tmp['user_like'] + $tmp['user_dislike'] + 2 - 12; ?> Rating: <?= number_format($this->fetchScore($tmp['user_like'] - 6, $tmp['user_dislike'] - 6), 2) ?>
+			</span>
+		  </span>
+        </div>
+    </div>
+<?php } else { ?>
+    <div class="productRating-rows">
+        <div class="product-heading product-update-heading">
+            <a href="<?php echo $this->buildMemberUrl($this->productRating['username']); ?>">
+                <img class="userimg"
+                     src="<?= $this->Image(
+                         'hive/user-pics/nopic.png', array('width' => 40, 'height' => 40)
+                     ) ?>"
+                     alt="product-maker"
+                />
+            </a>
+            <span>
+		<span class="score label" style="background-color:<?= $this->fetchScoreColor(5) ?>; ">
+			Base: 5 x 5.0 Ratings
+		</span>
+	  </span>
+        </div>
+    </div>
+    <?php } ?>
+<?php } ?>
+<script type="text/javascript">
+    $(function () {
+        $('span.rating-label-btn').on('click', function () {
+            if ($(this).hasClass("rating-label-highlight")) {
+                $(this).removeClass("rating-label-highlight");
+                $('div.productRating-rows').show();
+            } else {
+                $('span.rating-label-btn').not(this).removeClass("rating-label-highlight");
+                $(this).addClass("rating-label-highlight");
+                $('div.productRating-rows').hide();
+                $('.product-rating-' + $(this).text()).show();
+            }
+        });
+    });
+</script>

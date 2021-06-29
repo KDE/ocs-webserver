@@ -1,0 +1,93 @@
+.pling-list-container {
+    .pling-list-item-container {
+        float: left;
+        padding: .3em;
+        border: .35em solid #dee0e0;
+        border-radius: 5px;
+        height: 14em;
+        margin-bottom: 1em;
+        background: white;
+        width: 115px;
+        height: 200px;
+        margin-right: 10px;
+        -webkit-transition: all .2s ease-out;
+        -moz-transition: all .2s ease-out;
+        -ms-transition: all .2s ease-out;
+        -o-transition: all .2s ease-out;
+        position: relative;
+        text-align: center;
+        font-size: small;
+
+        .pling-item-profile-image {
+            display: block;
+            figure {
+                height: auto;
+                width: 100%;
+                img {
+                    width: 100%;
+                    height: 100%;
+                    border: 1px solid #dbdbdb;
+                    -webkit-border-radius: 999px;
+                    -moz-border-radius: 999px;
+                    border-radius: 999px;
+                    -webkit-background-clip: padding-box;
+                    -moz-background-clip: padding;
+                    background-clip: padding-box;
+                }
+            }
+        }
+
+        .pling-item-username {
+            max-width: 100px;
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        .pling-item-bottom {
+            position: absolute;
+            right: 2px;
+            bottom: 3px;
+            width: 100%;
+
+            .cntplings {
+                float: right;
+                margin-right: 5px;
+            }
+
+            .pui-pling,.pui-heart {
+                left:5px;
+                bottom:0px;
+            }
+
+            .pling-item-pling-icon {
+                width: 20px;
+                height: 20px;
+                background-size: contain;
+                border: 1px solid #dbdbdb;
+                -webkit-border-radius: 999px;
+                -moz-border-radius: 999px;
+                border-radius: 999px;
+                display: inline-block;
+                margin-right: 1px;
+                margin-bottom: -5px;
+            }
+
+            .pling-item-created-at {
+                padding: 2px;
+                float: right;
+            }
+
+            .fa {
+                margin-right: 3px;
+            }
+        }
+    }
+    .plinged-by {
+        .pling-item-username {
+            text-align: center;
+            a {
+                font-weight: bold;
+            }
+        }
+    }
+}

@@ -1,0 +1,104 @@
+.pling-nav-tabs-a {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+}
+.pling-nav-tabs ul.nav-tabs > li {
+  background-color: transparent;
+  margin-bottom: 0px ;
+}
+.pling-nav-tabs ul.nav-tabs > li > a {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+}
+.pling-nav-tabs ul.nav-tabs > li > a:hover {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+  color: #2673b0;
+}
+.pling-nav-tabs ul.nav-tabs > li > a:hover svg {
+  fill: #2673b0;
+}
+.pling-nav-tabs ul.nav-tabs > li > a:focus {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+}
+.pling-nav-tabs ul.nav-tabs > li svg {
+  fill: #777;
+}
+.pling-nav-tabs ul.nav-tabs > li.active > a {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+  color: #2673b0;
+  border-bottom-color: #2673b0;
+  font-weight: bold;
+}
+.pling-nav-tabs ul.nav-tabs > li.active > a:hover {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+  color: #2673b0;
+  border-bottom-color: #2673b0;
+  font-weight: bold;
+}
+.pling-nav-tabs ul.nav-tabs > li.active > a:focus {
+  border: 0 ;
+  position: relative;
+  color: #777;
+  font-size: 13px;
+  transition: color 0s;
+  bottom: -1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  background-color: transparent;
+  color: #2673b0;
+  border-bottom-color: #2673b0;
+  font-weight: bold;
+}

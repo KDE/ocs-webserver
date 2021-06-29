@@ -1,0 +1,1503 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+$this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/select2.min.css');
+$this->headLink()->appendStylesheet('/theme/flatui/css/select2.custmized.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/select2.min.js');
+
+$this->tab = 'products';
+?>
+<link href="/theme/flatui/css/chosen.css" media="screen" rel="stylesheet" type="text/css" />
+
+<link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+<script type="text/javascript" src="/tools/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+
+<style type="text/css">
+    div.datafiledroparea{
+        overflow-y: scroll !important;
+        overflow-x: scroll !important;
+    }
+    
+    div.datafiledroparea button.multiselect {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+</style>
+<main class="user-admin-page">
+    <?php include __DIR__.'/partials/userHeader_top.phtml';?>
+    <section class="body-wrap">
+
+        <section class="wrapper product-page">
+
+            <!-- PAGE BODY -->
+
+            <section class="my-products-page">
+
+                <!-- NAVIGATION -->
+                <?php include __DIR__.'/partials/userHeader.phtml';?>                
+                <?php include __DIR__.'/../product/partials/header.phtml';?>                
+                <!-- /NAVIGATION -->
+
+                <div class="my-products-heading">
+                    <h1 class="page-title left"><?= $this->translate('Products') ?></h1>
+
+                    <div class="right light lightgrey num-products">
+                        <span class="label label-default">
+                            <?= $this->products->getTotalItemCount() ?> <?= $this->translate('products') ?>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="my-products-list">
+                    <div class="row">
+                        <?php //echo $this->partialLoop('user/partials/loopMyProducts.phtml', $this->products, $this->productFiles); 
+                            foreach ($this->products as $productFiles) {
+                                echo $this->partial('partials/loopMyProducts.phtml', $productFiles);
+                            }
+                        ?>
+                    </div>
+                </div>
+
+                <section style="text-align: center;">
+                    <?php echo $this->paginationControl($this->products
+                        , 'Sliding'
+                        , 'application/partials/paginatorFromRoute.phtml',
+                            array(
+                                 'route' => 'application_user'
+                                ,'action' => 'products'      
+                                ,'username' => $this->member->username                               
+                                ,'dom_target' => 'section.my-products-page')); ?>
+                </section>
+
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>
+
+<script type="text/javascript">
+    var myProducts = (function () {
+        return {
+            setup: function () {
+                this.initBtnPublish();
+                this.initFilesPopup();
+            },
+            
+            initBtnPublish: function () {
+                $('body').off('click', 'a[data-target]').on('click', 'a[data-target]', function (event) {
+                    event.preventDefault();
+                    var url = this.href;
+                    var target = $(this).attr("data-target");
+
+                    $(target).empty().html('<img src="/images/system/ajax-loader.gif" style="display: inline;height: 20px; margin: 1px;"/>').load(url + ' ' + target + ' > *', function (response, status, xhr) {
+                        if (status == "error") {
+                            $(target).find('#error').html('Sorry, but there was an error. Please try again later.');
+                            return;
+                        } else {
+                            return response;
+                        }
+                    });
+                    return false;
+                });
+            },
+            
+            initFilesPopup: function () {
+                
+                $('body').off("click", "#github_picker").on("click", "#github_picker", function (event) {
+
+                    html = '<form id="get-url-form">' +
+                        '<div class="form-group">' +
+                        '<input type="url" class="form-control" id="get-url" placeholder="Enter a URL where the files can be downloaded" required="required" />' +
+                        '<span id="get-url-help" class="help-block small">e.g. https://github.com/mongodb/mongo/archive/r3.5.2.tar.gz</span></div>' +
+                        '<button type="submit" class="btn btn-native btn-sm" id="get-url-submit">Submit</button>' +
+                        '</form>';
+
+                    var msgBox = $('#generic-dialog');
+                    msgBox.modal('hide');
+                    msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+                    msgBox.find('.modal-body').empty().append(html);
+                    setTimeout(function () {
+                        msgBox.modal('show');
+                    }, 900);
+
+                });
+
+                $('body').off('submit', '#get-url-form').on('submit', '#get-url-form', function(event) {
+                    if (! $('#get-url-form').validate()) {
+                        return true;
+                    }
+                    event.preventDefault();
+                    $.ajax({
+                        url: '/file/link/',
+                        type: 'post',
+                        data: {
+                            project_id: $('#modal-ppload').attr('data-product-id'),
+                            u: $('#get-url').val()
+                        },
+                        success: function(returndata, textStatus, jqXHR) {
+                            data = returndata.data;
+                            if (!data.file) {
+                                $('#get-url').addClass('hasError').focus();
+                                $('#get-url-help').html('An Error occurred. Please check your URL or try again later.');
+                                return;
+                            }
+                            data_file = data.file;
+                            $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
+                            $('#get-url').val('').removeClass('hasError');
+                            $('#get-url-help').html('');
+                            $('#generic-dialog').modal('hide');
+                            getPploadFiles();
+                        },
+                        /*error: function() {
+                            $('#get-url').addClass('hasError').focus();
+                            $('#get-url-help').html('An Error occurred. Please check your URL or try again later.');
+                        }*/
+                    });
+                });
+
+                $('body').off('change', '#get-url').on('change', '#get-url', function(event) {
+                    $('#get-url-help').empty();
+                });
+
+                var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+
+                $('button[rel="tooltip"]').tooltip();
+
+                var $modalPpload = $('#modal-ppload');
+
+                var pploadApiUri = $modalPpload.attr('data-ppload-api-uri');
+
+                var pploadUploads = {
+                    queue: {},
+                    currentUploadId: null,
+                    uploading: null
+                };
+
+                function keysrt(key, asc) {
+                    if(asc) {
+                          return function(a,b){
+                           if (a[key] > b[key]) return 1;
+                           if (a[key] < b[key]) return -1;
+                           return 0;
+                          }
+                    } else {
+                     return function(a,b){
+                               if (a[key] < b[key]) return 1;
+                               if (a[key] > b[key]) return -1;
+                               return 0;
+                     }
+                    }
+                }
+
+                function getPploadFiles(page) {
+                    var collectionId = $modalPpload.attr('data-ppload-collection-id');
+                    var catId = $modalPpload.attr('data-product-cat-id');
+                    var prodId = $modalPpload.attr('data-product-id');
+
+                    if (!page) {
+                        page = 1;
+                        $modalPpload.find('table[data-ppload-files] tbody').empty();
+                    }
+                    $.ajax({
+                        //url: pploadApiUri + 'files/index',
+                        url: '/p/'+prodId+'/getfilesajax',
+                        type: 'GET',
+                        data: {
+                            collection_id: collectionId,
+                            perpage: 1000,
+                            page: page,
+                            async: false,
+                            cache: false,
+                            format: 'json',
+                            ignore_status_code: 0,
+                            status: 'active'
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+
+                            //get cat-tag-groups
+                            var tagGroups = null;
+                            var tagGroupsCount = 0;
+                            $.ajax({
+                                url: '/p/'+prodId+'/gettaggroupsforcatajax',
+                                type: 'GET',
+                                timeout: 30000,
+                                async: false,
+                                cache: false,
+                                data: {project_cat_id: catId},
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    if (data.status != 'success') {
+                                        $modalPpload.find('table[data-ppload-files] thead').html('');
+
+                                        tagGroups = data.tag_groups;
+                                        tagGroupsCount = data.ResultSize;
+
+                                        var tableHeader = '';
+                                        tableHeader += '<tr>';
+                                        tableHeader +=  '    <th><?= $this->translate('Filename') ?></th>';
+                                        tableHeader +=  '    <th><?= $this->translate('MD5SUM') ?></th>';
+                                        tableHeader +=  '    <th><?= $this->translate('Version') ?></th>';
+                                        tableHeader +=  '    <th><?= $this->translate('Description') ?></th>';
+
+                                        if(tagGroupsCount>0) {
+                                            $.each(tagGroups, function() {
+                                                tableHeader += '<th>'+this.group_display_name+'</th>';
+                                            });
+                                        } else {
+                                            tableHeader += '<th></th>';
+                                        }
+
+                                        tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
+                                        tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
+                                        tableHeader +=  '   <th style="text-align: right"><?= $this->translate('# DLs') ?></th>';
+                                        tableHeader +=  '   <th></th>';
+                                        tableHeader +=  '</tr>';
+                                        $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
+
+
+                                        return;
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    return;
+                                }
+                            });
+
+                            var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
+                            var updatePploadFileBtnPerFile = '';
+                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
+                            var deletePploadFileBtnPerFile = '';
+
+                            var myArray = $.map(data.files, function(entry) {
+                                return entry;
+                            });
+                            myArray.sort(keysrt('created_timestamp'), false);
+
+                            //var tagOptions = UserTags.getTagOptions();
+                            var fileTagsArray = null;
+                            var fileTagsArraySize = 0;
+
+                            $.each(myArray, function () {
+                                if(null != tagGroups && tagGroupsCount > 0) {
+                                    //get cat-tag-groups
+                                    $.ajax({
+                                        url: '/p/'+prodId+'/gettaggroupsforcatajax',
+                                        type: 'GET',
+                                        timeout: 30000,
+                                        async: false,
+                                        cache: false,
+                                        data: {project_cat_id: catId, file_id: this.id, test: false},
+                                        dataType: 'json',
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.status != 'success') {
+                                                tagGroups = data.tag_groups;
+                                                return;
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            return;
+                                        }
+                                    });
+                                } else {
+                                    //get cat-tag-groups
+                                    $.ajax({
+                                        url: '/p/'+prodId+'/getfiletagsajax',
+                                        type: 'GET',
+                                        timeout: 30000,
+                                        async: false,
+                                        cache: false,
+                                        data: {file_id: this.id},
+                                        dataType: 'json',
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.status != 'success') {
+                                                fileTagsArray = data.file_tags;
+                                                fileTagsArraySize = data.ResultSize;
+                                                return;
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            return;
+                                        }
+                                    });
+                                }
+
+                                var fileDescription = '';
+                                if (this.description) {
+                                    fileDescription = this.description;
+                                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                                }
+
+                                var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
+                                    + ' type="text" maxlength="140" placeholder="File description"'
+                                    + ' value="' + fileDescription + '">';
+                                if(this.active == '0') {
+                                    inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File description"'
+                                        + ' value="' + fileDescription + '">';
+                                }
+
+                                var versionText;
+                                if(this.version==null) {versionText = '';} else{versionText = this.version;}
+                                versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
+                                var version = '<input data-ppload-file-version="" class="form-control input-sm"'
+                                    + ' type="text" maxlength="140" placeholder="File version"'
+                                    + ' value="' + versionText + '">';
+                                if(this.active == '0') {
+                                    version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File version"'
+                                        + ' value="' + versionText + '">';
+                                }
+
+                                var fileCategory = '';
+                                if (this.category) {
+                                    fileCategory = this.category;
+                                }
+                                var link = '';
+                                var fileTags = '';
+
+                                $.each(tagGroups, function() {
+                                    eval('var '+ this.group_legacy_name + 'Id = \'\';');
+                                });
+
+
+                                //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                $projectId = $('#modal-ppload').attr('data-product-id')
+                                var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/"+$projectId+"/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+
+                                var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
+                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="'+$projectId+'"  data-link_type="download">' + downloadLinkFilename + '</a>';
+
+
+
+                                if(this.active == '1') {
+                                    updatePploadFileBtnPerFile = updatePploadFileBtn;
+                                    deletePploadFileBtnPerFile = deletePploadFileBtn;
+                                } else {
+                                    updatePploadFileBtnPerFile = '';
+                                    deletePploadFileBtnPerFile = '';
+                                }
+
+                                //var numDownloads = this.downloaded_count;
+                                //numDownloads = numDownloads || 0;
+                                
+                                //var numDownloads = this.downloaded_count_live || 0;
+                                var numDownloads = this.downloaded_count_uk || 0;
+
+                                var tableString = '';
+                                tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                                tableString += '<td>' + downloadLink + '</td>';
+                                if(this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
+                                    tableString += '<td>' + this.md5sum + '</td>';
+                                } else {
+                                    tableString += '<td></td>'; 
+                                }
+                                tableString += '<td>' + version + '</td>';
+                                tableString += '<td>' + inputFileDescription + '</td>';
+
+                                var fileId = this.id;
+                                if(tagGroupsCount>0) {
+                                    $.each(tagGroups, function() {
+                                        tableString += '<td>';
+                                        
+                                        //Tag-Group Multiselect?
+                                        if(this.is_multi_select == 1) {
+                                            tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                        } else {
+                                            tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="" style="width: 150px;">';
+                                            tableString +='<option value=""></option>';
+                                        }
+                                        
+                                        
+
+                                        //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                        //tableString += '<option value=\"\"></option>';
+
+                                        for(key in this.tag_list) {
+                                            tableString += '<option value=\"'+key+'\"';
+                                            if(null != this.selected_tags) {
+                                                $.each(this.selected_tags, function() {
+                                                    if(key == this.tag_id) {
+                                                        tableString += ' selected="selected"';
+                                                    }
+                                                })
+                                            }
+
+                                            tableString += '>' + this.tag_list[key] + '</option>';
+                                        }
+
+                                        tableString += '</select>';
+                                        tableString += '</td>';
+                                    });
+                                } else {
+                                    if(fileTagsArraySize>0) {
+                                        tableString += '<td>';
+
+                                        tableString += '<span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: auto;">';
+                                        tableString += '    <span class="selection">';
+                                        tableString += '        <span class="select2-selection select2-selection--multiple" aria-expanded="false" tabindex="-1">';
+                                        tableString += '            <ul class="select2-selection__rendered">';
+
+                                        $.each(fileTagsArray, function() {
+                                            tableString += '                <li id="file-tag-'+fileId+'-'+this.tag_id+'" class="select2-selection__choice"  style="line-height: 20px !important; font-size: 9px !important;" title="'+this.name+'">';
+                                            tableString += '                    <span class="select2-selection__choice__remove" data-file-id="'+fileId+'" data-file-tag-id="'+this.tag_id+'" role="presentation">×</span>'+this.name+'</li>';
+                                        });
+                                        tableString += '            </ul>';
+                                        tableString += '        </span>';
+                                        tableString += '    </span>';
+                                        tableString += '</span>';
+
+                                        tableString += '</td>';
+                                    } else {
+                                        tableString += '<td></td>';
+                                    }
+                                }
+
+                                tableString += '<td>' + this.created_timestamp + '</td>';
+                                tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
+                                tableString +='<td style="text-align: right">' + numDownloads + '</td>';
+                                tableString +='<td>' + updatePploadFileBtnPerFile + '</td>';
+                                tableString +='<td>' + deletePploadFileBtnPerFile + '</td>';
+                                tableString +='</tr>';
+                                $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                                $('.multi').multiselect({
+                                    includeSelectAllOption: true,
+                                    buttonClass: 'btn btn-native btn-xs'
+                                });
+
+                                if ((typeof link != 'undefined') && (link != "")) {
+                                    //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                    $("#data-link" + this.id).attr('target','_blank');
+                                    $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                }
+                            });
+
+                            $modalPpload.find('p[data-file-upload-msg]').show();
+                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                            $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
+
+                            $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
+
+                            if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                                $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                $modalPpload.find('#github_picker').removeAttr('disabled');
+                            } else {
+                                $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                            }
+
+                            /*if (data.pagination !== 'undefined' && data.pagination.next) {
+                                getPploadFiles(data.pagination.next);
+                            }*/
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                }
+
+                function addFileToPploadUploadQueue(fileId, fileUpload) {
+                    var uploadId = 'file-upload-' + Math.floor(Math.random() * 1000) + '-' + new Date().getTime();
+                    pploadUploads.queue[uploadId] = {
+                        fileId: fileId,
+                        fileUpload: fileUpload
+                    };
+
+                    $modalPpload.find('table[data-file-upload] tbody').append(
+                        '<tr data-file-upload-id="' + uploadId + '">'
+                        + '<td>' + fileUpload.name + ' (' + humanFileSize(fileUpload.size) + ')</td>'
+                        + '<td>'
+                        + '<progress max="100" value="0" data-file-upload-progress=""></progress>'
+                        + '<br>'
+                        + '<span'
+                        + ' data-file-upload-progress=""'
+                        + ' data-file-upload-loaded="0"'
+                        + ' data-file-upload-time="0"></span>'
+                        + '</td>'
+                        + '<td><a href="#" data-file-upload-cancel-btn="">×</a></td>'
+                        + '</tr>'
+                    );
+                }
+
+                function startUploadPploadFiles() {
+                    if ($.isEmptyObject(pploadUploads.queue) || pploadUploads.uploading) {
+                        return;
+                    }
+
+                    //var productId = $modalPpload.attr('data-product-id');
+                    var uploadId = null;
+                    var formData = new FormData();
+                    $.each(pploadUploads.queue, function (key, value) {
+                        uploadId = key;
+                        if (value.fileId) {
+                            formData.append('file_id', value.fileId);
+                        }
+                        formData.append('file_upload', value.fileUpload);
+                        return false;
+                    });
+                    var $uploadContainer = $modalPpload.find('tr[data-file-upload-id="' + uploadId + '"]');
+                    var $uploadProgressBar = $uploadContainer.find('progress[data-file-upload-progress]');
+                    var $uploadProgress = $uploadContainer.find('span[data-file-upload-progress]');
+                    $uploadProgress.attr('data-file-upload-time', new Date().getTime());
+
+                    $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
+                    $modalPpload.find('button[data-file-upload-ok-btn]').attr('disabled', 'disabled');
+                    $modalPpload.find('button[data-file-upload-cancel-btn]').removeAttr('disabled');
+
+                    pploadUploads.currentUploadId = uploadId;
+
+                    var url = '';
+                    if (formData.has('file_id')) {
+                        url = $modalPpload.attr('data-updatepploadfile-uri');
+                    } else {
+                        url = $modalPpload.attr('data-addpploadfile-uri');
+                    }
+
+                    pploadUploads.uploading = $.ajax({
+                        xhr: function () {
+                            var xhr = $.ajaxSettings.xhr();
+                            if (xhr.upload) {
+                                xhr.upload.addEventListener('progress', function (event) {
+                                    var progress = parseInt(event.loaded / event.total * 10000) / 100;
+                                    var previousLoaded = parseInt($uploadProgress.attr('data-file-upload-loaded'));
+                                    var previousTime = parseInt($uploadProgress.attr('data-file-upload-time'));
+                                    var currentTime = new Date().getTime();
+                                    var rate = '--';
+                                    if (previousTime < currentTime) {
+                                        $uploadProgress.attr('data-file-upload-loaded', event.loaded);
+                                        $uploadProgress.attr('data-file-upload-time', currentTime);
+                                        rate = humanFileSize(Math.floor((event.loaded - previousLoaded) / (currentTime - previousTime) * 1000));
+                                    }
+                                    $uploadProgressBar.attr('value', progress);
+                                    $uploadProgress.html(progress + '% | ' + rate + '/s');
+                                }, false);
+                            }
+                            xhr.addEventListener('abort', function (event) {
+                                if (pploadUploads.queue[uploadId].fileId) {
+                                    $modalPpload.find('tr[data-ppload-file-id="' + pploadUploads.queue[uploadId].fileId + '"]').show();
+                                }
+                                delete pploadUploads.queue[uploadId];
+                                pploadUploads.currentUploadId = null;
+                                pploadUploads.uploading = null;
+                                $uploadContainer.remove();
+                                if ($modalPpload.attr('data-ppload-collection-id')) {
+                                    $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
+                                }
+                                $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
+                                $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                                startUploadPploadFiles();
+                            }, false);
+                            return xhr;
+                        },
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                            if (pploadUploads.queue[uploadId].fileId) {
+                                $modalPpload.find('tr[data-ppload-file-id="' + pploadUploads.queue[uploadId].fileId + '"]').remove();
+                            }
+                            delete pploadUploads.queue[uploadId];
+                            pploadUploads.currentUploadId = null;
+                            pploadUploads.uploading = null;
+                            $uploadContainer.remove();
+                            $('a[href="#modal-ppload"][data-product-id="' + $modalPpload.attr('data-product-id') + '"]')
+                                .attr('data-ppload-collection-id', data.file.collection_id);
+                            $modalPpload.attr('data-ppload-collection-id', data.file.collection_id);
+
+                            var versionText;
+                            if(data.file.version==null) {versionText = '';} else{versionText = data.file.version;}
+                            versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
+                            var version = '<input data-ppload-file-version="" class="form-control input-sm"'
+                                + ' type="text" maxlength="140" placeholder="File version"'
+                                + ' value="' + versionText + '">';
+
+                            var fileDescription = '';
+                            if (data.file.description) {
+                                fileDescription = data.file.description;
+                            }
+                            var fileCategory = '';
+                            if (data.file.category) {
+                                fileCategory = data.file.category;
+                            }
+                            var fileTags = '';
+                            if (data.file.tags) {
+                                fileTags = data.file.tags;
+                            }
+
+                            //var tagOptions = UserTags.getTagOptions();
+
+                            var tableString = '';
+                            tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                            tableString += '<td><a href="' + pploadApiUri + 'files/download/';
+                            tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                            if(data.file.md5sum != 'NULL' && data.file.md5sum != 'null' && data.file.md5sum != null) {
+                                tableString += '<td>' + data.file.md5sum + '</td>';
+                            } else {
+                                tableString += '<td></td>'; 
+                            }
+                            tableString += '<td>' + version + '</td>';
+                            tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
+                            tableString += ' type="text" maxlength="140" placeholder="File description"';
+                            tableString += ' value="' + fileDescription + '"></td>';
+
+                            var fileId = data.file.id;
+
+
+                            //get cat-tag-groups
+                            var tagGroups = null;
+                            var tagGroupsCount = 0;
+                            var catId = $modalPpload.attr('data-product-cat-id');
+
+                            $.ajax({
+                                url: '/p/'+$modalPpload.attr('data-product-id')+'/gettaggroupsforcatajax',
+                                type: 'GET',
+                                async: false,
+                                cache: false,
+                                timeout: 30000,
+                                data: {project_cat_id: catId},
+                                dataType: 'json',
+                                success: function (data, textStatus, jqXHR) {
+                                    tagGroups = data.tag_groups;
+                                    tagGroupsCount = data.ResultSize;
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    return;
+                                }
+                            });
+
+                            if(tagGroupsCount>0) {
+                                $.each(tagGroups, function() {
+                                    tableString += '<td>';
+                                    
+                                    if(this.is_multi_select == 1) {
+                                        tableString +='<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                    } else {
+                                        tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="" style="width: 150px;">';
+                                        tableString +='<option value=""></option>';
+                                    }
+
+                                    
+
+                                    //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                    //tableString += '<option value=\"\"></option>';
+
+                                    for(key in this.tag_list) {
+                                        tableString += '<option value=\"'+key+'\"';
+                                        if(null != this.selected_tags) {
+                                            $.each(this.selected_tags, function() {
+                                                if(key == this.tag_id) {
+                                                    tableString += ' selected="selected"';
+                                                }
+                                            })
+                                        }
+
+                                        tableString += '>' + this.tag_list[key] + '</option>';
+                                    }
+
+                                    tableString += '</select>';
+                                    tableString += '</td>';
+                                });
+                            } else {
+                                tableString += '<td></td>';
+                            }
+
+
+                            tableString += '<td>' + data.file.created_timestamp + '</td>';
+                            tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
+                            tableString +='<td style="text-align: right">0</td>';
+                            tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>';
+                            tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
+                            tableString += '</tr>';
+                            $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                            $('.multi').multiselect({
+                                includeSelectAllOption: true,
+                                buttonClass: 'btn btn-native btn-xs'
+                            });
+
+                            //UserTags.activateSelect(data.file.id, '');
+
+                            $modalPpload.find('button[data-deletepploadfiles-btn]').removeAttr('disabled');
+                            $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
+                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                            startUploadPploadFiles();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                function updatePploadFile(fileId, fileDescription, fileCategory, fileTags) {
+                    $.ajax({
+                        url: $modalPpload.attr('data-updatepploadfile-uri'),
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            file_description: fileDescription,
+                            file_category: fileCategory
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                function updateFileTag(fileId, tagId, tagGroupId) {
+                    $.ajax({
+                        url: $modalPpload.attr('data-updatefiletag-uri'),
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            tag_id: tagId,
+                            tag_group_id: tagGroupId
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                function deleteFileTag(fileId, tagId) {
+                    $.ajax({
+                        url: $modalPpload.attr('data-deletefiletag-uri'),
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            tag_id: tagId
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status == 'ok') {
+                                $('#file-tag-'+fileId+'-'+tagId).remove();
+                                return true;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return false;
+                        }
+                    });
+
+                }
+
+                function updatePploadFileVersion(fileId, version) {
+                    version = version.replace(/<\/?[^>]+(>|$)/g, "");
+                    $.ajax({
+                        url: $modalPpload.attr('data-updatepploadfile-uri'),
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            file_version: version
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                function updatePploadFileTags(fileId, fileTags) {
+                    $.ajax({
+                        url: $modalPpload.attr('data-updatepploadfile-uri'),
+                        type: 'POST',
+                        data: {
+                            file_id: fileId,
+                            file_tags: fileTags
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                function deletePploadFile(fileId) {
+                    $.ajax({
+                        url: $modalPpload.attr('data-deletepploadfile-uri'),
+                        type: 'POST',
+                        data: {file_id: fileId},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                //alert('Error: ' + data.error_text);
+                                return;
+                            }
+                            $modalPpload.find('table[data-ppload-files] thead').html('');
+                            $modalPpload.find('table[data-ppload-files] tbody').html('');
+                            $modalPpload.find('table[data-file-upload] tbody').html('');
+                            getPploadFiles();
+                            /**
+                            $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').remove();
+                            if ($modalPpload.find('tr[data-ppload-file-id]').size() === 0) {
+                                $modalPpload.find('table[data-ppload-files] tbody').html('');
+                                $modalPpload.find('table[data-file-upload] tbody').html('');
+                                $modalPpload.find('p[data-file-upload-msg]').show();
+                                $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
+                                $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
+                                $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+
+                                if ($modalPpload.find('input[data-accept-checkbox]').is('checked')) {
+                                    $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                } else {
+                                    $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                }
+
+                            }
+                            **/
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            //alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });
+                }
+
+                function deletePploadFiles() {
+                    $.ajax({
+                        url: $modalPpload.attr('data-deletepploadfiles-uri'),
+                        type: 'POST',
+                        data: {},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {
+                                return;
+                            }
+                            $modalPpload.find('table[data-ppload-files] thead').html('');
+                            $modalPpload.find('table[data-ppload-files] tbody').html('');
+                            $modalPpload.find('table[data-file-upload] tbody').html('');
+                            $modalPpload.find('p[data-file-upload-msg]').show();
+
+                            //$modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                            $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
+                            $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
+                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+
+                            $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
+                            $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+                }
+
+                function humanFileSize(bytes) {
+                    var size = '';
+                    size = (bytes / 1048576).toFixed(2) + ' MB';
+                    /*
+                     if (bytes >= 1073741824) {
+                     size = (bytes / 1073741824).toFixed(2) + 'GB';
+                     }
+                     else if (bytes >= 1048576) {
+                     size = (bytes / 1048576).toFixed(2) + 'MB';
+                     }
+                     else if (bytes >= 1024) {
+                     size = (bytes / 1024).toFixed(2) + 'KB';
+                     }
+                     else {
+                     size = bytes + 'bytes';
+                     }*/
+                    return size;
+                }
+
+                $('a[href="#modal-ppload"]').off('click').on('click', function (event) {
+                    event.preventDefault();
+                    $modalPpload.attr('data-ppload-collection-id', $(this).attr('data-ppload-collection-id'));
+                    $modalPpload.attr('data-product-id', $(this).attr('data-product-id'));
+                    $modalPpload.attr('data-product-cat-id', $(this).attr('data-product-cat-id'));
+                    $modalPpload.attr('data-product-tile', $(this).attr('data-product-title'));
+                    $modalPpload.attr('data-product-version', $(this).attr('data-product-version'));
+                    $modalPpload.attr('data-addpploadfile-uri', $(this).attr('data-addpploadfile-uri'));
+                    $modalPpload.attr('data-updatefiletag-uri', $(this).attr('data-updatefiletag-uri'));
+                    $modalPpload.attr('data-deletefiletag-uri', $(this).attr('data-deletefiletag-uri'));
+                    $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
+                    $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
+                    $modalPpload.attr('data-deletepploadfiles-uri', $(this).attr('data-deletepploadfiles-uri'));
+                    $modalPpload.find('div[data-file-upload]').css({
+                        'min-height': '200px',
+                        'max-height': '400px',
+                        'border-width': '5px',
+                        'border-style': 'dashed',
+                        'border-color': '#cccccc',
+                        'overflow': 'inherit'
+                    });
+
+                    $modalPpload.find('h3[data-ppload-label]').html('Files for ' + $modalPpload.attr('data-product-tile'));
+                    $modalPpload.find('#product-version').val($modalPpload.attr('data-product-version'));
+
+                    $modalPpload.find('table[data-ppload-files] thead').html('');
+                    $modalPpload.find('table[data-ppload-files] tbody').html('');
+                    $modalPpload.find('table[data-file-upload] tbody').html('');
+                    $modalPpload.find('p[data-file-upload-msg]').show();
+
+                    $modalPpload.find('#update-list').html('');
+
+                    $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
+
+                    $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                    $modalPpload.find('button[data-deletepploadfiles-btn]').attr('disabled', 'disabled');
+                    $modalPpload.find('button[data-file-upload-ok-btn]').removeAttr('disabled');
+                    $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+
+                    if ($modalPpload.attr('data-ppload-collection-id')) {
+                        getPploadFiles();
+                    }
+
+                });
+
+                $modalPpload.off('dragover', 'div[data-file-upload]').on('dragover', 'div[data-file-upload]', function (event) {
+                    event.preventDefault();
+                });
+
+                $modalPpload.off('dragenter', 'div[data-file-upload]').on('dragenter', 'div[data-file-upload]', function (event) {
+                    event.preventDefault();
+                    $(this).css('border-color', '#00ccff');
+                });
+
+                $modalPpload.off('dragleave', 'div[data-file-upload]').on('dragleave', 'div[data-file-upload]', function (event) {
+                    event.preventDefault();
+                    $(this).css('border-color', '#cccccc');
+                });
+
+                $modalPpload.off('drop', 'div[data-file-upload]').on('drop', 'div[data-file-upload]', function (event) {
+                    event.preventDefault();
+                    $.each(event.originalEvent.dataTransfer.files, function () {
+                        addFileToPploadUploadQueue(null, this);
+                    });
+                    startUploadPploadFiles();
+                    $(this).css('border-color', '#cccccc');
+                });
+
+                $modalPpload.off('change', 'input[data-file-upload]').on('change', 'input[data-file-upload]', function (event) {
+                    $.each(this.files, function () {
+                        addFileToPploadUploadQueue(null, this);
+                    });
+                    startUploadPploadFiles();
+                });
+
+                $modalPpload.off('click', 'button[data-addpploadfile-btn]').on('click', 'button[data-addpploadfile-btn]', function (event) {
+                    event.preventDefault();
+                    $modalPpload.find('input[data-file-upload]').click();
+                });
+
+                $modalPpload.off('change', 'input[data-file-upload-update]').on('change', 'input[data-file-upload-update]', function (event) {
+                    if ($(this).attr('data-ppload-file-id')) {
+                        var fileId = $(this).attr('data-ppload-file-id');
+                        $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').hide();
+                        addFileToPploadUploadQueue(fileId, this.files[0]);
+                        startUploadPploadFiles();
+                    }
+                });
+
+                $modalPpload.off('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]').on('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]', function (event) {
+                    event.preventDefault();
+                    var $inputForm = $modalPpload.find('input[data-file-upload-update]');
+                    $inputForm.attr('data-ppload-file-id', $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
+                    $inputForm.click();
+                });
+
+                $modalPpload.off('click', 'input[data-accept-checkbox]').on('click', 'input[data-accept-checkbox]', function (event) {
+                    if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                        $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                        $modalPpload.find('#github_picker').removeAttr('disabled');
+                    } else {
+                        $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                        $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                    }
+                });
+
+                $modalPpload.off('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]').on('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]', function (event) {
+                    event.preventDefault();
+                    deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
+                });
+
+                $modalPpload.off('click', 'button[data-deletepploadfiles-btn]').on('click', 'button[data-deletepploadfiles-btn]', function (event) {
+                    event.preventDefault();
+                    deletePploadFiles();
+                });
+
+                $modalPpload.off('click', 'button[data-ppload-cancel-btn]').on('click', 'button[data-ppload-cancel-btn]', function (event) {
+                    event.preventDefault();
+                    $modalPpload.modal('hide');
+                });
+
+                $modalPpload.off('click', 'button[data-file-upload-cancel-btn]').on('click', 'button[data-file-upload-cancel-btn]', function (event) {
+                    event.preventDefault();
+                    pploadUploads.uploading.abort();
+                    pploadUploads.queue = {};
+                    $modalPpload.find('table[data-file-upload] tbody').html('');
+                });
+
+                $modalPpload.off('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]').on('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]', function (event) {
+                    event.preventDefault();
+                    var uploadId = $(this).closest('tr[data-file-upload-id]').attr('data-file-upload-id');
+                    if (uploadId == pploadUploads.currentUploadId) {
+                        pploadUploads.uploading.abort();
+                    }
+                    else {
+                        delete pploadUploads.queue[uploadId];
+                        $modalPpload.find('tr[data-file-upload-id="' + uploadId + '"]').remove();
+                    }
+                });
+
+                $modalPpload.off('change', 'input[data-ppload-file-description]').on('change', 'input[data-ppload-file-description]', function (event) {
+                    event.preventDefault();
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
+                    var fileCategory = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-category');
+                    var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
+
+                    $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
+                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                    updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
+                });
+
+                $modalPpload.off('change', 'input[data-ppload-file-version]').on('change', 'input[data-ppload-file-version]', function (event) {
+                    event.preventDefault();
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
+                    updatePploadFileVersion(fileId, fileVersion);
+                });
+
+                $modalPpload.off('change', 'select[data-tag-group]').on('change', 'select[data-tag-group]', function(event) {
+                    event.preventDefault();
+                    var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                    var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                    var tagId = $(this).val();
+                    var tagGroupId = $(this).attr('data-tag-group-id');
+                    var tagGroupName = $(this).attr('data-tag-group');
+
+                    var newFileTags = '';
+                    if (fileTags) {
+
+                        $.each(fileTags.split(','), function () {
+                            // skip old entries
+                            if ((this.length == 0) || (this.indexOf(tagGroupName+'id-') == 0) || (this.indexOf(tagGroupName+'id##') == 0)) {
+                                return true;
+                            }
+                            newFileTags += ',' + this;
+                        });
+
+                    }
+                    newFileTags += ','+tagGroupName+'id-'+tagId;
+                    //updatePploadFileTags(fileId, newFileTags);
+                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                    updateFileTag(fileId, tagId, tagGroupId);
+                });
+
+
+                $modalPpload.off('click', 'span[data-file-tag-id]').on('click', 'span[data-file-tag-id]', function (event) {
+                    event.preventDefault();
+
+                    $tagId = $(this).attr('data-file-tag-id');
+                    $fileId = $(this).attr('data-file-id');
+                    var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+
+                    /*
+                    var newFileTags = '';
+                    if (fileTags) {
+
+                        $.each(fileTags.split(','), function () {
+                            // skip old entries
+                            if ((this.length == 0) || (this.indexOf(tagGroupName+'id-') == 0) || (this.indexOf(tagGroupName+'id##') == 0)) {
+                                return true;
+                            }
+                            newFileTags += ',' + this;
+                        });
+
+                    }
+                    newFileTags += ','+tagGroupName+'id-'+tagId;
+                    updatePploadFileTags(fileId, newFileTags);
+
+                    $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+
+                    */
+                    deleteFileTag($fileId, $tagId);
+                });
+                
+                
+                
+
+                var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+
+                $('button[rel="tooltip"]').tooltip();
+
+                var $modalUpdates = $('#modal-updates');
+
+                $('a[href="#modal-updates"]').off('click').on('click', function (event) {
+                    event.preventDefault();
+                    
+                    $modalUpdates.attr('data-product-id', $(this).attr('data-product-id'));
+                    $modalUpdates.attr('data-product-title', $(this).attr('data-product-title'));
+
+                    $modalUpdates.find('h3[data-ppload-label]').html('Changelog for ' + $modalUpdates.attr('data-product-tile'));
+
+                    $modalUpdates.find('#update-list').html('');
+
+                    if ($modalUpdates.attr('data-product-id')) {
+                        getUpdates();
+                    }
+
+                });
+
+
+                function getUpdates(page) {
+                    $modalUpdates.find('#update-list').html('');
+
+                    var productId = $modalUpdates.attr('data-product-id');
+                    $.ajax({
+                        url: '/p/'+productId+'/getupdatesajax/',
+                        type: 'GET',
+                        data: {
+                            format: 'json',
+                            ignore_status_code: 1
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                            $modalUpdates.find('#update-list').append('<br/><br/><br/>');
+
+                            $.each(data.updates, function () {
+                                var id = '';
+                                if (this.project_update_id) {
+                                    id = this.project_update_id;
+                                }
+                                var title = '';
+                                if (this.title) {
+                                    title = this.title;
+                                }
+                                var text = '';
+                                if (this.text) {
+                                    text = this.text;
+                                }
+                                var date = '';
+                                if (this.created_at) {
+                                    date = this.created_at;
+                                }
+
+
+                                var divEl = $('<div />');
+                                divEl.attr('data-uptdate-id', id);
+                                divEl.append(
+                                         '<a name="anker_'+id+'"></a>'
+                                        + '<h4>'+title+'</h4>'
+                                        + '<div class="small light lightgrey product-update-date">'+date+ '</div>'
+                                        + text + '<br/><br/>'
+                                    );
+
+                                var btnEdit = $('<button type="submit" class="btn btn-native btn-sm">Edit</button>');
+                                btnEdit.attr('data-change-update-btn',id);
+                                btnEdit.attr('data-change-title',title);
+                                btnEdit.attr('data-change-text',text);
+
+
+                                var btnDelete = $('<button type="submit" class="btn btn-native btn-sm">Delete</button>');
+                                btnDelete.attr('data-delete-update-btn',id);
+
+                                divEl.append(btnEdit);
+                                divEl.append('&nbsp;&nbsp;');
+                                divEl.append(btnDelete);
+                                divEl.append('<br/><br/><br/><br/>');
+
+                                $modalUpdates.find('#update-list').append(divEl);
+
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+
+                }
+
+                $modalUpdates.off('click', 'button[data-add-update-btn]').on('click', 'button[data-add-update-btn]', function (event) {
+                    //var product_version = $modalPpload.find('#product-version').val();
+                    var update_id = $modalUpdates.find('#update-id').val();
+                    var title = $modalUpdates.find('#update-title').val();
+                    var text = $modalUpdates.find('#update-text').val();
+                    var productId = $modalUpdates.attr('data-product-id');
+                    event.preventDefault();
+
+                    $.ajax({
+                        url: '/p/'+productId+'/saveupdateajax',
+                        type: 'POST',
+                        data: {title: title, text: text, update_id: update_id/*, product_version: product_version*/},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                for (var item in data.messages) {
+                                    alert(data.messages[item]);
+                                }
+                                return;
+                            }
+                            //$modalPpload.find('#product-version').val('');
+                            $modalUpdates.find('#update-title').val('');
+                            $modalUpdates.find('#update-text').val('');
+                            $modalUpdates.find('#update-id').val('');
+
+                            //if(update_id) {
+                                getUpdates();
+                            //} else {
+                            //  $modalPpload.modal('hide');
+                            //  location.reload();
+                            //}
+                        },
+                    });
+
+                });
+
+
+                $modalUpdates.off('click', 'button[data-delete-update-btn]').on('click', 'button[data-delete-update-btn]', function (event) {
+                    var updateId = $(this).attr('data-delete-update-btn');
+                    var productId = $modalUpdates.attr('data-product-id');
+                        event.preventDefault();
+
+                    $.ajax({
+                        url: '/p/'+productId+'/deleteupdateajax',
+                        type: 'POST',
+                        data: {update_id: updateId},
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                alert('Update could not be deleted!');
+                                return;
+                            }
+                            getUpdates();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            return;
+                        }
+                    });
+
+                });
+
+                $modalUpdates.off('click', 'button[data-change-update-btn]').on('click', 'button[data-change-update-btn]', function (event) {
+                    var updateId = $(this).attr('data-change-update-btn');
+                    var title = $(this).attr('data-change-title');
+                    var text = $(this).attr('data-change-text');
+
+                    $modalUpdates.find('#update-title').val(title);
+                    $modalUpdates.find('#update-text').val(text);
+                    $modalUpdates.find('#update-id').val(updateId);
+
+                    $modalUpdates.find('#update-title').focus();
+
+                        event.preventDefault();
+
+                });
+
+                $modalUpdates.off('click', 'button[data-updates-cancel-btn]').on('click', 'button[data-updates-cancel-btn]', function (event) {
+                    event.preventDefault();
+                    $modalUpdates.modal('hide');
+                });
+                
+            }
+        }
+    })();
+</script>
+<!-- updates -->
+<div id="modal-updates"
+     class="modal fade"
+     role="dialog"
+     aria-labelledby="modal-updates-label"
+     data-product-id=""
+     data-product-title="">
+    <div class="modal-dialog content-modal" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="modal-updates-label" data-updates-label=""><?= $this->translate('Changelog') ?></h3>
+            </div>
+            <div class="modal-body" style="font-size: small;">
+                <div role="form" class="">
+                    <input type="hidden" id="update-id" data-update-id="" value="">
+                        <?php /**
+                    <div class="form-group">
+                      <label for="tile">Product Version:</label>
+                      <input type="text" id="product-version" data-product-version="" class="form-control input-sm" placeholder="Product Version Number">
+                    </div>
+                         *
+                         */?>
+                    <div class="form-group">
+                      <label for="tile">Changelog Title:</label>
+                      <input type="text" id="update-title" data-update-title="" class="form-control input-sm" placeholder="Enter a Changelog Title">
+                    </div>
+                    <div class="form-group">
+                      <label for="text">Changelog Text:</label>
+                      <textarea id="update-text" data-update-text="" class="form-control input-sm" rows="3" placeholder="Enter a Changelog Text"></textarea>
+                    </div>
+                    <button class="btn btn-native pull-right btn-xs btn-file-action" data-updates-cancel-btn=""><?= $this->translate('Cancel') ?></button>
+                    <button type="submit" class="btn btn-native pull-right btn-xs btn-file-action" data-add-update-btn="">Save</button>
+                </div>
+
+                <article id="update-list">
+                </article>
+
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ppload -->
+
+<div id="modal-ppload"
+     class="modal fade"
+     role="dialog"
+     aria-labelledby="modal-ppload-label"
+     data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+     data-ppload-collection-id=""
+     data-product-version=""
+     data-product-id=""
+     data-product-cat-id=""
+     data-product-tile=""
+     data-addpploadfile-uri=""
+     data-updatepploadfile-uri=""
+     data-updatefiletag-uri=""
+     data-deletefiletag-uri=""
+     data-deletepploadfile-uri=""
+     data-deletepploadfiles-uri="">
+    <div class="modal-dialog content-modal" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="modal-ppload-label" data-ppload-label=""><?= $this->translate('Files') ?></h3>
+            </div>
+            <div class="modal-body">
+                <input type="file" style="display: none;" data-file-upload="" multiple>
+                <input type="file" style="display: none;" data-file-upload-update="" data-ppload-file-id="">
+
+                <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
+
+                <div data-file-upload="" dropzone style="font-size: small; " class="datafiledroparea">
+                    <table class="table" data-ppload-files="">
+                        <thead>
+                        
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <table class="table" data-file-upload="">
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+
+                <div style="float: right; padding-top: 10px;" class="small light">
+                    Deleted files are archived. Number of downloads are kept. *
+                </div>
+            </div>
+
+            <div class="modal-footer" style="margin-top: 20px;">
+                <span class="pull-left">
+                    <input type="checkbox" data-accept-checkbox="">
+                    <?= $this->translate('I accept the ') ?>
+                    <a href="<?=$this->url('application_static_terms')?>"><?= $this->translate('Terms and Conditions') ?></a>
+                </span>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-native pull-left" data-addpploadfile-btn="">
+                    <?= $this->translate('Add File(s)') ?>
+                </button>
+                <button class="btn btn-danger pull-left" data-file-upload-cancel-btn="">
+                    <?= $this->translate('Cancel Upload') ?>
+                </button>
+                <button id="github_picker" class="btn btn-native pull-left" data-toggle="" data-target="#generic-dialog" data-username="<?=$this->member->link_github?>" title="add an URL here">
+                    <?= $this->translate('Add URL') ?>
+                </button>
+                <button class="btn btn-native pull-right" data-ppload-cancel-btn=""><?= $this->translate('Close') ?></button>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+       </div>
+   </div>
+</div>
+
+<script type="text/javascript" src="/theme/flatui/js/lib/chosen.jquery.min.js"></script>
+<!-- /ppload -->
+
+<?php
+            $this->inlineScript()->appendScript(
+                '    $(document).ready(function(){
+                        TagingLoopMyProducts.setup();
+                        Opendownloadfile.setup();
+                        myProducts.setup();
+                        Partials.setup();                    
+                     });
+                ');

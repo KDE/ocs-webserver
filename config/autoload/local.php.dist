@@ -1,0 +1,54 @@
+<?php
+/**
+ * Local Configuration Override
+ *
+ * This configuration override file is for overriding environment-specific and
+ * security-sensitive configuration information. Copy this file without the
+ * .dist extension at the end and populate values as needed.
+ *
+ * @NOTE: This file is ignored from Git by default with the .gitignore included
+ * in ZendSkeletonApplication. This is a good practice, as it prevents sensitive
+ * credentials from accidentally being committed into version control.
+ */
+
+return [
+
+    'db' => array(
+        'dsn' => 'mysql:dbname={db_name};host={host_ip_or_name}',
+        'username' => '{username}',
+        'password' => '{password}',
+    ),
+
+    'cache' => array(
+        'adapter' => array(
+            'options' => array(
+                'servers' => ['1'=>['{hostname}',11211]],
+                'namespace' => '{my_namespace}',
+            ),
+        ),
+    ),
+
+    'session_config'  => [
+        'options' => [
+            'name'                => '{my_sessionname}',
+            // most of the development system have no SSL installed
+            'cookie_secure'       => false,
+
+            'php_save_handler'    => '{name_for_php_save_handler}',
+            'save_path'           => '{host_ip_or_name}:{port}',
+
+            // examples
+            // 'php_save_handler'    => 'memcached',
+            // 'save_path'           => 'sessions:11211',
+
+            // 'php_save_handler'    => 'redis',
+            // 'save_path'           => 'redis:6379',
+
+            // used for TTL ; For the memcached backend, there is a lifetime limit of 30 days (2592000 seconds)
+            'gc_maxlifetime'      => 2592000,
+        ],
+    ],
+
+    'ocs_config' => require __DIR__ . '/application.dev.ini.php',
+
+];

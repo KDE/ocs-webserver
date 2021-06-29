@@ -1,0 +1,450 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+
+<div class="filtering">
+    <form>
+        Member Id: <input type="text" name="filter_member_id" id="filter_member_id"/>
+        First Name: <input type="text" name="filter_firstname" id="filter_firstname"/>
+        Last Name: <input type="text" name="filter_lastname" id="filter_lastname"/>
+        Username: <input type="text" name="filter_username" id="filter_username"/>
+        e-mail: <input type="text" name="filter_mail" id="filter_mail"/>
+        <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+        <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+    </form>
+</div>
+<div id="TableContainer"></div>
+<div id="dialog-form" title=""></div>
+<script type="text/javascript">
+    $("#dialog-form").dialog({
+        autoOpen: false,
+        //height: 350,
+        width: 600,
+        modal: true,
+        buttons: {
+            Close: function () {
+                $(this).dialog("close");
+            },
+            Save: function () {
+                $('#dialog-form form').submit();
+                $(this).dialog("close");
+            }
+        }
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'mail asc',
+            title: 'Table of user',
+            actions: {
+                listAction: '/backend/user/list',
+                createAction: '/backend/user/create',
+                updateAction: '/backend/user/update'/*,
+                deleteAction: '/backend/user/delete'*/
+            },
+            fields: {
+                member_id: {
+                    title: 'MemberId',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true
+                },
+                uuid: {
+                    title: 'UUID',
+                    width: '10%',
+                    list: false,
+                    create: false
+                },
+                password: {
+                    title: 'Password',
+                    list: false,
+                    edit: false,
+                    create: false,
+                    type: 'password'
+                },
+                roleId: {
+                    title: 'Role',
+                    width: '5%',
+                    sorting: false //This column is not sortable!
+                },
+                type: {
+                    title: 'Type',
+                    width: '5%',
+                    sorting: false //This column is not sortable!
+                },
+                firstname: {
+                    title: 'firstname',
+                    width: '5%'
+                },
+                lastname: {
+                    title: 'lastname',
+                    width: '5%'
+                },
+                street: {
+                    title: 'street',
+                    list: false
+                },
+                zip: {
+                    title: 'zip',
+                    list: false
+                },
+                city: {
+                    title: 'city',
+                    list: false
+                },
+                phone: {
+                    title: 'phone',
+                    list: false
+                },
+                mail: {
+                    title: 'mail',
+                    width: '5%',
+                    list: true
+                },
+                last_online: {
+                    title: 'last_online',
+                    type: 'date',
+                    list: false
+                },
+                is_deleted: {
+                    title: 'Deleted',
+                    width: '5%',
+                    list: true
+                },
+                mail_checked: {
+                    title: 'mail_checked',
+                    list: false
+                },
+                created_at: {
+                    title: 'Created',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                changed_at: {
+                    title: 'Changed',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                deleted_at: {
+                    title: 'Deleted',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                biography: {
+                    title: 'biography',
+                    type: 'textarea',
+                    list: false
+                },
+                avatar: {
+                    title: 'avatar',
+                    list: false
+                },
+                username: {
+                    title: 'username',
+                    width: '5%',
+                    list: true
+                },
+                agb: {
+                    title: 'agb',
+                    list: false
+                },
+                country: {
+                    title: 'country',
+                    list: false
+                },
+                newsletter: {
+                    title: 'newsletter',
+                    list: false
+                },
+                is_active: {
+                    title: 'Active',
+                    width: '5%',
+                    list: true,
+                    sorting: false //This column is not sortable!
+                },
+                paypal_mail: {
+                    title: 'paypal_mail',
+                    width: '5%',
+                    list: true
+                },
+                paypal_valid_status: {
+                    title: 'paypal_valid_status',
+                    width: '5%',
+                    //options: {'': '', '0': '0 - New', '100': '100 - Valid', '500': '500 - Invalid', '501': '501 - Can only receive money from homepage', '502': '502 - Can not receive personal payments', '503': '503 - This recipient is currently unable to receive money'},
+                    <?php 
+                        $optionString = "'':'',";                        
+                        $list = $this->paypalValidStatus;
+                        foreach ($list as $key => $value) {
+                            $optionString.= "'".$key."':'".$key." - ".$value."',";
+                        }
+                        echo "options: {" . $optionString . "},";
+                    ?>
+                    
+                    optionsSorting: 'text',
+                    list: true
+                },
+                wallet_address: {
+                    title: 'wallet_address',
+                    width: '5%',
+                    list: true
+                },
+                main_project_id: {
+                    title: 'main_project_id',
+                    list: false
+                },
+                profile_image_url: {
+                    title: 'profile_image_url',
+                    list: false
+                },
+                login_method: {
+                    title: 'login_method',
+                    list: false
+                },
+                social_username: {
+                    title: 'social_username',
+                    list: false
+                },
+                social_user_id: {
+                    title: 'social_user_id',
+                    list: false
+                },
+                gravatar_email: {
+                    title: 'gravatar_email',
+                    list: false
+                },
+                profile_img_src: {
+                    title: 'profile_img_src',
+                    list: false
+                },
+                facebook_username: {
+                    title: 'facebook_username',
+                    list: false
+                },
+                twitter_username: {
+                    title: 'twitter_username',
+                    list: false
+                },
+                link_facebook: {
+                    title: 'link_facebook',
+                    list: false
+                },
+                link_twitter: {
+                    title: 'link_twitter',
+                    list: false
+                },
+                link_website: {
+                    title: 'link_website',
+                    list: false
+                },
+                link_google: {
+                    title: 'link_google',
+                    list: false
+                },
+                validated_at: {
+                    title: 'validated_at',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                validated: {
+                    title: 'validated',
+                    list: false
+                },
+                exportUser: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a role="button" title="export user data" class="btn btn-primary btn-xs export-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-export" aria-hidden="true"></span></a>';
+                        }
+                    }
+                },
+                reactivateUser: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.is_deleted == 1) {
+                            return '<a role="button" title="Reactivate User" class="btn btn-primary btn-xs reactivate-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span></a>';
+                        } else {
+                            return '<a role="button" title="Delete User" class="btn btn-primary btn-xs deactivate-user" style="color:white;" data-record="' + data.record.member_id + '"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+                        }
+                    }
+                }
+            }
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_member_id: $('#filter_member_id').val(),
+                filter_firstname: $('#filter_firstname').val(),
+                filter_lastname: $('#filter_lastname').val(),
+                filter_username: $('#filter_username').val(),
+                filter_mail: $('#filter_mail').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_member_id: null,
+                filter_firstname: null,
+                filter_lastname: null,
+                filter_username: null,
+                filter_mail: null
+            });
+        });
+
+        $('body').on("click", 'a.export-user', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/user/export/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log("-------");
+                    console.log(textStatus);
+                    console.log("-------");
+                    console.log(errorThrown);
+                    if (jqXHR.responseText) {
+                        $('#dialog-form').empty().html(jqXHR.responseText).dialog('open');
+                    } else {
+                        alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    }
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').empty().html(results.Message).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+        
+        $('body').on("click", 'a.reactivate-user', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/user/reactivate/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log("-------");
+                    console.log(textStatus);
+                    console.log("-------");
+                    console.log(errorThrown);
+                    if (jqXHR.responseText) {
+                        $('#dialog-form').empty().html(jqXHR.responseText).dialog('open');
+                    } else {
+                        alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    }
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('load', {
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_firstname: $('#filter_firstname').val(),
+                        filter_lastname: $('#filter_lastname').val(),
+                        filter_username: $('#filter_username').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
+                    return false;
+                }
+            });
+
+            return false;
+        });
+        
+        $('body').on("click", 'a.deactivate-user', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/user/delete/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR);
+                    console.log("-------");
+                    console.log(textStatus);
+                    console.log("-------");
+                    console.log(errorThrown);
+                    if (jqXHR.responseText) {
+                        $('#dialog-form').empty().html(jqXHR.responseText).dialog('open');
+                    } else {
+                        alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    }
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('load', {
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_firstname: $('#filter_firstname').val(),
+                        filter_lastname: $('#filter_lastname').val(),
+                        filter_username: $('#filter_username').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('#TableContainer').jtable('load');
+    });
+</script>

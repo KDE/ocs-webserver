@@ -1,0 +1,98 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$form = $this->pictureform;
+$form->get('profile_picture_upload')
+     ->setAttributes(array('class'=>'product-picture'
+                           ,'onchange' =>'ImagePreview.previewImage(this, \'profile-picture-preview\');'
+        ));
+$form->get('profile_image_url')->setAttributes(array('data-target'=>'#profile-picture-preview'));
+$form->get('submit')->setAttributes(array('class'=>'btn btn-native pull-right', 'tabindex' => 14));
+?>
+<div class="panel-collapse " id="picture-collapse">
+    <div class="panel-body">
+        <form class="standard-form partialajax"
+              action="<?= $form->getAttribute('action'); ?>"
+              method="<?= $form->getAttribute('method'); ?>"
+              data-target="#form-picture"
+              data-trigger="#picture-trigger"
+              enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4 center">                 
+                <?= $this->formLabel($form->get('profile_picture_upload')); ?>
+                <?= $this->formElement($form->get('profile_picture_upload')); ?>
+                <?= $this->formElementErrors($form->get('profile_picture_upload')); ?>
+
+                    <div class="bordered box image-preview" style="overflow: hidden;">
+                        <img src="/theme/flatui/img/sample-profile-image-2.jpg"
+                            alt="profile-image"
+                            id="profile-picture-preview"
+                            height="200"
+                            width="200">
+                    </div>
+                    <!-- hack hack hack -->
+                    <a class="btn btn-purple" id="add-profile-picture" onclick="$('input#profile_picture_upload').click();"
+                    tabindex="13">
+                        ADD PICTURE
+                    </a>
+                    <?= $this->formElement($form->get('profile_image_url')); ?>
+               
+                <?= $this->formElement($form->get('profile_img_src')); ?>
+                
+                    <div class="progress hidden" style="min-height:17px;">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-percent"> 0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                    <div class="image-info">
+                        <p><em class="icon info-icon"></em></p>
+                        <p class="italic">
+                            <?= $this->translate('Maximum picture size<br> is 1024 x 1024 px') ?>
+                        </p>
+                        <p class="italic">
+                            <?= $this->translate('You can use <br><span class="purple">JPG, PNG, GIF</span> formats') ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="box pull-left margin-left-15" style="padding-left: 15px;">
+                    <?php echo $this->formResult($form, $this->save, true,
+                        'Changes saved. Some picture elements will be updated at next login.'); ?>
+                </div>
+            
+                <button type="submit" class="btn btn-native pull-right" tabindex="14">
+                    <?= $this->translate('Save &amp; Update') ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        ImagePreview.initProfilePicture();
+        AjaxFormWithProgress.setup($('form.standard-form.partialajax').get(0));
+    });
+</script>

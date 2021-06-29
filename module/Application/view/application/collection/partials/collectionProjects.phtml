@@ -1,0 +1,149 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+    $i = 0;
+    
+
+    foreach ($this->collection_projects as $project): 
+        $project=(object)$project;         
+        $ppload_collection_id = $project->ppload_collection_id;
+        $files=array();
+        $files_toinstall=array();
+        foreach ($this->collection_projects_dls as $f) {
+            if($f['collection_id']==$ppload_collection_id) $files[]=$f;
+            if($f['collection_id']==$ppload_collection_id && $f['ocs_compatible']==1){
+              $xdgType = $this->catXdgType($project->project_category_id);
+              if($xdgType) $files_toinstall[]=$f;
+            } 
+        }
+        $project->description = Application\Model\Service\BbcodeService::renderHtml(Application\Model\Service\HtmlPurifyService::purify($project->description));
+        $i++;
+?>
+        <div class="row smaller row-collection" >
+            <div class="col-lg-1 col-md-1">
+                <figure>
+                    <?= $i ?>.
+                </figure>  
+                <div>
+                    <button data-id="<?=$project->project_id?>" class="toggleCollectionRowBtn">
+                        <i class="fa fa-angle-right"></i> </button>
+                </div>
+            </div> 
+            <div class="col-lg-5 col-md-5">
+                <figure style="display: block;float: left;">
+                    <a href="<?= $this->buildProductUrl($project->project_id) ?>"><img width="80" src="<?php echo $this->Image($project->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" /></a>
+                </figure>   
+                <div style="margin-left: 95px">
+                    <a href="<?= $this->buildProductUrl($project->project_id) ?>"><?=$project->title?></a>                           
+                </div>
+                <div style="margin-left: 95px; font-size: small;">
+                     by <a href="/u/<?php echo $project->username?>"><?php echo $project->username?></a>                          
+                </div>
+              
+            </div>      
+                    
+            <div class="col-lg-2 col-md-1">  
+                <?=$project->cat_title?>                                          
+            </div>
+            <div class="col-lg-2 col-md-1">  
+               
+                <?php 
+                 if(sizeof($files_toinstall)>0)
+                 {
+                ?>
+                <div id="project_btn_grp_install" class="btn-group dropleft " style="width: 100%;">
+                    <button style="width: 100%" id="project_btn_install" class="btn active btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Install
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu active" id="dropdown_installs" style="min-width: 270px; top:50px">           
+                    <?php
+                    foreach ($files_toinstall as $f) {
+                        echo '<li>'.$this->buildDownloadLink($f,$project,'install').'</li>';
+                    }
+                    ?>           
+                    </ul>                
+                </div>
+            <?php } ?>
+                
+            </div>
+
+            <div class="col-lg-2 col-md-1" >                                                                    
+                <?php 
+                 if(sizeof($files)>0)
+                 {
+                ?>
+                <div  class="btn-group dropleft" style="width: 100%">
+                    <button style="width: 100%" id="project_btn_download" class="btn active btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Download
+                    <span class="caret"></span></button>
+                    <ul class="dropdown-menu active" id="dropdown_downloads" style="min-width: 270px;">   
+                    <?php
+                    foreach ($files as $f) {
+                        echo '<li>'.$this->buildDownloadLink($f,$project,'download').'</li>';
+                    }
+                    ?>                
+                    </ul>
+                </div>
+                <?php } ?>
+            </div>
+
+      </div>
+      <div class="row row-detail" style="display: none" id="row-<?=$project->project_id?>">
+        <div class="col-lg-1 col-md-1">
+        </div>
+        <div class="col-lg-9 col-md-9">
+            <div>
+                <?php echo $project->description?>
+
+            </div>
+              
+        </div>
+        <div class="col-lg-2 col-md-1" >
+            <div class="rating text-center" style="width: 80px; padding-top: 10px;float: right ">               
+                <?php
+//@todo: repair it. Because "laplace_score" is not in $project
+//                        echo $this->partial(
+//                            'application/partials/circle.phtml', array(
+//                                "r" => 50,
+//                                "score" => $project->laplace_score/10
+//                            )
+//                        );
+                ?>        
+               
+
+                
+            </div>
+        </div>
+             
+      </div>
+
+ <?php endforeach; ?>
+
+<script type="text/javascript">
+        $(document).ready(function(){
+            $('body').on('click', 'button.toggleCollectionRowBtn', function (event) {                
+                $('#row-'+$(this).attr("data-id")).toggle();                
+                $(this).find('i').toggleClass( "fa-angle-right" );
+                $(this).find('i').toggleClass( "fa-angle-down" );
+                
+            });
+
+        });
+</script>
+ 

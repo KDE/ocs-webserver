@@ -1,0 +1,2376 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+/**  @var \Laminas\View\Renderer\PhpRenderer|\Laminas\Form\View\HelperTrait $this */
+/** @var \Laminas\Form\Form $form */
+
+$this->headTitle($this->headTitle);
+
+//$this->os = Zend_Registry::get('application_os');
+$this->tab = 'add';
+$isAdmin = $this->isAdmin;
+
+$modelCategory = $this->prodCatRepo;
+
+
+$valueCatId = $this->form->get('project_category_id')->getValue();
+//$valueCatId = 55;
+if ($this->catId) {
+    $valueCatId = $this->catId;
+}
+
+if (null == $valueCatId) {
+    $valueCatId = 0;
+}
+
+$storeCatIds = $GLOBALS['ocs_store_category_list'];
+$categoryAncestors = $modelCategory->fetchAncestorsAsId($valueCatId);
+$categories = $modelCategory->fetchCategoriesForFormNew($valueCatId);
+
+$categoriesFallback = $modelCategory->fetchCategoriesForForm($valueCatId);
+//$categories2 = array();
+
+if (count($categoryAncestors) > 0) {
+    $categoryPath = explode(',', $categoryAncestors['ancestors']);
+}
+$categoryPath[] = $valueCatId;
+
+
+$this->headLink()->appendStylesheet('/theme/flatui/css/chosen.css');
+$this->inlineScript()->appendFile('/theme/flatui/js/lib/chosen.jquery.min.js');
+$this->inlineScript()->appendScript('
+                                    $(document).ready(function(){
+                                        $("select.chosen").chosen({
+                                        width: "100%",
+                                        max_selected_options: "5",
+                                        disable_search: "false",
+                                        disable_search_threshold: "5"
+                                        });
+                                    });
+                                ');
+
+
+?>
+    <style>
+
+        .wizard .product-picture {
+            position: relative;
+            width: 100%;
+        }
+
+        .wizard, .tabcontrol {
+            overflow: visible;
+        }
+
+        .wizard > .content {
+            overflow: visible;
+        }
+
+        .wizard > .content > .body {
+            position: relative;
+        }
+
+        input[type=checkbox] {
+            /*display: none;*/
+        }
+
+        div.datafiledroparea {
+            /*overflow-x: scroll !important;
+            overflow-y: scroll !important;*/
+        }
+
+        /*
+        - Style each label that is directly after the input
+        - position: relative; will ensure that any position: absolute children will position themselves in relation to it
+        */
+        /*
+        input[type=checkbox] + label {
+            display: block;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 1px #FFF;
+            background: #2184be none repeat scroll 0 0;
+            border: 3px solid #9dc8e2;
+            color: white;
+            height: 25px;
+            transition: all 0.4s ease 0s;
+            width: 25px;
+        }
+        */
+
+        /* Provide a border when hovered and when the checkbox before it is checked */
+        input[type=checkbox] + label:hover,
+        input[type=checkbox]:checked + label {
+            border: 3px solid #9dc8e2;
+            box-shadow: 0 0 1px #fff;
+        }
+
+        /*
+        - Create a pseudo element :after when checked and provide a tick
+        - Center the content
+        */
+        input[type=checkbox]:checked + label:after {
+            content: '\2714'; /*content is required, though it can be empty - content: '';*/
+            bottom: 2px;
+            color: white;
+            display: block;
+            height: 1em;
+            left: 3px;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 1em;
+        }
+
+        .add-product-page {
+            padding-top: 15px;
+        }
+
+        section.body {
+            width: 100% !important;
+        }
+
+        #is_original-element {
+            width: 25px;
+            float: left;
+        }
+
+        #is_gitlab_project {
+            width: 25px;
+            float: left;
+        }
+
+        #gitlab_project_name-element {
+            width: 300px;
+            float: left;
+        }
+
+        #gitlab_project_id {
+            width: 300px;
+            float: left;
+        }
+
+        #show_gitlab_project_issues {
+            width: 25px;
+            float: left;
+        }
+
+        #use_gitlab_project_readme {
+            width: 25px;
+            float: left;
+        }
+
+        .wizard > .content > .body ul.multiselect-container {
+            list-style: none !important;
+        }
+
+        .wizard > .content > .body button.multiselect {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+    <script type="text/javascript" src="/tools/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+
+    <main class="user-admin-page">
+
+        <?php include __DIR__ . '/../user/partials/userHeader_top.phtml'; ?>
+
+        <section class="body-wrap">
+
+            <section class="wrapper product-page">
+
+                <!-- PAGE BODY -->
+
+                <section class="my-products-page">
+
+                    <!-- NAVIGATION -->
+
+                    <?php include __DIR__ . '/../user/partials/userHeader.phtml'; ?>
+
+                    <?php echo $this->render('partials/header.phtml'); ?>
+
+                    <!-- /NAVIGATION -->
+
+
+                    <!-- PAGE BODY -->
+
+                    <section class="add-product-page">
+
+
+                        <form enctype="multipart/form-data" role="application" class="wizard clearfix" action="" method="post"
+                              id="add-product-form">
+                            <?php /*
+                            <?= $this->formElement($form->get('project_id')) ?>
+                             */ ?>
+                            <?php $this->element = $form->get('project_id'); ?>
+                            <?php include __DIR__ . '/' . $form->getViewScriptsArray()['project_id']; ?>
+                            <h3>Basics</h3>
+                            <section id="required">
+                                <div class="form-group"><p class="col-sm-10">(*) Mandatory fields.</p></div>
+                                <div id="preview_img_msg"></div>
+                                <?php $this->element = $form->get('title'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['title']; ?>
+
+                                <?php $this->element = $form->get('project_category_id'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['project_category_id']; ?>
+
+                                <?php if ($form->has('project_subcategory_id')) { ?>
+                                    <?php $this->element = $form->get('project_subcategory_id'); ?>
+                                    <?php include __DIR__ . '/' . $form->getViewScriptsArray()['project_subcategory_id']; ?>
+                                    <?php //$this->formElement()->render($this->form->get('project_subcategory_id')) ?>
+                                <?php } ?>
+
+                                <?php if ($form->has('project_sub_subcategory_id')) { ?>
+                                    <?php $this->element = $form->get('project_sub_subcategory_id'); ?>
+                                    <?php include __DIR__ . '/' . $form->getViewScriptsArray()['project_sub_subcategory_id']; ?>
+                                    <?php //$this->formElement()->render($this->form->get('project_sub_subcategory_id')) ?>
+                                <?php } ?>
+
+                                <?php $this->element = $form->get('description'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['description']; ?>
+
+                                <?php $this->element = $form->get('version'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['version']; ?>
+
+                                <?php $this->element = $form->get('source_url'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['source_url']; ?>
+
+                                <div class="form-group">
+                                    <div class="col-sm-12 margin-top-15">
+                                        <?php /*
+                                 <?= $this->form->is_original ?>  Check this box, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original.   
+                                 */ ?>
+
+                                        <?php
+                                        echo $this->formLabel($form->get('is_original_or_modification'));
+                                        echo $this->formElement()
+                                                  ->render($this->form->get('is_original_or_modification')) . " Select Original, if this is your own original work and not based on something else. If based on some other work you need to change 60%-70% to mark as an original. Select Modification, if you changed at least 5-10%. If you changed < 5%, leave blank. <br>For nature or any other camera taken pictures, if you claim you have not used any other picture as base, you need to provide the original picture yourself by uploading the original file as well under \"files\".";
+                                        ?>
+
+                                    </div>
+                                </div>
+                                <?php $this->element = $form->get('license_tag_id'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['license_tag_id']; ?>
+                                <?php
+                                if ($this->project_id) {
+                                    $tagscats = $this->systemTags;
+                                    if (strlen($tagscats) > 0) {
+
+
+                                        ?>
+                                        <div class="form-group">
+                                            <div class="col-sm-12 margin-top-15">
+                                                <label class="form-label"> System Auto Tags</label>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <?php echo $tagscats; ?>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
+
+                                <?php $this->element = $form->get('tagsuser'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['tagsuser']; ?>
+
+                                <?php $this->element = $form->get('image_small'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['image_small']; ?>
+
+                                <?php $this->element = $form->get('image_small_upload'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['image_small_upload']; ?>
+
+                                <?php //$this->form->image_big ?>
+                                <?php //$this->form->image_big_upload ?>
+
+                                <?php $subForm = $form->get('gallery');
+                                $this->element = $subForm; ?>
+                                <?php include __DIR__ . '/viewscripts/subform_gallery.phtml'; ?>
+
+                                <?php $this->element = $form->get('embed_code'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['embed_code']; ?>
+
+                                <?php $this->element = $form->get('link_1'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['link_1']; ?>
+
+                                <?php $this->element = $form->get('facebook_code'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['facebook_code']; ?>
+
+                                <?php $this->element = $form->get('twitter_code'); ?>
+                                <?php include __DIR__ . '/' . $form->getViewScriptsArray()['twitter_code']; ?>
+
+                            </section>
+
+                            <h3>Git</h3>
+
+                            <section id="git">
+                                <?php
+                                if (!empty($this->form->get('gitlab_project_id')->getValueOptions())) {
+                                    ?>
+
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <dt id="is_gitlab_project-label">
+                                                <label for="is_gitlab_project"
+                                                       class="optional"><?= $this->formLabel($form->get('is_gitlab_project')) ?></label>
+                                            </dt>
+                                            <dd id="is_gitlab_project-element">
+                                                <?= $this->formElement()->render($this->form->get('is_gitlab_project')) ?>
+                                            </dd>
+                                            Check this box, if this a public project on opencode.net
+                                        </div>
+                                    </div>
+
+                                    <?php
+                                    if (empty($this->product) || (!empty($this->product) && $this->product->is_gitlab_project == 0)) {
+                                        $this->form->get('gitlab_project_id')->setAttribute('disabled', 'disabled');
+                                    }
+                                    ?>
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <label class="form-label" for="gitlab_project_id">Please choose your Gitlab
+                                                Project</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <?= $this->formElement()->render($this->form->get('gitlab_project_id')) ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <dt id="show_gitlab_project_issues-label"><label for="show_gitlab_project_issues"
+                                                                                             class="optional">Git-Issues</label>
+                                            </dt>
+                                            <dd id="show_gitlab_project_issues-element">
+                                                <?php
+                                                if (empty($this->product) || (!empty($this->product) && $this->product->is_gitlab_project == 0)) {
+                                                    $this->form->get('show_gitlab_project_issues')
+                                                               ->setAttribute('disabled', 'disabled');
+                                                }
+                                                ?>
+                                                <?= $this->formElement()
+                                                         ->render($this->form->get('show_gitlab_project_issues')) ?>
+                                            </dd>
+                                            Check this box, if you want to show the issue list
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <dt id="use_gitlab_project_readme-label"><label for="use_gitlab_project_readme"
+                                                                                            class="optional">README.md</label>
+                                            </dt>
+                                            <dd id="use_gitlab_project_readme-element">
+                                                <?php
+                                                if (empty($this->product) || (!empty($this->product) && $this->product->is_gitlab_project == 0)) {
+                                                    $this->form->get('use_gitlab_project_readme')
+                                                               ->setAttribute('disabled', 'disabled');
+                                                }
+                                                ?>
+                                                <?= $this->formElement()->render($this->form->get('use_gitlab_project_readme')) ?>
+                                            </dd>
+                                            Check this box, if you want to show the README.md as project description
+                                        </div>
+                                    </div>
+
+
+                                    <?php
+                                } else {
+                                    ?>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-12 margin-top-15">
+                                            <dt id="is_gitlab_project-label"><label for="is_gitlab_project" class="optional">Git-Project</label>
+                                            </dt>
+                                            <dd id="is_gitlab_project-element">
+                                                You can create a project on <a href="https://opencode.net">opencode.net</a> and
+                                                link it with this project.
+                                            </dd>
+                                        </div>
+                                    </div>
+
+                                    <?php
+                                }
+                                ?>
+                            </section>
+
+
+                            <h3>Files</h3>
+                            <section id="files">
+
+                                <!-- ppload -->
+
+                                <div id="modal-ppload" aria-labelledby="modal-ppload-label"
+                                     data-ppload-api-uri="<?= PPLOAD_API_URI ?>"
+                                     data-ppload-collection-id="<?= $this->ppload_collection_id ?>" data-product-id=""
+                                     data-addpploadfile-uri="<?= $this->buildProductUrl('@@project_id@@', 'addpploadfile') ?>"
+                                     data-updatepploadfile-uri="<?= $this->buildProductUrl('@@project_id@@', 'updatepploadfile') ?>"
+                                     data-updatefiletag-uri="<?= $this->buildProductUrl('@@project_id@@', 'updatefiletag') ?>"
+                                     data-deletefiletag-uri="<?= $this->buildProductUrl('@@project_id@@', 'deletefiletag') ?>"
+                                     data-deletepploadfile-uri="<?= $this->buildProductUrl('@@project_id@@', 'deletepploadfile') ?>"
+                                     data-deletepploadfiles-uri="<?= $this->buildProductUrl('@@project_id@@', 'deletepploadfiles') ?>">
+                                    <div class="pling-modal" style="width: 100%;">
+                                        <div class="">
+                                            <div class="modal-header">
+                                                <!-- <h3 id="modal-ppload-label"><?= $this->translate('Add your Files') ?></h3> -->
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="file" style="display: none;" data-file-upload="" multiple accept="">
+                                                <input type="file" style="display: none;" data-file-upload-update=""
+                                                       data-ppload-file-id="" accept="">
+
+                                                <p data-file-upload-msg=""><?= $this->translate('Drop file(s) here') ?>:</p>
+
+                                                <div data-file-upload="" dropzone class="datafiledroparea"
+                                                     style="overflow: auto !important;">
+                                                    <table class="table" data-ppload-files="">
+                                                        <thead>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                    <table class="table" data-file-upload="">
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <div style="float: right; padding-top: 10px;" class="small light">
+                                                Deleted files are archived. Number of downloads are kept. *
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer" style="margin-top: 20px;">
+                                            <span class="pull-left">
+                                                <input type="checkbox"
+                                                       data-accept-checkbox=""> <?= $this->translate('I accept the ') ?>
+                                                <a href="<?= $this->url('application_static_terms') ?>"><?= $this->translate('Terms and Conditions') ?></a>
+                                            </span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-native pull-left" data-addpploadfile-btn="">
+                                                <?= $this->translate('Add File(s)') ?>
+                                            </button>
+                                            <button class="btn btn-danger pull-right" data-file-upload-cancel-btn="">
+                                                <?= $this->translate('Cancel Upload') ?>
+                                            </button>
+                                            <a role="button" id="github_picker" class="btn btn-native pull-left" data-toggle=""
+                                               data-target="#generic-dialog" data-username="<?= $this->member->link_github ?>"
+                                               title="add an URL here">
+                                                <?= $this->translate('Add URL') ?>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                </div>
+
+                                <!-- /ppload -->
+
+                            </section>
+
+
+                            <?php if (isset($this->project_id)) { ?>
+                                <h3>Changelog</h3>
+                                <section id="changlog">
+
+                                    <div id="modal-changlog" data-product-id="">
+                                        <div class="row">
+                                            <div class="modal-header">
+                                                <h3 id="modal-ppload-label"><?= $this->translate('Changelog') ?></h3>
+                                            </div>
+                                            <div class="modal-body" style="font-size: small;">
+                                                <div role="form" class="">
+                                                    <input type="hidden" data-update-id="" id="update-id" value="">
+                                                    <div class="form-group">
+                                                        <label for="tile">Changelog Title:</label>
+                                                        <input type="text" id="update-title" data-update-title=""
+                                                               class="form-control input-sm" placeholder="Enter Changelog Title">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="text">Changelog Text:</label>
+                                                        <textarea id="update-text" data-update-text=""
+                                                                  class="form-control input-sm" rows="3"
+                                                                  placeholder="Enter Changelog Text"></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-native" data-add-update-btn="">Save
+                                                        Changelog
+                                                    </button>
+                                                </div>
+
+                                                <h4 style="padding-top: 15px;"> Your Entries:</h4>
+                                                <article id="update-list">
+
+                                                </article>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- changlog -->
+                                </section>
+                            <?php } ?>
+
+
+                        </form>
+
+                        <!-- /PAGE BODY -->
+
+                    </section>
+
+                    <!-- /PAGE BODY -->
+
+                </section>
+
+            </section>
+        </section>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+
+            /*
+            $('.multiple').multiselect({
+                includeSelectAllOption: true
+            });
+            */
+
+            var formElement = $('#add-product-form');
+            var validator = formElement.validate({
+                ignore: ":disabled,:hidden"
+            });
+            formElement.steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                enableAllSteps: <?php echo ($this->mode == 'edit') ? "true" : "false"; ?>,
+                enableCancelButton: true,
+                showFinishButtonAlways: true,
+                transitionEffect: "slideLeft",
+                /* Labels */
+                labels: {
+                    cancel: "Cancel",
+                    finish: "Save"
+                },
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Allways allow previous action even if the current form is not valid!
+                    if (currentIndex > newIndex) {
+                        formElement.find(".body:eq(" + newIndex + ") .bg-danger").removeClass("bg-danger");
+                        return true;
+                    }
+                    // Needed in some cases if the user went back (clean up)
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        formElement.find(".body:eq(" + newIndex + ") label.error").remove();
+                        formElement.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+                        formElement.find(".body:eq(" + newIndex + ") .bg-danger").removeClass("bg-danger");
+                    }
+
+                    if (currentIndex == 0) {
+                        if (ImagePreview.hasError) {
+                            return false;
+                        }
+                        //logo OR preview pic mandatory!
+                        var logoSrc = $('#product-picture-preview').attr('src');
+                        var gallery = $('.product-gallery div:first-child');
+                        var galleryPic = gallery.find('.image');
+
+                        if (!logoSrc && !galleryPic.attr('style')) {
+                            var msg = $('#preview_img_msg');
+                            msg.text('');
+                            msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+
+                            return false;
+                        }
+
+                        if (formElement.valid()) {
+                            if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                                var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
+                                if (result == false) {
+                                    validator.showErrors(ProductForm.errors);
+                                    return result;
+                                }
+                                formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
+                                formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
+                            }
+                            getPploadFiles();
+                            return true;
+                        }
+                        return false;
+                    }
+                    return formElement.valid();
+                },
+
+                onFinished: function (event, currentIndex) {
+                    //logo OR preview pic mandatory!
+                    var logoSrc = $('#product-picture-preview').attr('src');
+                    var gallery = $('.product-gallery div:first-child');
+                    var galleryPic = gallery.find('.image');
+
+                    if (!logoSrc && !galleryPic.attr('style')) {
+                        var msg = $('#preview_img_msg');
+                        msg.text('');
+                        msg.append('<label id="description-error" class="error" for="product-gallery">Please add a product logo or at least one product gallery picture!</label>');
+
+                        return false;
+                    }
+
+                    if (currentIndex == 0) {
+                        if (ImagePreview.hasError) {
+                            return false;
+                        }
+                        if (ProductForm.mode == 'add' && (ProductForm.project_id == '' || ProductForm.project_id == undefined)) {
+                            // var result = ProductForm.saveSection(formElement.find('.body:eq(' + currentIndex + ')').attr('id'));
+                            // if (result == false) {
+                            //     validator.showErrors(ProductForm.errors);
+                            //     return result;
+                            // }
+                            // formElement.find("#modal-ppload").attr('data-product-id', ProductForm.project_id);
+                            // formElement.find("#modal-changlog").attr('data-product-id', ProductForm.project_id);
+                        }
+                    }
+
+
+                    $('[name=project_id]').val(ProductForm.project_id);
+                    formElement.submit();
+                },
+
+                onCanceled: function (event, currentIndex) {
+                    window.location.href = "/member/<?php echo $this->member->member_id; ?>/products/";
+                }
+
+            });
+
+
+            $('body').on("click", "#github_picker", function (event) {
+
+                html = '<form id="get-url-form">' +
+                    '<div class="form-group">' +
+                    '<input type="url" class="form-control" id="get-url" placeholder="Enter a URL where the files can be downloaded" required="required">' +
+                    '<span id="get-url-help" class="help-block small">e.g. https://github.com/mongodb/mongo/archive/r3.5.2.tar.gz</span></div>' +
+                    '<span id="get-url-error" class="help-block small"></span></div>' +
+                    '<button type="submit" class="btn btn-native btn-sm" id="get-url-submit">Submit</button>' +
+                    '</form>';
+
+                var msgBox = $('#generic-dialog');
+                msgBox.modal('hide');
+                msgBox.find('.modal-header-text').empty().append('Enter a download URL:');
+                msgBox.find('.modal-body').empty().append(html);
+                setTimeout(function () {
+                    msgBox.modal('show');
+                }, 900);
+
+            });
+
+            $('body').on('submit', '#get-url-form', function (event) {
+                if (!$('#get-url-form').validate()) {
+                    return true;
+                }
+                event.preventDefault();
+                $.ajax({
+                    url: '/file/link/',
+                    type: 'post',
+                    data: {
+                        project_id: ProductForm.project_id,
+                        u: $('#get-url').val()
+                    },
+                    success: function (returndata, textStatus, jqXHR) {
+                        returned_data = returndata.data;
+                        if (!returned_data.file) {
+                            $('#get-url').addClass('hasError').focus();
+                            $('#get-url-error').html('An Error occurred. Please check your URL or try again later.');
+                            return;
+                        }
+                        data_file = returned_data.file;
+                        $modalPpload.attr('data-ppload-collection-id', data_file.collection_id);
+                        $('#get-url').val('').removeClass('hasError');
+                        $('#get-url-error').html('');
+                        $('#generic-dialog').modal('hide');
+
+                        getPploadFiles(null, null);
+
+                    },
+                    error: function () {
+                        $('#get-url').addClass('hasError').focus();
+                        $('#get-url-error').html('An Error occurred. Please check your URL or try again later.');
+                    }
+                });
+            });
+
+            $('body').on('change', '#get-url', function (event) {
+                $('#get-url-error').empty();
+            });
+
+
+            var Base64 = {
+                _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) {
+                    var t = "";
+                    var n, r, i, s, o, u, a;
+                    var f = 0;
+                    e = Base64._utf8_encode(e);
+                    while (f < e.length) {
+                        n = e.charCodeAt(f++);
+                        r = e.charCodeAt(f++);
+                        i = e.charCodeAt(f++);
+                        s = n >> 2;
+                        o = (n & 3) << 4 | r >> 4;
+                        u = (r & 15) << 2 | i >> 6;
+                        a = i & 63;
+                        if (isNaN(r)) {
+                            u = a = 64
+                        } else if (isNaN(i)) {
+                            a = 64
+                        }
+                        t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a)
+                    }
+                    return t
+                }, decode: function (e) {
+                    var t = "";
+                    var n, r, i;
+                    var s, o, u, a;
+                    var f = 0;
+                    e = e.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+                    while (f < e.length) {
+                        s = this._keyStr.indexOf(e.charAt(f++));
+                        o = this._keyStr.indexOf(e.charAt(f++));
+                        u = this._keyStr.indexOf(e.charAt(f++));
+                        a = this._keyStr.indexOf(e.charAt(f++));
+                        n = s << 2 | o >> 4;
+                        r = (o & 15) << 4 | u >> 2;
+                        i = (u & 3) << 6 | a;
+                        t = t + String.fromCharCode(n);
+                        if (u != 64) {
+                            t = t + String.fromCharCode(r)
+                        }
+                        if (a != 64) {
+                            t = t + String.fromCharCode(i)
+                        }
+                    }
+                    t = Base64._utf8_decode(t);
+                    return t
+                }, _utf8_encode: function (e) {
+                    e = e.replace(/\r\n/g, "\n");
+                    var t = "";
+                    for (var n = 0; n < e.length; n++) {
+                        var r = e.charCodeAt(n);
+                        if (r < 128) {
+                            t += String.fromCharCode(r)
+                        } else if (r > 127 && r < 2048) {
+                            t += String.fromCharCode(r >> 6 | 192);
+                            t += String.fromCharCode(r & 63 | 128)
+                        } else {
+                            t += String.fromCharCode(r >> 12 | 224);
+                            t += String.fromCharCode(r >> 6 & 63 | 128);
+                            t += String.fromCharCode(r & 63 | 128)
+                        }
+                    }
+                    return t
+                }, _utf8_decode: function (e) {
+                    var t = "";
+                    var n = 0;
+                    var r = c1 = c2 = 0;
+                    while (n < e.length) {
+                        r = e.charCodeAt(n);
+                        if (r < 128) {
+                            t += String.fromCharCode(r);
+                            n++
+                        } else if (r > 191 && r < 224) {
+                            c2 = e.charCodeAt(n + 1);
+                            t += String.fromCharCode((r & 31) << 6 | c2 & 63);
+                            n += 2
+                        } else {
+                            c2 = e.charCodeAt(n + 1);
+                            c3 = e.charCodeAt(n + 2);
+                            t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+                            n += 3
+                        }
+                    }
+                    return t
+                }
+            }
+            $('button[rel="tooltip"]').tooltip();
+
+            var $modalPpload = $('#modal-ppload');
+            var $modalChanglog = $('#modal-changlog');
+
+            var pploadApiUri = $modalPpload.attr('data-ppload-api-uri');
+
+            var pploadUploads = {
+                queue: {},
+                currentUploadId: null,
+                uploading: null
+            };
+
+            function keysrt(key, asc) {
+                if (asc) {
+                    return function (a, b) {
+                        if (a[key] > b[key]) return 1;
+                        if (a[key] < b[key]) return -1;
+                        return 0;
+                    }
+                } else {
+                    return function (a, b) {
+                        if (a[key] < b[key]) return 1;
+                        if (a[key] > b[key]) return -1;
+                        return 0;
+                    }
+                }
+            }
+
+            function getUpdates(page) {
+
+                $modalChanglog.find('#update-list').html('');
+                var productId = <?= isset($this->project_id) ? $this->project_id : 0 ?>;
+                $.ajax({
+                    url: '<?=$this->buildProductUrl($this->project_id, 'getupdatesajax')?>',
+                    type: 'GET',
+                    data: {
+                        format: 'json',
+                        ignore_status_code: 1
+                    },
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'success') {
+                            return;
+                        }
+                        $.each(data.updates, function () {
+                            var id = '';
+                            if (this.project_update_id) {
+                                id = this.project_update_id;
+                            }
+                            var title = '';
+                            if (this.title) {
+                                title = this.title;
+                            }
+                            var text = '';
+                            if (this.text) {
+                                text = this.text;
+                            }
+                            var date = '';
+                            if (this.created_at) {
+                                date = this.created_at;
+                            }
+
+                            Changelog.setLogMsg(id, this.raw_title, this.raw_text);
+
+                            var divEl = $('<div />');
+                            divEl.attr('data-update-id', id);
+                            divEl.append(
+                                '<a name="anker_' + id + '"></a>'
+                                + '<h4>' + title + '</h4>'
+                                + '<div class="small light lightgrey product-update-date">' + date + '</div>'
+                                + text + '<br/><br/>'
+                            );
+
+                            var btnEdit = $('<button type="submit" class="btn btn-native btn-sm" style="line-height: 10px;margin: 5px;">Edit</button>');
+                            btnEdit.attr('data-change-update-btn', id);
+                            btnEdit.attr('data-change-title', title);
+                            btnEdit.attr('data-change-text', text);
+
+
+                            var btnDelete = $('<button type="submit" class="btn btn-native btn-sm" style="line-height: 10px;margin: 5px;">Delete</button>');
+                            btnDelete.attr('data-delete-update-btn', id);
+
+                            divEl.append(btnEdit);
+                            divEl.append(btnDelete);
+                            divEl.append('<br/><br/><br/><br/>');
+
+                            // $modalPpload.find('#update-list').append(divEl);
+                            $modalChanglog.find('#update-list').append(divEl);
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+
+            }
+
+            function getPploadFiles(page) {
+                if (!page) {
+                    page = 1;
+                    $modalPpload.find('table[data-ppload-files] tbody').empty();
+                }
+
+                var prodId = ProductForm.project_id;
+                if (!prodId) {
+                    prodId = 0;
+                }
+
+                var catId = $('#project_category_id').val();
+
+                //Is this a Video? Then allow only Videos and srt
+                /*for (var item in ProductForm.cat_id_path) {
+                    if(item == 586) {
+                        alert('Video');
+                    }
+                }*/
+
+                //get cat-tag-groups
+                var tagGroups = null;
+                var tagGroupsCount = 0;
+                $.ajax({
+                    url: '/p/' + prodId + '/gettaggroupsforcatajax',
+                    type: 'GET',
+                    async: false,
+                    cache: false,
+                    timeout: 30000,
+                    data: {project_cat_id: catId},
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'success') {
+                            $modalPpload.find('table[data-ppload-files] thead').html('');
+
+                            tagGroups = data.tag_groups;
+                            tagGroupsCount = data.ResultSize;
+
+                            var tableHeader = '';
+                            tableHeader += '<tr>';
+                            tableHeader += '    <th><?= $this->translate('Filename') ?></th>';
+                            tableHeader += '    <th><?= $this->translate('MD5SUM') ?></th>';
+                            tableHeader += '    <th><?= $this->translate('Version') ?></th>';
+                            tableHeader += '    <th><?= $this->translate('Description') ?></th>';
+
+                            if (tagGroupsCount > 0) {
+                                $.each(tagGroups, function () {
+                                    tableHeader += '<th>' + this.group_display_name + '</th>';
+                                });
+                            } else {
+                                tableHeader += '<th></th>';
+                            }
+
+                            tableHeader += '    <th><?= $this->translate('Date added') ?></th>';
+                            tableHeader += '    <th style="text-align: right"><?= $this->translate('Filesize') ?></th>';
+                            tableHeader += '   <th style="text-align: right"><?= $this->translate('# DLs') ?></th>';
+                            tableHeader += '   <th></th>';
+                            tableHeader += '</tr>';
+                            $modalPpload.find('table[data-ppload-files] thead').append(tableHeader);
+
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+
+                var collectionId = $modalPpload.attr('data-ppload-collection-id');
+
+                if (!collectionId) {
+
+                } else {
+                    $.ajax({
+                        //url: pploadApiUri + 'files/index',
+                        url: '/p/' + prodId + '/getfilesajax',
+                        type: 'GET',
+                        data: {
+                            collection_id: collectionId,
+                            perpage: 1000,
+                            page: page,
+                            format: 'json',
+                            ignore_status_code: 0,
+                            status: 'active'
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'success') {
+                                return;
+                            }
+                            var updatePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a>';
+                            var updatePploadFileBtnPerFile = '';
+                            var deletePploadFileBtn = '<a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a>';
+                            var deletePploadFileBtnPerFile = '';
+
+                            var myArray = $.map(data.files, function (entry) {
+                                return entry;
+                            });
+                            myArray.sort(keysrt('created_timestamp'), false);
+
+                            var fileTagsArray = null;
+                            var fileTagsArraySize = 0;
+                            $.each(myArray, function () {
+
+
+                                if (null != tagGroups && tagGroupsCount > 0) {
+                                    //get cat-tag-groups
+                                    $.ajax({
+                                        url: '/p/' + prodId + '/gettaggroupsforcatajax',
+                                        type: 'GET',
+                                        async: false,
+                                        cache: false,
+                                        timeout: 30000,
+                                        data: {project_cat_id: catId, file_id: this.id, test: false},
+                                        dataType: 'json',
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.status != 'success') {
+                                                tagGroups = data.tag_groups;
+
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+
+                                        }
+                                    });
+                                } else {
+                                    //get cat-tag-groups
+                                    $.ajax({
+                                        url: '/p/' + prodId + '/getfiletagsajax',
+                                        type: 'GET',
+                                        async: false,
+                                        cache: false,
+                                        timeout: 30000,
+                                        data: {file_id: this.id},
+                                        dataType: 'json',
+                                        success: function (data, textStatus, jqXHR) {
+                                            if (data.status != 'success') {
+                                                fileTagsArray = data.file_tags;
+                                                fileTagsArraySize = data.ResultSize;
+
+                                            }
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+
+                                        }
+                                    });
+                                }
+
+                                var fileDescription = '';
+                                if (this.description) {
+                                    fileDescription = this.description;
+                                    fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+                                }
+
+                                var inputFileDescription = '<input data-ppload-file-description="" class="form-control input-sm"'
+                                    + ' type="text" maxlength="140" placeholder="File description"'
+                                    + ' value="' + fileDescription + '">';
+                                if (this.active == '0') {
+                                    inputFileDescription = '<input disabled="disabled" data-ppload-file-description="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File description"'
+                                        + ' value="' + fileDescription + '">';
+                                }
+
+                                var versionText;
+                                if (this.version == null) {
+                                    versionText = '';
+                                } else {
+                                    versionText = this.version;
+                                }
+                                versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
+                                var version = '<input data-ppload-file-version="" class="form-control input-sm"'
+                                    + ' type="text" maxlength="140" placeholder="File version"'
+                                    + ' value="' + versionText + '">';
+                                if (this.active == '0') {
+                                    version = '<input disabled="disabled" data-ppload-file-version="" class="form-control input-sm"'
+                                        + ' type="text" maxlength="140" placeholder="File version"'
+                                        + ' value="' + versionText + '">';
+                                }
+
+                                var fileCategory = '';
+                                if (this.category) {
+                                    fileCategory = this.category;
+                                }
+                                var link = '';
+                                var fileTags = '';
+                                var osId = null;
+
+                                //downloadlink is now: domain/api/files/download/id/ID/s/TOKEN/t/TIMESTAMP/u/USERID/FILE_NAME
+                                var downloadUrl = "https://<?= $_SERVER["SERVER_NAME"]?>/p/<?= $this->project_id ?>/startdownload?file_id=" + this.id + "&file_name=" + this.name + "&file_type=" + this.type + "&file_size=" + this.size;
+
+                                var downloadLinkFilename = link ? this.name + ' (External Link)' : this.name;
+                                var downloadLink = '<a href="' + downloadUrl + '" id="data-link' + this.id + '" class="opendownloadfile" data-file_id="' + this.id + '" data-file_name="' + this.name + '" data-file_type="' + this.type + '" data-file_size="' + this.size + '" data-project_id="<?= $this->project_id ?>"  data-link_type="download">' + downloadLinkFilename + '</a>';
+
+                                if (this.active == '1') {
+                                    updatePploadFileBtnPerFile = updatePploadFileBtn;
+                                    deletePploadFileBtnPerFile = deletePploadFileBtn;
+                                } else {
+                                    updatePploadFileBtnPerFile = '';
+                                    deletePploadFileBtnPerFile = '';
+                                }
+
+                                //var numDownloads = this.downloaded_count;
+                                //numDownloads = numDownloads || 0;
+
+                                //var numDownloads = this.downloaded_count_live || 0;
+                                var numDownloads = this.downloaded_count_uk || 0;
+
+
+                                tableString = '';
+                                tableString += '<tr data-ppload-file-id="' + this.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                                tableString += '<td>' + downloadLink + '</td>';
+                                if (this.md5sum != 'NULL' && this.md5sum != 'null' && this.md5sum != null) {
+                                    tableString += '<td>' + this.md5sum + '</td>';
+                                } else {
+                                    tableString += '<td></td>';
+                                }
+                                tableString += '<td>' + version + '</td>';
+                                tableString += '<td>' + inputFileDescription + '</td>';
+
+                                var fileId = this.id;
+
+                                if (tagGroupsCount > 0) {
+
+                                    $.each(tagGroups, function () {
+                                        tableString += '<td>';
+                                        //Tag-Group Multiselect?
+                                        if (this.is_multi_select == 1) {
+                                            tableString += '<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-' + this.group_legacy_name + '-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                        } else {
+                                            tableString += '<select id="data-select-' + this.group_legacy_name + fileId + '" data-' + this.group_legacy_name + '-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="" style="width: 150px;">';
+                                            tableString += '<option value=""></option>';
+                                        }
+                                        //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                        //tableString += '<option value=\"\"></option>';
+
+                                        var tag_list_sort = Object.entries(this.tag_list);                                     
+                                        tag_list_sort.sort(function(a, b) {                                                
+                                                return  a[1] > b[1] ;
+                                                });
+                                        var i;
+                                        for (i = 0; i < tag_list_sort.length; i++) {
+                                            tableString += '<option value=\"' + tag_list_sort[i][0] + '\"';
+                                            if (null != this.selected_tags) {
+                                                $.each(this.selected_tags, function () {                                                    
+                                                    if (tag_list_sort[i][0] == this.tag_id) {
+                                                        tableString += ' selected="selected"';
+                                                    }
+                                                })
+                                            }
+                                            tableString += '>' + tag_list_sort[i][1] + '</option>';
+                                        } 
+
+                                        tableString += '</select>';
+                                        tableString += '</td>';
+                                    });
+
+                                } else {
+
+                                    if (fileTagsArraySize > 0) {
+                                        tableString += '<td>';
+
+                                        tableString += '<span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" style="width: auto;">';
+                                        tableString += '    <span class="selection">';
+                                        tableString += '        <span class="select2-selection select2-selection--multiple" aria-expanded="false" tabindex="-1">';
+                                        tableString += '            <ul class="select2-selection__rendered">';
+
+                                        $.each(fileTagsArray, function () {
+                                            tableString += '                <li id="file-tag-' + fileId + '-' + this.tag_id + '" class="select2-selection__choice"  style="line-height: 20px !important; font-size: 9px !important;" title="' + this.name + '">';
+                                            tableString += '                    <span class="select2-selection__choice__remove" data-file-id="' + fileId + '" data-file-tag-id="' + this.tag_id + '" role="presentation">×</span>' + this.name + '</li>';
+                                        });
+                                        tableString += '            </ul>';
+                                        tableString += '        </span>';
+                                        tableString += '    </span>';
+                                        tableString += '</span>';
+
+                                        tableString += '</td>';
+                                    } else {
+                                        tableString += '<td></td>';
+                                    }
+                                }
+
+                                tableString += '<td>' + this.created_timestamp + '</td>';
+                                tableString += '<td style="text-align: right">' + humanFileSize(this.size) + '</td>';
+                                tableString += '<td style="text-align: right">' + numDownloads + '</td>';
+                                tableString += '<td>' + updatePploadFileBtnPerFile + '</td>';
+                                tableString += '<td>' + deletePploadFileBtnPerFile + '</td>';
+                                tableString += '</tr>';
+                                $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                                $('.multi').multiselect({
+                                    includeSelectAllOption: true,
+                                    buttonClass: 'btn btn-native btn-xs'
+                                });
+
+                                if ((typeof link != 'undefined') && (link != "")) {
+                                    //$("#data-link" + this.id).attr('href', decodeURIComponent(link));
+                                    $("#data-link" + this.id).attr('target', '_blank');
+                                    $("#data-link" + this.id).html($("#data-link" + this.id).html() + " (External Link)");
+                                }
+                            });
+
+                            $modalPpload.find('p[data-file-upload-msg]').show();
+                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+
+                            if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                                $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                $modalPpload.find('#github_picker').removeAttr('disabled');
+                            } else {
+                                $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                            }
+                            /*if (data.pagination !== 'undefined' && data.pagination.next) {
+                                getPploadFiles(data.pagination.next);
+                            }*/
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                        }
+                    });
+                }
+            }
+
+            function addFileToPploadUploadQueue(fileId, fileUpload) {
+                var uploadId = 'file-upload-' + Math.floor(Math.random() * 1000) + '-' + new Date().getTime();
+                pploadUploads.queue[uploadId] = {
+                    fileId: fileId,
+                    fileUpload: fileUpload
+                };
+
+                $modalPpload.find('table[data-file-upload] tbody').append(
+                    '<tr data-file-upload-id="' + uploadId + '">'
+                    + '<td>' + fileUpload.name + ' (' + humanFileSize(fileUpload.size) + ')</td>'
+                    + '<td>'
+                    + '<progress max="100" value="0" data-file-upload-progress=""></progress>'
+                    + '<br>'
+                    + '<span'
+                    + ' data-file-upload-progress=""'
+                    + ' data-file-upload-loaded="0"'
+                    + ' data-file-upload-time="0"></span>'
+                    + '</td>'
+                    + '<td><a href="#" data-file-upload-cancel-btn="">×</a></td>'
+                    + '</tr>'
+                );
+            }
+
+            function startUploadPploadFiles() {
+                if ($.isEmptyObject(pploadUploads.queue) || pploadUploads.uploading) {
+                    return;
+                }
+
+                //var productId = $modalPpload.attr('data-product-id');
+                var uploadId = null;
+                var formData = new FormData();
+                $.each(pploadUploads.queue, function (key, value) {
+                    uploadId = key;
+                    if (value.fileId) {
+                        formData.append('file_id', value.fileId);
+                    }
+                    formData.append('file_upload', value.fileUpload);
+                    return false;
+                });
+                var $uploadContainer = $modalPpload.find('tr[data-file-upload-id="' + uploadId + '"]');
+                var $uploadProgressBar = $uploadContainer.find('progress[data-file-upload-progress]');
+                var $uploadProgress = $uploadContainer.find('span[data-file-upload-progress]');
+                $uploadProgress.attr('data-file-upload-time', new Date().getTime());
+
+                $modalPpload.find('button[data-file-upload-cancel-btn]').removeAttr('disabled');
+
+                pploadUploads.currentUploadId = uploadId;
+
+                var url = '';
+                if (formData.has('file_id')) {
+                    url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                        url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                    }
+                } else {
+                    url = ($modalPpload.attr('data-addpploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                    if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                        url = ($modalPpload.attr('data-addpploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                    }
+                }
+
+                pploadUploads.uploading = $.ajax({
+                    xhr: function () {
+                        var xhr = $.ajaxSettings.xhr();
+                        if (xhr.upload) {
+                            xhr.upload.addEventListener('progress', function (event) {
+                                var progress = parseInt(event.loaded / event.total * 10000) / 100;
+                                var previousLoaded = parseInt($uploadProgress.attr('data-file-upload-loaded'));
+                                var previousTime = parseInt($uploadProgress.attr('data-file-upload-time'));
+                                var currentTime = new Date().getTime();
+                                var rate = '--';
+                                if (previousTime < currentTime) {
+                                    $uploadProgress.attr('data-file-upload-loaded', event.loaded);
+                                    $uploadProgress.attr('data-file-upload-time', currentTime);
+                                    rate = humanFileSize(Math.floor((event.loaded - previousLoaded) / (currentTime - previousTime) * 1000));
+                                }
+                                $uploadProgressBar.attr('value', progress);
+                                $uploadProgress.html(progress + '% | ' + rate + '/s');
+                            }, false);
+                        }
+                        xhr.addEventListener('abort', function (event) {
+                            if (pploadUploads.queue[uploadId].fileId) {
+                                $modalPpload.find('tr[data-ppload-file-id="' + pploadUploads.queue[uploadId].fileId + '"]').show();
+                            }
+                            delete pploadUploads.queue[uploadId];
+                            pploadUploads.currentUploadId = null;
+                            pploadUploads.uploading = null;
+                            $uploadContainer.remove();
+                            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                            startUploadPploadFiles();
+                        }, false);
+                        return xhr;
+                    },
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+                            return;
+                        }
+
+                        if (pploadUploads.queue[uploadId].fileId) {
+                            $modalPpload.find('tr[data-ppload-file-id="' + pploadUploads.queue[uploadId].fileId + '"]').remove();
+                        }
+                        delete pploadUploads.queue[uploadId];
+                        pploadUploads.currentUploadId = null;
+                        pploadUploads.uploading = null;
+                        $uploadContainer.remove();
+                        $('a[href="#modal-ppload"][data-product-id="' + $modalPpload.attr('data-product-id') + '"]')
+                            .attr('data-ppload-collection-id', data.file.collection_id);
+                        $modalPpload.attr('data-ppload-collection-id', data.file.collection_id);
+
+                        var versionText;
+                        if (data.file.version == null) {
+                            versionText = '';
+                        } else {
+                            versionText = data.file.version;
+                        }
+                        versionText = versionText.replace(/<\/?[^>]+(>|$)/g, "");
+
+                        var version = '<input data-ppload-file-version="" class="form-control input-sm"'
+                            + ' type="text" maxlength="140" placeholder="File version"'
+                            + ' value="' + versionText + '">';
+
+                        var fileDescription = '';
+                        if (data.file.description) {
+                            fileDescription = data.file.description;
+                        }
+                        var fileCategory = '';
+                        if (data.file.category) {
+                            fileCategory = data.file.category;
+                        }
+                        var fileTags = '';
+                        if (data.file.tags) {
+                            fileTags = data.file.tags;
+                        }
+
+                        var tableString = '';
+                        tableString += '<tr data-ppload-file-id="' + data.file.id + '" data-ppload-file-category="' + fileCategory + '" data-ppload-file-tags="' + fileTags + '">';
+                        tableString += '<td><a href="' + pploadApiUri + 'files/download/';
+                        tableString += 'id/' + data.file.id + '/' + data.file.name + '">' + data.file.name + '</a></td>';
+                        if (data.file.md5sum != 'NULL' && data.file.md5sum != 'null' && data.file.md5sum != null) {
+                            tableString += '<td>' + data.file.md5sum + '</td>';
+                        } else {
+                            tableString += '<td></td>';
+                        }
+                        tableString += '<td>' + version + '</td>';
+                        tableString += '<td><input data-ppload-file-description="" class="form-control input-sm"';
+                        tableString += ' type="text" maxlength="140" placeholder="File description"';
+                        tableString += ' value="' + fileDescription + '"></td>';
+
+                        var fileId = data.file.id;
+
+
+                        //get cat-tag-groups
+                        var tagGroups = null;
+                        var tagGroupsCount = 0;
+                        var catId = $('#project_category_id').val();
+
+                        $.ajax({
+                            url: '/p/' + ProductForm.project_id + '/gettaggroupsforcatajax',
+                            type: 'GET',
+                            async: false,
+                            cache: false,
+                            timeout: 30000,
+                            data: {project_cat_id: catId},
+                            dataType: 'json',
+                            success: function (data, textStatus, jqXHR) {
+                                tagGroups = data.tag_groups;
+                                tagGroupsCount = data.ResultSize;
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+
+                            }
+                        });
+
+
+                        if (tagGroupsCount > 0) {
+                            $.each(tagGroups, function () {
+                                tableString += '<td>';
+
+
+                                //Tag-Group Multiselect?
+                                if (this.is_multi_select == 1) {
+                                    tableString += '<select multiple="multiple" id="data-select-' + this.group_legacy_name + fileId + '" data-' + this.group_legacy_name + '-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="multi" style="width: 150px;">';
+                                } else {
+                                    tableString += '<select id="data-select-' + this.group_legacy_name + fileId + '" data-' + this.group_legacy_name + '-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="" style="width: 150px;">';
+                                    tableString += '<option value=""></option>';
+                                }
+
+                                //tableString +='<select id="data-select-' + this.group_legacy_name + fileId + '" data-'+this.group_legacy_name+'-id="" data-tag-group-id="' + this.tag_group_id + '" data-tag-group="' + this.group_legacy_name + '" name="' + this.group_legacy_name + '" class="form-control input-sm" style="width: 150px;">';
+                                //tableString += '<option value=\"\"></option>';
+
+                                // for (key in this.tag_list) {
+                                //     tableString += '<option value=\"' + key + '\"';
+                                //     if (null != this.selected_tags) {
+                                //         $.each(this.selected_tags, function () {
+                                //             if (key == this.tag_id) {
+                                //                 tableString += ' selected="selected"';
+                                //             }
+                                //         })
+                                //     }
+
+                                //     tableString += '>' + this.tag_list[key] + '</option>';
+                                // }
+                                
+                                var tag_list_sort = Object.entries(this.tag_list);                                     
+                                        tag_list_sort.sort(function(a, b) {                                                
+                                                return  a[1] > b[1] ;
+                                                });
+                                var i;
+                                for (i = 0; i < tag_list_sort.length; i++) {
+                                    tableString += '<option value=\"' + tag_list_sort[i][0] + '\"';
+                                    if (null != this.selected_tags) {
+                                        $.each(this.selected_tags, function () {                                                    
+                                            if (tag_list_sort[i][0] == this.tag_id) {
+                                                tableString += ' selected="selected"';
+                                            }
+                                        })
+                                    }
+                                    tableString += '>' + tag_list_sort[i][1] + '</option>';
+                                } 
+                                tableString += '</select>';
+                                tableString += '</td>';
+                            });
+                        } else {
+                            tableString += '<td></td>';
+                        }
+
+                        tableString += '<td>' + data.file.created_timestamp + '</td>';
+                        tableString += '<td style="text-align: right">' + humanFileSize(data.file.size) + '</td>';
+                        tableString += '<td style="text-align: right">0</td>';
+                        tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-updatepploadfile-btn="">Update</a></td>';
+                        tableString += '<td><a href="#" class="btn btn-native btn-xs btn-file-dropzone" data-deletepploadfile-btn=""><span class="glyphicon glyphicon-trash"></span></a></td>';
+                        tableString += '</tr>';
+                        $modalPpload.find('table[data-ppload-files] tbody').append(tableString);
+
+                        $('.multi').multiselect({
+                            includeSelectAllOption: true,
+                            buttonClass: 'btn btn-native btn-xs'
+                        });
+
+                        //UserTags.activateSelect(fileId, '');
+
+                        $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+                        startUploadPploadFiles();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function updatePploadFile(fileId, fileDescription, fileCategory, fileTags) {
+                var url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+                fileDescription = fileDescription.replace(/<\/?[^>]+(>|$)/g, "");
+
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        file_id: fileId,
+                        file_description: fileDescription,
+                        file_category: fileCategory
+                    },
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function updateFileTag(fileId, tagId, tagGroupId) {
+                var url = ($modalPpload.attr('data-updatefiletag-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-updatefiletag-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        file_id: fileId,
+                        tag_id: tagId,
+                        tag_group_id: tagGroupId
+                    },
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function deleteFileTag(fileId, tagId) {
+                var url = ($modalPpload.attr('data-deletefiletag-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-deletefiletag-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        file_id: fileId,
+                        tag_id: tagId
+                    },
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status == 'ok') {
+                            $('#file-tag-' + fileId + '-' + tagId).remove();
+                            return true;
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+                        return false;
+                    }
+                });
+
+            }
+
+            function updatePploadFileVersion(fileId, version) {
+                var url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+                version = version.replace(/<\/?[^>]+(>|$)/g, "");
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        file_id: fileId,
+                        file_version: version
+                    },
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function updatePploadFileTags(fileId, fileTags) {
+                var url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-updatepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        file_id: fileId,
+                        file_tags: fileTags
+                    },
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function deletePploadFile(fileId) {
+                var url = ($modalPpload.attr('data-deletepploadfile-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-deletepploadfile-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {file_id: fileId},
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+                            alert("Error: " + data.error_text);
+                            return;
+                        }
+                        $modalPpload.find('table[data-ppload-files] tbody').html('');
+                        $modalPpload.find('table[data-file-upload] tbody').html('');
+                        getPploadFiles();
+                        /**
+                         $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').remove();
+                         if ($modalPpload.find('tr[data-ppload-file-id]').size() === 0) {
+                                                        $modalPpload.find('table[data-ppload-files] tbody').html('');
+                                                        $modalPpload.find('table[data-file-upload] tbody').html('');
+                                                        $modalPpload.find('p[data-file-upload-msg]').show();
+                                                        $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+
+                                                        if ($modalPpload.find('input[data-accept-checkbox]').is('checked')) {
+                                                            $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                                                        } else {
+                                                            $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                                                        }
+                                                    }**/
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function deletePploadFiles() {
+                var url = ($modalPpload.attr('data-deletepploadfiles-uri')).replace(/@@project_id@@/i, ProductForm.project_id);
+                if (typeof ProductForm.project_id == 'undefined' || ProductForm.project_id == '' || ProductForm.project_id == '0') {
+                    url = ($modalPpload.attr('data-deletepploadfiles-uri')).replace(/@@project_id@@/i, <?= (isset($this->project_id)) ? $this->project_id : 0  ?>);
+                }
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {},
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'ok') {
+                            return;
+                        }
+                        $modalPpload.find('table[data-ppload-files] tbody').html('');
+                        $modalPpload.find('table[data-file-upload] tbody').html('');
+                        $modalPpload.find('p[data-file-upload-msg]').show();
+
+                        $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+
+                        $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
+                        $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                        $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Error: " + textStatus + ", " + errorThrown);
+
+                    }
+                });
+            }
+
+            function humanFileSize(bytes) {
+                var size = '';
+                size = (bytes / 1048576).toFixed(2) + ' MB';
+                /*
+                 if (bytes >= 1073741824) {
+                 size = (bytes / 1073741824).toFixed(2) + 'GB';
+                 }
+                 else if (bytes >= 1048576) {
+                 size = (bytes / 1048576).toFixed(2) + 'MB';
+                 }
+                 else if (bytes >= 1024) {
+                 size = (bytes / 1024).toFixed(2) + 'KB';
+                 }
+                 else {
+                 size = bytes + 'bytes';
+                 }*/
+                return size;
+            }
+
+            $modalPpload.attr('data-ppload-collection-id', $(this).attr('data-ppload-collection-id'));
+            $modalPpload.attr('data-product-id', $(this).attr('data-product-id'));
+            $modalPpload.attr('data-addpploadfile-uri', $(this).attr('data-addpploadfile-uri'));
+            $modalPpload.attr('data-updatepploadfile-uri', $(this).attr('data-updatepploadfile-uri'));
+            $modalPpload.attr('data-deletepploadfile-uri', $(this).attr('data-deletepploadfile-uri'));
+            $modalPpload.find('div[data-file-upload]').css({
+                'min-height': '250px',
+                'border-width': '5px',
+                'border-style': 'dashed',
+                'border-color': '#cccccc',
+                'overflow': 'inherit'
+            });
+            $modalPpload.find('table[data-ppload-files] tbody').html('');
+            $modalPpload.find('table[data-file-upload] tbody').html('');
+            $modalPpload.find('p[data-file-upload-msg]').show();
+
+            $modalPpload.find('input[data-accept-checkbox]').removeAttr('disabled');
+
+            $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+            $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+            $modalPpload.find('button[data-file-upload-cancel-btn]').attr('disabled', 'disabled');
+
+            //if ($modalPpload.attr('data-ppload-collection-id')) {
+            //    getPploadFiles();
+            //}
+
+            if (<?= (isset($this->project_id)) ? $this->project_id : 0  ?> !=
+            0
+        )
+            {
+                getUpdates();
+            }
+
+            $modalPpload.on('dragover', 'div[data-file-upload]', function (event) {
+                event.preventDefault();
+            });
+
+            $modalPpload.on('dragenter', 'div[data-file-upload]', function (event) {
+                event.preventDefault();
+                $(this).css('border-color', '#00ccff');
+            });
+
+            $modalPpload.on('dragleave', 'div[data-file-upload]', function (event) {
+                event.preventDefault();
+                $(this).css('border-color', '#cccccc');
+            });
+
+            $modalPpload.on('drop', 'div[data-file-upload]', function (event) {
+                event.preventDefault();
+                $.each(event.originalEvent.dataTransfer.files, function () {
+                    addFileToPploadUploadQueue(null, this);
+                });
+                startUploadPploadFiles();
+                $(this).css('border-color', '#cccccc');
+            });
+
+            $modalPpload.on('change', 'input[data-file-upload]', function (event) {
+                $.each(this.files, function () {
+                    addFileToPploadUploadQueue(null, this);
+                });
+                startUploadPploadFiles();
+            });
+
+            $modalPpload.on('click', 'button[data-addpploadfile-btn]', function (event) {
+                event.preventDefault();
+                $modalPpload.find('input[data-file-upload]').click();
+            });
+
+            $modalPpload.on('change', 'input[data-file-upload-update]', function (event) {
+                if ($(this).attr('data-ppload-file-id')) {
+                    var fileId = $(this).attr('data-ppload-file-id');
+                    $modalPpload.find('tr[data-ppload-file-id="' + fileId + '"]').hide();
+                    addFileToPploadUploadQueue(fileId, this.files[0]);
+                    startUploadPploadFiles();
+                }
+            });
+
+            $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-updatepploadfile-btn]', function (event) {
+                event.preventDefault();
+                var $inputForm = $modalPpload.find('input[data-file-upload-update]');
+                $inputForm.attr('data-ppload-file-id', $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
+                $inputForm.click();
+            });
+
+            $modalPpload.on('click', 'input[data-accept-checkbox]', function (event) {
+                if ($modalPpload.find('input[data-accept-checkbox]').is(':checked')) {
+                    $modalPpload.find('button[data-addpploadfile-btn]').removeAttr('disabled');
+                    $modalPpload.find('#github_picker').removeAttr('disabled');
+                } else {
+                    $modalPpload.find('button[data-addpploadfile-btn]').attr('disabled', 'disabled');
+                    $modalPpload.find('#github_picker').attr('disabled', 'disabled');
+                }
+            });
+
+            $modalPpload.on('click', 'tr[data-ppload-file-id] a[data-deletepploadfile-btn]', function (event) {
+                event.preventDefault();
+                deletePploadFile($(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id'));
+            });
+
+            $modalPpload.on('click', 'button[data-file-upload-cancel-btn]', function (event) {
+                event.preventDefault();
+                pploadUploads.uploading.abort();
+                pploadUploads.queue = {};
+                $modalPpload.find('table[data-file-upload] tbody').html('');
+            });
+
+            $modalPpload.on('click', 'tr[data-file-upload-id] a[data-file-upload-cancel-btn]', function (event) {
+                event.preventDefault();
+                var uploadId = $(this).closest('tr[data-file-upload-id]').attr('data-file-upload-id');
+                if (uploadId == pploadUploads.currentUploadId) {
+                    pploadUploads.uploading.abort();
+                } else {
+                    delete pploadUploads.queue[uploadId];
+                    $modalPpload.find('tr[data-file-upload-id="' + uploadId + '"]').remove();
+                }
+            });
+
+            $modalPpload.on('change', 'input[data-ppload-file-description]', function (event) {
+                event.preventDefault();
+                var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                var fileDescription = $(this).closest('input[data-ppload-file-description]').val();
+                var fileCategory = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-category');
+                var fileTags = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags');
+
+                $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-tags', fileTags);
+                updatePploadFile(fileId, fileDescription, fileCategory, fileTags);
+            });
+
+            $modalPpload.on('change', 'input[data-ppload-file-version]', function (event) {
+                event.preventDefault();
+                var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                var fileVersion = $(this).closest('input[data-ppload-file-version]').val();
+                updatePploadFileVersion(fileId, fileVersion);
+            });
+
+            $modalChanglog.on('click', 'button[data-add-update-btn]', function (event) {
+                var update_id = $modalChanglog.find('#update-id').val();
+                var title = $modalChanglog.find('#update-title').val();
+                var text = $modalChanglog.find('#update-text').val();
+                var productId = <?= isset($this->project_id) ? $this->project_id : 0 ?>;
+                event.preventDefault();
+
+                $.ajax({
+                    url: '<?=$this->buildProductUrl($this->project_id, 'saveupdateajax')?>',
+                    type: 'POST',
+                    data: {title: title, text: text, update_id: update_id},
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'success') {
+                            return;
+                        }
+                        $modalChanglog.find('#update-title').val('');
+                        $modalChanglog.find('#update-text').val('');
+                        $modalChanglog.find('#update-id').val('');
+                        getUpdates();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+
+            });
+
+            $modalChanglog.on('click', 'button[data-delete-update-btn]', function (event) {
+                var updateId = $(this).attr('data-delete-update-btn');
+                var productId = <?= isset($this->project_id) ? $this->project_id : 0 ?>;
+                event.preventDefault();
+
+                $.ajax({
+                    url: '<?=$this->buildProductUrl($this->project_id, 'deleteupdateajax')?>',
+                    type: 'POST',
+                    data: {update_id: updateId},
+                    dataType: 'json',
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.status != 'success') {
+                            alert('Update could not be deleted!');
+                            return;
+                        }
+                        getUpdates();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+
+            });
+
+            $modalChanglog.on('click', 'button[data-change-update-btn]', function (event) {
+                var updateId = $(this).attr('data-change-update-btn');
+                //var title = $(this).attr('data-change-title');
+                //var text = $(this).attr('data-change-text');
+                var changelog = Changelog.getLogMsg(updateId);
+                var title = changelog.msg_title;
+                var text = changelog.msg_text;
+
+                $modalChanglog.find('#update-title').val(title);
+                $modalChanglog.find('#update-text').val(text);
+                $modalChanglog.find('#update-id').val(updateId);
+
+                $modalChanglog.find('#update-title').focus();
+
+                event.preventDefault();
+            });
+
+
+            /*
+            $modalPpload.on('change', 'select.chosen', function (event) {
+                event.preventDefault();
+                var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                var currentTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                var chosenTags = $(this).val();
+
+                var newTags = UserTags.removeOldTags(currentTags);
+                newTags = UserTags.setNewTags(newTags, chosenTags);
+
+                updatePploadFileTags(fileId, newTags);
+                $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newTags);
+            });*/
+
+            $modalPpload.on('change', 'select[data-tag-group]', function (event) {
+                event.preventDefault();
+                var fileId = $(this).closest('tr[data-ppload-file-id]').attr('data-ppload-file-id');
+                var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+                var tagId = $(this).val();
+                var tagGroupId = $(this).attr('data-tag-group-id');
+                var tagGroupName = $(this).attr('data-tag-group');
+
+                var newFileTags = '';
+                if (fileTags) {
+
+                    $.each(fileTags.split(','), function () {
+                        // skip old entries
+                        if ((this.length == 0) || (this.indexOf(tagGroupName + 'id-') == 0) || (this.indexOf(tagGroupName + 'id##') == 0)) {
+                            return true;
+                        }
+                        newFileTags += ',' + this;
+                    });
+
+                }
+                newFileTags += ',' + tagGroupName + 'id-' + tagId;
+                //updatePploadFileTags(fileId, newFileTags);
+                //$(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+                updateFileTag(fileId, tagId, tagGroupId);
+            });
+
+            $modalPpload.on('click', 'span[data-file-tag-id]', function (event) {
+                event.preventDefault();
+
+                $tagId = $(this).attr('data-file-tag-id');
+                $fileId = $(this).attr('data-file-id');
+                var fileTags = $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags');
+
+                /*
+                var newFileTags = '';
+                if (fileTags) {
+
+                    $.each(fileTags.split(','), function () {
+                        // skip old entries
+                        if ((this.length == 0) || (this.indexOf(tagGroupName+'id-') == 0) || (this.indexOf(tagGroupName+'id##') == 0)) {
+                            return true;
+                        }
+                        newFileTags += ',' + this;
+                    });
+
+                }
+                newFileTags += ','+tagGroupName+'id-'+tagId;
+                updatePploadFileTags(fileId, newFileTags);
+
+                $(this).closest('tr[data-ppload-file-tags]').attr('data-ppload-file-tags',newFileTags);
+
+                */
+                deleteFileTag($fileId, $tagId);
+            });
+
+
+            $('.multi').multiselect({
+                includeSelectAllOption: true
+            });
+
+
+        });
+
+
+        var LogCollection = function () {
+            this.changelogs = {};
+
+            this.setLogMsg =
+                function (id, title, msg) {
+                    this.changelogs[id] = {msg_title: title, msg_text: msg};
+                };
+
+            this.getLogMsg =
+                function (id) {
+                    return this.changelogs[id];
+                }
+        };
+
+        var Changelog = new LogCollection();
+    </script>
+    <script>
+        $.fn.sortSelect = function () {
+            var op = this.children("option");
+            op.sort(function (a, b) {
+                return a.text > b.text ? 1 : -1;
+            })
+            return this.empty().append(op);
+        }
+
+        $.fn.sort_select_box = function () {
+            var my_options = $("option", $(this));
+            my_options.sort(function (a, b) {
+                if (a.text > b.text) return 1;
+                else if (a.text < b.text) return -1;
+                else return 0
+            });
+            $(this).empty().append(my_options);
+        }
+
+        function setSourceNeededForCategoryInfo(element_id, cat_id) {
+            $('.cat_source_info').remove();
+            jQuery.ajax({
+                data: {'cat_id': cat_id},
+                url: '/productcategory/fetchsourceneeded/',
+                type: 'get',
+                success: function (results) {
+                    var isSourceRequired = results.source_required;
+
+                    if (isSourceRequired == 1) {
+                        $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                    }
+                }
+            });
+        }
+
+
+        ProductForm = {
+
+            mode: "<?=$this->mode?>",
+            project_id: <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>,
+            errors: "",
+            cat_id_data: <?=json_encode($categories)?>,
+            cat_id_data_fallback: <?=json_encode($categoriesFallback)?>,
+            cat_id_path: <?=json_encode($categoryPath)?>,
+            store_cat_ids: <?=json_encode($storeCatIds)?>,
+            value_cat_id: <?=json_encode($valueCatId)?>,
+
+            setup: function () {
+                //20190508 ronald: laut CT sollen wieder alle Kategorien angezigt werden, nicht mehr nur die Store-Kats
+                //this.setupCategorySelect(this.cat_id_data);
+                this.setupCategorySelect(this.cat_id_data_fallback);
+
+                this.setupCategoryAjax();
+                this.setGitlabProjectNameSelect();
+            },
+
+            setupCategorySelect: function (catList) {
+                var level = 0;
+                var hasNoRoot = true;
+
+                for (var form_elem_name in catList) {
+                    var nextElementName = form_elem_name.substring(0, form_elem_name.length - 1) + (level + 1);
+                    var new_html_element = '<select name="' + form_elem_name + '" id="' + form_elem_name + '" class="required form-control product_select_cat" data-target="' + nextElementName + '" data-level="' + level + '">';
+                    new_html_element += '<option value=""> </option>';
+
+                    hasNoRoot = true;
+
+                    for (var form_select_option in catList[form_elem_name]) {
+                        var attr_selected = '';
+                        if(form_select_option==567) continue; // exclude category collection
+                        if (form_select_option == this.cat_id_path[level] || form_select_option == this.value_cat_id) {
+                            attr_selected = ' selected="selected"';
+                            hasNoRoot = false;
+                        }
+                        new_html_element += '<option value="' + form_select_option + '" ' + attr_selected + '>' + catList[form_elem_name][form_select_option] + '</option>';
+                    }
+
+                    if (hasNoRoot == true && this.cat_id_path != '0') {
+                        this.setupCategorySelect(this.cat_id_data_fallback);
+                        return;
+                    }
+
+                    new_html_element += '</select>';
+                    $('#wrapper_cat_id').append(new_html_element);
+                    this.sortOptionByValue(form_elem_name);
+
+                    var size = <?=count($categories)?>;
+                    if ((size - 1) == level) {
+                        this.setSourceNeededForCategoryInfo(form_elem_name, this.cat_id_path[level]);
+                    }
+
+                    level++;
+                }
+            },
+
+            setSourceNeededForCategoryInfo: function (element_id, cat_id) {
+
+                jQuery.ajax({
+                    data: {'cat_id': cat_id},
+                    url: '/productcategory/fetchsourceneeded/',
+                    type: 'get',
+                    success: function (results) {
+                        var isSourceRequired = results.source_required;
+                        if (isSourceRequired == 1) {
+                            $('#wrapper_cat_id').append('<div class="cat_source_info" id="' + element_id + '_cat_source_info">*for this category a Source-Code Repository is needed for plings</div>');
+                        }
+                    }
+                });
+            },
+
+            setGitlabProjectNameSelect: function () {
+                //project name is required if the checkbox is checked
+                $('body').on('change', '#is_gitlab_project', function () {
+                    if (this.checked) {
+                        $('#gitlab_project_id').attr('class', 'required form-control gitlab_project_id');
+                        $('#gitlab_project_id').prop('disabled', false);
+                        $('#show_gitlab_project_issues').prop('disabled', false);
+                        $('#use_gitlab_project_readme').prop('disabled', false);
+                    } else {
+                        //$('#gitlab_project_id').disable();
+                        $('#gitlab_project_id').val([]);
+                        $('#gitlab_project_id').removeClass('required');
+                        $('#gitlab_project_id').prop('disabled', true);
+                        $('#show_gitlab_project_issues').prop('disabled', true);
+                        $('#use_gitlab_project_readme').prop('disabled', true);
+                        $('#show_gitlab_project_issues').removeAttr('checked');
+                        $('#use_gitlab_project_readme').removeAttr('checked');
+                    }
+                });
+            },
+
+            sortOptionByValue: function (element_id) {
+                var my_options = $("#" + element_id + " option");
+                var selected = $("#" + element_id).val();
+
+                my_options.sort(function (a, b) {
+                    if (a.text > b.text) return 1;
+                    else if (a.text < b.text) return -1;
+                    else return 0;
+                })
+                $("#" + element_id).empty().append(my_options);
+                $("#" + element_id).val(selected);
+            },
+
+
+            setupCategoryAjax: function () {
+                $('body').on('change', 'div#wrapper_cat_id select.product_select_cat', function () {
+
+                    var cat_id = $(this).val();
+                    var name_old_elem = $(this).attr('name');
+                    var name_new_elem = $(this).data('target');
+                    var level_elem = $(this).data('level') + 1;
+                    var level_new_elem = level_elem + 1;
+                    var name_new_target = name_new_elem.substring(0, name_new_elem.length - 1) + level_new_elem;
+
+                    if (!cat_id) {
+                        $('#wrapper_form_cat input:hidden:first').val($('#wrapper_cat_id').find("[data-level]:lt(" + (level_elem - 1) + ")").val());
+                        $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                        $('.cat_source_info').remove();
+                        return;
+                    }
+                    $('#wrapper_form_cat input:hidden:first').val(cat_id);
+
+                    jQuery.ajax({
+                        data: {'cat_id': cat_id},
+                        url: '/productcategory/fetchchildren/',
+                        type: 'post',
+                        success: function (results) {
+                            $('#wrapper_cat_id').find("[data-level]:gt(" + (level_elem - 1) + ")").remove();
+                            $('#' + (level_elem - 1) + '_cat_source_info').remove();
+                            $('.cat_source_info').remove();
+                            if (!$.isEmptyObject(results)) {
+                                var new_html_element = '<select name="' + name_new_elem + '" id="' + name_new_elem + '" class="required form-control product_select_cat" data-target="' + name_new_target + '" data-level="' + level_elem + '">';
+                                new_html_element += '<option value=""> </option>';
+                                for (var i in results) {
+                                    new_html_element += '<option value="' + results[i].project_category_id + '">' + results[i].title + '</option>';
+                                }
+                                new_html_element += '</select>';
+
+                                $('#wrapper_cat_id').append(new_html_element);
+                            } else {
+                                var name_elem = name_old_elem;
+                                setSourceNeededForCategoryInfo(name_elem, cat_id);
+                            }
+                        }
+                    });
+                });
+            },
+
+            saveSection: function (sectionId) {
+                var pid = <?php echo ($this->mode == 'edit') ? $this->project_id : '$(\'#project_id\').val()'?>;
+
+                if (pid != '') {
+                    return;
+                }
+
+                var url = '/product/save/';
+                var data = $('#' + sectionId + ' :input').serialize();
+                var result = false;
+
+                jQuery.ajax({
+                    data: data,
+                    url: url,
+                    type: 'post',
+                    async: false
+                }).done(function (data, textStatus, jqXHR) {
+                    if (data.project_id == undefined) {
+                        ProductForm.project_id = '';
+                    } else {
+                        ProductForm.project_id = data.project_id;
+                    }
+                    if (data.status == 'error') {
+                        ProductForm.errors = data.messages;
+                        result = false;
+                    } else {
+                        result = true;
+                    }
+
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+
+                }).always(function (data, textStatus, errorThrown) {
+
+                });
+
+                return result;
+            },
+
+            showErrors: function () {
+                $.each(this.errors, function (index, value) {
+                    $('[name=' + index + ']').append('<label id="title-error" class="error" for="title">' + value + '</label>');
+                });
+            }
+
+        };
+
+        var ProductGallery = (function () {
+            var maxImageCount = 5;
+
+            return {
+
+                setup: function () {
+                    $('body').on({
+                        mouseenter: function () {
+                            $(this).find('.icon-check').hide();
+                            $(this).find('.icon-cross').show();
+                        },
+                        mouseleave: function () {
+                            $(this).find('.icon-check').show();
+                            $(this).find('.icon-cross').hide();
+                        }
+                    }, '.product-image');
+
+                    if ($('.product-image').length >= 6) {
+                        $('.upload-image-container').hide();
+                    }
+
+                    $('body').on('click', '.icon-cross', function () {
+                        $(this).closest('.product-image').remove();
+                        ProductGallery.incImageCount();
+                    });
+                },
+
+                previewImage: function (input) {
+
+                    if (!input.files.length) {
+                        return;
+                    }
+
+                    maxImageCount--;
+
+                    var reader = new FileReader();
+                    var image = new Image();
+                    var file = input.files[0];
+
+                    reader.readAsDataURL(file);
+                    reader.onload = function (_image) {
+
+                        $('#gallery-error').parent().parent().find('.bg-danger').removeClass('bg-danger');
+                        $('#gallery-error').remove();
+
+                        $('.product-image').last().append('<div class="absolute icon-check"></div>' +
+                            '<div class="absolute icon-cross"></div>' +
+                            '<div class="image" style="background-image: url(' + _image.target.result + ');"></div>'
+                        );
+
+                        $('.product-image').last().after('<div class="product-image relative">' +
+                            '<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>'
+                        );
+
+                        if ($('.product-image').length >= 6) {
+                            $('.upload-image-container').hide();
+                        }
+                        /*
+                        if (maxImageCount <= 0) {
+                            $('.upload-image-container').hide();
+                        }
+                        */
+
+                        image.src = _image.target.result;              // url.createObjectURL(file);
+                        image.onload = function () {
+                            var w = this.width,
+                                h = this.height,
+                                t = file.type,                           // ext only: // file.type.split('/')[1],
+                                n = file.name,
+                                s = ~~(file.size / 5120)// +'KB';
+                            if (s > 5120) {
+                                $('.product-image').last().prev()
+                                    .find('div.icon-check')
+                                    .after('<div class="image-error">File too large</div>')
+                                    .removeClass('icon-check')
+                                    .addClass('icon-report')
+                                ;
+                                $('.product-image').last().prev()
+                                    .find('input.gallery-picture').remove()
+                                    .append('<input type="file" name="upload_picture[]" class="gallery-picture" onchange="ProductGallery.previewImage(this);"></div>')
+                                ;
+                            }
+                        };
+
+                        image.onerror = function () {
+                            $('.product-image').last().prev().find('div.image').append('Invalid file type: ' + file.type);
+                        };
+                    }
+                },
+                thumbClick: function (element) {
+                    var index = $(element).attr('data-index');
+                    $('.thumb').removeClass('thumb-active');
+                    $(element).parent().addClass('thumb-active');
+                    $('#gallery-carousel').find('.active').removeClass('active');
+                    $('#gallery-carousel').find('.item[data-index="' + index + '"]').addClass('active');
+
+                },
+                gallerySlide: function () {
+                    var index = $('#gallery-carousel').find('.active').attr('data-index');
+                    $('.thumb-active').removeClass('thumb-active');
+                    $('.thumb a[data-index="' + index + '"]').parent().addClass('thumb-active');
+                },
+                incImageCount: function () {
+                    if (maxImageCount < 5) {
+                        maxImageCount = maxImageCount + 1;
+                    }
+                    $('.upload-image-container').show();
+                }
+
+            };
+        })();
+
+    </script>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ImagePreview.setup();
+            ProductForm.setup();
+            ProductGallery.setup();
+            Opendownloadfile.setup();
+        });
+    ');

@@ -1,0 +1,44 @@
+.score-circle-module {
+    text-align: center;
+    float: left;
+    width: 100%;
+    margin: 15px 0 4px 0;
+
+    .circle-container {
+        display: table;
+        margin:0 auto;
+
+
+
+        .circle-inner-content-container {
+            color:#a0c8a0;
+            font-size: 100% !important;
+            font-family: Helvetica Narrow, Arial Narrow, HelveticaNeue-CondensedBold, Arial, Helvetica, sans-serif;
+            font-stretch: condensed;
+            font-weight: 800;
+            letter-spacing: -0.004em;
+            position: relative;
+            top: -0.05em;
+            transition: color 0.1s linear 0s;
+            line-height: 0.9;
+            text-align: center;
+            white-space: nowrap;
+
+            .small-number {
+                font-size: 58%;
+                margin-left: 0.33em;
+            }
+        }
+
+        &.hide-decimal {
+            .circle-inner-content-container {
+                span {
+                    margin-right: 0.2rem;
+                }
+                .small-number {
+                    display: none;
+                }
+            }
+        }
+    }
+}

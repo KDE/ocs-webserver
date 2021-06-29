@@ -1,0 +1,32 @@
+<?php
+header('content-type: image/png');
+
+if (isset($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    $cookie_params = session_get_cookie_params();
+    foreach($cookies as $cookie) {
+        $parts = explode('=', $cookie);
+        $name = trim($parts[0]);
+        setcookie($name, false, time()-1000, $cookie_params['path'], $cookie_params['domain'], $cookie_params['secure'], $cookie_params['httponly']);
+    }
+}
+
+if (isset($_GET['k'])) {
+    $key = $_GET['k'];
+    $id = Library\LoginCookie::readJwt($key);
+    if ($id) {
+//        $cookie_lifetime = (int)Zend_Registry::get('config')->resources->session->cookie_lifetime;
+        /** @var \Laminas\Cache\Storage\Adapter\AbstractAdapter $cache */
+        $cache = $GLOBALS['ocs_cache'];
+        if ($data = $cache->getItem($id)) {
+//            $cookie_domain = Local_Tools_ParseDomain::get_domain($_SERVER['HTTP_HOST']);
+            $cookie_params = session_get_cookie_params();
+            setcookie($data['name'], $data['id'], time() - $data['lifetime'], $cookie_params['path'], '', $cookie_params['secure'], $cookie_params['httponly']);
+            $cache->removeItem($id);
+        }
+    }
+}
+
+$imagePath = realpath(__DIR__ . "/../../../../../httpdocs/img/default.png");
+$image = file_get_contents($imagePath);
+echo $image;

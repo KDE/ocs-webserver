@@ -1,0 +1,62 @@
+<?php
+
+use Library\LoginCookie;
+use Laminas\Cache\Storage\Adapter\AbstractAdapter;
+use Laminas\Session\Container;
+
+?><!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function loadComplete() {
+            setTimeout("document.location.href = \"<?= $this->redirect ?>\";",3000);
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait...
+    <?php
+    $http_scheme = $this->plugin('serverUrl')->getScheme();
+
+    $config = $this->configHelp()->ocs_config->settings->domain;
+    $url_nextcloud = $this->configHelp()->ocs_config->settings->client->default->url_cloudopendesktop;
+
+    foreach ($this->domains as $domain) {
+        if ($domain == $_SERVER['HTTP_HOST']) {
+            continue;
+        }
+        $session_id = Container::getDefaultManager()->getId();
+        $id = crc32($domain . $session_id);
+        $cookie_params = session_get_cookie_params();
+        $data = array(
+            'name' => $this->configHelp()->session_config->options->name,
+            'id' => $session_id,
+            'lifetime' => $cookie_params['lifetime'],
+        );
+        /** @var AbstractAdapter $cache */
+        $cache = $GLOBALS['ocs_cache'];
+        $cache->setItem($id, $data);
+        $cookie = LoginCookie::createJwt($id, 120);
+        $url = sprintf('%s://%s/logout/set?k=%s', $http_scheme, $domain, $cookie);
+        echo '<img src="' . $url . '" height="1" width="1" style="background-color: black" />' . PHP_EOL;
+    }
+    ?>
+    <img src="<?= $http_scheme ?>://<?= $config->openid->host ?>/logout" height="1" width="1" style="background-color: black"/>
+    <img src="<?= $http_scheme ?>://<?= $config->forum->host ?>:8443/removedata.php" height="1" width="1" style="background-color: black"/>
+    <img src="<?= $http_scheme ?>://<?= $config->opencode->host ?>/users/sign_out" height="1" width="1" style="background-color: black"/>
+    <img src="<?= $http_scheme ?>://<?= $config->opencode->host ?>/external/removedata.php" height="1" width="1" style="background-color: black"/>
+    <?php
+    /*
+    <img src="<?= $http_scheme ?>://<?= $config->myopendesktop->host ?>/removedata.php" height="1" width="1" style="background-color: black" />
+    <img src="<?= $http_scheme ?>://<?= $url_nextcloud ?>/users/sign_out" height="1" width="1" style="background-color: black" />
+    <img src="<?=$http_scheme?>://<?=$config->mastodon->host?>/auth/sign_out" height="1" width="1" style="background-color: black" />
+    <img src="<?=$http_scheme?>://<?=$config->base->host?>/external/removedata.php" height="1" width="1" style="background-color: black" />
+     */
+    ?>
+    <br>
+    <small>or click here if the redirect not work: <a href="<?= $this->redirect ?>">Take me out</a></small>
+</p>
+
+</body>
+</html>

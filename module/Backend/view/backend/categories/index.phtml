@@ -1,0 +1,528 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
+
+<style>
+    .highlight {
+        background-color: #fefff3;
+    }
+</style>
+<div class="messages">
+   
+
+    <div class="alert alert-danger alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='error'>Operation not possible.</span>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='success'>Operation successfully completed.</span>
+        </div>
+    </div>
+
+</div>
+
+<div class="filtering">
+    <form>
+        <span style="margin-right: 0.9em;">hide deleted records: <input type="checkbox" name="filter_deleted"
+                                                                        id="filter_deleted" value="1" checked="checked"/></span>
+        <div style="display:inline-block; text-align: right;width: 95%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+</div>
+
+<div id="TableContainer"></div>
+
+<div id="dialog-cat-about" title="Create/Edit Category About Page">
+    <form id="edit-cat-about" class="" action="/backend/categories/saveabout" method="post">
+        <input type="hidden" value="" id="text-cat-id" name="c"/>
+        <textarea class="" id="text-cat-about" name="ca"></textarea>
+    </form>
+</div>
+
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<!-- <script src="//cdn.tinymce.com/4/jquery.tinymce.min.js"></script> -->
+<script type="text/javascript">
+    var curId = 0;
+    var OcsProps = {
+        set: function (value) {
+            curId = value;
+            $('#TableContainer').jtable('showCreateForm');
+        }
+    };
+
+    $(document).ready(function () {
+        // Prevent jQuery UI dialog from blocking focusin
+        $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".mce-window, .moxman-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+
+        tinymce.init({
+            selector: "#text-cat-about",
+            width: '100%',
+            height: 400,
+            convert_urls: false,
+            relative_urls : false,
+            remove_script_host : false,
+            autoresize_min_height: 400,
+            autoresize_max_height: 600,
+            menubar: false,
+            plugins: [
+                'autoresize advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css']
+        });
+
+        $("#dialog-cat-about").dialog({
+            autoOpen: false,
+            height: 480,
+            width: 640,
+            modal: true,
+            open: function (event, ui) {
+                tinymce.get("text-cat-about").load();
+            },
+            buttons: {
+                Cancel: function () {
+                    $(this).dialog("close");
+                },
+                Save: function () {
+                    tinymce.get("text-cat-about").save();
+                    $('#edit-cat-about').submit();
+                    $(this).dialog("close");
+                }
+            },
+            close: function () {
+            }
+        });
+
+        $('body').on("submit", '#edit-cat-about', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            jQuery.ajax({
+                data: $(this).serialize(),
+                url: this.action,
+                type: this.method,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+                    $(".alert-danger").alert().fadeIn('slow');
+                    return false;
+                },
+                success: function (data, textStatus, jqXHR) {
+                    return false;
+                }
+            });
+
+            return false;
+        });
+        
+        
+        $('.alert .close').on('click', function (e) {
+            $(this).parent().hide();
+        });
+
+        var title = $("#subcat-title"),
+            status = $("#subcat-status"),
+            allFields = $([]).add(title).add(status),
+            tips = $(".validateTips");
+
+        $('body').on("click", '.move-category', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var direction = $(this).attr("data-direction");
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'direction': direction, 'record': elementRecord},
+                url: '/backend/categories/moveelement/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation not possible.</span>');
+                    $(".alert-danger").alert().fadeIn('slow');
+                    return false;
+                },
+                success: function (data, textStatus, jqXHR) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                },
+                complete: function (data, textStatus, errorThrown) {
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+
+        $('body').on("click", 'a.create-about', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var elementRecord = $(this).data("record");
+           
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/categories/readabout/',
+                type: 'post',
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(".alert-danger .alert-body").empty().html('<span class="error">Operation failed.</span>');
+                    $(".alert-danger").alert().fadeIn('slow');
+                    return false;
+                },
+                success: function (data, textStatus, jqXHR) {                   
+//                    $(".alert-success .alert-body").empty().html('<span class="success">Please find the category about page in : /httpdocs/partials/category-about/'+elementRecord+'.phtml .</span>');
+//                    $(".alert-success").alert().fadeIn('slow');
+                    $('#text-cat-about').val(data.CatAbout);
+                    $('#text-cat-id').val(data.c);
+                    $('#dialog-cat-about').dialog('open');
+                    return false;
+                },
+                complete: function (data, textStatus, errorThrown) {
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of Categories',
+            actions: {
+                listAction: '/backend/categories/list',
+                createAction: '/backend/categories/create',
+                //updateAction: '/backend/categories/update',
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/categories/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
+                deleteAction: '/backend/categories/delete'
+            },
+            fields: {
+                project_category_id: {
+                    title: 'Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    width: '5%'
+                },
+                lft: {
+                    title: 'left',
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '3%'
+                },
+                rgt: {
+                    title: 'right',
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '3%'
+                },
+                parent: {
+                    title: 'parent',
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();
+                        if (data.source == 'edit') {
+                            return '/backend/categories/tree?c=' + data.record.project_category_id;
+                        }
+                        return '/backend/categories/tree?c=-1';
+                    }
+                },
+                title: {
+                    title: 'Title',
+                    inputTitle: 'Title*',
+                    type: 'input',
+                    list: false,
+                    width: '30%',
+                    inputClass: 'validate[required]'
+                },
+                title_show: {
+                    title: 'Text (indented according to hierarchy)',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '30%'
+                },
+                xdg_type: {
+                    title: 'XDG-Type',
+                    type: 'input',
+                    create: true,
+                    edit: true,
+                    width: '10%'
+                },
+                name_legacy: {
+                    title: 'Legacy Name',
+                    type: 'input',
+                    create: true,
+                    edit: true,
+                    width: '10%'
+                },
+                dl_pling_factor: {
+                    title: 'DL Factor',
+                    type: 'input',
+                    defaultValue: '1',
+                    create: true,
+                    edit: true,
+                    width: '8%'
+                },
+                mv_pling_factor: {
+                    title: 'MV Factor',
+                    type: 'input',
+                    defaultValue: '1',
+                    create: true,
+                    edit: true,
+                    width: '8%'
+                },
+                show_description: {
+                    title: 'Description',
+                    inputTitle: 'Show Description*',
+                    options: {'1': 'Show', '0': 'Do not show'},
+                    defaultValue: '0',
+                    width: '8%'
+                },
+                source_required: {
+                    title: 'Source',
+                    inputTitle: 'Source Required*',
+                    options: {'1': 'Required', '0': 'Not Required'},
+                    defaultValue: '0',
+                    width: '8%'
+                },
+                browse_list_type_name: {
+                    title: 'Browse-List-Type',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '8%'
+                }, 
+                browse_list_type: {
+                    title: 'Browse-List-Type',
+                    type: 'multiselectddl',
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/browselisttype/allbrowselisttypes';
+                    }
+                },
+                tag_rating_name: {
+                    title: 'Tag-Rating',                   
+                    create: false,
+                    edit: false,
+                    list:true,
+                    width: '8%'
+                }, 
+                tag_rating: {
+                    title: 'Tag-Rating',                    
+                    create: true,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/categories/fetchtagratinggroups';
+                    }
+                },
+                is_active: {
+                    title: 'Status',
+                    inputTitle: 'Status*',
+                    options: {'1': 'Active', '0': 'Inactive'},
+                    defaultValue: '1',
+                    width: '5%'
+                },
+                is_deleted: {
+                    title: 'Deleted',
+                    options: {'0': 'Not Deleted', '1': 'Deleted'},
+                    defaultValue: '0',
+                    create: false,
+                    width: '5%'
+                },
+                created_at: {
+                    title: 'Created',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                changed_at: {
+                    title: 'Changed',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                deleted_at: {
+                    title: 'Deleted',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                addSubCat: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="add sub category" href="javascript:return false;" role="button" onclick="OcsProps.set(' + data.record.project_category_id + ');"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>';
+                        }
+                    }
+                },
+                moveUp: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="move category up" href="javascript:return false;" class="move-category" role="button" data-direction="up" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>';
+                        }
+                    }
+                },
+                moveDown: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="move category down" href="javascript:return false;" class="move-category" role="button" data-direction="down" data-record=\'{"project_category_id":' + data.record.project_category_id + ', "lft": ' + data.record.lft + ', "rgt": ' + data.record.rgt + ' }\'><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></a>';
+                        }
+                    }
+                },
+                about: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="create/edit about page" href="javascript:return false;" class="create-about" role="button" data-record=\'' + data.record.project_category_id + ' \'><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span></a>';
+                        }
+                    }
+                }
+
+            },
+
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.validationEngine();
+                if (typeof curId !== 'undefined') {
+                    console.log(curId);
+                    $("select[id=Edit-parent] option[value="+curId+"]").attr('selected','selected');
+                }
+                $('#jtable-create-form').attr('style', 'padding:5%');
+            },
+            //Validate form when it is being submitted
+            formSubmitting: function (event, data) {
+                return data.form.validationEngine('validate');
+            },
+            //Dispose validation logic when form is closed
+            formClosed: function (event, data) {
+                curId=null;
+                data.form.validationEngine('hide');
+                data.form.validationEngine('detach');
+            },
+            recordsLoaded: function () {
+                $(".jtable").attr('style', 'position:inherit;'); // corrects the position for dragged element.
+                $('tr.jtable-data-row').hover(function () {
+                    $(this).addClass('highlight');
+                }, function () {
+                    $(this).removeClass('highlight');
+                });
+
+            }
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: 0,
+            });
+        });
+
+    });
+</script>

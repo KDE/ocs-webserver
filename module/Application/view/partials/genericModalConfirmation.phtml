@@ -1,0 +1,87 @@
+<?php
+/**
+We need a generic Modal to ask for confirmation.
+   Please note that:
+    - we have a placeholder (#delete-confirmation-msg) for displaying delete message
+    - Confirm proceed button is #delete-confirmation-yes
+    - Confirm cancel button is #delete-confirmation-no
+**/ ?>
+<div class="modal fade" id="delete-confirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="delete-confirmation-msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="delete-confirmation-no" data-dismiss="modal" >Cancel</button>
+                <button type="button" class="btn red-pink" id="delete-confirmation-yes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="application/javascript">
+    <?php
+    // Example javascript callback function
+    ?>
+    function defaultCallbackConfirmation(link) {
+        // Do however you want to handle deleting
+        // We have the link element and can access it's data attributes
+        $(link).closest('form').submit();
+    }
+
+    $(document).ready(function() {
+        // Now, when the button is clicked, setup the message, attach event with button
+        // and then show the modal
+        $(document).on('click', '.remove, .confirm', function(e) {
+            e.preventDefault();
+            var link = this;
+            $('#delete-confirmation-msg').html($(this).data('message'));
+            $('#delete-confirmation-yes').on('click', function() {
+                var callback = $(link).data('callback');
+//                if(typeof callback == 'function') {
+                    window[callback](link);
+//                } else {
+//                    window.location = $(link).data('url');
+//                }
+
+                $('#delete-confirmation').modal('hide');
+            });
+
+            if(yesBtn = $(this).data('yes-btn')) {
+                $('#delete-confirmation-yes').html(yesBtn);
+            }
+            if(noBtn = $(this).data('no-btn')) {
+                $('#delete-confirmation-no').html(noBtn);
+            }
+
+            $('#delete-confirmation').modal('show');
+        });
+        $('#delete-confirmation').on('hidden.bs.modal', function (e) {
+            $('#delete-confirmation-yes').off();
+
+            $('#delete-confirmation-msg').empty();
+            $('#delete-confirmation-yes').text('Yes');
+            $('#delete-confirmation-no').text('Cancel');
+        });
+    });
+</script>
+<?php
+/** HTML example code
+ * The delete links should have a common class (.remove here) and the following data attributes:
+
+ * data-message  - The message to show on confirmation modal
+ * data-callback - OPTIONAL: The name of callback function that will be called if confirmation is positive
+ *                           This function will receive the delete link element as argument
+ * data-url      - OPTIONAL: If confirmation affirmative, will forward to this link if no data-callback is mentioned
+ * data-yes-btn  - OPTIONAL: Label of Yes button of confirmation modal
+ * data-no-btn   - OPTIONAL: Label of No button of confirmation modal
+
+<ul class="list-unstyled fileList">
+ <li class="font-blue-steel" id="attachment-234">
+  <a href="#" class="remove attachment" title="Remove this file" data-callback="defaultCallbackConfirmation" data-message="Are you sure to delete this <b>InterestingThing<b/>?">
+   <span class="glyphicon glyphicon-remove"></span> Delete
+  </a>
+ </li>
+ <!-- More list items... -->
+</ul>
+ */

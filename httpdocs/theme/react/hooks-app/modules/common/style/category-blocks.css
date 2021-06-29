@@ -1,0 +1,123 @@
+/*** Include style below into AppImageHub css ***/
+
+/* optional */
+a, a:hover {
+    text-decoration: none;
+  }
+  
+  .aih-container {
+    width: 90%;
+    max-width: 1000px;
+    text-align: center;
+    display: block;
+  }
+  
+  .aih-section {
+    padding: 60px 15px;
+    overflow-x: hidden;
+  }
+  
+  .aih-row {
+    margin-left: -16px;
+    margin-right: -16px;
+    clear: both;
+    display: inline-block;
+    
+  }
+  .aih-card {
+    text-align: left;
+    position: relative;
+    display: inline-block;
+    width: 214px;
+    margin: 16px;
+    border: 1px solid #ccc;
+    background: #fff;
+  }
+  .aih-card-last {margin-right: 0;}
+  
+  .aih-card:before, 
+  .aih-card:after {
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+  }
+  .aih-card:before {
+    left: 3px;
+    top: 3px;
+    z-index: -1;
+  }
+  .aih-card:after {
+    left: 5px;
+    top: 5px;
+    z-index: -2;
+  }
+  
+  .aih-ribbon {
+    width: 100%;
+    height: 4px;
+    background-color: #00e676;
+  }
+  
+  /* Ribbon category colors */
+  .aih-all { background-color: #3d5161; }
+  .aih-audio { background-color: #2ecc71; }
+  .aih-education { background-color: #1abc9c; }
+  .aih-games { background-color: #3498db; }
+  .aih-graphics { background-color: #9b59b6; }
+  .aih-internet { background-color: #f1c40f; }
+  .aih-office { background-color: #e74c3c; }
+  .aih-programming { background-color: #2ecc71; }
+  .aih-systools { background-color: #e67e22; }
+  .aih-video { background-color: #9b59b6; }
+  
+  .aih-thumb {
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+  }
+  
+  .aih-content {
+    min-height: 90px;
+  }
+  
+  .aih-title {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.3;
+    color: #37474f;
+    max-width: 60%;
+    margin: 10px 10px 10px 20px;
+  }
+  a:hover .aih-title {
+    color: #111;
+  }
+  
+  .aih-counter {
+    position: absolute;
+    margin: 10px;
+    color: #78909c;
+    font-size: 14px;
+    text-align: center;
+    top: 144px;
+    right: 4px;
+  }
+  a:hover .aih-counter {
+    color: #455a64;
+  }
+  .aih-counter span {
+    font-size: 10px;
+    display: none;
+  }
+  
+  @media only screen and (min-width: 1109px) {
+    .aih-container {
+      text-align: left;
+    }
+    .aih-card {
+      float: left;
+    }
+  }

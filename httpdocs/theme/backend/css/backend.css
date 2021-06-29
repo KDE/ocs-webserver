@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+@import url('/theme/backend/css/backend/start.css');
+@import url('/theme/backend/css/backend/navigation.css');
+@import url('/theme/backend/css/backend/datatable.css');
+@import url('/theme/backend/css/backend/formular.css');
+@import url('/theme/backend/css/backend/search.css');
+@import url('/theme/backend/css/backend/pling-nav-tabs.css');
+@import url('/theme/backend/css/backend/stati.css');

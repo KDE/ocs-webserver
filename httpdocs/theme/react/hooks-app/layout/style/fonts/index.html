@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Sans font</title>
+    <!-- Open Sans font-->
+    <link rel="stylesheet" href="fonts.css">
+    <!-- Pling style-start-->
+    <link rel="stylesheet" href="https://new-layout.pling.cc/theme/react/hooks-app/layout/style/style-start.css">
+    <style>
+        body { font-family: 'open_sansregular', serif; }
+        header h1 { border-bottom: 1px solid var(--color-light-5); }
+        .show-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-large); }
+        pre { background: var(--color-light-2); padding: var(--space-normal); border-radius: var(--space-small); color: var(--color-dark-3); overflow: auto; margin: var(--space-medium) 0; }
+    </style>
+</head>
+<body class="theme-light">
+    <div class="container-normal">
+        <h1>Open Sans font</h1>
+        <p>Webfont <a class="link-primary" href="https://www.fontsquirrel.com/fonts/open-sans">Open Sans Webfont Kit</a></p>
+        <p>Home page <a class="link-primary" href="https://www.opensans.com/">Open Sans</a></p>
+        <hr>
+    </div>
+    <div class="container-normal">
+        <div>
+            <a class="pui-btn" href="fonts.zip">Download fonts</a>
+        </div>
+        <div>
+            <h2>Include Open Sans font</h2>
+            <p>Structure</p>
+            <pre><code>fonts [dir]
+- fonts.css
+- opensans [dir]
+-- opensans-regular 
+-- opensans-italic
+-- opensans-bold
+- another_font
+-- another_font-regular
+            </code></pre>
+
+        </div>
+        <div>
+            <h4>Add font files</h4>
+            <p>Include in the <b>head</b> of the document</p>
+            <pre><code> &lt;link href="fonts/fonts.css" rel="stylesheet"&gt; </code></pre>
+
+            <p>Update body inside style-start.css</p>
+            <pre><code>
+body {
+    background: var(--color-light-1);
+    color: var(--color-dark-1);
+    font-family: 'open_sansregular', "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--text-normal);
+    line-height: 1.5;
+}</code></pre>
+            <p>Remove google fonts</p>
+            <pre><code>&lt;link rel="preconnect" href="https://fonts.gstatic.com"&gt;</code></pre>
+            <pre><code>&lt;link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600,0:800;1,400&amp;display=swap" rel="stylesheet"&gt;</code></pre>
+        </div>
+        <div>
+            <p>Only move fonts directory if needed; if content inside is moved separately, fonts.css needs paths update</p>
+            <br>
+            <p>All fonts (if we decide to change) will go inside fonts dir and fonts.css contains paths for all fonts.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$helpImage = new \Application\View\Helper\Image();
+$helpPrintDate = new \Application\View\Helper\PrintDate();
+?>
+<div class="commentstore">
+	<div class="row" style="margin-left: 0;margin-right: 0; ">
+		<?= \Application\Model\Service\HtmlPurifyService::purify($this->comment['title']) ?>
+		<span
+			style="display: block;" class="small"><?= $this->comment['catTitle'] ?></span>
+	</div>
+	<div class="row" style="margin-left: 0;margin-right: 0;">
+		<div class="userinfo">
+			<a href="<?=$this->buildMemberUrl($this->comment['username'])?>"  class="tooltipuserleft" data-tooltip-content="#tooltip_content" data-user="<?=$this->comment['member_id']?>" >
+                <img src="<?= $helpImage->Image($this->comment['profile_image_url'],array('width' => 40, 'height' => 40)) ?>" />
+				<span style="display: block"><?= $this->comment['username'] ?></span>
+			</a>
+		</div>
+		<div class="info">
+			<div class="small" style="line-height:1.3">
+                <a href="<?=$this->buildProductUrl($this->comment['project_id'])?>">
+					<?=$this->truncate(\Application\Model\Service\HtmlPurifyService::purify($this->comment['comment_text']), 200, '...', false, true)?>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="row " style="margin-left: 0;margin-right: 0;">
+		<span style="font-size: smaller;"><?= $helpPrintDate->printDate($this->comment['comment_created_at'])?></span>
+	</div>
+</div>

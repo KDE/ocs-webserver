@@ -1,0 +1,171 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+$this->headTitle('Duplicates');
+?>
+
+<link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+<link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+<script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+<link href="/theme/flatui/css/jtable.extra.css" rel="stylesheet">
+
+<main id="explore-content">
+  <section class="wrapper" id="products-wrapper" >
+<h1>
+    Duplicates Project Source   
+</h1>
+    
+     <form style="margin-top: 20px; margin-bottom: 20px">       
+            Source_url Filter  :
+            <select name="filter_type" id="filter_type" >
+                <option value="1">Show ALL Duplicates</option>
+                <option value="2">filter source_url from Duplicates</option>
+                <option value="3">filter source_url like '/in/photolist'</option>
+            </select>
+            <input name="filter_source_url" id="filter_source_url"/>                
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>                         
+    </form>
+        
+    <div id="TableContainer"></div>    
+    </section>
+
+</main>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $('#filter_type').on('change',function(){
+            $('#filter_source_url').val('');        
+        })
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,                     
+            actions: {
+                listAction: '/duplicates/list'                
+            },
+            fields: {
+                    source_url: {
+                                     title: 'Source',
+                                     key: true,
+                                     create: false,
+                                     edit: false,
+                                     list: true                   
+                                 },
+                    cnt: {
+                                     title: 'cnt', 
+                                     width:'5%',                                  
+                                     create: false,
+                                     edit: false,
+                                     list: true                   
+                                 },
+                    pids:{
+                         title: 'Projects',                         
+                         list:true,
+                         edit: false,
+                         display:function(data){   
+                            var pids = data.record.pids.split(",");  
+                            var html='';
+                            pids.forEach(function(element,idx, array) {
+                               html = html+'<a target="_blank" href="/p/'+element+'">'+element+'</a>';
+                               if (idx !== array.length - 1){ 
+                                       html=html+','; 
+                                }
+                            });                   
+                            return html;
+                        }
+                    }
+                             
+                    
+            }
+        });
+
+        $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+        });
+
+     
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_source_url: $('#filter_source_url').val(),
+                filter_type: $('#filter_type').val(),             
+            },function(){
+              TooltipUser.setup("tooltipuser","right");        
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();            
+          $("#filter_member_id option[value='']").attr('selected', true)      
+            $('#TableContainer').jtable('load', {            
+                filter_member_id: null,              
+            });
+        });
+
+        // $('#TableContainer').jtable('load', {           
+        //     filter_member_id: $('#filter_member_id').val()            
+        // });
+
+        $('#TableContainer').jtable('load', {                       
+        },function(){
+                
+        });
+
+        $('body').on("click", 'a.imghistory', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+           
+            return false;
+        });
+
+      
+
+                
+    
+    });
+</script>
+
+     

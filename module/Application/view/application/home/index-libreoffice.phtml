@@ -1,0 +1,119 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->headTitle($_SERVER['HTTP_HOST'], 'SET');
+$this->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', 'www.opendesktop.org/s/LibreOffice')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', 'www.opendesktop.org/s/LibreOffice')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:site_name','www.opendesktop.org/s/LibreOffice')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image','https://www.opendesktop.org/images_sys/superstore/lo-logo.png')->setAutoEscape(false);
+
+
+$modelInfo = new Default_Model_Info();
+$helperBuildMemberUrl = new Default_View_Helper_BuildMemberUrl();
+$helperBuildBaseUrl = new Default_View_Helper_BuildBaseUrl();
+$helperImage = new Default_View_Helper_Image();
+$helpPrintDate = new Default_View_Helper_PrintDate();
+
+$host = $_SERVER['SERVER_NAME'];
+
+$modelProject = new Default_Model_Project();
+$totalProjects = $modelProject->fetchTotalProjectsCount(true);
+
+$basrUrl = $helperBuildBaseUrl->buildBaseUrl();
+
+if(strpos ( $host , ".cc" ) > 0 || strpos ( $host , ".local" ) > 0) {
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"104");
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"105");
+    $products3 = $modelInfo->getJsonLastProductsForHostStores(15,"98");
+    $products4= $modelInfo->getJsonLastProductsForHostStores(15,"57");
+    $products5= $modelInfo->getJsonLastProductsForHostStores(15,"53");
+    $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"52");
+    $products7 = $modelInfo->getJsonLastProductsForHostStores(15,"52");
+
+    $response = array(
+        'products3' => array('title' =>'Documentation','catIds' =>'52','products' => $products3),
+        'products4' => array('title' =>'Extensions','catIds' =>'98','products' => $products4),
+        'products7' => array('title' =>'Templates','catIds' =>'52','products' => $products7),
+        'products2' => array('title' =>'Dictionaries','catIds' =>'105','products' => $products2),
+        'products1' => array('title' =>'Clipart Galleries','catIds' =>'104','products' => $products1),
+        'products6' => array('title' =>'Splash Screens','catIds' =>'53','products' => $products6),
+        'products5' => array('title' =>'Fonts','catIds' =>'57','products' => $products5),
+    );
+
+  } else {
+    $products1 = $modelInfo->getJsonLastProductsForHostStores(15,"559");
+    $products2 = $modelInfo->getJsonLastProductsForHostStores(15,"547");
+    $products3 = $modelInfo->getJsonLastProductsForHostStores(15,"554");
+    $products4= $modelInfo->getJsonLastProductsForHostStores(15,"556");
+    $products5= $modelInfo->getJsonLastProductsForHostStores(15,"555");
+    $products6 = $modelInfo->getJsonLastProductsForHostStores(15,"271");
+    $products7 = $modelInfo->getJsonLastProductsForHostStores(15,"103");
+
+    $response = array(
+        'products1' => array('title' =>'Documentation','catIds' =>'559','products' => $products1),
+        'products2' => array('title' =>'Extensions','catIds' =>'547','products' => $products2),
+        'products3' => array('title' =>'Templates','catIds' =>'554','products' => $products3),
+        'products4' => array('title' =>'Dictionaries','catIds' =>'556','products' => $products4),
+        'products5' => array('title' =>'Clipart Galleries','catIds' =>'555','products' => $products5),
+        'products6' => array('title' =>'Splash Screens','catIds' =>'271','products' => $products6),
+        'products7' => array('title' =>'Fonts','catIds' =>'103','products' => $products7),
+    );
+  }
+
+?>
+<style>
+#main-header .logo-header {
+  width: 275px;
+  height: 71px;
+  left: 0;
+  top: 0;
+  background-color: #18a302;
+}
+
+#main-header > .container {
+  margin-left: auto;
+  margin-right: auto;
+  float: none;
+  height: auto;
+  width: 100%;
+  background-color: #18a203;
+}
+
+#main-header .header_cat_link {
+    bottom: 20px;
+}
+</style>
+<main id="explore-content"></main>
+<script type="text/javascript">
+  var filters = {};
+  var view = "home";
+  var hpVersion = 2;
+  var page = "libreoffice";
+  var data = <?php echo Zend_Json::encode($response)?>;
+  var totalProjects = <?php echo $totalProjects ?>;
+  var baseUrl = <?php echo Zend_Json::encode($basrUrl)?>;
+</script>
+<div id="carousel-module-container" class="app-images-hub">
+</div>

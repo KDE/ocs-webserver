@@ -1,0 +1,244 @@
+.button-container-cell {
+    position: relative;
+}
+
+.button-container-cell.open ul.dropdown-menu {
+    display: block !important;
+}
+
+.custom-fancybox-close {cursor: pointer;}
+
+ul.pagination li.active  a { font-weight: bold;}
+
+.user-profile-activity-item .item-info .pui-pling,
+.user-profile-activity-item .item-info .pui-heart {
+    position: relative;
+    margin: 0;
+    left: 0;
+    top: 0;
+    margin-right: 5px;
+}
+
+#user-profile-container .pling-cards-grid .pui-card {
+    display: block;
+}
+
+@-moz-document url-prefix() {
+    .app-download {
+        grid-template-columns: 54px 1fr;
+        padding: var(--space-normal) var(--space-normal);
+    }
+
+    .app-download img {
+        width: 80%;
+    }
+}
+
+.plingbartext {
+    white-space: nowrap;
+}
+.aih-welcome {
+    background: url(media/aih-waves.png) no-repeat;
+}
+
+.myfav .heart-button .pui-heart {
+    position: absolute;
+    top: 8px;
+    left: 75px;
+    z-index: 20;
+    background: var(--color-light-1);
+    width: var(--space-xlarge);
+    height: var(--space-xlarge);
+    padding: var(--space-normal);
+    box-shadow: 2px 2px 8px rgba(0,0,0,.4);
+    cursor: pointer;
+}
+
+.show-old-score {
+    padding-top: 60px;
+}
+
+.show-old-score .old-score-info {
+    
+    word-wrap: break-word;
+    width: 100px;
+    display: block;
+    font-style: italic;
+    padding: var(--space-normal);
+    background: var(--color-light-2);
+    border-radius: var(--space-small);
+    font-size: var(--text-xsmall);
+    position: absolute;
+    right: -15px;
+    top: 0;
+}
+
+/** tool tip **/
+
+/*** Update style for tooltip ***/
+
+/* Tooltip container */
+
+.mytooltip-container {
+    background: var(--color-light-1) !important;
+    border: 1px solid var(--color-light-4) !important;
+    border-radius: var(--space-normal);
+    -webkit-box-shadow: 0 8px 12px 0 rgba(0, 0, 0, .2);
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, .2);
+    color: var(--color-dark-2) !important;
+    max-width: 320px;
+    padding: 0;
+    opacity: 1 !important;
+    text-align: left !important;
+    text-transform: none !important;
+    font-weight: normal;
+}
+
+
+/* Tooltip arrow */
+
+/* Tooltip header */
+
+.mytooltip-container .mytooltip .header {
+    border-bottom: 1px solid var(--color-light-4) !important;
+    -webkit-box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.15);
+    display: block;
+    font-size: var(--text-normal);
+    margin: 0 auto !important;
+    padding: var(--space-normal) var(--space-medium) !important;
+}
+
+.mytooltip-container .mytooltip .row {
+    margin: 0 !important;
+    padding: 0 !important;
+    padding: 0 !important;
+    border-top-left-radius: var(--space-normal);
+    border-top-right-radius: var(--space-normal);
+    overflow: hidden; 
+}
+
+
+/* Tooltip statistics*/
+
+.tool-tip-container .statistics {
+    padding: var(--space-normal) var(--space-medium);
+}
+
+
+/* Tooltip spinner */
+
+.tool-tip-container .spinner-grow-sm {
+    margin: var(--space-normal) !important;
+}
+
+/* please login */
+
+.please-login {
+    margin: 50px;
+    text-align: center;
+}
+
+/* install info */
+
+#install-info {
+    height: 85vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#install-info .info {
+    overflow-y: hidden;
+    overflow: auto;
+    flex-grow: 1;
+    width: calc(100% + 17px);
+}
+
+
+/* Sidebar products tooltip padding on image and description */
+.__react_component_tooltip .more-product-item-popover .content .title, .__react_component_tooltip .more-product-item-popover .profile-img-product .imgpopover {
+    padding: 4px;
+}
+.__react_component_tooltip.show {
+    opacity: 1;
+}
+/* Tooltip white arrows */
+.__react_component_tooltip {
+    color: #222;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 0 !important;
+}
+.__react_component_tooltip.place-top {
+    margin-top: -10px;
+}
+.__react_component_tooltip.place-top::before {
+    border-top: 8px solid #ccc;
+}
+.__react_component_tooltip.place-top::after {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    bottom: -6px;
+    left: 50%;
+    margin-left: -8px;
+    border-top-color: #fff;
+    border-top-style: solid;
+    border-top-width: 6px;
+}
+.__react_component_tooltip.place-bottom {
+    margin-top: 10px;
+}
+.__react_component_tooltip.place-bottom::before {
+    border-bottom: 8px solid #ccc;
+}
+.__react_component_tooltip.place-bottom::after {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    top: -6px;
+    left: 50%;
+    margin-left: -8px;
+    border-bottom-color: #fff;
+    border-bottom-style: solid;
+    border-bottom-width: 6px;
+}
+.__react_component_tooltip.place-left {
+    margin-left: -10px;
+}
+.__react_component_tooltip.place-left::before {
+    border-left: 8px solid #ccc;
+}
+.__react_component_tooltip.place-left::after {
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    right: -6px;
+    top: 50%;
+    margin-top: -4px;
+    border-left-color: #fff;
+    border-left-style: solid;
+    border-left-width: 6px;
+}
+.__react_component_tooltip.place-right {
+    margin-left: 10px;
+}
+.__react_component_tooltip.place-right::before {
+    border-right: 8px solid #ccc;
+}
+.__react_component_tooltip.place-right::after {
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    left: -6px;
+    top: 50%;
+    margin-top: -4px;
+    border-right-color: #fff;
+    border-right-style: solid;
+    border-right-width: 6px;
+}
+
+@media screen and (min-width: 1400px){
+    .product-browse-item {
+        grid-template-columns: calc(var(--space-xlarge)*5) 1fr calc(var(--space-xlarge)*5);
+    }   
+}

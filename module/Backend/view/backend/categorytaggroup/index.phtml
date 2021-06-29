@@ -1,0 +1,223 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
+<style>
+    .highlight {
+        background-color: #fefff3;
+    }
+</style>
+<div class="messages">
+   
+
+    <div class="alert alert-danger alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='error'>Operation not possible.</span>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='success'>Operation successfully completed.</span>
+        </div>
+    </div>
+
+</div>
+
+<div class="filtering">
+    <form>
+        <span style="margin-right: 0.9em;">hide deleted records: <input type="checkbox" name="filter_deleted"
+                                                                        id="filter_deleted" value="1" checked="checked"/></span>
+        <div style="display:inline-block; text-align: right;width: 95%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+          
+        </div>
+    </form>
+</div>
+
+<div id="TableContainer"></div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Prevent jQuery UI dialog from blocking focusin
+        $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".mce-window, .moxman-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of Categories and the Tag-Groups',
+            actions: {
+                 listAction: '/backend/categorytaggroup/list',
+                                            
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/categorytaggroup/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
+               
+            },
+            fields: {
+                project_category_id: {
+                    title: 'Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    width: '5%'
+                },
+                lft: {
+                    title: 'left',
+                    create: false,
+                    edit: false,
+                    list: false,
+                    width: '3%'
+                },
+                rgt: {
+                    title: 'right',
+                    create: false,
+                    edit: false,
+                    list: false,
+                    width: '3%'
+                },
+                title: {
+                    title: 'Category-Name',
+                    type: 'input',
+                    list: false,
+                    width: '30%',
+                    inputClass: 'validate[required]'
+                },
+                title_show: {
+                    title: 'Category-Name',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '30%'
+                },                
+                
+                tag_group_name: {
+                    title: 'Tag-Groups',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    width: '30%'
+                },                
+                tag_group_id: {
+                    title: 'Tag-Group-IDs',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    width: '30%'
+                }
+                ,    
+                
+                all_tag_groups: {
+                    title: 'Tag-Groups Helper Click to Select',
+                    type: 'multiselectddl',
+                    create: false,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/categorytaggroup/alltaggroups';
+                    }
+                }
+                
+                
+                                                        
+            },
+
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.validationEngine();
+                
+                $('#jtable-create-form').attr('style', 'padding:5%');
+                $('#jtable-edit-form').find('#Edit-tag_group_name').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-title').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-all_tag_groups').change(function () {
+                    var str = "";
+                    $( "select#Edit-all_tag_groups option:selected" ).each(function() {
+                      str = $( this ).val() ;
+                    });
+
+                    var t = $('#jtable-edit-form').find('#Edit-tag_group_id').val();
+                    var tids ='';
+                    if($.trim(t)){
+                        tids = t+','+str;
+                    }else{
+                        tids = str;
+                    }
+                    
+                     $('#jtable-edit-form').find('#Edit-tag_group_id').val(tids);
+                  })
+                  ;
+            },
+            
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: 0,
+            });
+        });
+
+    });
+</script>

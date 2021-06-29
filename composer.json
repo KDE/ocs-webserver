@@ -1,0 +1,105 @@
+{
+    "name": "ocs/ocs-webserver",
+    "description": "Started in 2001, OpenDesktop.org is one of the largest websites for the Free Software and Content community.",
+    "type": "project",
+    "minimum-stability": "stable",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "pling GmbH",
+            "email": "contact@opendesktop.org"
+        }
+    ],
+    "homepage": "https://www.opendesktop.org/",
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "ext-pdo": "*",
+        "ext-dom": "*",
+        "ext-ctype": "*",
+        "ext-json": "*",
+        "ext-mcrypt": "*",
+        "ext-openssl": "*",
+        "ext-gd": "*",
+        "ext-curl": "*",
+        "ext-fileinfo": "*",
+        "ext-ldap": "*",
+        "ext-imagick": "*",
+        "ext-pcntl": "*",
+        "laminas/laminas-diactoros": "^1.8",
+        "laminas/laminas-component-installer": "^1.0 || ^2.1",
+        "laminas/laminas-mvc": "3.1.*",
+        "laminas/laminas-development-mode": "^3.2",
+        "laminas/laminas-cache": "^2.9.0",
+        "laminas/laminas-db": "^2.10.0",
+        "laminas/laminas-mvc-form": "^1.0",
+        "laminas/laminas-json": "^3.1.2",
+        "laminas/laminas-log": "^2.11",
+        "laminas/laminas-mvc-console": "^1.2.0",
+        "laminas/laminas-mvc-plugins": "^1.0.1",
+        "laminas/laminas-psr7bridge": "^1.2.0",
+        "laminas/laminas-session": "^2.9.1",
+        "laminas/laminas-servicemanager-di": "^1.2.1",
+        "laminas/laminas-serializer": "^2.9",
+        "laminas/laminas-http": "^2.11",
+        "mjohnson/decoda": "*",
+        "mikemix/zf2htmlpurifier": "~1.0",
+        "laminas/laminas-paginator": "*",
+        "yohang88/letter-avatar": "^2.2",
+        "laminas/laminas-crypt": "^3.3",
+        "tasmaniski/zend-layout-change": "^1.0",
+        "laminas/laminas-mail": "^2.10",
+        "laminas/laminas-ldap": "^2.10",
+        "laminas/laminas-captcha": "^2.9",
+        "laminas/laminas-i18n-resources": "^2.6",
+        "laminas/laminas-recaptcha": "^3.0.0",
+        "mjphaynes/php-resque": "^2.2",
+        "laminas/laminas-permissions-acl": "^2.7",
+        "symfony/console": "^3.4",
+        "laminas/laminas-mime": "^2.7",
+        "zfr/zfr-cors": "^1.5",
+        "laminas/laminas-dependency-plugin": "^1.0",
+        "zf1/zend-currency": "~1.12",
+        "laminas/laminas-mvc-middleware": "^1.1",
+        "http-interop/http-middleware": "^0.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Application\\": "module/Application/src/",
+            "Portal\\": "module/Portal/src/",
+            "Statistic\\": "module/Statistic/src/",
+            "Backend\\": "module/Backend/src/",
+            "JobQueue\\": "module/JobQueue/src/",
+            "OcsService\\": "module/OcsService/src",
+            "Library\\": "library/"
+        },
+        "psr-0": {
+            "Zend_Service_": "librarypsr0/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ApplicationTest\\": "module/Application/test/"
+        }
+    },
+    "scripts": {
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "development-disable": "laminas-development-mode disable",
+        "development-enable": "laminas-development-mode enable",
+        "development-status": "laminas-development-mode status",
+        "post-create-project-cmd": [
+            "@development-enable",
+            "php bin/update-gitignore.php"
+        ],
+        "serve": "php -S 0.0.0.0:8080 -t httpdocs",
+        "test": "phpunit --testsuite Application",
+        "resque-start": "sh ./scripts/composer/resque-start.sh",
+        "resque-stop": "sh ./scripts/composer/resque-stop.sh"
+    },
+    "require-dev": {
+        "laminas/laminas-developer-tools": "^1.2.3",
+        "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.17",
+        "laminas/laminas-test": "^3.3",
+        "andrey-mokhov/bjy-profiler": "^1.3.0"
+    }
+}

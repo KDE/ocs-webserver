@@ -1,0 +1,79 @@
+#comics-reader-wrapper {
+  height: 100%;
+  position: relative;
+}
+#comics-reader-wrapper #ajax-loader {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -12px;
+  margin-top: -12px;
+  background-color: white;
+}
+#comics-reader-wrapper .comic-book-reader {
+  height: 100%;
+  position: relative;
+  padding-bottom: 60px;
+}
+#comics-reader-wrapper .comic-book-reader .bb-bookblock {
+  width: 450px;
+  height: 100%;
+}
+#comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-item img,
+#comics-reader-wrapper .comic-book-reader .bb-bookblock .bb-page img {
+  width: 50%;
+  float: left;
+}
+#comics-reader-wrapper .nav-container {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  z-index: 111;
+  height: 58px;
+}
+#comics-reader-wrapper .nav-container nav {
+  width: auto;
+  height: 34px;
+  margin: 0 auto 0;
+  display: table;
+}
+#comics-reader-wrapper .nav-container nav a {
+  display: block;
+  min-width: 30px;
+  height: 30px;
+  text-align: center;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  margin: 2px;
+  float: left;
+  cursor: pointer;
+}
+#comics-reader-wrapper .nav-container nav a i {
+  margin-top: 3px;
+  display: inline-block;
+}
+#comics-reader-wrapper .nav-container nav a:hover {
+  opacity: 0.6;
+}
+#comics-reader-wrapper .nav-container nav a#bb-nav-counter {
+  line-height: 30px;
+  font-size: 12px;
+}
+#comics-reader-wrapper .nav-container > span.title {
+  display: inline-block;
+  /* min-width: 30px; */
+  height: auto;
+  text-align: center;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  margin: 2px;
+  /* float: left; */
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
+}

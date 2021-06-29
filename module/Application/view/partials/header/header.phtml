@@ -1,0 +1,218 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\View\Helper\MemberSettingItemHelperTrait;
+
+/** @var \Application\Model\Entity\CurrentUser $member */
+$member = $this->currentUser();
+$phash = null;
+$ltat = null;
+
+if ($member->hasIdentity()) {
+    $sess = new \Laminas\Session\Container('ocs_meta');
+    $phash = $sess->phash;
+    $ltat = $sess->openid;
+}
+
+$userRoleName = $member->roleName;
+$isAdmin = false;
+if ($member->isAdmin()) {
+    $isAdmin = true;
+}
+
+$jsonmember = null;
+if ($member && !empty($member->username)) {
+    $jsonmember = array(
+        'member_id'         => $member->member_id,
+        'username'          => $member->username,
+        'avatar'            => $member->avatar,
+        'profile_image_url' => $member->profile_image_url,
+        'isAdmin'           => $isAdmin,
+    );
+}
+
+$config = $this->configHelp()->ocs_config;
+$baseurl = $config->settings->client->default->baseurl;
+$baseurlStore = $config->settings->client->default->baseurl_store;
+$searchbaseurl = $this->buildSearchBaseUrl();
+/** @var \Application\Model\Entity\CurrentStore $current_store */
+$current_store = $this->currentStore();
+$store_template = $current_store->getTemplate();
+
+$sname = $current_store->getConfig()->host;
+$store_config = $current_store->getConfig();
+$store_order = $store_config->order;
+$store_name = $store_config->name;
+$is_show_title = $store_config->is_show_title;
+$last_char_store_order = substr($store_order, -1);
+$is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
+
+$url_forum = $config->settings->client->default->url_forum;
+$url_gitlab = $config->settings->client->default->url_gitlab;
+$url_blog = $config->settings->client->default->url_blog;
+$config_domain = $config = $config->settings->domain;
+$url_openid = $config_domain->openid->host;
+
+/** @var \Laminas\View\Helper\ServerUrl $serverUrl */
+$serverUrl = $this->plugin('serverurl');
+$serverUrl->setUseProxy(true);
+$http_scheme = $serverUrl->getScheme();
+
+$json_menu = $this->fetchMetaheaderMenuJson();
+$json_tree = $this->fetchStoresForCatTreeJson();
+
+
+$thisurl = "/";
+if (isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
+$url_logout = SERVER_BASE_PATH."/logout?redirect=" . $this->urlEncrypt($thisurl);
+$url_login = SERVER_BASE_PATH."/login?redirect=" . $this->urlEncrypt($thisurl);
+
+$cat_id = $this->params()->fromRoute('cat');
+
+$project_id = $this->params()->fromRoute('project_id');
+
+if(!$cat_id) {
+    $cat_id = $this->fetchCategoryIdForProduct($project_id);
+}
+/** @var \Application\Model\Entity\ProjectCategoryData $current_category */
+$current_category = $this->readCategoryData($cat_id);
+$cat_title = empty($current_category->title) ? 'ALL' : $current_category->title;
+$param_tag = $this->params()->fromQuery('tag');
+$category_id = $cat_id;
+
+//$category_id_parent = $current_category->parent;
+$cat_title_length = strlen($cat_title);
+//check logo-width:
+$logoWidth = (int)$store_template['header-logo']['width'];
+$cat_title_left = (int)$logoWidth + (int)strlen($store_name) + 120;
+$tabs_left = (int)$store_template['header-nav-tabs']['absolute-left'];
+$tabs_left += $cat_title_length * 10;
+$idCat = $GLOBALS['ocs_store_category_list'];
+
+
+$j_section = null;
+if ($cat_id > 0) {
+    $j_section = $this->readSectionData($cat_id);
+}
+
+?>
+
+    <style>
+
+            #category-tree-container ul li.active > a,
+            #category-tree-container ul li a.active  {
+                background-color: <?=$store_template['header-nav-tabs']['background-color-hover']?> !important;
+                color: #ffffff !important;
+            }
+
+            #category-tree-container ul li a:hover {
+                background-color: <?=$store_template['header-nav-tabs']['background-color-hover']?> !important;
+                color: #ffffff !important;
+            }
+
+            #category-tree-container ul li a {
+                display: block;
+                width: 100%;
+                float: left;
+                background-color: transparent !important;
+                color: <?=$store_template['header-nav-tabs']['background-color-active']?> !important;
+                padding-left: 3px;
+                padding-right: 40px;
+                position: relative;
+                -webkit-transition: all .2s ease-out;
+                -moz-transition: all .2s ease-out;
+                -o-transition: all .2s ease-out;
+                transition: all .2s ease-out;
+            }
+    </style>
+
+
+    <script type="text/javascript">
+        var json_hasIdentity = <?php  if ($member->hasIdentity()) {
+            echo '1';
+        } else {
+            echo '0';
+        } ?>;
+        var json_redirectString = <?php  if ($member->hasIdentity()) {
+            echo \Laminas\Json\Encoder::encode(null);
+        } else {
+            $redirectString = '/redirect/' . $this->urlEncrypt($serverUrl->getScheme() . '://' . $serverUrl->getHost() . $_SERVER["REQUEST_URI"]);
+            echo \Laminas\Json\Encoder::encode($redirectString);
+        } ?>;
+        var json_serverUri = <?php echo \Laminas\Json\Encoder::encode($_SERVER["REQUEST_URI"]);?>;
+        var json_member = <?php echo \Laminas\Json\Encoder::encode($jsonmember); ?>;
+        var json_member_avatar = <?php if ($member->hasIdentity()) {
+            echo \Laminas\Json\Encoder::encode($this->Image($member->profile_image_url,
+                array('width' => 30, 'height' => 30)));
+        } else {
+            echo \Laminas\Json\Encoder::encode(null);
+        }?>;
+        var json_template = <?php echo \Laminas\Json\Encoder::encode($store_template); ?>;
+        var json_serverUrl = <?php echo \Laminas\Json\Encoder::encode($serverUrl()); ?>;
+        var json_baseurl = <?php echo \Laminas\Json\Encoder::encode($baseurl);?>;
+        var json_baseurlStore = <?php echo \Laminas\Json\Encoder::encode($baseurlStore);?>;
+        var json_header_links = <?php echo \Laminas\Json\Encoder::encode($cat_title.($param_tag?' - '.$param_tag:''));?>;
+        <?php
+        $contentTheme = '';
+        if ($member->hasIdentity()) {
+            $result = $this->memberSettingItem(2, true);
+            if ($result && $result['value'] == 1) {
+                $contentTheme = 'content-theme-dark';
+            }
+        }
+        ?>
+        var json_content_theme = <?php echo \Laminas\Json\Encoder::encode($contentTheme);?>;
+
+        var json_searchbaseurl = <?php echo \Laminas\Json\Encoder::encode($searchbaseurl);?>;
+        var json_sname =  <?php echo \Laminas\Json\Encoder::encode($sname);?>;
+        var json_store_order =  <?php echo \Laminas\Json\Encoder::encode($store_order);?>;
+        var json_store_name =  <?php echo \Laminas\Json\Encoder::encode($store_name);?>;
+        var json_is_show_title =  <?php echo \Laminas\Json\Encoder::encode($is_show_title);?>;
+        var json_last_char_store_order = <?php echo \Laminas\Json\Encoder::encode($last_char_store_order);?>;
+        var json_cat_title =  <?php echo \Laminas\Json\Encoder::encode($cat_title);?>;
+        var json_cat_id =  <?php echo \Laminas\Json\Encoder::encode($category_id);?>;
+        var json_logoWidth = <?php echo \Laminas\Json\Encoder::encode($logoWidth);?>;
+        var json_cat_title_left = <?php echo \Laminas\Json\Encoder::encode($cat_title_left);?>;
+        var json_tabs_left = <?php echo \Laminas\Json\Encoder::encode($tabs_left);?>;
+        var json_loginurl = <?php echo \Laminas\Json\Encoder::encode($url_login); ?>;
+        var json_logouturl = <?php echo \Laminas\Json\Encoder::encode($url_logout); ?>;
+        var json_section = <?php echo \Laminas\Json\Encoder::encode($j_section); ?>;
+        var json_store_for_tree = <?php echo $json_tree; ?>;
+        var json_isShowAddProduct = <?php echo $this->showAddProduct && $category_id > 0 ? '1' : '0'; ?>;
+        var json_is_show_real_domain_as_url = <?php echo $is_show_real_domain_as_url;?>;
+
+        var json_server_images = <?php echo \Laminas\Json\Encoder::encode($this->configHelp()->ocs_config->settings->server->images->media->server); ?>;
+        var json_server_videos = <?php echo \Laminas\Json\Encoder::encode($this->configHelp()->ocs_config->settings->server->videos->media->server); ?>;
+        var json_server_comics = <?php echo \Laminas\Json\Encoder::encode($this->configHelp()->ocs_config->settings->server->comics->media->server); ?>;
+
+    </script>
+    <section id="site-header-container"></section>
+    <script src="/theme/react/bundle/header-bundle.js?<?= APPLICATION_VERSION ?>" type="text/javascript"></script>
+
+<?php $this->inlineScript()->appendScript('$(document).ready(function(){
+        MenuHover.setup();
+        Popuppanel.setup();
+        LoginContainer.update();
+        PlingsRedirect.setup();
+    });');

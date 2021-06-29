@@ -1,0 +1,68 @@
+<style>
+    div.title{
+        font-weight:bold;border-bottom:1px solid #ccc; padding:5px; margin-bottom:5px;
+    }
+    </style>
+
+<?php
+if($this->related_ancesters){
+?>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 title" > Ancestors </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <?php 
+    $this->userProducts=$this->related_ancesters;
+    echo $this->render('partials/productRelatedProducts.phtml'); ?>   
+     </div>
+ </div>
+<?php }?>
+
+
+<?php
+if($this->related_parents){
+?>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 title" > Parents</div>
+</div>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<?php 
+$this->userProducts=$this->related_parents;
+echo $this->render('partials/productRelatedProducts.phtml'); ?>
+</div>
+</div>
+<?php }?>
+
+
+<?php
+if($this->related_siblings){
+?>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 title" > Siblings</div>
+</div>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 title">
+<?php 
+$this->userProducts=$this->related_siblings;
+echo $this->render('partials/productRelatedProducts.phtml'); ?>
+</div>
+</div>
+<?php }?>
+
+
+<?php
+if($this->related_children){
+?>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 title" > Children</div>
+</div>
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+<?php 
+$this->userProducts=$this->related_children;
+echo $this->render('partials/productRelatedProducts.phtml'); ?>
+</div>
+</div>
+<?php }?>

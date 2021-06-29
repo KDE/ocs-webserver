@@ -1,0 +1,103 @@
+<?php
+
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle('Payout Member');
+$this->tab = 'payout-member';
+echo $this->render('headerTabs.phtml'); 
+
+
+foreach ($this->plings as &$x) {
+        $x['plingsGive'] = '';
+        foreach ($this->plingsGiven as $t) {
+                if($t['member_id'] ===$x['member_id'])
+                {
+                        $x['plingsGive'] = $t['plings'];
+                        break;
+                }
+        }
+}
+
+
+?>
+<style>
+        .rowContainer
+        {
+                display: flex;
+                clear: both;
+        }
+        .memberPlingList
+        {
+                width: 450px;
+                margin-left:20px;
+                max-height: 300px;
+                overflow: auto;
+        }
+        .memberPlingList ul{
+                list-style: none;                
+        }
+        .memberPlingList ul li {
+                border-bottom: 1px solid #ccc;
+        }
+        .memberPlingList ul li span.header{
+                font-weight: bold;
+        }
+        .memberPlingList ul li span.title{
+                width: 150px;
+                display: inline-block;
+        }
+        .memberPlingList ul li span.value{
+                width: 100px;
+                display: inline-block;
+                text-align: right;
+        }
+</style>
+<h3>Statistics: Payout Member</h3>
+<div id="payoutTab" class="tab-pane">
+        <div style="width: 1500px; display: block;float: left">
+                <div id="payoutyear" style="display: block; float: left; padding-right: 20px" class="d3linepath"></div>
+                <div class="rowContainer">
+                <div id="pie" style="clear:left;padding:50px; display:block;  "></div>
+                <div class="memberPlingList">
+                        <?php                                
+                                echo "<ul><li><span class='title header'>Username</span><span class='value header'>Plings Received</span><span class='value header'>Plings Give out</span></li>";
+                                $cnt = 0;
+                                                                                             
+                                foreach ($plings as $p) {
+                                        echo '<li><span class="title">'.$p['username'].'_'.$p['member_id']
+                                                .'</span><span class="value">'.$p['plings']
+                                                .'</span><span class="value">'.$p['plingsGive'].'</span></li>';
+                                }
+                                echo "</ul>";
+                        ?>
+                </div>
+                </div>
+        </div>
+        <div>
+                <div style="display: block; float: left; clear:left" id="detailContainer"></div>
+        </div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+                $.getScript("/theme/flatui/js/stati2/payoutyear.js");
+                $.getScript("/theme/flatui/js/stati2/memberPayout.js");
+        });
+</script>

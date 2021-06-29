@@ -1,0 +1,162 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+//Change from opendesktop to pling
+$baseurl = $this->configHelp()->ocs_config->settings->client->default->baseurl;
+$baseurlStore = $this->configHelp()->ocs_config->settings->client->default->baseurl_store;
+$searchbaseurl = $this->buildSearchBaseUrl();
+$url_forum = $this->configHelp()->ocs_config->settings->client->default->url_forum;
+$url_blog = $this->configHelp()->ocs_config->settings->client->default->url_blog;
+$url_gitlab = $this->configHelp()->ocs_config->settings->client->default->url_gitlab;
+$url_riot = $this->configHelp()->ocs_config->settings->client->default->url_riot;
+$url_myopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_myopendesktop;
+$url_cloudopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_cloudopendesktop;
+$url_musicopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_musicopendesktop;
+$url_mastodon = $this->configHelp()->ocs_config->settings->client->default->url_mastodon;
+$url_docsopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_docsopendesktop;
+
+// intern metaheader diff opendesktop/pling
+//$storeConfig = Zend_Registry::isRegistered('store_config') ? Zend_Registry::get('store_config') : null;
+/** @var \Application\Model\Entity\CurrentStore $storeConfig */
+$storeConfig = $this->currentStore();
+$target = 'pling';
+if ($storeConfig->getConfig()->config_id_name == 'opendesktop' or $storeConfig->getConfig()->config_id_name == 'kde-store') {
+    $target = $storeConfig->getConfig()->config_id_name;
+}
+
+if (isset($_GET['target'])) {
+    $target = $_GET['target'];
+}
+$targetObject = array();
+$targetObject['target'] = $target;
+if ($target == "pling") {
+    $targetObject['logo'] = "pling";
+    $targetObject['logoLabel'] = "";
+    $targetObject['link'] = $baseurlStore;
+} else {
+    if ($target == "kde-store") {
+        $targetObject['logo'] = "kdeStore";
+        $targetObject['logoLabel'] = "store.kde.org";
+        $targetObject['link'] = 'https://store.kde.org/';
+    } else {
+        $targetObject['logo'] = "opendesktop";
+        $targetObject['logoLabel'] = "OpenDesktop";
+        $targetObject['link'] = $baseurl;
+    }
+}
+
+$uri = (false === empty($redirect)) ? $this->urlDecrypt($redirect) : $_SERVER['REQUEST_URI'];
+$request_uri = new \Laminas\Uri\Uri($_SERVER['REQUEST_URI']);
+$request_uri->setHost(null)->setScheme(null);
+$redirect = (false === empty($redirect)) ? $redirect : $this->urlEncrypt($request_uri->toString());
+$dummy = $this->urlDecrypt($redirect);
+
+$url_login = $this->url('application_login');
+if (false === $storeConfig->hasOwnUrl()) {
+    $url_login = $this->url('application_login', array('store_id'=>$storeConfig->getConfig()->name));
+}
+if ($uri != '/' AND $uri != '') {
+    $url_login .= "redirect/" . $redirect;
+}
+$url_logout = $this->url('application_logout');
+if ($uri != '/' AND $uri != '' AND $uri != '/start') {
+    $url_logout .= "redirect/" . $redirect;
+}
+$isExternal = 'var isExternal = false;';
+$is_external = false;
+
+/** @var \Application\Model\Entity\CurrentUser $currentUser */
+$currentUser = $this->currentUser();
+$isAdmin = false;
+if ($currentUser->isAdmin()) {
+    $isAdmin = true;
+}
+
+
+$user = null;
+$metamenuTheme = '';
+$contentTheme = '';
+if ($this->currentUser()->hasIdentity()) {
+    /** @var \Application\Model\Entity\CurrentUser $identity */
+    $identity = $this->currentUser();
+    $avatar = $this->image($identity->profile_image_url, array('width' => 100, 'height' => 100, 'crop' => 2));
+    $user = array(
+        "username"    => $identity->username,
+        "member_id"   => $identity->member_id,
+        "mail"        => $identity->mail,
+        "avatar"      => $avatar,
+        "roleName"    => $identity->roleName,
+        "isSupporter" => $identity->isSupporter,
+    );
+
+    $headerThemeVar = $this->fetchMemberSettingItem($identity->member_id, 1);
+    if ($headerThemeVar && $headerThemeVar['value'] == 1) {
+        $metamenuTheme = 'metamenu-theme-dark';
+    }
+    
+    $contentThemeVar = $this->fetchMemberSettingItem($identity->member_id, 2);
+    if ($contentThemeVar && $contentThemeVar['value'] == 1) {
+        $contentTheme = 'content-theme-dark';
+    }
+
+}
+
+$sname = $storeConfig->getConfig->host;
+$json_menu = $this->fetchStoresForCatTreeJson();
+
+
+$response = array(
+    "isAdmin"             => $isAdmin,
+    "isExternal"          => $is_external,
+    "domains"             => \Laminas\Json\Decoder::decode($json_menu),
+    "user"                => $user,
+    "baseUrl"             => $baseurl,
+    "baseUrlStore"        => $baseurlStore,
+    "searchbaseurl"       => $searchbaseurl,
+    "blogUrl"             => $url_blog,
+    "forumUrl"            => $url_forum,
+    "mastodonUrl"         => $url_mastodon,
+    "gitlabUrl"           => $url_gitlab,
+    "myopendesktopUrl"    => $url_myopendesktop,
+    "cloudopendesktopUrl" => $url_cloudopendesktop,
+    "musicopendesktopUrl" => $url_musicopendesktop,
+    "docsopendesktopUrl"  => $url_docsopendesktop,
+    "riotUrl"             => $url_riot,
+    "loginUrl"            => $url_login,
+    "logoutUrl"           => $url_logout,
+    "sName"               => $sname,
+    "metamenuTheme"       => $metamenuTheme,
+    "contentTheme"        => $contentTheme,
+    "target"              => $targetObject,
+    "store"               => ($storeConfig ? $storeConfig->getConfig()->name : null),
+    "storeConfig"         => array("config_id_name" => $storeConfig->getConfig()->config_id_name, "name" => $storeConfig->getConfig()->name),
+    "uri"                 => $uri,
+);
+
+?>
+
+<div id="metaheader"></div>
+<script type="text/javascript">
+    var config =<?=json_encode($response)?>;
+</script>
+
+<script src="/theme/react/bundle/metaheader-local-bundle.js?<?= APPLICATION_VERSION ?>"></script>
+

@@ -1,0 +1,511 @@
+@import "mixins.less";
+
+  /**-- SPECIFIC USE CLASSES ---------*/
+
+    .clearfix:after {
+         content: ".";
+         display: block;
+         clear: both;
+         visibility: hidden;
+         line-height: 0;
+         height: 0;
+    }
+
+    a {
+      text-decoration: none;
+      color: @newblue;
+    }
+
+    a:hover, a:active, a:focus {
+      color: @newblue;
+    }
+
+    .full-width {
+      width: 100% !important;
+    }
+
+    .left {
+      float: left;
+    }
+
+    .right {
+      float: right;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .margin-auto {
+      margin: auto;
+    }
+
+    .margin-bottom-10 {
+        margin-bottom: 10px;
+    }
+
+    .margin-bottom-20 {
+        margin-bottom: 20px;
+    }
+
+    .margin-left-0 {
+        margin-left: 0;
+    }
+
+    .margin-left-10 {
+      margin-left: 10px;
+    }
+
+    .margin-left-30 {
+      margin-left: 30px;
+    }
+
+    .margin-top-5 {
+        margin-top: -5px;
+    }
+
+    .margin-top-40 {
+        margin-top: 40px;
+    }
+
+    .padding-both-5 {
+      padding: 0 5px;
+    }
+
+    .padding-both-20 {
+      padding: 0 20px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .relative {
+      position: relative;
+    }
+
+    .absolute {
+      position: absolute;
+    }
+
+    .inline {
+      display: inline-block;
+    }
+
+    .block {
+        display: block;
+    }
+
+    .aligncenter {
+        margin: 0 auto;
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .large {
+      font-size: 18px;
+    }
+
+    .light {
+      font-weight: 300;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    .lightblue {
+      color: @newblue;
+    }
+
+    .lightgrey {
+      color: #95a5a6;
+    }
+
+    .lightlightgrey {
+      color: #cacfd2;
+    }
+
+    .greyblue {
+      color: #bdc3c7
+    }
+
+    .purple {
+      color: #8e44ad;
+    }
+
+    h1.page-title {
+      color: #34495e;
+      font-weight: bold;
+      font-size: 32px;
+    }
+
+    .box {
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .bordered {
+      border: 1px solid #bdc3c7;
+    }
+
+    .bordered-top-left-right {
+      border: 1px solid #bdc3c7;
+      border-bottom: none;
+    }
+
+    .margin-top_5 {
+      margin-top: 5px;
+    }
+
+    .margin-top-15 {
+      margin-top: 15px;
+    }
+
+    .margin-top-25 {
+      margin-top: 25px;
+    }
+
+    .margin-top-80 {
+      margin-top: 80px;
+    }
+
+    .margin-bottom-15 {
+      margin-bottom: 15px;
+    }
+
+    .margin-left-15 {
+      margin-left: 15px;
+    }
+
+    .margin-right-5 {
+        margin-right: 5px;
+    }
+
+    .wrapper {
+        width: 1170px;
+        margin: auto;
+    }
+
+    .width-150 {
+        width: 150px;
+    }
+
+    .borderless {
+        border:none !important;
+    }
+
+    .default-cursor {
+        cursor: default !important;
+    }
+
+    .cursor-hand {
+        cursor: pointer !important;
+    }
+
+  /**-- /SPECIFIC USE CLASSES --------*/
+
+  /**-- ICONS ------------------------*/
+
+    em.icon {
+      display: inline-block;
+      .bg_sheet;
+    }
+
+    em.pling-icon-gold {
+      width: 30px;
+      height: 30px;
+      //background-position: -192px -200px;
+      background-image: url('/theme/flatui/img/new/box-logo.png') !important;
+      background-size: cover;
+    }
+
+
+    // general icons
+
+    em.gear-icon {
+      width: 16px;
+      height: 16px;
+      background-position: -672px -129px;
+    }
+
+    em.info-icon {
+      width:31px;
+      height: 30px;
+      background-position: -289px -64px;
+    }
+
+    em.calender-icon {
+      background-position: -223px -63px;
+      width: 18px;
+      height: 15px;
+    }
+
+    // arrow icons
+
+    em.arrow-down-gray {
+      width: 16px;
+      height: 8px;
+      background-position: -687px -25px;
+    }
+
+    em.arrow-right-black {
+      width: 7px;
+      height: 12px;
+      background: url(../img/right_arrow_small.png) center center;
+      /*background-position: -684px -35px;*/
+    }
+
+    em.arrow-white-up {
+      width: 16px;
+      height: 8px;
+      background-position: -748px -103px;
+    }
+
+    em.arrow-gray-down {
+      width: 16px;
+      height: 8px;
+      background-position: -748px -113px;
+    }
+
+    em.icon-expand {
+      width: 12px;
+      height: 10px;
+      background-position: -734px -31px;
+    }
+
+    em.icon-contract {
+      width: 12px;
+      height: 10px;
+      background-position: -750px -31px;
+    }
+
+    // social icons
+
+    .icon-facebook, .icon-twitter, .icon-google {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: inline-block;  
+      .bg_sheet;
+    }
+
+    .icon-facebook {
+      background-position: 0px -105px;
+
+      &:hover {
+        background-position: 0px -145px;
+      }
+    }
+
+    .icon-twitter {
+      background-position: -40px -105px;
+
+      &:hover {
+        background-position: -40px -145px ;
+      }  
+    }
+
+    .icon-google {
+      background-position: -80px -105px ;
+
+      &:hover {
+        background-position: -80px -145px ;
+      }  
+    }
+
+    // about me pages header icon
+
+    em.heart-icon {
+      width: 26px;
+      height: 24px;
+      background-position: -703px -48px;
+      &:hover {
+        background-position: -673px -48px;
+      }
+    }
+
+    em.heart-icon-purple {
+      width: 26px;
+      height: 24px;
+      background-position: -733px -48px;
+    }
+
+    em.share-icon {
+      height: 23px;
+      width: 23px;
+      background-image: url(/theme/flatui/img/icon-share.png);
+      //background-position: -696px -73px;
+      //&:hover {
+        //background-position: -672px -73px;
+      //}
+    }
+
+    em.report-icon {
+      height: 23px;
+      width: 23px;
+      background-image: url(/theme/flatui/img/icon-report.png);
+      //background-position: -728px -73px;
+      //&:hover {
+      //  background-position: -720px -73px;  
+      //}
+    }
+
+    // settings page icons
+
+    em.section-heading-icon {
+      width: 24px;
+      height: 24px;
+      margin: -3px 5px 0 0;
+    }
+
+    em.icon-profile {
+      background-position: -192px -128px;
+    }
+
+    em.icon-profile-picture {
+      background-position: -224px -128px;
+    }
+
+    em.icon-password {
+      background-position: -257px -128px;
+    }
+
+    em.icon-newsletter {
+      background-position: -320px -128px;
+    }
+
+    em.icon-website {
+      background-position: -288px -128px;
+    }
+
+    em.icon-payment {
+      background-position: -347px -128px;
+    }
+
+  /**-- /ICONS ------------------------*/
+
+  /**-- BUTTONS -------------------**/
+
+    .plingbutton {
+      height: 60px;
+      width: 204px;
+      background: url(/theme/flatui/img/new/button.png);
+      padding: 0;
+      background-color: white !important;
+      margin: 0 auto;
+
+        a, button {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    .body-pling-button {
+        margin: 0px
+    }
+
+    .btn-pling-2 {
+      font-size: 1.1em;
+      font-weight: 400;
+      padding: 0.4em 0.8em;
+      height: 41px;
+      margin: 0;
+      background: @newblue;
+      color: white;
+      border-radius: 5px;
+      border: 1px solid #7f7f7f;
+      text-shadow: 1px 1px 1px #444;
+      .box_shadows(inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.05));
+      .transition();
+
+      &:hover {
+        background:lighten(@newblue,5%);
+      }
+
+      &:active {
+        .box_shadows(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));        
+        background:darken(@newblue,5%);
+      }
+
+    }
+
+    .btn-submit {
+      background: @newblue;
+      padding: 10px 35px;
+    }
+
+    .btn-purple {
+      background: #9b59b6;
+      padding: 10px 35px;
+    }
+
+    .btn-grey {
+      background: #393d3f;
+      padding: 10px 35px;
+    }
+
+    .btn-light-grey {
+      background: #517892;
+      padding: 10px 35px;
+    }
+
+    .btn-native {
+        background-color: #14B9D5;
+    }
+
+    .btn.btn-native:hover,
+    .btn.btn-native:focus,
+    .btn-group:focus .btn.btn-native.dropdown-toggle {
+        background-color: #0e778a;
+    }
+
+    .btn-min-width {
+        min-width: 120px;
+    }
+
+  /**-- /BUTTONS ------------------**/
+
+  /**-- COMMON ----------------------*/
+
+    * {
+      outline: none !important;
+    }
+
+    .icon-expand {
+      right: 0;
+      top: 0;
+      width: 45px;
+      height: 50px;
+      padding-bottom: 2px;
+      background: url(../img/icon-expand.png);
+      border-left: 1px solid #bdc3c7;
+    }
+
+
+    .expand {
+      right: 0;
+      top: 0px;
+      width: 45px;
+      height: 98%;
+      padding-bottom: 2px;
+      border-left: 1px solid #bdc3c7;
+
+      em {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -6px;
+        margin-top: -5px;
+        border-left:0px;
+      }
+    }
+
+  /**-- COMMON ----------------------*/

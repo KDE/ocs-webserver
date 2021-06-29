@@ -1,0 +1,60 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+#dialog-form label{
+    display: block;
+}
+#dialog-form label span{
+    margin-bottom: 5px;
+    display: block;
+}
+#dialog-form _fieldset{
+    background: #ddd;
+}
+#dialog-form form input {
+    width: 100%;
+}
+#dialog-form form >fieldset {
+    margin-top: 45px;
+}
+#dialog-form form fieldset > fieldset {
+    padding-left: 30px;
+}
+#dialog-form form legend {
+   /* text-transform: uppercase;*/
+   text-transform:capitalize;
+    background-color:  #d9d4d7;
+    padding-left: 5px;
+}
+#dialog-form form input {
+    width: 95%;
+    border: 1px solid #000;
+    padding: 2px;    
+    font-weight: normal;
+}
+</style>
+<?php
+if ($this->defaultConfigLoaded) {
+    echo '<div class="alert-warning">File for configuration does not exist yet. Default configuration was used as example. Don`t forget to save your changes to create the right configuration file.</div>';
+}
+echo $this->form($this->formConfig);

@@ -1,0 +1,77 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle('Top Downloads Controlling');
+$this->tab = 'top-downloads-controlling';
+echo $this->render('headerTabs.phtml'); 
+
+
+?>
+<h3>Statistics: Top 300 Proudcts Downloads Controlling <?=$this->datum?></h3>
+<select id="datumSelect">
+<?php foreach ($datumlist as $d) {
+    ?>
+    <option value="<?=$d['datum']?>" <?=($d['datum']==$this->datum?'selected':'')?>><?=$d['datum']?></option>
+    <?php
+}?>
+</select>
+<!--<a class="topDownloadsTab" style="display: none">Payout Categories</a> -->
+<div id="topDownloadsTab" class="tab-pane" style="width:800px">
+      <table class="table">
+          <thead><tr>
+          <th>#</th>
+          <th>Project_id</th>
+          <th>Cnt</th>
+          <th>Cnt_unique</th>
+          <th>Category</th>
+          <th>Member_id</th>
+          <th>Username</th>
+              </tr>
+          </thead>
+          <tbody>
+            <?php $cnt = 1;
+            foreach ($this->data as $row) {
+                ?>
+            <tr>
+                <td><?=$cnt++?></td>
+                <td><a href="/p/<?=$row['PROJECT_ID']?>"><?=$row['PROJECT_ID']?></a></td>
+                <td><?=$row['CNT']?></td>
+                <td><?=$row['CNT_UNIQUE']?></td>
+                <td><?=$row['GRUPPEN']?></td>
+                <td><?=$row['MEMBER_ID']?></td>
+                <td><a href="/u/<?=$row['USERNAME']?>"><?=$row['USERNAME']?></a></td>                
+            </tr>
+
+            <?php
+            }
+            ?>
+
+          </tbody>
+      </table>      
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {		
+       $('.topDownloadsTab').trigger('click');
+       $('#datumSelect').on('change', function() {            
+            window.location.href ='https://www.pling.com/statistics/top-downloads-controlling?datum='+this.value;
+        });
+	});
+</script>

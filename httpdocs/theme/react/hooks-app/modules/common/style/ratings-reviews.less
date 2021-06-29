@@ -1,0 +1,125 @@
+#products-ratings-container {
+    width: 100%;
+    float: left;
+    height: auto;
+
+    #product-ratings-summary-container {
+        margin: 0 auto;
+        display: table;
+        width: auto;
+        margin-bottom: 30px;
+    }
+
+    #product-ratings-summary {
+        .ratings-number-container {
+            float: left;
+            margin: 0 5px;
+            text-align: center;
+
+            span.number-display {
+                padding: 1px 1em 0;
+                border-radius: .25em;
+                font-size: 90%;
+                clear: both;
+                cursor: pointer;
+
+                &.selected {
+                    text-decoration:underline;
+                    font-weight: bold;
+                }
+            }
+
+            .ratings-counter {
+                display: block;
+                cursor: pointer;              
+            }
+        }
+    }
+}
+
+#product-ratings-list {
+    padding: 0;
+    
+    .product-ratings-list-item {
+        width: 100%;
+        float: left;
+
+        .rating-container {
+            width: 100%;
+            padding: 0;
+            position: relative;
+            float: none !important;
+            margin-bottom: var(--space-normal);
+            min-height: calc(var(--space-normal) * 10); /* same user list height */
+
+            .rating-header {
+                width: 100%;
+                font-size: var(--text-small);
+                margin: 0;
+                display: flex;
+                align-items: center;
+
+                .pui-badge  {
+                    margin: 0 var(--space-small); 
+                    margin-right: 5px;
+                }
+
+                .product-update-date {
+                    margin: 0 var(--space-small);
+                }
+                
+                .rating-profile-image {
+                    position: relative;
+                    top: 0;
+                    left: 0;
+                    display: block;
+                    width: auto;
+                    height: auto;
+
+                    figure {
+                        background: rgba(255,255,255,0.16);
+                        border-radius: var(--space-xlarge);;
+                        margin: 0;
+                        width: 40px;
+                        height: 40px;
+                        overflow: hidden;
+                        position: relative;
+                    }
+
+                    img {
+                        border-radius: 0;
+                        border: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+                .rating-username {
+                    font-size: var(--text-medium);
+                    margin: 0 var(--space-small) 0 var(--space-normal);
+                    font-weight: bold;
+
+                    a:hover {
+                        color: var(--color-primary-1);
+                    }
+                }
+
+                .rating-number {
+                    display: inline-block;
+                    padding: 0 1em 0;
+                    color: #fff;
+                    border-radius: 0.25em;
+                    font-weight: 700;
+                    font-size: 14px;
+                    margin: 0 4px;
+                }
+            }
+
+            .rating-text {
+                padding: 0 0 var(--space-medium) calc(var(--space-large) * 2);
+                width: 100%;
+                float: left;
+            }
+        }
+    }
+}

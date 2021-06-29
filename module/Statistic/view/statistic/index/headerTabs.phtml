@@ -1,0 +1,69 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+
+?>
+
+<div class="pling-nav-tabs">
+    <ul class="nav nav-tabs ">
+
+        
+        <li class="<?php echo $this->tab == 'new-members-projects' ? 'active' : ''; ?>">
+            <a class="newuserprojectTab" href="<?=$this->url('statistics', ['action' => 'new-members-projects'])?>">New Members & Projects </a></li>
+
+         <li class="<?php echo $this->tab == 'new-products-weekly' ? 'active' : ''; ?>">
+         <a class="newproductsweeklyTab" href="<?=$this->url('statistics', ['action' => 'new-products-weekly'])?>">New Products weekly</a></li>
+
+        <li class="<?php echo $this->tab == 'downloads-domain' ? 'active' : ''; ?>">
+        <a class="downloadsDomainTab" href="<?=$this->url('statistics', ['action' => 'downloads-domain'])?>">Downloads Domain</a></li>
+
+        <li class="<?php echo $this->tab == 'downloads-payouts-daily' ? 'active' : ''; ?>">
+        <a class="downloadsdailyTab" href="<?=$this->url('statistics', ['action' => 'downloads-payouts-daily'])?>">Downloads&Payouts daily</a></li>
+
+        <li class="<?php echo $this->tab == 'product-per-day' ? 'active' : ''; ?>">
+        <a class="topDownloadsPerDayTab" href="<?=$this->url('statistics', ['action' => 'product-per-day'])?>" >Product/Day</a></li>
+        <li class="<?php echo $this->tab == 'product-per-month' ? 'active' : ''; ?>">
+        <a class="topDownloadsPerMonthTab" href="<?=$this->url('statistics', ['action' => 'product-per-month'])?>" >Product/Month</a></li>
+
+        <li class="<?php echo $this->tab == 'payout-member' ? 'active' : ''; ?>">
+            <a class="payoutTab" href="<?=$this->url('statistics', ['action' => 'payout-member'])?>" >Payout Member</a></li>
+        <li class="<?php echo $this->tab == 'payout-newcomer' ? 'active' : ''; ?>"
+            ><a class="payoutNewcomerTab" href="<?=$this->url('statistics', ['action' => 'payout-newcomer'])?>" >Payout Newcomer</a></li>
+        <li class="<?php echo $this->tab == 'payout-newloser' ? 'active' : ''; ?>">
+        <a class="payoutNewloserTab" href="<?=$this->url('statistics', ['action' => 'payout-newloser'])?>" >Payout Newloser</a></li>
+        <li class="<?php echo $this->tab == 'payout-month-diff' ? 'active' : ''; ?>">
+        <a class="payoutMonthDiffTab" href="<?=$this->url('statistics', ['action' => 'payout-month-diff'])?>" >Payout Month Diff</a></li>
+
+        <li class="<?php echo $this->tab == 'payout-categories' ? 'active' : ''; ?>">
+        <a class="payoutCategoryMonthlyTab" href="<?=$this->url('statistics', ['action' => 'payout-categories'])?>" >Payout Categories</a></li>
+    
+        <li class="<?php echo $this->tab == 'payout-category-monthly' ? 'active' : ''; ?>">
+        <a class="payoutCategoryTab" href="<?=$this->url('statistics', ['action' => 'payout-category-monthly'])?>" >Payout Category monthly</a></li>    
+
+        <li class="<?php echo $this->tab == 'payout-groupby-amount' ? 'active' : ''; ?>">
+        <a class="payoutGroupbyAmountTab" href="<?=$this->url('statistics', ['action' => 'payout-groupby-amount'])?>" >Payout Groupby amount last month</a></li>             
+
+        <li class="<?php echo $this->tab == 'top-downloads-controlling' ? 'active' : ''; ?>">
+        <a class="topDownloadsTab" href="<?=$this->url('statistics', ['action' => 'top-downloads-controlling'])?>" >Top Downloads Controlling</a></li>    
+
+    </ul>
+</div>

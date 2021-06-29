@@ -1,0 +1,181 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$authorTags = $this->authorTags;
+$editorTags = $this->editorTags;
+$illuTags = $this->illuTags;
+$transTags = $this->transTags;
+$shelfTags = $this->shelfTags;
+$subjectTags = $this->subjectTags;
+$langTags = $this->langTags;
+
+
+/*<a rel="nofollow" href="<?=$this->buildSearchTagUrl($tag)?>" class="topic-tag topic-tag-link usertagslabel"><?=$tag?></a>*/
+
+?>
+<div class="prod-widget-box right details">
+    <span class="title"> eBook Details </span>
+
+    <div class="row">
+        <!-- Author -->
+        <?php if(!empty($authorTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Author/s:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                if(!empty($authorTags)) {
+                    echo "<ul>";
+                    foreach ($authorTags as $tag) {
+                        echo "<li>";
+                        echo $tag['tag_fullname'];
+                        if(isset($tag['tag_description'])) {
+                            echo ' (' . $tag['tag_description']. ')';
+                        }
+                        echo "</li>";
+                    }
+                    echo "</ul>";
+                }
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+        <!-- Editor -->
+        <?php if(!empty($editorTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Editor/s:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                echo "<ul>";
+                foreach ($editorTags as $tag) {
+                    echo "<li>";
+                    echo $tag['tag_fullname'];
+                    if(isset($tag['tag_description'])) {
+                        echo ' (' . $tag['tag_description']. ')';
+                    }
+                    echo "</li>";
+                }
+                echo "</ul>";
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+        <!-- Illustrator -->
+        <?php if(!empty($illuTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Illustrator/s:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                echo "<ul>";
+                foreach ($illuTags as $tag) {
+                    echo "<li>";
+                    echo $tag['tag_fullname'];
+                    if(isset($tag['tag_description'])) {
+                        echo ' (' . $tag['tag_description']. ')';
+                    }
+                    echo "</li>";
+                }
+                echo "</ul>";
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+        <!-- Translator -->
+        <?php if(!empty($transTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Translator/s:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                echo "<ul>";
+                foreach ($transTags as $tag) {
+                    echo "<li>";
+                    echo $tag['tag_fullname'];
+                    if(isset($tag['tag_description'])) {
+                        echo ' (' . $tag['tag_description']. ')';
+                    }
+                    echo "</li>";
+                }
+                echo "</ul>";
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+        <!-- Language -->
+        <?php if(!empty($langTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Language:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                echo "<ul>";
+                foreach ($langTags as $tag) {
+                    echo "<li>";
+                    echo $tag['tag_fullname'];
+                    echo "</li>";
+                }
+                echo "</ul>";
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+        <!-- Subjects -->
+        <?php if(!empty($subjectTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Subject/s:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                echo "<ul>";
+                foreach ($subjectTags as $tag) {
+                    echo "<li>";
+                    echo $tag['tag_fullname'];
+                    echo "</li>";
+                }
+                echo "</ul>";
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+        <!-- Shelf -->
+        <?php if(!empty($shelfTags)) { ?>
+        <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><b>Shelf/s:</b></span>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <span class="value">
+                <?php
+                echo "<ul>";
+                foreach ($shelfTags as $tag) {
+                    echo "<li>";
+                    echo $tag['tag_fullname'];
+                    echo "</li>";
+                }
+                echo "</ul>";
+                ?>
+            </span>
+        </div>
+        <?php } ?>
+        
+    </div>
+
+</div>

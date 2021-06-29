@@ -1,0 +1,123 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/    
+    
+    $usertags = array();
+    foreach ($this->data2 as $t) {
+        $usertags[$t['tag_id']][] = $t;
+    }
+    $groups = array();
+    foreach ($this->data as $g) {
+        $groups[$g['group_id']][] = $g;
+    }
+    function custom_sort($a, $b) {
+        return $a['tag_name'] > $b['tag_name'] ;
+    }
+?>
+<link rel="stylesheet" href="/tools/bootstrap-multiselect/css/bootstrap-multiselect.css" type="text/css">
+<script type="text/javascript" src="/tools/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<div class="panel-collapse " id="osuser-collapse">    
+
+    <div class="panel-body" style="padding-top: 30px">              
+        <?php
+            foreach ($this->gids as $g) {                
+                $options = $groups[$g];                
+                usort($options,"custom_sort");
+                $attr = 'data-tag-gid="'.$g.'"';                       
+                if($options[0]['is_multi_select'])
+                {
+                    $attr.= ' multiple="multiple"';
+                }
+        ?>
+            <div class="row">
+                <div class="col-lg-3">                    
+                    <?=$options[0]['group_display_name']?$options[0]['group_display_name']:$options[0]['group_name']?>                    
+                </div>
+                <div class="col-lg-4">
+                    <select class="osuser-tag" <?=$attr?>  style="width: 150px;">
+                     <?php
+                     if(!$options[0]['is_multi_select'])
+                     {
+                        echo '<option></option>';
+                     }
+                     ?>
+                     
+                    <?php 
+                    foreach ($options as $o) {
+                        $tag_id = $o['tag_id'];
+                        $selected = '';
+                        if(isset($usertags[$tag_id])){
+                            // if user selected
+                            $selected=' selected';
+                        }
+                    ?>
+                        <option value="<?=$tag_id?>" <?=$selected?> >
+                            <?=$o['tag_fullname']?$o['tag_fullname']:$o['tag_name']?>                            
+                        </option>
+                    <?php
+                    }
+                    ?>
+                    </select>
+                </div>
+            </div>
+
+        <?php
+            }
+        ?>
+
+    </div>
+    <!-- /.section-body -->
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {        
+        $(".osuser-tag[multiple*='multiple']").multiselect();
+        $( "select.osuser-tag" ).change(function() {               
+            var gid = $(this).attr("data-tag-gid");                    
+            var tagid = $(this).val();   
+            if(!$('#osuer-spinner').length)
+            {
+            var spin = $('<span id="osuer-spinner" class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 20px;top: 0px;"></span>');
+            $('#osuser-collapse').prepend(spin);
+            }
+            $.ajax({
+                        url: '/settings/savetags',
+                        type: 'POST',
+                        data: {                           
+                            tag_id: tagid,
+                            tag_group_id: gid,                            
+                        },
+                        dataType: 'json',
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.status != 'ok') {  
+                                return;
+                            }
+                            if (data.status == 'ok') {  
+                                $('#osuer-spinner').remove();  
+                            }                            
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error: " + textStatus + ", " + errorThrown);
+                            return;
+                        }
+                    });           
+        });
+    });
+</script>

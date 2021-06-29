@@ -1,0 +1,172 @@
+<?php
+/**
+ *   ocs-webserver
+ *
+ *   Copyright 2016 by pling GmbH.
+ *
+ *     This file is part of ocs-webserver.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$form->get('username')->setAttributes([
+    'class'       => 'form-control',
+    'placeholder' => 'Username',
+    'required'    => true,
+    'autofocus'   => true,
+])->setLabelAttributes([
+    'class' => 'sr-only',
+]);
+
+$form->get('mail')->setAttributes([
+    'class'       => 'form-control',
+    'placeholder' => 'Email',
+    'required'    => true,
+])->setLabelAttributes([
+    'class' => 'sr-only',
+]);
+
+$form->get('password')->setAttributes([
+    'class'       => 'form-control',
+    'placeholder' => 'Password',
+    'required'    => true,
+])->setLabelAttributes([
+    'class' => 'sr-only',
+]);
+
+$form->get('password-confirm')->setAttributes([
+    'class'       => 'form-control',
+    'placeholder' => 'Password Confirm',
+    'required'    => true,
+])->setLabelAttributes([
+    'class' => 'sr-only',
+]);
+
+?>
+<style>
+    main#reg-page section#register-wrap {
+        z-index: 1000;
+    }
+
+    div.checkbox input[type="checkbox"] {
+        margin-top: -0.2em;
+    }
+
+    div.checkbox input[type="checkbox"]:checked {
+        background-color: gray;
+    }
+
+    @media (max-width: 767px) {
+        main#reg-page section#register-wrap {
+            position: absolute;
+            top: 150px;
+            margin: 0;
+            width: 90%;
+            left: 5%;
+        }
+
+        main#reg-page section#register-wrap button#login {
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        main#reg-page section#register-wrap #register #register-box {
+            width: 100%;
+        }
+
+        main#reg-page section#register-wrap #register #social-register {
+            float: right;
+            width: 100%;
+            padding: 0;
+        }
+
+        main#reg-page section#register-wrap #register #social-register #social-login-elements {
+            margin: 0;
+        }
+    }
+
+    /* style for form errors */
+    form ul {
+        list-style-type: none;
+        padding: 0px;
+        margin: 0px 5px;
+    }
+
+    form ul li {
+        color: red;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+</style>
+
+<div id="register-form-box" class="well">
+    <h3><?= $this->translate('Join the community') ?></h3>
+
+    <div id="error" class="center text-error help-block">
+        <?php if ($this->error && isset($this->errorText)): ?>
+            <p class="errors">
+                <?= $this->translate($this->errorText) ?>
+            </p>
+        <?php endif; ?>
+    </div>
+    <form class="form-signin" method="post" id="form-register">
+        <h2 class="form-signin-heading"></h2>
+        <?php if ($isRegisterError): ?>
+            <div class="alert alert-warning" role="alert">
+                Incorrect login and/or password.
+                <a href="<?= $this->url('application_password') ?>">Forgot password?</a>
+            </div>
+        <?php endif; ?>
+        <div class="form-group">
+        <?= $this->formLabel($form->get('username')); ?>
+        <?= $this->formElement($form->get('username')); ?>
+        <?= $this->formElementErrors($form->get('username')); ?>
+        </div>
+        <div class="form-group">
+        <?= $this->formLabel($form->get('mail')); ?>
+        <?= $this->formElement($form->get('mail')); ?>
+        <?= $this->formElementErrors($form->get('mail')); ?>
+        </div>
+        <div class="form-group">
+        <?= $this->formLabel($form->get('password')); ?>
+        <?= $this->formElement($form->get('password')); ?>
+        <?= $this->formElementErrors($form->get('password')); ?>
+        </div>
+        <div class="form-group">
+        <?= $this->formLabel($form->get('password-confirm')); ?>
+        <?= $this->formElement($form->get('password-confirm')); ?>
+        </div>
+        <div class="form-group">
+        <?= $this->formElement($form->get('recaptcha')); ?>
+        <?= $this->formElementErrors($form->get('recaptcha')); ?>
+        </div>
+        <?= $this->formElement($form->get('redirect')); ?>
+        <?= $this->formElement($form->get('csrf')) ?>
+        <?= $this->formElementErrors($form->get('csrf')); ?>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+
+    <div class="small light lightgrey center margin-top-15">
+        By clicking register you agree to the <br/>
+        <a href="<?=$this->url('application_static_terms')?>"
+           class="lightblue"><?= $this->translate('Terms &amp; Conditions') ?></a> <?= $this->translate('and') ?> <a
+            href="<?=$this->url('application_static_privacy')?>" class="lightblue"><?= $this->translate('privacy policy') ?></a>
+    </div>
+
+</div>
+
+

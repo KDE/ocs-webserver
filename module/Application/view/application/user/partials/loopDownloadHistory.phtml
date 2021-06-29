@@ -1,0 +1,164 @@
+
+<?php
+
+$options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=>'okay',7=>'good', 8=>'great', 9=>'excellent',10=>'the best');
+krsort($options);
+
+$userRateData = $this->fetchRate($this->file->project_id, $this->member_id);
+$userrate ="data-userrate='-1'";
+$comment="data-comment=''";
+if($userRateData){
+	$userrate ="data-userrate='".$userRateData['score']."'";		
+	$comment="data-comment='".$userRateData['comment_text']."'";		
+}		
+$formproject="data-project='".$this->file->project_id."'";
+$creator="data-creator='".$this->file->project_member_id."'";
+$attrhistory = $userrate.' '.$comment.' '.$formproject.' '.$creator;
+
+if($this->counter==0){
+?>
+<div class="row smaller header" >
+	<div class="col-lg-5 col-md-5">
+		<figure>
+		    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
+		</figure>	
+		<div>
+			<a href="<?= $this->buildProductUrl($this->file->project_id) ?>"><?=$this->file->title?></a>
+			<p><?=$this->file->catTitle?> 
+		</div>
+	</div>		
+	<div class="col-lg-2 nowrap">
+		<?php /*$this->file->max_downloaded_timestamp */?> 
+	</div>			    	
+	<div class="col-lg-2 col-md-2">	
+		
+		<div class="rating text-center" >	
+				
+		    <?php            
+		    	
+					echo $this->partial(
+						'application/partials/circle.phtml', array(
+							"r" => 40,
+							"fontSize" =>Application\Model\Service\ConstCircle::small40,
+							"score" => $this->file->laplace_score/10
+						)
+					); 
+					?>
+		        
+		</div>
+		
+	</div>
+	
+	<div class="col-lg-2" >
+
+		<?php
+		if($userRateData){
+			?>
+			<span class="score label" style="line-height:30px;background-color:<?=$this->fetchScoreColor($userRateData['score'])?>;">
+                <?=$userRateData['score']?>
+            </span>
+		<?php
+		}
+		?>
+
+		<?php if($this->file->project_member_id<> $this->authMember->member_id){
+			?>
+			 <select <?=$attrhistory ?> id="ratingoptions<?=$this->file->project_id?>" 
+			 		class="rating-select" name="ratingoptions<?=$this->file->project_id?>">
+			    <?php
+			    	$sc = null;
+			    	if($userRateData){ 
+			    		$sc = $userRateData['score'];			
+			    		 echo '<option value="-1">Remove Rating</option>';    		
+			    	}
+			    	else{
+		                echo '<option value="0">Add Rating</option>';
+		             }
+		              foreach ($options as $key => $value) {
+		                 $selected = '';		                
+		                 if($sc==$key){
+		                   $selected=' selected';		                 
+		                 } 
+		                
+		                echo '<option value="'.$key.'"'.$selected.'>'.$key.' '.$value.'</option>';                
+		             }
+			    ?>
+			</select> 
+		<?php }?>
+
+
+
+
+	<?php						
+		if($userRateData){
+			echo '<div class="rate-comment">';
+			echo $userRateData['comment_text'].'   '.$this->printDate($userRateData['created_at']);
+			echo '</div>';
+		}
+		?>
+
+	</div>
+	<div class="col-lg-1" >
+		<div id="container-follow<?=$this->file->project_id?>" style="display: block;float:left;margin-right: 3px">		
+		<?php 
+		if($this->file->project_member_id<> $this->authMember->member_id){
+			echo $this->partial(
+				'application/product/follow.phtml',				
+			    array(
+			        "authMember"  => $this->authMember,
+			        "project_id" => $this->file->project_id
+			    )
+			);
+		}
+		?>
+
+		
+		</div>	
+
+			
+	</div>
+</div>
+
+<div class="row smaller">
+	<div class="col-lg-3 paddingLeft80" style="overflow: hidden">
+	<?=$this->file->file_name?> 		
+	</div>
+	<div class="col-lg-2 " >
+	<?=$this->humanFilesize($this->file->file_size)?> 		
+	</div>	
+	<div class="col-lg-2 nowrap">
+
+	<?=$this->file->downloaded_timestamp?> 
+       
+	</div>
+	<div class="col-lg-3 " >
+	<?=$this->file->file_type?> 		
+	</div>    
+			
+</div>
+
+<?php
+}else{
+?>
+<div class="row smaller">
+	<div class="col-lg-3 paddingLeft80" style="overflow: hidden">
+	<?=$this->file->file_name?> 		
+	</div>
+	<div class="col-lg-2 " >
+	<?=$this->humanFilesize($this->file->file_size)?> 		
+	</div>
+	
+	<div class="col-lg-2 nowrap">
+
+	<?=$this->file->downloaded_timestamp?> 
+       
+	</div>
+	<div class="col-lg-3 " >
+	<?=$this->file->file_type?> 		
+	</div>
+		    
+			
+</div>
+<?php
+}
+?>

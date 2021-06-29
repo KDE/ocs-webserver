@@ -1,0 +1,323 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+use Application\Model\Repository\SectionSupportRepository;
+use Application\Model\Service\SectionService;
+
+$this->tab = 'funding';
+
+$modelSection = new SectionService($this->db);
+$modelSectionSupport = new SectionSupportRepository($this->db);
+$allSections = $modelSection->fetchAllSections();        
+//$currency = new Zend_Currency('en_US');
+?>
+<main class="user-admin-page">
+<?php include __DIR__.'/partials/userHeader_top.phtml';?>
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <!-- NAVIGATION -->
+                <?php include __DIR__.'/partials/userHeader.phtml';?>   
+                <!-- /NAVIGATION -->
+             
+              <div class="my-products-heading">
+                   <h1 class="page-title left"><?= $this->translate('Funding') ?></h1> 
+                   <!--<p>Supporter Level = (S1,S2)</p>-->
+               </div>
+                
+                
+                
+
+                <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
+                    <div class="row"> 
+                        <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Section</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Status</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Amount</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paid Since</strong></div>
+                        <div class="col-md-1 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Paid Until</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Months</strong></div>
+                        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Total</strong></div>
+                        <div class="col-md-3 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Details</strong></div>
+                        <?php if ($this->isAdmin){ ?>
+                        <div class="col-md-1 text-left text-uppercase nowrap font-italic" style="white-space: nowrap;"><strong>Affiliate of</strong></div>
+                        <?php } ?>
+                    </div>
+                    
+                <?php 
+                    $noData = true;
+                    foreach ($allSections as $section) { 
+                        $isFirst = true;
+                        $supports = $modelSectionSupport->fetchAllSectionSupportsForMember($section['section_id'], $this->member->member_id);
+                        
+                        if($modelSection->wasMemberSectionSupporter($section['section_id'], $this->member->member_id) && !empty($supports)) {
+                            $noData = false;
+                            foreach ($supports as $support) {
+                                //calc months
+                                $now = new DateTime();
+                                $months = 0;
+                                
+                                $from = strtotime($support['active_time']);
+                                $to = null;
+                                
+                                if($support['type_id'] == 0) {
+                                    $to = strtotime($support['active_time_one_year']);
+                                } else {
+                                    $to = strtotime($support['last_payment_until_time']);
+                                }
+                                $min_date = min($from, $to);
+                                $max_date = max($from, $to);
+                                $i = 1;
+
+                                while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                    $i++;
+                                }
+                                $months = $i; // 8
+                                
+                                
+                                /*
+                                if($support['period'] == 'Y') {
+                                    
+                                    $d1 = strtotime($support['active_time']);
+                                    $d2 = $now->getTimestamp();
+                                    
+                                    if($support['active_status'] == 'inactive') {
+                                        
+                                        if($support['type_id'] == 1) {
+                                            if(strtotime($support['last_payment_until_time']) < $now->getTimestamp()) {
+                                                $d2 = strtotime($support['last_payment_until_time']);
+                                            }
+                                        } else {
+                                            if(strtotime($support['active_time_one_year']) < $now->getTimestamp()) {
+                                                $d2 = strtotime($support['active_time_one_year']);
+                                            }
+                                        }
+                                        
+                                        
+                                    }
+                                    
+                                    $min_date = min($d1, $d2);
+                                    $max_date = max($d1, $d2);
+                                    $i = 1;
+
+                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                        $i++;
+                                    }
+                                    $months = $i; // 8
+                                } else {
+                                    $d1 = strtotime($support['active_time']);
+                                    
+                                    $d2 = $now->getTimestamp();
+                                    
+                                    if(strtotime($support['last_payment_until_time']) < $now->getTimestamp()) {
+                                        $d2 = strtotime($support['last_payment_until_time']);
+                                    }
+                                    
+                                    $min_date = min($d1, $d2);
+                                    $max_date = max($d1, $d2);
+                                    $i = 1;
+
+                                    while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                                        $i++;
+                                    }
+                                    $months = $i; // 8
+
+                                }
+                                */
+                                if($months == 0) {
+                                    $months = 1;
+                                }
+                                
+                                
+                ?>
+                    
+                    <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <!-- Section -->
+                        <div class="col-md-2 cell-default" style="">
+                            <?php if($isFirst) { 
+                                echo $section['name']; 
+                            } ?>
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="col-md-1 cell-default" style="">
+                            <?php
+                            /*
+                            active, ongoing, green
+                            active, canceled, yellow
+                            active, one-time, yellow
+                            inactive, canceled, red
+                            inactive, one-time, red
+                             */
+                            ?>
+                            <?php
+                                //One-Time-Support
+                                if($support['type_id'] == 0) {
+                                    if($support['active_status'] == 'active') {
+                                        echo "<span class='label label-warning'>active, one-time</span>";
+                                    } else {
+                                        echo "<span class='label label-danger'>inactive, one-time</span>";
+                                    }
+                                } else {
+                                    //Subscription
+                                    if($support['status_id'] == 2) {
+                                        echo "<span class='label label-success'>active, ongoing</span>";
+                                    } else {
+                                        //canceld?
+                                        if(strtotime($support['last_payment_until_time']) > $now->getTimestamp()) {
+                                            echo "<span class='label label-warning'>active, cancelled</span>";
+                                        } else {
+                                            echo "<span class='label label-danger'>inactive, cancelled</span>";
+                                        }
+                                    }
+                                }
+                            ?>
+                        </div>
+                        
+                        <!-- Amount -->
+                        <div class="col-md-1 cell-default text-right" >
+                        <?php  
+                         echo $this->currencyFormat($support['tier'], 'USD', true, 'en_US');
+                        ?></div>
+
+                        <!-- Since -->
+                        <div class="col-md-1 cell-default"><?= date_format(date_create($support['active_time']),'M Y') ?></div>
+                        
+                        <!-- Until -->
+                        <div class="col-md-1 cell-default" >
+                            <?php
+                                if($support['type_id'] == 0) {
+                                    echo date_format(date_create($support['active_time_one_year']),'M Y');
+                                } else {
+                                    echo date_format(date_create($support['last_payment_until_time']),'M Y');
+                                }
+                            ?>
+                        </div>
+                        
+                        <!-- Months -->
+                        <div class="col-md-1 cell-default text-right" style="">
+                            <?= $months ?>
+                        </div>
+                        
+                        <!-- total -->
+                        <div class="col-md-1 cell-default text-right" style="">
+                            <?php // print($currency->toCurrency($months * $support['tier']));
+                            echo $this->currencyFormat($months * $support['tier'], 'USD', true, 'en_US');
+                            ?>
+                        </div>
+                        
+                        
+                        
+                        <!-- Desc -->
+                        <div class="col-md-3 cell-default" style="">
+                            <?php 
+                                $text = "Your ";
+                                if($support['type_id'] == 0) {
+                                    $text .= "One-Time-Payment ";
+                                } else {
+                                    if($support['period'] == 'Y') {
+                                        $text .= "yearly Subscription ";
+                                    } else {
+                                        $text .= "monthly Subscription ";
+                                    }
+                                }
+                                $text .= " via ". $support['payment_provider'];
+                                if($support['active_status'] == 'active') {
+                                    $text .= " is active since ". $this->printDate($support['active_time']);
+                                    if($support['type_id'] == 0) {
+                                        $text .= " until ". $this->printDate($support['active_time_one_year']);
+                                    }
+                                } else {
+                                    $text .= " was active from ". $this->printDate($support['active_time']);
+                                    if($support['type_id'] == 0) {
+                                        $text .= " to ". $this->printDate($support['active_time_one_year']);
+                                    } else {
+                                        $text .= " to ". $this->printDate($support['delete_time']);
+                                    }
+                                }
+                                $text .= ". Transaction-Id: ".$support['subscription_id'];
+                                
+                                
+                                echo $text;
+                                
+                                
+                                if ($this->isAdmin && !empty($support['project_id'])){
+                                    echo "<br><span style='font-style: italic;'>Referer: <a href='".$support['referer']."'>".$support['referer']."</span></a>";
+                                }
+                                
+                                $isFirst = false;
+
+                            ?>
+                        
+                        </div>
+                        
+                        <?php if ($this->isAdmin){ ?>
+                        <div class="col-md-1 cell-default" style="font-style: italic;">
+                            <a href="<?= $this->buildMemberUrl($support['affiliate_username']) ?>"><?= $support['affiliate_username']; ?></a>
+                        </div>
+                        <?php } ?>
+                    </div>
+                    
+                <?php    
+                            }
+                        } else {
+                            /*
+                ?>            
+                     <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;<?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <!-- Section -->
+                        <div class="col-md-2 cell-default" style="">
+                            <?php echo $section['name']; ?>
+                        </div>
+                        <div class="col-md-10 cell-default center" style="text-align: center">
+                            No Data available!
+                        </div>
+                     </div>
+                            
+                <?php     */       
+                        } 
+                    }
+                ?>
+                    
+                <?php
+                    if($noData) {
+                ?>
+                    <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;
+                        <?php if($isFirst) echo "border-top: 1px solid #ddd;margin-top: 15px;padding-top: 5px;" ?>">
+                        <!-- Section -->
+                        <div class="col-md-12 cell-default center" style="text-align: center;font-size: larger;padding-top: 40px;">
+                            <a href="/support">Become a supporter</a>
+                        </div>
+                    </div>
+                <?php
+                    }
+                ?>
+                    
+                </div>
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>

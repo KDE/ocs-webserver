@@ -1,0 +1,81 @@
+ <?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$updateTime = $this->printDate($this->project_changed_at);
+$nr = $this->partialLoop()->nr++;
+$nr++;
+?>
+
+<div class="explore-product col-lg-12 col-md-12 col-sm-12 col-xs-12 disply-flex rowproduct">
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+        <div class="rank">
+            <?=$nr?>
+        </div>        
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 explore-product-imgcolumn">
+        <figure>
+            <a href="<?= $this->buildProductUrl($this->project_id, ''); ?>">
+                <div class="text-center imageContainer_">
+                <img src="<?php echo $this->Image($this->image_small, array('width' => 167, 'height' => 167, 'crop' => 0)); ?>" class="explore-product-image"/>
+                </div>
+            </a>
+        </figure>
+    </div>
+    <div class="explore-product-details col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <h3>
+          <?php 
+                $version = Application\Model\Service\HtmlPurifyService::purify($this->version);
+                $product_title = Application\Model\Service\HtmlPurifyService::purify($this->title);
+
+            ?>
+            <a href="<?= $this->buildProductUrl($this->project_id, ''); ?>"><?= $product_title ?> 
+            <span class="version"><?= $version ?> </span></a>
+        </h3>
+       
+       <div class="title">
+        <b><?php echo $this->catTitle?></b>
+        
+        </div>
+
+        
+      
+
+                  
+    </div>
+    <div class="explore-product-details col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <b class="username small">by <a  href="<?php echo $this->buildMemberUrl($this->username)?>" 
+                    class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->member_id?>">
+          <?php echo $this->username?></a></b>
+    </div>
+    
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                 
+      
+              <span class="small created_at" >
+                <a class="tooltipuserplings" data-tooltip-content="#tooltip_content" data-user="<?=$this->project_id?>" >
+                    <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px" /> </a>
+                <?=$this->sum_plings; ?>
+             </span>              
+    </div>
+</div><!-- END .explore-product -->
+
+
+

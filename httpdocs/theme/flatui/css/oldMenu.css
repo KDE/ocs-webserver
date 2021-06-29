@@ -1,0 +1,319 @@
+/******************************************
+/* HEADER
+/*******************************************/
+
+header {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 10px 0 10px 0;
+    height: 50px;
+    font-size: 16px;
+    font-weight: 300;
+    width: 100%;
+    position: fixed;
+    margin-top: -50px;
+    z-index: 1;
+}
+
+header .wrapper {
+    width: 1170px;
+    margin: auto;
+}
+
+header .wrapper-fluid {
+    max-width: 1170px;
+    margin: auto;
+}
+
+header .alignleft {
+    float: left;
+    padding: 0 10px 10px 0;
+}
+
+header .alignright {
+    float: right;
+    padding: 0 0 10px 10px;
+}
+
+header form#search {
+    margin: 0;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+header input#searchbox {
+    height: 20px;
+    width: 300px;
+    border-radius: 0px;
+    border: none;
+    padding: 4px 6px;
+    padding-left: 10px;
+}
+
+header .nav {
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-top: 10px;
+    list-style: none;
+}
+
+header nav#top-menu ul {
+    list-style: none;
+    margin-top: 0px;
+}
+
+header nav#top-menu > ul > li {
+    display: inline-block;
+    margin-left: 30px;
+}
+
+header .aligntop {
+    vertical-align: top;
+}
+
+header a {
+    color: white;
+}
+
+header a:hover {
+    color: #2e3133;
+}
+
+header a#whatshot {
+    color: white;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+header ul.menu {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+header ul.menu li{
+    list-style: none;
+    display: inline-block;
+    padding:0 25px;
+    margin: 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+header ul.menu li:hover{
+    background: white;
+    color: #2e3133;
+}
+
+header ul.menu li:hover a {
+    color: #2e3133;
+}
+
+header ul.left-menu {
+    margin-left: 40px;
+}
+
+header ul.left-menu li {
+    height: 60px;
+    border-left: 1px solid #444;
+    margin-top: -16px;
+    padding-top: 18px;
+    margin-right: -4px;
+}
+
+header ul.right-menu li {
+    height: 60px;
+    border-right: 1px solid #444;
+    margin-top: -10px;
+    padding-top: 18px;
+    margin-left: -4px;
+}
+
+header ul.menu li ul{
+    padding: 0;
+    list-style:none;
+    position:absolute;
+    left: -9999px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: normal;
+}
+
+header ul.menu ul li{
+    text-align: left;
+    display: block;
+    float:none;
+    width: 270px;
+    height: 35px;
+    border: none;
+    background: #ecf0f1;
+    margin: 0;
+    padding: 15px 0 35px 15px;
+    border-bottom: 1px solid white;
+}
+
+header ul.menu li:hover ul li a {
+    color: #7f8c8d;
+}
+
+header ul.menu li ul li:hover a, header ul.menu ul li:hover a:hover {
+    color: white;
+}
+
+header ul.left-menu .dropdown-header{
+    width: 270px;
+    height: 12px;
+    background: url(/images/system/dropdown-header-left.png);
+}
+
+header ul.right-menu .dropdown-header{
+    display: block;
+    width: 270px;
+    height: 12px;
+    background: url(/images/system/dropdown-header-right.png);
+}
+
+header ul.right-menu a.user-dropdown-menu {
+    display: inline-block;
+    margin-right: 0px;
+    width: 15px;
+    height: 15px;
+    background: url(/images_sys/sprite.png) no-repeat;
+    background-position: -22px -314px;
+    vertical-align: middle;
+}
+
+header ul.menu li ul li.first {
+    border-radius: 5px 5px 0 0;
+}
+
+header ul.menu li ul li:last-child {
+    border-radius: 0 0 5px 5px;
+    border-bottom: none;
+}
+
+header ul.menu li:hover ul.hot{
+    left: 0px;
+    top: 30px;
+}
+
+header ul.menu li:hover ul.categories{
+    left: 125px;
+    top: 30px;
+}
+
+header ul.menu li:hover ul.profile-menu{
+    left: 118px;
+    top: 35px;
+}
+
+header ul.menu ul li:hover {
+    background: #08a5c1;
+    color: white;
+}
+
+
+header ul.left-menu li:last-child {
+    border-right: 1px solid #444;
+}
+
+header ul.right-menu li:first-child {
+    border-left: 1px solid #444;
+}
+
+header ul.left-menu li ul li:last-child {
+    border-right: none;
+}
+
+header ul.right-menu li ul li:last-child {
+    border-left: none;
+}
+
+header ul.right-menu li .icon-down {
+    margin-left: 60px;
+}
+
+header ul.menu li ul .profile-summary {
+    background: #ecf0f1;
+    border-bottom: 1px solid white;
+    border-radius: 5px 5px 0 0;
+    text-align: left;
+    cursor: default;
+}
+
+header .profile-summary {
+    padding: 30px 0 15px 15px;
+}
+
+header .profile-image-header {
+    min-height: 76px;
+}
+
+header .image-overlay-32 {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+}
+
+header .profile-image-header-overlay {
+    width: 76px;
+    height: 76px;
+    background: url(/images/system/profile-image-header-overlay.png)
+}
+
+
+
+header .welcome-header {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+header .profile-header-name {
+    font-size: 16px;
+    color: #34495c;
+}
+
+#content {
+    margin-top: 50px; /* to counter our header margin */
+}
+
+#explore-content {
+    margin-top: 50px; /* to counter our header margin */
+}
+
+/******************************************
+/* TOP MENU
+/*******************************************/
+
+header nav#top-menu {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+header nav#top-menu ul {
+    list-style: none;
+    margin-top: 0px;
+}
+
+header nav#top-menu > ul > li {
+    display: inline-block;
+    margin-left: 30px;
+}
+
+header nav#top-menu > ul > li > a {
+    color: white;
+}
+
+header nav#top-menu ul li a:hover {
+    /* to be decided */
+}
+
+header nav#top-menu ul li a.active {
+    color: #08a5c1;
+}

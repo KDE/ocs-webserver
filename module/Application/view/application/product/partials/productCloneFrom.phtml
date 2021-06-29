@@ -1,0 +1,97 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+    <div class="sidebar-content">
+        <span><?= $this->moreProductsTitle ?>: </span>
+        <div class="">
+            <div class="row product-row" >
+                <?php
+                foreach ($this->moreProducts as $product):                    
+                    $product = Application\Model\Service\Util::arrayToObject($product);
+                    if($product->project_id==0 || is_null($product->project_id)) {
+                        continue;
+                    }
+                    $imgUrl = $this->Image($product->image_small, array('width' => 200, 'height' => 160));
+                    $title = substr(\Application\Model\Service\HtmlPurifyService::purify($product->title), 0, 20) . ' - ' . substr($this->catTitle($product->project_category_id), 0, 20);
+                    $title = str_replace('"', '&#8221;', $title);
+                    ?>
+                    <!-- product item -->
+                    <div class="col-md-3 col-lg-3 col-sm-4 col-xs-3 product-thumbnail"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-html="true"
+                         data-placement="top"
+                         data-content="<div class='profile-img-product'>
+			                     <img class='imgpopover'  src='<?= $imgUrl ?>'/>
+			                     </div>
+                                <div class='content'>
+                                    <div class='title'>
+                                        <p><?= $title ?></p>
+                                       <p>updated: <?= $this->printDate($product->changed_at) ?></p>
+                                    </div>  			                                                  
+                                </div>">
+                        <!-- product thumbnail -->
+                        <a
+                            href="<?= $this->buildProductUrl($product->project_id) ?>"
+                            title="<?= $product->title ?>">
+                            <img src="<?= $this->Image($product->image_small, array('width' => 80, 'height' => 80)); ?>"
+                                 alt="product">
+                        </a>
+                        <!-- /product thumbnail -->
+                    </div>
+                    <!-- /product item -->
+                <?php endforeach; ?>
+
+
+                    <div class="externallinkclone">
+                    <?php
+                    foreach ($this->moreProducts as $product):
+
+                        if(empty($product['project_id'])) {
+                            echo '<a href="'.$product['external_link'].'">'.$product['external_link'].'</a>';
+                        }
+
+                    endforeach; 
+                    ?>
+                    </div>
+             
+            </div>
+        </div>
+    </div>
+<style type="text/css">
+        
+         .externallinkclone {
+           display: block; 
+           float: left; 
+           clear: both; 
+           padding-top:20px; 
+           padding-left:20px;
+        }
+        .externallinkclone a{
+            display: block;
+        }
+        .product-row{
+            margin-top: 0px;
+        }
+
+</style>

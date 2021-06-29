@@ -1,0 +1,68 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$css_error = "";
+if ($this->element->getMessages()) {
+    $css_error = " bg-danger";
+}
+?>
+<div class="form-group">
+    <div class="col-sm-12 margin-top-15<?= $css_error ?>">
+        <div class="small grey bold-font pull-left margin-right-5">*</div>
+        <label class="form-label" for="<?= $this->element->getName() ?>">Gallery Pictures (5MB, max. 5 pictures)</label>
+    </div>
+    <div class="col-sm-12<?= $css_error ?>">
+        <div class="product-gallery">
+            <?php
+            if (count($this->form->getOnlineGalleryImageSources()) > 0) {
+                $i = 0;
+                foreach ($this->form->getOnlineGalleryImageSources() as $pic) {
+                    $i++;
+                    $file_src = $this->image($pic, array('width' => '110', 'height' => '77', 'crop' => 2));
+                    $online_src = $pic;
+                    if (file_exists($pic)) {  // it is a workaround to detect uploaded temp files
+                        $online_src = $file_src = $this->image($pic, array('tempFile' => true));
+                    }
+                    ?>
+                    <div class="product-image relative">
+                        <input type="hidden" name="online_picture[<?= $i ?>]" value="<?= $online_src ?>"
+                               id="gallery_picture_online_<?= $i ?>">
+                        <div class="absolute icon-check" style="display: block;"></div>
+                        <div class="absolute icon-cross" style="display: none;"></div>
+                        <img src="<?= $file_src; ?>">
+                    </div>
+
+                    <?php
+                }
+            }
+            ?>
+
+            <div class="product-image relative">
+                <input type="hidden" name="MAX_FILE_SIZE" value="29360128" id="MAX_FILE_SIZE">
+                <input type="file" name="upload_picture[]" id="upload_picture-0" class="gallery-picture"
+                       onchange="ProductGallery.previewImage(this);">
+            </div>
+            <div class="upload-image-container">
+                <div class="upload-image relative" onclick="$('input.gallery-picture:last-child').click();"></div>
+            </div>
+        </div>
+    </div>
+</div>

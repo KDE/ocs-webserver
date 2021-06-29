@@ -1,0 +1,126 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\Model\Service\HtmlPurifyService;
+        
+$product = $this->featureProducts;
+$productDescription = HtmlPurifyService::purify($product['description']);
+
+?>
+    <div id="featureProducts"  class="carousel slide" data-ride="carousel" data-interval="false">       
+       
+        <div id="featureProducts-content"  class="carousel-inner">
+        <?php                
+            
+          ?>            
+                    <div  class="feature_container">       
+                          
+
+                            <span  class="feature_title">In the Spotlight </span>
+                         
+                        <div  class="main_container">
+                               
+                             <span class="small label label-info label_featured <?=($this->type=='Plinged'?'label_plinged':'')?>" style="float: right;">                             
+                                   <?php   echo $this->type.($this->type=='Plinged'?': '.$product['sum_plings']:''); ?> 
+                            </span>   
+                                                        
+                              <a class="feature_image"  title="<?=$this->truncate($productDescription, 200, '...', false, true)?>" href="<?=$this->buildProductUrl($product['project_id'],'')?>">
+                                 <img  src="<?=$this->Image($product['image_small'], array('width' => 300, 'height' => 230, 'crop' => 1))?>"  />
+                              </a>
+
+                               <div class="feature_text">
+                               <div style="display: flex">
+                                        <div class="feature_category" ><a href="<?=$this->buildProductUrl($product['project_id'],'')?>"><?=$product['title']?></a>
+                                                  <span  class="feature_text_title" >                                                      
+                                                      <?=$this->fetchCategoriesForProductAsString($product['project_id'])?>                                                      
+                                                    </span>
+                                        </div>
+                                        <div class="feature_rating" >
+                                              <div class="rating" >
+                                                  <?php  
+                                                
+                                                    echo $this->partial(
+                                                        'application/partials/circle.phtml', array(
+                                                            "r" => 30,
+                                                            "fontSize" => Application\Model\Service\ConstCircle::small30,
+                                                            "score" => $product['laplace_score']/10
+                                                        )
+                                                    );      
+                                                  ?>
+                                              </div>
+                                              <span class="time text-center" style="font-size: smaller;display: block"><?=$this->printDate($product['changed_at']==null?$product['created_at']:$product['changed_at'])?>
+                                              </span>
+                                        </div>
+                                </div>
+                               <div class="feature_text_auth" >
+                               <a  class="auto_link" href="<?php echo $this->buildMemberUrl($product['username']); ?>" >
+                                   <figure >
+                                       <img src="<?php echo $this->Image($product['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" />
+                                   </figure>                                        
+                               </a>
+                                  <span class="created_by" > created by <?php echo $product['username']; ?> </span>
+
+                                  
+                               </div>
+                              
+
+                                <span class="feature_text_comments" >
+                                <?php                                    
+                                    $count_comments = $product['count_comments'];                                                                        
+                                    echo ($count_comments>0 ? '<span class="cntComments">'.$count_comments.' comment':'').($count_comments>1?'s':'').($count_comments>0?'</span>':'') ;                                    
+                                ?>
+                                </span>
+                                
+                                <span class="feature_text_description" >                                  
+                                        <?=$this->truncate($productDescription, 300, '...', false, true)?>
+                                </span>
+                                
+                          
+
+
+                                </div>
+                              
+                                  <div style="clear: left"></div>
+                                  <span class="button_next small">
+                                         <a type="button" class="ajaxPartialFeatureProduct" style="padding-right: 20px" href="/showfeatureajax/page/0">random</a>                                          
+                                         <a type="button" class="ajaxPartialFeatureProduct" style="padding-right: 20px" href="/showfeatureajax/page/1">featured</a>   
+
+                                          <a type="button" class="ajaxPartialFeatureProduct" href="/showfeatureajax/page/2">plinged</a>                                          
+                                 </span>   
+
+                          </div>      
+                                                                   
+                    </div>                           
+       
+        
+      </div>
+
+       
+        
+    </div>
+
+    
+
+
+
+
+

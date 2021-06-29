@@ -1,0 +1,1 @@
+Backup von $HOST fehlgeschlagen.

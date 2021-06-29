@@ -1,0 +1,35 @@
+<?php
+
+ini_set('memory_limit', '1024M');
+
+//var_dump($data);
+/*
+foreach ($member as $m){
+echo $m['member_id'];
+echo ' / ';
+}
+*/
+//die;
+
+$title = 'Config Store';
+$this->headTitle($title);
+
+?>
+<h1><?= $this->escapeHtml($title) ?></h1>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Host</th>
+    <th>Name</th>   
+   
+    
+</tr>
+<?php foreach ($stores as $store) : ?>
+    <tr>
+        <td><?= $this->escapeHtml($store->store_id) ?></td>
+        <td><?= $this->escapeHtml($store->host) ?></td>
+        <td><?= $this->escapeHtml($store->name) ?></td>        
+           
+    </tr>
+<?php endforeach; ?>
+</table>

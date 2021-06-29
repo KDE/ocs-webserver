@@ -1,0 +1,249 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+    .jtable-toolbar-item-add-record {
+        display: none !important;
+    }
+</style>
+
+<div class="filtering">
+    <form>
+        <span style="margin-right: 0.9em;">show deleted reports: <input type="checkbox" name="deletedreports"
+                                                                       id="deletedreports" value="1"
+                                                                       /></span>
+        <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+        <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+    </form>
+</div>
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of reports',
+            sorting: true, //Enable sorting
+            defaultSorting: 'last_report_date DESC', //Set default sorting
+            actions: {
+                listAction: '/backend/reportproducts/list',
+                createAction: '/backend/reportproducts/create',
+                
+            },
+            fields: {
+                report_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                project_id: {
+                    title: 'Project ID',
+                    width: '10%',
+                    display: function (data) {
+                        if (data.record.project_id) {
+                            return data.record.project_id + ' <a href="/p/' + data.record.project_id + '/" class="btn btn-info btn-xs pull-right" role="button" style="color: white" target="_blank">show</a>';
+                        }
+                    }
+                },
+                reported_by: {
+                    title: 'Reported by',
+                    width: '10%',
+                    display: function (data) {
+                        if (data.record.reported_by) {
+                            return data.record.reported_by
+                                + ' <a role="button" title="show member info" class="btn btn-info btn-xs member-info pull-right" style="color:white;"  data-record="' + data.record.reported_by + '"><span>info</span></a>'
+                                ;
+                        }
+                    }
+                },
+                is_deleted: {
+                    title: 'Deleted',
+                    width: '5%'
+                },
+                created_at: {
+                    title: 'Created',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                last_report_date: {
+                    title: 'Created (newest report)',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                counter: {
+                    title: 'total count reported',
+                    width: '10%',
+                    create: false,
+                    edit: false
+                },
+                hide: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.status) {
+                            if (data.record.status > 40) {
+                                btn_title = 'deactivate';
+                            } else {
+                                btn_title = 'activate';
+                            }
+                            if (data.record.is_deleted == 1) {
+                                css_deactivated = "disabled";
+                            } else {
+                                css_deactivated = '';
+                            }
+                            return '<a role="button" title="' + btn_title + ' this product" class="btn btn-warning btn-xs toggle-status pull-right ' + css_deactivated + '" style="color:white;"  data-record="' + data.record.project_id + '"><span>' + btn_title + '</span></a>';
+                        }
+                    }
+                },
+                del_reports: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.is_deleted == 1) {
+                            css_deactivated = "disabled";
+                        } else {
+                            css_deactivated = '';
+                        }
+                         return '<a role="button" title="delete reports for this product" class="btn btn-warning btn-xs del-reports pull-right ' + css_deactivated + '" style="color:white;"  data-record="' + data.record.project_id + '"><span>delete</span></a>';
+                    }
+                }
+
+            }
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_deleted: $('#deletedreports:checked').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#deletedreports').prop('checked', false);
+            $('#TableContainer').jtable('load', {
+                filter_deleted: null
+            });
+        });
+
+        $('#TableContainer').jtable('load');
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $('body').on("click", 'a.member-info', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'member_id': elementRecord},
+                url: '/backend/user/memberinfo/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').html(results.ViewRecord).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+       $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/reportproducts/status/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.del-reports', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'p': elementRecord},
+                url: '/backend/reportproducts/deletereports/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+    });
+</script>

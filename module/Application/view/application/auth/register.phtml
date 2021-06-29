@@ -1,0 +1,182 @@
+<?php
+/**
+ *   ocs-webserver
+ *
+ *   Copyright 2016 by pling GmbH.
+ *
+ *     This file is part of ocs-webserver.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$users = $this->newUsers($limit = 216, 'created_at', 'DESC');
+$url_param_redirect = isset($this->redirect) ? 'redirect/' . $this->redirect : null;
+$this->headMeta()->setName('robots', 'noindex, nofollow');
+?>
+
+<!-- new code -->
+<main id="reg-page">
+
+    <section class="wrapper" id="register-wrap">
+        <div id="register" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+            <div id="register-box" class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+
+                <?= $this->render('application/auth/partials/registerForm.phtml') ?>
+
+            </div>
+            <!-- END #register-box -->
+            <div id="social-register" class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <h3></h3>
+
+                <div id="social-login-elements">
+                    <div class="bottom margin-top-15">
+                        <div id="show-login-description" class="small light lightgrey">Already have an account?</div>
+                        <div class="login2">
+                            <a href="<?=$this->url('application_login')?>" id="show-login-form" class="btn btn-native btn-min-width" rel="nofollow">
+                                <i class="icon-white icon-lock"></i>
+                                Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="thumbs">
+        <?php foreach ($users as $key => $user) { ?>
+            <div class="thumb">
+                <a href="<?php //echo $buildMemberUrl->buildMemberUrl($user['username']); ?>"
+                   title="<?= $user->profile_image_url ?>">
+                    <span></span>
+                    <img src="<?php echo $this->Image($user->profile_image_url,
+                        array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                </a>
+            </div>
+        <?php } ?>
+    </section>
+
+</main>
+<!-- /new code -->
+
+<script>
+    $('document').ready(function () {
+
+        var ValidateAjax = {
+            isClean: {},
+            initialize: function (formid, endpoint) {
+                end_url = endpoint;
+                form_id = '#' + formid;
+
+                $(form_id + ' input[name=username],input[name=mail]').blur(function () {
+                    var formElementID = $(this).attr('name');
+                    var formElementValue = $(this).val();
+                    ValidateAjax.doValidate(formElementID, formElementValue);
+                    return false;
+                });
+                $(form_id).on('submit', function (e) {
+                    var target = $(this).attr("data-target");
+                    var loadState = $(this).attr('data-load-state');
+
+                    $(target).find(loadState).prop('disabled', true);
+                    $(target).find(loadState).find('i').removeClass('hidden');
+
+                    var validateValues = ValidateAjax.isClean;
+                    for (var k in validateValues) {
+                        if (validateValues.hasOwnProperty(k)) {
+                            if (!validateValues[k]) {
+                                e.preventDefault();
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                });
+            },
+
+            doValidate: function (id, value) {
+                $.fn.capitalize = function () {
+                    $.each(this, function () {
+                        var caps = this.value;
+                        caps = caps.charAt(0).toUpperCase() + caps.slice(1);
+                        this.value = caps;
+                    });
+                    return this;
+                };
+
+                var url = end_url;
+                var data = {'name': id, 'value': value};
+                $.post(url, data, function (response) {
+                    var element = $('input[name=' + id + ']');
+                    element.parent().find('.form-control-feedback').remove();
+                    element.parent().removeClass('has-error');
+
+                    if (!response['status']) {
+                        ValidateAjax.isClean[id] = false;
+                        $('#login').attr("disabled", "disabled");
+
+                        element.parent().addClass('has-error');
+                        if (response[id]) {
+                            element.parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
+                            element.parent().find('.errors').remove();
+
+                            $msgArray = response[id];
+                            $msgString = "";
+                            $msgString += '<ul class="errors" style="text-align: left;">';
+                            // if (id == 'mail') {
+                            //     $msgString += '<li class="errors">Email is invalid or already taken</li>';
+                            // } else {
+                            //     $.each($msgArray, function (key, value) {
+                            //         if (key == 'regexNotMatch') {
+                            //             $msgString += '<li class="errors">Username may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
+                            //         } else {
+                            //             $msgString += '<li class="errors">' + value + '</li>';
+                            //         }
+                            //     });
+                            //
+                            // }
+                            $.each($msgArray, function (key, value) {
+                                 $msgString += '<li class="errors small">' + value + '</li>';
+                            });
+                            $msgString += '</ul>';
+                            element.parent().append($msgString);
+                            if ($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
+                                element.parent().append('<ul class="errors" style="text-align: left;"><li class="errors">This ' + id + ' is already taken</li></ul>');
+                            }
+                        }
+                    } else {
+                        ValidateAjax.isClean[id] = true;
+                        $('#login').removeAttr("disabled");
+                        element.parent().addClass('has-success');
+                        element.parent().append('<i class="glyphicon glyphicon-ok form-control-feedback"></i>');
+                        element.parent().find('.errors').remove();
+                        element.parent().append('<ul class="errors" style="visibility: hidden;"><li></li></ul>');
+                    }
+                }, 'json');
+
+            },
+            getHTML: function (errArray) {
+                var o = '<ul class="errors">';
+                $.each(errArray, function (key, value) {
+                    o += '<li>' + value + '</li>';
+                });
+                o += '</ul>';
+
+                return o;
+            }
+        };
+
+        ValidateAjax.initialize('form-register', '/register/validate');
+    });
+</script>

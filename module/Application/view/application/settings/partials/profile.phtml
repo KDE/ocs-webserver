@@ -1,0 +1,99 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$form = $this->profileform;
+
+$form->get('firstname')->setAttributes(array(   
+    'tabindex' => 2
+    ));
+$form->get('city')->setAttributes(array(   
+    'tabindex' => 4
+    ));
+$form->get('lastname')->setAttributes(array(   
+    'tabindex' => 3
+    ));
+$form->get('country')->setAttributes(array(   
+    'tabindex' => 5
+    ));
+$form->get('aboutme')->setAttributes(array(   
+    'tabindex' => 6
+    ));
+?>
+
+<div class="panel-collapse " id="profile-connected">
+    <div class="panel-body">
+        <form class="standard-form partial well" action="<?= $form->getAttribute('action'); ?>"
+              method="<?= $form->getAttribute('method'); ?>" data-target="#form-profile"
+              data-trigger="#profile-trigger">
+            <div class="row">
+                <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                        <div class="field">
+                            <?php echo $this->formLabel($form->get('username')); ?>                           
+                            <br/>
+                            <div style="height: 44px;padding-top: 5px;"><?= $form->get('username')->getValue() ?></div>                            
+                            <?php echo $this->formElement($form->get('username')); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="field">
+                            <?php echo $this->formLabel($form->get('firstname')); ?>
+                            <?php echo $this->formElement($form->get('firstname')); ?>                                                    
+                        </div>
+                        <div class="field">
+                            <?php echo $this->formLabel($form->get('city')); ?>
+                            <?php echo $this->formElement($form->get('city')); ?>                             
+                        </div>
+                    </div>
+                    <!-- /.span4 -->
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
+                        <div class="field">
+
+                            <?php echo $this->formLabel($form->get('lastname')); ?>
+                            <?php echo $this->formElement($form->get('lastname')); ?>   
+                            
+                        </div>
+                        <div class="field">
+                            <?php echo $this->formLabel($form->get('country')); ?>
+                            <?php echo $this->formElement($form->get('country')); ?>   
+                            
+                        </div>
+                    </div>
+                </div>
+                <!-- /.span4 -->
+                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-4">
+                        <?php echo $this->formLabel($form->get('aboutme')); ?>
+                        <?php echo $this->formElement($form->get('aboutme')); ?>                  
+                </div>
+                <!-- /.span4 -->
+            </div>
+            <!-- /.row-fluid -->
+            <hr>
+            <div class="row">
+                <div class="box pull-left margin-left-15" style="padding-left: 15px;">
+                    <?php echo $this->formResult($form, $this->save, null, 'Changes saved. Some changes will be activated at next login.'); ?>
+                </div>
+                <button type="submit" class="btn btn-native pull-right"
+                        tabindex="7" ><?= $this->translate('Save &amp; Update') ?></button>
+            </div>
+        </form>
+    </div>
+</div>

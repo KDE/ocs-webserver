@@ -1,0 +1,93 @@
+.tags-container {
+  float: right;
+  position: relative;
+}
+.tags-container ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.tags-container .tag-is-saved-container {
+  position: absolute;
+  top: -20px;
+  color: #2bb12b;
+  padding: 0 5px;
+}
+.tags-container .manage-tags-container {
+  position: relative;
+}
+.tags-container .manage-tags-menu-container {
+  float: right;
+  border: solid black 1px;
+  outline: 0;
+  border-radius: 5px;
+}
+.tags-container .manage-tags-menu-container > ul {
+  padding: 0 3px;
+}
+.tags-container .manage-tags-menu-container > ul li {
+  float: left;
+  margin: 3px 3px 3px 0;
+  line-height: 25px!important;
+}
+.tags-container .manage-tags-menu-container > ul li.tag {
+  background-clip: padding-box;
+  background-color: #eee;
+  background-image: linear-gradient(#f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
+  background-repeat: repeat-x;
+  background-size: 100% 19px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  box-shadow: 0 0 2px #fff inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+  color: #333;
+  max-width: 100%;
+  padding: 0 10px;
+  position: relative;
+  display: inline-block;
+  font-size: 13px;
+}
+.tags-container .manage-tags-menu-container > ul li span.remove-x {
+  float: right;
+  margin-left: 5px;
+  color: #999;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 2px;
+  font-size: 14px;
+}
+.tags-container .manage-tags-menu-container > ul li span.remove-x:hover {
+  color: black;
+}
+.tags-container .manage-tags-menu-container > ul li input {
+  border: 0;
+  width: auto;
+  min-width: auto;
+}
+.tags-container .suggestions-container {
+  float: left;
+  width: 100%;
+}
+.tags-container .suggestions-container > ul li {
+  width: 100%;
+}
+.tags-container .suggestions-container > ul li a {
+  width: 100%;
+  display: block;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px;
+}
+.tags-container .suggestions-container > ul li:hover a {
+  color: white;
+  background-color: #0366d6;
+}
+.tags-container .loading-suggestions-container {
+  padding: 5px;
+}
+.tags-container .loading-suggestions-container span.glyphicon {
+  margin: 0;
+}
+.tags-container .loading-suggestions-container span + span {
+  margin-left: 5px;
+}

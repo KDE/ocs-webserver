@@ -1,0 +1,478 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+$this->headTitle($this->headTitle);
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}else
+{
+   //$thisurl= 'https://' . $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+    $thisurl= $_SERVER["REQUEST_URI"];
+}
+
+
+$url_login = SERVER_BASE_PATH . "/login/redirect/".$this->urlEncrypt($thisurl);
+
+$sections = $this->sections;
+
+$creator_id = $this->creator_id;
+$baseurlStore = $this->config->settings->client->default->baseurl_store;
+?>
+<link href="/theme/flatui/css/support.css" rel="stylesheet">
+
+<style>
+    .amount input {
+        opacity: .95;
+        margin-top: -8px;
+        color: #000;
+        font-size: 24px;
+        width: 50%;
+        margin: 0;
+            margin-top: 0px;
+        margin-top: 0;
+        border: 0;
+            border-bottom-color: currentcolor;
+            border-bottom-style: none;
+            border-bottom-width: 0px;
+        border-bottom: 1px solid #d0d0d0;
+        padding: 0;
+        box-shadow: none;
+        background-color: #fff;
+    }
+    
+    .unit-wrapper {
+        position: absolute;
+        display: inline-block;
+    }
+    
+    .unit-wrapper .unit {
+        color: #231f20;
+        opacity: .6;
+        font-size: 13px;
+        position: absolute;
+        top: 5px;
+        right: 3px;
+        line-height: 10px;
+    }
+    
+    .item-text {
+        padding-left: 15px;
+    }
+    
+    .disabled {
+        cursor: not-allowed !important;
+        background-color: #959595 !important;
+        box-shadow: 0 2px 0 0 #404040 !important;
+    }
+    
+    .hiddden {
+        display: none !important;
+    }
+    
+</style>
+
+<main>
+    <section class="wrapper" id="products-wrapper">
+        <form class="donation-form" id="new_donation" action="<?= $this->urlPay ?>" accept-charset="UTF-8" data-remote="true" method="post">  
+                <input type="hidden" id="currency-symbol" value="$">
+                <input type="hidden" name="provider" value="paypal" id="provider">
+                <input type="hidden" name="creator_id" value="<?= $creator_id ?>" id="creator_id">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar-left col-md-2"></div>
+                
+   
+                <div class="content col-md-8">
+                    <h2>Become a Supporter</h2>
+                    <p>Support any of these sections and their creators via a donation:</p>
+                    </p>
+                    
+                    
+                    <div class="x-donation-widget">
+                         <div class="row disply-flex">
+                             
+                            <div class="col-lg-6" style="padding-left: 15px; min-width: 250px;">        
+                               <div class="x-tabs-header " style="text-align: center;">
+                                  <div class="header-content">                                                                                     
+                                     Section
+                                 
+                                  </div>
+                                </div>                                          
+                            </div> 
+                            <div class="col-lg-6">        
+                               <div class="x-tabs-header " style="padding: 0 35px;">
+                                  <div class="header-content">                                                                                                                         
+                                    Select                                 
+                                  </div>
+                                </div>                                          
+                            </div>    
+                            <?php /*
+                             <div class="col-lg-3 col-md-2" style="min-width: 150px;">        
+                                <div class="x-tabs-header " style="padding: 0 20px;">
+                                  <div class="header-content">   
+                                    Enter Amount
+                                  </div>
+                                </div>                                                  
+                            </div>                        
+
+                           
+                            <div class="col-lg-2 col-md-2" style="">
+                            <div class="x-tabs-header ">
+                              <div class="header-content">                                                
+                                  Payment 
+                                 <br><span style="font-size: small;" class="extrasmall">(can be cancelled at any time before next year)</span>
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                             
+                             <div class="col-lg-2 col-md-2 text-right" style="padding-right: 15px;">
+                            <div class="x-tabs-header ">
+                              <div class="header-content">                                                
+                                 
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                            **/?>
+                             
+                            <!-- 
+                            <div class="col-lg-2 col-md-2 " style="padding-right: 15px;">
+                            <div class="x-tabs-header ">
+                              <div class="header-content" style="text-align:right;padding-right:15px;">                                                
+                                 Next Goal
+                              </div>
+                            </div>                                                                                     
+                            </div>
+                            -->
+                        </div> <!--end of row-->
+                        <?php
+                            foreach ($sections as $section) {
+                        ?>
+                        <div class="row disply-flex">
+                            <div class="col-lg-6" style="padding-left: 15px;min-width: 250px;">        
+                                                                            
+                                <div class="text" style="padding: 16px;">
+                                    <?= $section['name'] ?>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" style="padding-left: 0;">        
+                                                                            
+                                <div class="radiocontainer" style="text-align: left;">
+                                    <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount mdl-radio__button" data-checked="false" <?=$this->payment_options['Option5']['checked']?> id="sam-15-<?= $section['section_id'] ?>" type="checkbox" value="<?=$this->payment_options['Option5']['name']?>" name="amount_predefined-<?= $section['section_id'] ?>"/>
+                                    <span class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount" style="font-size: 18px;">1</span> monthly                                  
+                                    </span>
+                                </div>
+                                
+
+                            </div>    
+                                <?php /*
+                            <div class="col-lg-3 col-md-3" style="min-width: 150px;">  
+                                <div class="radiocontainer" style="text-align: left;">
+                                    <input data-section-id="<?= $section['section_id'] ?>" class="suggested-amount custom_amount_item mdl-radio__button" data-checked="false" <?=$this->checked?> id="custom_amount_item_<?= $section['section_id'] ?>" type="radio" value="Option7" name="amount_predefined-<?= $section['section_id'] ?>">
+                                    <span class="item-text">
+                                        <span class="unit-wrapper">
+                                          <span class="unit">$</span>
+                                        </span>
+                                        <span class="amount"><input data-section-id="<?= $section['section_id'] ?>" class="custom_amount" id="custom_amount-<?= $section['section_id'] ?>" min="1" step="any" inputmode="numeric" type="number" name="amount_handish-<?= $section['section_id'] ?>"> </span>
+                                        <!--
+                                        <div>
+                                            <span class="amount" ><span style="font-size: x-small;padding-left: 32px;">Enter a amount > $1 </span></span>    
+                                        </div>
+                                        -->
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!--
+                            <div class="col-lg-2 col-md-2">  
+                                <span class="amount">Total: xxx</span>
+                                <span class="amount" ><span style="font-size: x-small;">(incl. x Taxes and y Paypal Fees)</span></span>
+                                    
+                            </div>
+                            -->
+                            <div class="col-lg-2 text-right" >
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount" > 
+                                            <?php /*<?php echo $modelInfo->getCountSectionSupporters($section['section_id']);?></span>  
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                            */?>
+                            <!--
+                            <div class="col-lg-2" >
+                                <ul class="x-suggested-amounts">
+                                <li class="amount-item">       
+                                      <div class="item-text">          
+                                        <span class="amount" > 
+                                            (Balken)      
+                                      </div>    
+                                </li>
+                                </ul>
+                               
+                            </div>
+                            -->
+                        </div> <!--end of row-->
+
+
+                        
+                        <?php
+                            }
+                        ?>
+                        
+                        <div class="row disply-flex">
+                            <div class="col-lg-12 col-md-12" style="border-top: dotted thin #E7E7E7 !important;padding-top: 35px;">  
+                                <div class="tabs-footer">
+                                    Donation-Sum: $<span id="sum">0.00</span>/Month
+                                    - Pay 
+                                    <select name="paymentFrequenz">
+                                        <option value="Y" selected>Yearly</option>
+                                        
+                                    </select>
+                                <div>
+                                    <span style="font-size: x-small;" id="desc_1"></span>
+                                </div>
+                                <div>
+                                    <span style="font-size: x-small;" id="desc_2"></span>
+                                </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div> <!--end of row-->
+            
+                        <div class="row disply-flex">
+                              <div class="col-lg-12 col-md-12">  
+                                <div class="tabs-footer">
+                                    <?php if ($this->ocs_user->member_id) {?>
+                                    <button disabled="true" type="submit" id="submit" class="disabled dw-btn mdl-button mdl-js-button mdl-js-ripple-effect step-3 basic-color-background" data-upgraded=",MaterialButton,MaterialRipple">
+                                    <span class="donate" id="linkButton">
+                                      <span class="amount">
+                                        <span isolate="">Donate via PayPal</span>
+                                      </span>
+                                    </span>
+                                    </button>
+                                     <?php }else{
+                                        echo "<a href='".$url_login."'>Please login to donate</a>";
+                                    }?>
+                                </div>
+                                    </div>
+                        </div> <!--end of row-->
+                    </div> <!--end of tabs-->
+                    
+                    
+                </div> <!--end of content-->
+                <div class="sidebar-right col-md-2"></div>
+                
+            </div>
+            
+        </div>
+         </form>
+    </section>
+</main>
+
+<script>
+    $(document).ready(function(){
+        $checkedBoxes = [];
+        
+        calSum();
+        
+        $('.cat_drop_down').click(function(){
+            $section_id = $(this).attr('data-section-id');
+            $dropdown = $('cat_drop_down-'+$section_id);
+            
+            if($dropdown.hasClass('hidden')) {
+                $dropdown.removeClass('hidden');
+            } else {
+                $dropdown.addClass('hidden');
+            }
+            
+        });
+        
+        $('#submit').click(function(){
+            $("input[type=checkbox]:checked").each(function() {
+                $section_id = $(this).attr('data-section-id');
+                
+                if($(this).hasClass('custom_amount_item')) {
+                   $input = $('#custom_amount-'+$section_id);
+                   
+                   if($input.val() == '') {
+                       $(this).prop('checked', false);
+                   }
+                }
+            });
+            
+        });
+        
+        $(".custom_amount").click(function(){
+            $section_id = $(this).attr('data-section-id');
+            //alert('Section: ' + $section_id);
+            $('#sam-15-'+$section_id).removeAttr('checked');
+            $('#custom_amount_item_'+$section_id).prop("checked", true); 
+            
+            for( var i = 0; i < $checkedBoxes.length; i++){ 
+                if ( $checkedBoxes[i] === '#sam-15-'+$section_id) {
+                  $checkedBoxes.splice(i, 1); 
+                }
+            }
+            
+            calSum();
+        });
+        
+        
+        $('.custom_amount').change(function(){
+            calSum();
+        });  
+        
+        
+        
+        $(".mdl-radio__button").click(function(){
+            $wasChecked = $(this).attr("data-checked");
+            $section_id = $(this).attr('data-section-id');
+            
+            if($checkedBoxes.includes($(this).attr('id'))) {
+                //Is checked, so remove marker and elem in array
+                for( var i = 0; i < $checkedBoxes.length; i++){ 
+                    if ( $checkedBoxes[i] === $(this).attr('id')) {
+                      $checkedBoxes.splice(i, 1); 
+                    }
+                }
+                $(this).removeAttr('checked');
+                $(this).prop('checked', false);
+                
+            } else {
+                $checkedBoxes.push($(this).attr('id'));
+                //$(this).prop("checked", true);
+            }
+            calSum();
+        });  
+        
+        function calSum() {
+            $obj = null;
+            $sum = $("#sum");
+            $sumNum = 0;
+            $('#new_donation input[type=checkbox]:checked').each(function() {            
+                $section_id = $(this).attr('data-section-id');                
+                if($(this).hasClass('custom_amount_item')) {
+                   $input = $('#custom_amount-'+$section_id);
+                   
+                   if($input.val() != '') {
+                       $num = parseFloat($input.val());
+                       $sumNum += $num;
+                   }
+                } else {
+                   //$sumNum += 0.99;
+                   $sumNum += 1;
+                }
+            });
+            
+            if($sumNum>0) { 
+            
+                $monthNum = calForMonth($sumNum);
+                $yearNum = calForYear($sumNum);
+
+                num = $sumNum * 12;
+                paypal_fix = 0.3;
+                paypal_var = 0.029;
+                tax = 0.19;
+
+                $tier = $sumNum * 12;
+                $v = ($tier + paypal_fix) / (1 - ((paypal_var / (1 + paypal_var)) + (tax / (1 + tax))));
+                $paypal = paypal_fix + $v * paypal_var;
+                $total = $tier + $paypal;
+                $t = $total * tax;
+                $g = $total + $t;
+                $r = '($' + $tier + ' + $' +$paypal.toFixed(2)+ ' paypal + $' + $t.toFixed(2)+ ' tax = $' + $g.toFixed(2)+ ' yearly)';
+
+                //$('#desc_1').text("(Pay $" + $monthNum + " per Month, "+calFees($sumNum)+" or Pay $" + $yearNum + " per Year, "+calFees($sumNum*12)+")");
+                $('#desc_1').text($r);
+
+                $sumNum = Math.round($sumNum * 100 )/100;
+                $sumNum = $sumNum.toFixed(2);
+
+                $sum.text($sumNum);
+                $('#submit').prop('disabled', false);
+                $('#submit').removeClass('disabled');
+                
+            } else {
+                $sum.text('0.00');
+                $('#desc_1').text("");
+                $('#submit').prop('disabled', true);
+                
+                $('#submit').addClass('disabled');
+            }
+            
+        }
+        
+        
+        function calForMonth(num) {
+        
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+
+            v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
+            v = Math.round(v * 100 )/100;
+            v = v.toFixed(2);
+            return v;
+        }
+        
+        function calForYear(num) {
+            num = num * 12;
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+
+            v = (num + paypal_fix)/( 1- ( ( paypal_var) + (tax/(1+tax)) ));
+            v = Math.round(v * 100 )/100;
+            v = v.toFixed(2);
+            return v;
+        }
+        
+        
+        function calFees(num) {
+            paypal_fix = 0.3;
+            paypal_var = 0.029;
+            tax = 0.19;
+            
+            v = (num + paypal_fix)/( 1- ( ( paypal_var/(1+paypal_var)) + (tax/(1+tax)) ));		
+            paypal = paypal_fix+v*paypal_var;
+            total = num + paypal;
+            t=total*tax;
+            g = total+t;
+                
+            r = 'incl. $' + (Math.round(t * 100 )/100).toFixed(2) + ' Tax and $'+(Math.round(paypal * 100 )/100).toFixed(2)+' PayPal Fees';
+            return r;
+        }
+        
+        
+        
+    });
+</script>

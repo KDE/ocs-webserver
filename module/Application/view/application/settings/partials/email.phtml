@@ -1,0 +1,106 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+
+
+<div class="panel-collapse " id="email-collapse">
+    <div class="panel-body">
+        <div id="form-email-body" class="well">
+        <p>Your <strong>primary email address</strong> will be used for account-related notifications
+            (e.g. account changes) as well as any web-based operations
+            (e.g. login and comment notifications).</p>
+
+        <ul class="group-list">
+            <?php
+            foreach ($listEmails as $listEmail) {
+            ?>
+            <li class="css-truncate">
+                <span title="<?=$listEmail['email_address']?>" class="css-truncate-target"><?=$listEmail['email_address']?></span>
+                <?php if ($listEmail['email_primary']) { ?>
+                <span class="label default">Primary</span>
+                <?php } ?>
+                <?php if (empty($listEmail['email_checked'])) { ?>
+                    <span class="label attention">Unverified</span>
+                <?php } ?>
+                <span class="email-actions">
+                    <?php if (empty($listEmail['email_primary'])) { ?>
+                        <form method="post" action="/settings/removeemail" class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                              <input type="hidden" name="i" value="<?=$listEmail['email_id']?>">                              
+                            <button data-message="Are you sure you want to remove this email from your account?" data-callback="callbackDelete" aria-label="Delete" class="btn remove">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                        </form>
+                        <?php if ($listEmail['email_checked']) { ?>
+                        <form method="post" action="/settings/setdefaultemail"  class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                              <input type="hidden" name="i" value="<?=$listEmail['email_id']?>"/>
+                            <button class="btn" type="submit">Set as primary</button>
+                        </form>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if (empty($listEmail['email_checked'])) { ?>
+                        <form method="post" action="/settings/resendverification"  class="partial"  data-target="#form-email"
+                              data-trigger="#email-trigger">
+                              <input type="hidden" name="i" value="<?=$listEmail['email_id']?>"/>
+                            <button class="btn" type="submit">Resend verification</button>
+                        </form>
+                    <?php } ?>
+                </span>
+            </li>
+            <?php } ?>
+        </ul>
+
+        <form  method="<?= $this->emailform->getAttribute('method'); ?>" action="<?= $this->emailform->getAttribute('action'); ?>" class="partial"  data-target="#form-email"
+              data-trigger="#email-trigger">
+            <dl class="inline">
+                <dt> <?php echo $this->formLabel($this->emailform->get('user_email')); ?></dt>
+                <dd> <?php echo $this->formElement($this->emailform->get('user_email')); ?>
+                    <button class="btn" type="submit">Add</button></dd>
+            </dl>            
+        </form>
+
+        <hr>
+        <div class="row">
+            <?php
+            if ($this->messages) {
+                foreach ($this->messages as $form_element) {
+                    foreach ($form_element as $key=>$message) {
+                        echo "<div>{$message}</div>";
+                    }
+                }
+            }          
+            ?>
+        </div>
+    </div>
+</div>
+    <script>
+
+            function callbackDelete(link) {
+                // Do however you want to handle deleting
+                // We have the link element and can access it's data attributes
+
+                $(link).closest('form').submit();
+            }
+
+    </script>

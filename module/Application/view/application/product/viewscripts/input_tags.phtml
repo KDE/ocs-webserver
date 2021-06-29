@@ -1,0 +1,114 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?php $this->headLink()->appendStylesheet('/theme/flatui/css/bootstrap/bootstrap-tagsinput.css'); ?>
+<?php $this->inlineScript()->appendFile('/theme/flatui/js/lib/bootstrap-tagsinput.min.js'); ?>
+<?php /** $this->inlineScript()->appendScript('
+ * $(document).ready(function(){
+ * $(\'#tags-input\').on(\'beforeItemAdd\', function(event) {
+ * var tag = event.item;
+ * // Do some processing here
+ * var oid = $(this).attr(\'data-oid\');
+ * var type = $(this).attr(\'data-type\');
+ *
+ * var ajaxData = {
+ * \'type\': \'POST\',
+ * \'dataType\': \'text\',
+ * \'cache\': false,
+ * \'data\': {"oid": oid, "type": type, "tag": tag}
+ * }
+ *
+ * if (!event.options || !event.options.preventPost) {
+ * $.ajax(\'/tag/assign\', ajaxData, function(response) {
+ * if (response.failure) {
+ * // Remove the tag since there was a failure
+ * // "preventPost" here will stop this ajax call from running when the tag is removed
+ * $(\'#tags-input\').tagsinput(\'remove\', tag, {preventPost: true});
+ * }
+ * });
+ * }
+ * });
+ *
+ * $(\'#tags-input\').on(\'beforeItemRemove\', function(event) {
+ * var tag = event.item;
+ * // Do some processing here
+ * var oid = $(this).attr(\'data-oid\');
+ * var type = $(this).attr(\'data-type\');
+ *
+ * var ajaxData = {
+ * \'type\': \'POST\',
+ * \'dataType\': \'text\',
+ * \'cache\': false,
+ * \'data\': {"oid": oid, "type": type, "tag": tag}
+ * }
+ *
+ * if (!event.options || !event.options.preventPost) {
+ * $.ajax(\'/tag/remove\', ajaxData, function(response) {
+ * if (response.failure) {
+ * // Re-add the tag since there was a failure
+ * // "preventPost" here will stop this ajax call from running when the tag is added
+ * $(\'#tags-input\').tagsinput(\'add\', tag, {preventPost: true});
+ * }
+ * });
+ * }
+ * });
+ * });
+ * ');
+ * <div class="form-group">
+ * <div class="col-sm-12 margin-top-15">
+ * <label class="form-label" for="google_code">Tags</label>
+ * </div>
+ * <div class="col-sm-12">
+ * <div class="margin-left-5">
+ * <input type="text" name="tags" id="tags-input" data-role="tagsinput" data-oid=".'$this->project_id?>" data-type="10" value="Amsterdam,Washington,Sydney,Beijing,Cairo" placeholder="add new tag">
+ * </div>
+ * </div>
+ * </div>
+ */ ?>
+<div class="form-group">
+    <div class="col-sm-12 margin-top-15">
+        <?php if ($this->element->getOption('required')) { ?>
+            <div class="small grey bold-font pull-left margin-right-5">*</div>
+        <?php } ?>
+        <label class="form-label" for="<?= $this->element->getName() ?>">Tags</label>
+    </div>
+    <div class="col-sm-12">
+        <input id="tags-input"
+               class="form-control"
+               type="text"
+               value="<?= $this->element->getValue() ?>"
+               name="<?= $this->element->getName() ?>"
+               data-role="tagsinput"
+               data-oid="<?= $this->project_id ?>"
+               data-type="10"
+               placeholder="add new tag"
+        />
+        <?php if ($this->element->getMessages()) {
+            $errorHtml = '';
+            foreach ($this->element->getMessages() as $currentError) {
+                $errorHtml .= '<label id="' . $this->escape($this->element->getName()) . '-error" class="error" for="' . $this->escape($this->element->getName()) . '"><small>' . $currentError . '</small></label>';
+            }
+            ?>
+            <?php echo $errorHtml ?>
+        <?php } ?>
+    </div>
+</div>

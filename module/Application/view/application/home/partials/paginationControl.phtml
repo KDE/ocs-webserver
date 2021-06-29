@@ -1,0 +1,58 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+if (false === isset($this->params)) {
+    $this->params = array();
+}
+if(isset($this->next))
+{
+    $this->curr = $this->next-1;
+}else{
+    $this->curr = $this->pageCount;   
+}
+?>
+
+<a class="left carousel-control ajaxPartialFeatureProduct"  href="<?php echo isset($this->previous) ?'/showfeatureajax/page/'.$this->previous : '/showfeatureajax/page/1000'; ?>" data-slide="prev">
+                          <span class="glyphicon glyphicon-chevron-left"></span>
+</a>
+
+<a class="right carousel-control ajaxPartialFeatureProduct "  href="<?php echo isset($this->next) ? '/showfeatureajax/page/'.$this->next : '/showfeatureajax/page/1'; ?>" data-slide="next">
+  <span class="glyphicon glyphicon-chevron-right"></span>
+</a>
+
+<?php if ($this->pageCount): ?>
+
+<ol class="carousel-indicators">
+    <?php
+        $cnt = 1;
+        $cls = '';
+        for($cnt=1; $cnt<=$this->pageCount; $cnt++)                 
+        {
+            if($cnt==$this->curr){
+                $cls = 'active';
+            }else{
+                $cls = '';
+            }
+            echo '<li class="ajaxPartialFeatureProduct '.$cls.'" href="/showfeatureajax/page/'.$cnt.'" data-target="#myCarousel"  data-slide-to="'.$cnt.'"></li> ';
+        }
+    ?>
+</ol>
+<?php endif; ?>

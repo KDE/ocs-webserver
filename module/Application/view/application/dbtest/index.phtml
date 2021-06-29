@@ -1,0 +1,641 @@
+<div class="jumbotron">
+    <h1>DB-Test</h1>
+</div>
+
+
+<?php /*
+<h1>Activity-Log-Types</h1>
+<h2>fetchAll</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($logTypes as $type) : ?>
+    <tr>
+        <td><?= $type['activity_log_type_id'] ?></td>
+        <td><?= $this->escapeHtml($type['type_text']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+
+
+<h2>fetchAllWithLimit</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($logTypesLimit as $type) : ?>
+    <tr>
+        <td><?= $type['activity_log_type_id'] ?></td>
+        <td><?= $this->escapeHtml($type['type_text']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>findById</h2>
+<?php
+var_dump($logtype);
+
+?>
+
+<h1>MemberExternalId</h1>
+<h2>createExternalId</h2>
+<?php
+var_dump($extIdObj);
+
+?>
+
+<h1>Browse-List-Types</h1>
+<h2>fetchAll</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($browseListTypes as $type) : ?>
+    <tr>
+        <td><?= $type['browse_list_type_id'] ?></td>
+        <td><?= $this->escapeHtml($type['name']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h1>MemberPayout</h1>
+<h2>fetchAllPayouts(201905,100)</h2>
+<?php
+var_dump(count($memerPayouts));
+?>
+
+<h1>MemberRole</h1>
+<h2>fetchAll</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($memberRols as $type) : ?>
+    <tr>
+        <td><?= $type['member_role_id'] ?></td>
+        <td><?= $this->escapeHtml($type['title']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+*/?>
+<?php /*
+<h1>Image</h1>
+<h2>storeRemoteImage()</h2>
+<?php
+var_dump($fileName);
+?>
+<img src="https://cdn.pling.cc/cache/300x230-1/img/1/c/e/6/8721104baa43c8e87f5af8dd874f81649099.png">
+
+<h2>saveImageOnMediaServer()</h2>
+<?php
+var_dump($fileName2);
+?>
+<img src="https://cdn.pling.cc/img/<?= $fileName2 ?>">
+
+*/?>
+
+<?php /*
+<h2>fetchAllWithLimit</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($browseListTypesLimit as $type) : ?>
+    <tr>
+        <td><?= $type['browse_list_type_id'] ?></td>
+        <td><?= $this->escapeHtml($type['name']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>findById</h2>
+<?php
+var_dump($browseListType);
+
+?>
+
+
+<h1>Collection-Projects</h1>
+
+<h2>countProjects(1298334)</h2>
+<h3>Count: <?= $countProjects ?></h3>
+
+<h2>findById(1)</h2>
+<?php
+var_dump($collectionProject);
+
+?>
+
+<h2>getCollectionProjectIds(1298334)</h2>
+<?php
+var_dump($collectionProjectIds);
+
+?>
+
+<h2>getCollectionProjects(1298334)</h2>
+<table class="table">
+<tr>
+    <th>ColelctionProjectId</th>
+    <th>ProjectId</th>    
+</tr>
+<?php foreach ($collectionProjects as $type) : ?>
+    <tr>
+        <td><?= $type['title'] ?></td>
+        <td><?= $type['project_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>getProjectsForAllMembers(1298334, 438078, 'Youtube Skill')</h2>
+<table class="table">
+<tr>
+    <th>ColelctionProjectId</th>
+    <th>ProjectId</th>    
+</tr>
+<?php foreach ($collectionProjectsAllMember as $type) : ?>
+    <tr>
+        <td><?= $type['title'] ?></td>
+        <td><?= $type['project_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+
+<h2>getProjectsForMember(1298334, 438078, 'Arc')</h2>
+<table class="table">
+<tr>
+    <th>ColelctionProjectId</th>
+    <th>ProjectId</th>    
+</tr>
+<?php foreach ($collectionProjectsMember as $type) : ?>
+    <tr>
+        <td><?= $type['title'] ?></td>
+        <td><?= $type['project_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+
+<h2>createCollectionProject(1298334, 1167639, 7)</h2>
+<?php
+var_dump($createCollectionProject);
+
+?>
+<h2>setInactive(1298334, 1167639)</h2>
+<?php
+var_dump($inactiveCollectionProject);
+
+?>
+
+
+<h1>Comments</h1>
+<h2>fetchAllWithLimit(5,0)</h2>
+<table class="table">
+<tr>
+    <th>CommentsId</th>
+    <th>Text</th>    
+</tr>
+<?php foreach ($commentsLimit as $type) : ?>
+    <tr>
+        <td><?= $type['comment_id'] ?></td>
+        <td><?= $type['comment_text'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+
+<h2>findById(1016063)</h2>
+<?php
+var_dump($comment);
+
+?>
+
+
+<h1>ConfigOperatingSystem</h1>
+<h2>fetchAll</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($osTypes as $type) : ?>
+    <tr>
+        <td><?= $type['os_id'] ?></td>
+        <td><?= $this->escapeHtml($type['name']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchAllWithLimit(2,0)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($osTypesLimit as $type) : ?>
+    <tr>
+        <td><?= $type['os_id'] ?></td>
+        <td><?= $this->escapeHtml($type['name']) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>findById(1)</h2>
+<?php
+var_dump($osType);
+?>
+
+<h2>fetchOperatingSystems</h2>
+<?php
+var_dump($osList);
+?>
+
+<h2>From Cache?</h2>
+<?php
+var_dump($cachedData);
+?>
+
+<h2>fetchOsNamesForJTable</h2>
+<?php
+var_dump($osList2);
+?>
+
+<h1>ConfigStoreCategory</h1>
+<h2>fetchAllWithLimit(5,0)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+</tr>
+<?php foreach ($storeCatsLimit as $type) : ?>
+    <tr>
+        <td><?= $type['store_category_id'] ?></td>
+        <td><?= $type['store_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchAllCategoriesForStore(10)</h2>
+<?php
+var_dump($catsForStore);
+?>
+
+<h2>fetchCatIdsForStore(10)</h2>
+<?php
+var_dump($catsForStore2);
+?>
+
+<h2>fetchStoresForCatdId(256)</h2>
+<table class="table">
+<tr>
+    <th>StoreID</th>
+    <th>Config-Name</th>    
+</tr>
+<?php foreach ($storeForCat as $type) : ?>
+    <tr>
+        <td><?= $type['store_id'] ?></td>
+        <td><?= $type['config_id_name'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+
+<h1>ConfigStoreTagGroup</h1>
+<h2>fetchAllWithLimit(5,0)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>StoreId</th>    
+    <th>TagGroup</th>    
+</tr>
+<?php foreach ($storeTagGroupLimit as $type) : ?>
+    <tr>
+        <td><?= $type['config_store_taggroup_id'] ?></td>
+        <td><?= $type['store_id'] ?></td>
+        <td><?= $type['tag_group_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>findById(10)</h2>
+<?php
+var_dump($storeTagGroup);
+?>
+
+
+
+<h1>ConfigStoreTag</h1>
+<h2>fetchAllWithLimit(5,0)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>StoreId</th>    
+    <th>TagId</th>    
+</tr>
+<?php foreach ($storeTagLimit as $type) : ?>
+    <tr>
+        <td><?= $type['config_store_tag_id'] ?></td>
+        <td><?= $type['store_id'] ?></td>
+        <td><?= $type['tag_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>findById(10)</h2>
+<?php
+var_dump($storeTag);
+?>
+
+<h1>HiveContentCategory</h1>
+<?php //
+<h2>fetchAllProjectsForCategory(1)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+    <th>User</th>    
+</tr>
+<?php foreach ($allProjects as $type) : ?>
+    <tr>
+        <td><?= $type['id'] ?></td>
+        <td><?= $type['name'] ?></td>
+        <td><?= $type['user'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+ * 
+ *
+
+<h2>fetchCountAllProjectsForCategory(1)</h2>
+<?php
+var_dump($countProjects);
+?>
+
+<h2>fetchCountProjectsForCategory(1)</h2>
+<?php
+var_dump($countProjects2);
+?>
+
+<h2>fetchHiveCategories(1)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Desc</th>    
+</tr>
+<?php foreach ($catList as $type) : ?>
+    <tr>
+        <td><?= $type['id'] ?></td>
+        <td><?= $type['desc'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchOcsCategoryForHiveCategory(2)</h2>
+<?php
+var_dump($cat);
+?>
+
+<h1>HiveContent</h1>
+<h2>fetchAllProjectsForCategory(1, 0, 5, FALSE)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Desc</th>    
+</tr>
+<?php foreach ($listContent as $type) : ?>
+    <tr>
+        <td><?= $type['id'] ?></td>
+        <td><?= $type['name'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchCountAllProjectsForCategory(1)</h2>
+<?php
+var_dump($countContent);
+?>
+
+<h2>fetchCountProjects()</h2>
+<?php
+var_dump($countContent2);
+?>
+
+
+<h2>fetchCountProjectsForCategory(1)</h2>
+<?php
+var_dump($countContent3);
+?>
+
+<h2>fetchHiveCategories()</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Desc</th>    
+</tr>
+<?php foreach ($listContent2 as $type) : ?>
+    <tr>
+        <td><?= $type['id'] ?></td>
+        <td><?= $type['desc'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchHiveCategory(420)</h2>
+<?php
+var_dump($content);
+?>
+
+<h2>fetchOcsCategory(58)</h2>
+<?php
+var_dump($content2);
+?>
+
+
+
+<h1>LoginHistory</h1>
+<h2>fetchLastLoginData(375449)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>IP</th>    
+    <th>Browser</th>    
+</tr>
+<?php foreach ($loginHistList as $type) : ?>
+    <tr>
+        <td><?= $type['id'] ?></td>
+        <td><?= $type['ip'] ?></td>
+        <td><?= $type['browser'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchLastLoginData(375449) from Cache</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>IP</th>    
+    <th>Browser</th>    
+</tr>
+<?php foreach ($loginHistListCache as $type) : ?>
+    <tr>
+        <td><?= $type['id'] ?></td>
+        <td><?= $type['ip'] ?></td>
+        <td><?= $type['browser'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h1>MailTemplate</h1>
+<h2>findBy('name', 'tpl_user_comment_reply_note')</h2>
+<?php
+var_dump($mailTempl);
+?>
+
+<h1>MediaViews</h1>
+<h2>fetchCountViewsForFileAllTime(1543320794, 1543321055)</h2>
+<?php
+var_dump($countViews);
+?>
+
+<h2>fetchCountViewsForProjectAllTime(1276811)</h2>
+Count:
+<?php
+var_dump($countViews2);
+?>
+
+<h2>fetchCountViewsTodayForFile(1543320794, 1543321055)</h2>
+Count:
+<?php
+var_dump($countViews3);
+?>
+
+<h2>fetchCountViewsTodayForProject(1276811)</h2>
+Count:
+<?php
+var_dump($countViews4);
+?>
+
+<h2>getNewId()</h2>
+Count:
+<?php
+var_dump($newId);
+?>
+
+
+<h1>MemberDeactivationLog</h1>
+<h2>fetchAllWithLimit(5, 0)</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>ObjId</th>    
+    <th>MemberId</th>    
+</tr>
+<?php foreach ($memberDeactLog as $type) : ?>
+    <tr>
+        <td><?= $type['log_id'] ?></td>
+        <td><?= $type['object_id'] ?></td>
+        <td><?= $type['member_id'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+
+
+<h1>MemberDownloadHistory</h1>
+<h2>countDownloads(496313)</h2>
+<?php
+var_dump($countMemberDlHistory);
+?>
+
+<h2>countDownloadsAnonymous('050bb97018e12d1792bc232279bc038db89d829c8fa43d832a18bc203ea75469fb0a77ee12da2a15a97a8be5497874428d2a028cf91a62c9de2918cde70d3664')</h2>
+<?php
+var_dump($countMemberDlHistory2);
+?>
+
+<h2>getAnonymousDLSection('050bb97018e12d1792bc232279bc038db89d829c8fa43d832a18bc203ea75469fb0a77ee12da2a15a97a8be5497874428d2a028cf91a62c9de2918cde70d3664')</h2>
+<?php
+//var_dump($memberDlHistorySec);
+?>
+
+
+<h1>MemberEmail</h1>
+<h2>findById(1)</h2>
+<?php
+var_dump($email);
+?>
+
+<h2>delete(1)</h2>
+<?php
+var_dump($email2);
+?>
+
+<h2>activate(1)</h2>
+<?php
+var_dump($email3);
+?>
+
+<h2>setChecked(1)</h2>
+<?php
+var_dump($email4);
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1>Sections</h1>
+<h2>fetchAllSections()</h2>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Name</th>    
+    <th>Desc</th>    
+</tr>
+<?php foreach ($sections as $type) : ?>
+    <tr>
+        <td><?= $type['section_id'] ?></td>
+        <td><?= $type['name'] ?></td>
+        <td><?= $type['description'] ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+
+<h2>fetchAllSectionByIdArray()</h2>
+<?php
+var_dump($sections2);
+?>
+
+<h2>fetchAllSectionsAndCategories()</h2>
+<?php
+var_dump($sections3);
+?>
+
+<h2>fetchAllSectionsArray()</h2>
+<?php
+var_dump($sections4);
+?>
+
+*/?>
+
+
+<br><br><br><br><br><br><br>Done

@@ -1,0 +1,54 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$this->headLink()->appendStylesheet('/theme/flatui/css/stylesheets/general.css');
+
+?>
+    <section class="head-wrap">
+        <!-- HEADER -->
+        <section class="wrapper about-me-header">
+
+            <figure>
+                <img src="<?php echo $this->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)); ?>" alt="profile-image" width="110" height="110">
+            </figure>
+
+            <div class="user-menu well">
+
+                <div class="pull-left">
+                    <div class="intro">
+                        <div class="large">Hi
+                            <span class="lightblue"><?php echo $this->member->username; ?></span><?= $this->translate(', welcome to your Master Account page!') ?>
+                        </div>
+                        <div class="small lightgrey">
+                            <a href="<?php echo $this->buildMemberUrl($this->member->username); ?>"><?= $this->translate('Click here to go to your About Me page.') ?></a>
+                        </div>
+                        <div class="small lightgrey">
+                            <a href="https://opencode.net/<?php echo $this->member->username;?>"><img src="/images_sys/gitlab.png" height="15" width="15">&nbsp;<?= $this->translate('Click here to go to your opencode.net page.') ?></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- /HEADER -->
+    </section>

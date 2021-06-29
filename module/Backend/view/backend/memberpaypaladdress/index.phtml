@@ -1,0 +1,187 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<?php
+$lastMonth = date("Ym", strtotime("first day of previous month"));
+?>
+
+<div class="filtering">
+    <form>
+        Status: 
+            <select name="filter_status" id="filter_status">
+                <option value=""></option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+                <option value="Returned">Returned</option>
+                <option value="Unclaimed">Unclaimed</option>
+                <option value="Error">Error</option>
+            </select>
+        Member Id: <input type="text" name="filter_member_id" id="filter_member_id"/>
+        PayPal-Mail: <input type="text" name="filter_paypal_mail" id="filter_paypal_mail"/>
+        <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+        <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+    </form>
+</div>
+<div id="TableContainer"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'amount asc',
+            title: 'Table of member payouts',
+            actions: {
+                listAction: '/backend/memberpaypaladdress/list',
+                createAction: '/backend/memberpaypaladdress/create',
+                updateAction: '/backend/memberpaypaladdress/update',
+                deleteAction: '/backend/memberpaypaladdress/delete'
+            },
+            fields: {
+                id: {
+                    title: 'Id',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                member_id: {
+                    title: 'Member Id',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                paypal_address: {
+                    title: 'PayPal Address',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                name: {
+                    title: 'Name',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                address: {
+                    title: 'Address',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                currency: {
+                    title: 'Curency',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                country_code: {
+                    title: 'Country Code',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                last_payment_status: {
+                    title: 'Last Status',
+                    options: {'': '', 'Completed': 'Completed', 'Pending': 'Pending', 'Error' : 'Error', 'Returned' : 'Returned', 'Unclaimed' : 'Unclaimed'},
+                    optionsSorting: 'id',
+                    list: true,
+                    edit: true
+                },
+                last_payment_amount: {
+                    title: 'Last amount',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                last_transaction_id: {
+                    title: 'Last Tx-Id',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+            },
+            recordsLoaded: function (event, data) {
+                for (var i in data.records) {
+                    if (data.records[i].last_payment_status == 'Completed') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:green !important; color:white !important;");
+                    }
+                    if (data.records[i].last_payment_status == 'Pending') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:yellow !important; color:black !important;");
+                    }
+                    if (data.records[i].last_payment_status == 'Error') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
+                    }
+                    if (data.records[i].last_payment_status == 'Unclaimed') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
+                    }
+                    if (data.records[i].last_payment_status == 'Returned') {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:red !important; color:white !important;");
+                    }
+                }
+            },
+            recordUpdated: function (event, data) {
+                if (data.record) {
+                    $('#TableContainer').jtable('load', {
+                        filter_status: $('#filter_status').val(),
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_paypal_mail: $('#filter_paypal_mail').val()
+                    });
+                }
+            },
+            rowUpdated: function (event, data) {
+                if (data.record) {
+                    $('#TableContainer').jtable('load', {
+                        filter_yearmonth: $('#filter_status').val(),
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_paypal_mail: $('#filter_paypal_mail').val()
+                    });
+                }
+            }
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_status: $('#filter_status').val(),
+                filter_member_id: $('#filter_member_id').val(),
+                filter_paypal_mail: $('#filter_paypal_mail').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_status: null,
+                filter_member_id: null,
+                filter_paypal_mail: null
+            });
+        });
+
+        $('#TableContainer').jtable('load');
+        
+        
+    });
+</script>

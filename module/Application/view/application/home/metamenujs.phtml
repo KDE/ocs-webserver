@@ -1,0 +1,88 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+
+
+//Change from opendesktop to pling
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl . SERVER_BASE_PATH;
+// $baseurl = Zend_Registry::get('config')->settings->client->default->baseurl_meta;
+
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_blog = Zend_Registry::get('config')->settings->client->default->url_blog;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
+
+$filter = new Local_Filter_Url_Encrypt();
+
+$url_login;
+$url_logout;
+
+$target = 'opendesktop';
+if(isset($_GET['target'])) {
+    $target = $_GET['target'];
+}
+
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
+
+$isExternal = 'var isExternal = true;';
+if($target == 'opendesktop') {
+    $url_login = SERVER_BASE_PATH . "/login/redirect/".$filter->filter($thisurl);
+    $url_logout = SERVER_BASE_PATH . "/logout?redirect=".$filter->filter($thisurl);
+    $isExternal = 'var isExternal = false;';
+} else if($target == 'gitlab') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_gitlab);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_gitlab);
+} else if($target == 'forum') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_forum);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_forum);
+} else if($target == 'myopendesktop') {
+    $url_login = $baseurl."/login/redirect/".$filter->filter($url_myopendesktop);
+    $url_logout = $baseurl."/logout?redirect=".$filter->filter($url_myopendesktop);
+}
+
+
+$helperUserRole = new Backend_View_Helper_UserRole();
+$userRoleName = $helperUserRole->userRole();
+$isAdmin = false;
+if (Default_Model_DbTable_MemberRole::ROLE_NAME_ADMIN == $userRoleName) {
+    $isAdmin = true;
+}
+
+
+$sname = Zend_Registry::get('store_host');
+$json_menu = $this->fetchMetaheaderMenuJson();
+
+?>
+var json_isAdmin = <?php echo  Zend_Json::encode($isAdmin);?>;
+<?= $isExternal ?>
+var domains = <?=$json_menu?>;
+var user = null;
+var baseUrl = "<?=$baseurl?>";
+var blogUrl = "<?=$url_blog?>";
+var forumUrl = "<?=$url_forum?>";
+var gitlabUrl = "<?=$url_gitlab?>";
+var loginUrl = "<?=$url_login?>";
+var logoutUrl = "<?=$url_logout?>";
+var sName = "<?=$sname?>";

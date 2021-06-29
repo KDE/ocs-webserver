@@ -1,0 +1,131 @@
+/* Listing page v2 */
+.rowcollection {
+    border-bottom: 1px solid var(--color-light-2);
+    display: grid;
+    gap: var(--space-normal);
+    grid-template-columns: auto 1fr 1fr 1fr;
+    padding: var(--space-medium) 0 var(--space-small) 0;
+}
+
+/* Rownumber*/
+.rowcollection > div:nth-child(1) {
+    grid-column: span 4;
+    grid-row: span 1;
+}
+
+/* Listing product picture */
+.rowcollection > div:nth-child(2) {
+    grid-column: span 4;
+    grid-row: span 1;
+}
+
+/* Listing product name, username, more info */
+.rowcollection > div:nth-child(3) {
+    grid-column: span 4;
+    grid-row: span 1;
+}
+
+/* More info */
+.rowcollection > div:nth-child(4) {
+    grid-column: span 4;
+    grid-row: span 1;
+}
+
+/* Listing product category */
+.rowcollection > div:nth-child(5) {
+    grid-column: span 4;
+    grid-row: span 1;
+}
+
+/* Listing product buttons */
+.rowcollection > div:nth-child(6) {
+    grid-column: span 4;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xsmall);
+}
+
+/* Buttons wide on small screens */
+.rowcollection .button-container-cell .btn {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.rowcollection .pui-btn {
+    width: 100%;
+}
+
+.rowcollection h2, .rowcollection figure {
+    margin: 0;
+}
+
+/* Drop-down info */
+.rowcollection .tag-sub-menu-accordion .accordion-button {
+    margin-left: 0;
+    padding: var(--space-normal) 0;
+    grid-column: span 6;
+    grid-row: 2;
+}
+
+/* Smaller arrow */
+.rowcollection .accordion-button::after {
+    margin-left: var(--space-normal);
+    width: 1rem;
+    height: 1rem;
+    background-size: 1rem;
+    opacity: .7;
+}
+
+.rowcollection .accordion-body {
+    padding-bottom: var(--space-medium);
+}
+
+.rowcollection .accordion-button {
+    max-width: 120px;
+}
+
+.pui-btn-smaller {
+    font-size: var(--text-normal);
+    font-weight: var(--font-bold);
+    display: inline-block;
+    color: var(--color-light-1) !important;
+    background: var(--color-primary-1) !important;
+    border: 1px solid var(--color-primary-1) !important;
+    border-radius: var(--space-small);
+    margin: var(--space-small);
+    padding: var(--space-small) var(--space-normal);
+    text-decoration: none;
+    text-align: center;
+}
+
+
+/* BREAKPOINTS */
+@media screen and (min-width: 576px) {
+.rowcollection > div:nth-child(2) { grid-column: span 1; grid-row: span 1; }
+.rowcollection > div:nth-child(3) { grid-column: span 3; grid-row: span 1; }
+}
+
+@media screen and (min-width: 768px) {
+    .rowcollection > div:nth-child(4) { grid-column: span 4; grid-row: 3; }
+    .rowcollection > div:nth-child(5) { grid-column: span 3; grid-row: 4; }
+    .rowcollection > div:nth-child(6) {grid-column: span 1; grid-row: 4; }
+    .rowcollection .tag-sub-menu-accordion .accordion-button { margin: 0; padding: 0 0 var(--space-normal) 0; }
+
+}
+
+@media screen and (min-width: 992px) {
+    .rowcollection {
+        grid-template-columns: calc(var(--space-medium) * 2) calc(var(--space-xlarge) * 3) 1fr calc(var(--space-xlarge)*5) calc(var(--space-xlarge)*6);
+    }
+    .rowcollection > div:nth-child(1) { grid-column: span 1; }
+    .rowcollection > div:nth-child(2) { grid-column: span 1; }
+    .rowcollection > div:nth-child(3) { grid-column: span 1; }
+    .rowcollection > div:nth-child(4) { grid-column: 3/span 4; grid-row: 2; }
+    .rowcollection > div:nth-child(5) { grid-column: span 1; grid-row: span 1; }
+    .rowcollection > div:nth-child(6) { grid-column: span 1; grid-row: span 1; }
+}
+
+.rowcollection .button-container-cell.open ul.dropdown-menu {
+    top: auto;
+}

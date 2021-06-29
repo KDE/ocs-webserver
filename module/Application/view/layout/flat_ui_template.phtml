@@ -1,0 +1,223 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+use Application\View\Helper\ConfigHelperTrait;use Application\View\Helper\CurrentStoreHelperTrait;use Application\View\Helper\CurrentUserHelperTrait;use Application\View\Helper\MemberSettingItemHelperTrait;use Laminas\Mvc\Plugin\FlashMessenger\View\HelperTrait as FlashMessengerHelperTrait;use Laminas\Session\Container;use Laminas\View\Renderer\PhpRenderer;
+
+/**
+ * @var PhpRenderer|FlashMessengerHelperTrait $this
+ * @var PhpRenderer|CurrentUserHelperTrait $this
+ * @var PhpRenderer|MemberSettingItemHelperTrait $this
+ * @var PhpRenderer|CurrentStoreHelperTrait $this
+ * @var PhpRenderer|configHelperTrait $this
+ */
+?><!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->render('partials/htmlheader.phtml'); ?>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="alternate" type="application/rss+xml" title="Latest Products" href="/content.rdf"/>
+
+    <link rel="stylesheet" type="text/css" href="/theme/flatui/js/lib/tooltipster/dist/css/tooltipster.bundle.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="/theme/flatui/js/lib/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-light.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/theme/flatui/css/tooltipster-light-customized.css"/>
+
+    <!-- Loading Bootstrap -->
+    <link rel="stylesheet" href="/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/tools/fancybox2.1.4/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="/theme/flatui/css/fontawsome/font-awesome.min.css" crossorigin="anonymous">
+
+    <!-- custom styles -->
+    <link href="/theme/flatui/css/flex-layout.css" rel="stylesheet">
+    <link href="/theme/flatui/css/style.css" rel="stylesheet">
+    <link href="/theme/flatui/css/stylesheet.css?<?= APPLICATION_VERSION ?>" rel="stylesheet">
+    <link href="/theme/flatui/css/explore_index.css" rel="stylesheet">
+    <link href="/theme/flatui/css/startpage.css" rel="stylesheet">
+    <link href="/theme/flatui/css/circle.css" rel="stylesheet">
+
+    <link href="/theme/react/assets/css/metaheader.css?<?= APPLICATION_VERSION ?>" rel="stylesheet">
+
+    <link href="/theme/flatui/css/jquery.step.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/theme/react/assets/css/home-main-container.css"/>
+    <link type="text/css" rel="stylesheet" href="/theme/react/hooks-app/layout/style/style-header-footer.css"/>
+    <link rel="SHORTCUT ICON" href="<?= $GLOBALS['ocs_store']->template['favicon'] ?>"/>
+    <link type="text/css" href="/theme/react/hooks-app/layout/style/fonts/fonts.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="/theme/flatui/js/lib/html5shiv.js"></script>
+    <![endif]-->
+
+    <script src="/theme/flatui/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="/theme/flatui/js/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/theme/flatui/js/lib/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+
+    <script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
+    <?php /*
+   
+    */ ?>
+
+
+</head>
+<body id="od-body">
+<?php
+if (isset($GLOBALS['announcement'])) {
+    /** @var \Laminas\Session\AbstractContainer $session */
+    $session = $GLOBALS['ocs_session'];
+    if ($session->offsetGet('announcement_dismiss') !== md5($GLOBALS['announcement'])) {
+?>
+        <script>
+            $('document').ready(function () {
+                $('#announcement-bar').on('closed.bs.alert', function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/v1/announcement",
+                        data: {'announcement': {'dismissed': true, 'checksum': '<?=md5($GLOBALS['announcement'])?>'}},
+                        dataType: 'json',
+                        cache: false,
+                        success: function (response) {
+                        }
+                    });
+                });
+            });
+        </script>
+        <style>.announcement-top-bar.alert-dismissible .close {
+                top: 50%;
+                transform: translateY(-55%);
+            }
+
+            #announcement-bar h1, #announcement-bar h2, #announcement-bar h3, #announcement-bar h4, #announcement-bar h5, #announcement-bar h6 {
+                font-size: 28px;
+                font-weight: 700;
+                margin-bottom: 4px;
+                margin-top: 2px;
+                line-height: 20px;
+                font-family: Helvetica, Arial, sans-serif;
+            }
+        </style>
+        <div class="alert alert-info alert-dismissible show fade in fixed-top announcement-top-bar" role="alert"
+             id="announcement-bar">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <?php echo $GLOBALS['announcement']; ?>
+        </div>
+        <?php
+    }
+}
+?>
+<?php
+echo $this->flashMessenger()->renderCurrent('error', array('alert', 'alert-dismissible', 'alert-danger'));
+echo $this->flashMessenger()->renderCurrent('info', array('alert', 'alert-dismissible', 'alert-info'));
+echo $this->flashMessenger()->renderCurrent('warning', array('alert', 'alert-dismissible', 'alert-warning'));
+echo $this->flashMessenger()->renderCurrent('success', array('alert', 'alert-dismissible', 'alert-success'));
+//$this->flashMessenger()->getPluginFlashMessenger()->clearMessages();
+echo $this->render('partials/header/metaheader.phtml');
+if (!$this->noheader) {
+    ?>
+    <script type="text/javascript">
+    var headerData = <?php echo \Laminas\Json\Encoder::encode($this->headerData);?>
+    </script>
+<?php    
+    echo $this->render('partials/header/header-react.phtml');
+}
+echo $this->layout()->content;
+echo $this->render('partials/footer/template.phtml');
+?>
+<div id="overlays" class="" tabindex="-1" role="dialog"><?php if (isset($this->overlay)) {
+        echo $this->overlay;
+    } ?></div>
+<div id="modal-dialog" class="modal hide fade" tabindex="-1" role="dialog">
+    <div class="modal-body"></div>
+    <div id="error"></div>
+</div>
+
+<div id="generic-dialog" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content container" style="width: 600px;">
+            <div class="modal-header row">
+                <div class="modal-header-text col-md-11">Put the headline here</div>
+                <button type="button" class="close col-md-1" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer hidden">
+                <button type="button" class="btn btn-native" data-dismiss="modal" style="padding: 5px 10px;">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<?php echo $this->render('partials/genericModalConfirmation.phtml'); ?>
+
+<!-- Load JS here for greater good =============================-->
+<script src="/theme/flatui/js/lib/jquery.colorbox-min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.placeholder.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.jscrollpane.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.zclip.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.mousewheel.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.crypt.js"></script>
+<script src="/theme/flatui/js/lib/bootstrap-dialog.min.js"></script>
+
+<script src="/theme/flatui/js/lib/jquery.form.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery.validate.min.js"></script>
+<script src="/theme/flatui/js/lib/additional-methods.min.js"></script>
+<script src="/tools/md5.js"></script>
+<script src="/theme/flatui/js/lib/jquery.steps.min.js"></script>
+<script src="/theme/flatui/js/lib/jquery-ui.min.js"></script>
+<script src="/theme/flatui/js/lib/moment.min.js"></script>
+<script type="text/javascript" src="/tools/fancybox2.1.4/jquery.fancybox.pack.js?v=2.1.4"></script>
+<script src="/theme/flatui/js/script2.min.js?<?= APPLICATION_VERSION ?>"></script>
+
+<?= $this->inlineScript() ?>
+<?php
+$domain_config = $this->currentStore()->getConfig();
+
+$google_analytics_config = $this->configHelp()->ocs_config->analytics->google;
+if ($google_analytics_config->enabled) {
+    $google_id = isset($domain_config->google_id) ? $domain_config->google_id : $google_analytics_config->default_id;
+    echo sprintf($google_analytics_config->code, $google_id);
+}
+
+$piwik_config = $this->configHelp()->ocs_config->analytics->piwik;
+if ($piwik_config->enabled) {
+    $piwik_site_id = isset($domain_config->piwik_id) ? $domain_config->piwik_id : $piwik_config->default_id;
+    $piwik_user_id = $this->currentUser()->hasIdentity() ? sprintf("_paq.push(['setUserId', '%s']);", $this->currentUser()->member_id) : '';
+    $search_count = isset($search_count) ? sprintf("_paq.push(['setCustomUrl', document.URL + '&search_count=%s']);", $search_count) : '';
+    echo sprintf($piwik_config->code, $piwik_user_id, $search_count, $piwik_site_id, $piwik_site_id);
+}
+
+$session = new Container();
+$apiv4 = $this->configHelp()->ocs_config->settings->server->ip->api->v4;
+$apiv6 = $this->configHelp()->ocs_config->settings->server->ip->api->v6;
+if (false == $session->stat_valid) : ?>
+    <script src="/tools/fpjs2/fp2.compressed.js"></script>
+    <script type="text/javascript">OcsStats.readStats('<?php echo $apiv4; ?>', '<?php echo $apiv6; ?>');</script>
+<?php endif; ?>
+</body>
+</html>

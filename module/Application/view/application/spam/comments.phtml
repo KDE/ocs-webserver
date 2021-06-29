@@ -1,0 +1,402 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle('Spam/Comments');
+?>
+
+<style type="text/css">
+        
+
+        div.jtable-main-container table.jtable tbody > tr > td{
+            vertical-align: top;
+            border-left:0px;
+            border-right:0px;
+            font-size: small;
+        }
+        div.jtable-main-container table.jtable{
+            border: 0px;
+        }
+        div.jtable-main-container table.jtable th{
+            border: 0px;
+            background: none;
+            font-weight: bold;
+        }
+        
+        #TableContainer
+        {
+            padding: 20px;
+        }
+        #titleheader{
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+
+        a.btn-xs
+        {
+            line-height: 12px;
+            padding: 3px 5px;
+            border-radius: 2px;
+            margin: 2px;
+            float: right;
+        }
+        
+
+        div.jtable-main-container table.jtable .tooltipuser{
+            color: #2673b0;
+            cursor: pointer;
+        }
+
+        div.jtable-main-container img.avatar{
+                width: 50px;
+                border: 1px solid #dbdbdb;
+                -webkit-border-radius: 999px;
+                -moz-border-radius: 999px;
+                border-radius: 999px;
+                -webkit-background-clip: padding-box;
+                -moz-background-clip: padding;
+                background-clip: padding-box;
+                display: block;
+        }
+       
+       a.removeuser{
+        display: block;
+       }
+
+       .aligncenter
+       {
+        text-align: center;
+       }
+
+
+</style>
+
+<link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+<link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+<script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+
+<div class="messages">
+
+</div>
+<div class="tooltip_templates" style="display:none">
+      <span id="tooltip_content">
+          <i class="fa fa-spinner"></i>
+      </span>
+  </div>
+<div id="titleheader"> <h1>Table of comments </h1></div>
+
+<div id="filter" style="padding:10px 20px;">
+    Pick year: <select id="filter_year" name="filter_year">         
+    <?php 
+    $currentyear = date("Y");
+    $startyear = 2001;
+    for ($i = $currentyear; $i >= 2001; $i--) {
+        echo '<option>'.$i.'</option>';
+    }    
+    ?>     
+    </select>
+</div>
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<div id="dialog-confirm" title="Confirm"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,            
+            actions: {
+                listAction: '/spam/commentslist',                         
+               /*deleteAction: '/spam/deletecomment' */
+            },
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
+            },
+            rowInserted: function (event, data) {
+               if (data.record.cntComments==1) {                   
+                    data.row.css("background", "#F7F7E1");                   
+               }
+            },
+            fields: {
+                comment_id: {
+                    key: true,
+                    title: 'comment id',
+                    create: false,
+                    edit: false,
+                    list: false
+                },                               
+                comment_target_id: {
+                    title: 'project id',
+                    width: '5%', 
+                    edit: false,
+                    display:function(data){                               
+                            var html='<a target="_blank" href="/p/'+data.record.comment_target_id+'">'+data.record.comment_target_id+'</a>';                            
+                            return html;
+                        }
+                },
+                aboutme: {
+                    title: 'aboutme',
+                    width: '20%',                  
+                    create: false,
+                    edit: false
+                },
+                comment_created_at: {
+                    title: 'created',
+                    width: '10%',                  
+                    create: false,
+                    edit: false
+                },
+                comment_member_id: {
+                    title: 'by',
+                    width: '5%',
+                    edit: false,                    
+                    display:function(data){                        
+                        var html = '<a href="/u/'+data.record.username+'" target="_blank" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.comment_member_id+'" >';
+                        html=html+'<img class="avatar" src="'+data.record.avatar+'"/>'+data.record.username+'</a>';
+                       
+                         return html;
+                    }
+                },
+                member_since: {                  
+                    title: 'member since',
+                    create: false,
+                    edit: false,
+                    list: true,
+                    sorting:false
+                },
+                cntComments: {                  
+                    title: '#comments',
+                    create: false,
+                     width: '3%', 
+                    edit: false,
+                    list: true,
+                    listClass: 'aligncenter'
+                },     
+                cntProjects: {
+                    title: '#projects',
+                    width: '3%',                  
+                    create: false,
+                    edit: false,
+                    listClass: 'aligncenter'
+                },
+                comment_text: {
+                    title: 'text',
+                    width: '30%',
+                    sorting:false
+                },
+                 
+                reportedby:{
+                    title: 'reported by',
+                                        
+                    create: false,
+                    edit: false,
+                    display:function(data){   
+                            var reportedby = data.record.reportedby;  
+                            var html='';
+                            if(reportedby)
+                            {
+                                var array = reportedby.split(',');      
+                                if(array.length>5){ array = array.slice(0, 5);}
+                                $(array).each(function( index, element ) {                          
+                                    html = html+'<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+element+'" >'+element+'</a><br/>';  
+                                });                                  
+                            }                            
+                            return html;
+                        }
+                },
+                cntreport: {
+                    title: '#',
+                    width: '5%',                    
+                    create: false,
+                    edit: false,
+                    listClass: 'aligncenter',
+                    display:function(data){   
+                            var cnt = data.record.cntreport;  
+                            var html='';
+                            if(cnt>0) html=cnt;
+                            return html;
+                        }
+                },
+                hide: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.cntreport>0) {                            
+                            return '<a role="button" class="btn btn-warning btn-xs removecomment pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>Remove Comment</span></a><a role="button" class="btn btn-warning btn-xs removereports pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>Remove Reports</span></a><a role="button" class="btn btn-warning btn-xs removeuser pull-right" style="color:white;"  data-record="' + data.record.comment_member_id + '"><span>Remove User</span></a>'
+                                ;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        //$('#TableContainer').jtable('load');
+        $('#TableContainer').jtable('load', {},function(){
+              //TooltipUser.setup("tooltipuser","right");        
+            });
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+       
+
+        $('body').on("click", 'a.removecomment', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            //$("#dialog-confirm").html('are you sure to delete this comment ?').dialog('open');
+            var elementRecord = $(this).data("record");
+
+            $("#dialog-confirm").html('are you sure to delete this comment ?').dialog({
+                autoOpen: true,
+                html: 'are you sure to delete this comment ?',
+                width: 600,
+                modal: true,
+                buttons: {
+                     "Confirm" : function() {
+                            jQuery.ajax({
+                                data: {'comment_id': elementRecord},
+                                url: '/spam/deletecomment',
+                                type: 'post',
+                                error: function () {
+                                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                                    return false;
+                                },
+                                success: function (results) {
+                                    $("#dialog-confirm").dialog("close");
+                                    $('#TableContainer').jtable('reload');
+                                    return false;
+                                }
+                            });         
+                    },
+                    "Cancel" : function() {
+                      $(this).dialog("close");
+                    }
+                }
+            });
+            
+            return false;
+            
+        });
+
+
+        $('body').on("click", 'a.removereports', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            $("#dialog-confirm").html('are you sure to delete this reports ?').dialog({
+                autoOpen: true,
+                html: 'are you sure to delete this reports ?',
+                width: 600,
+                modal: true,
+                buttons: {
+                     "Confirm" : function() {
+                            jQuery.ajax({
+                                data: {'comment_id': elementRecord},
+                                url: '/spam/deletereports',
+                                type: 'post',
+                                error: function () {
+                                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                                    return false;
+                                },
+                                success: function (results) {
+                                    $("#dialog-confirm").dialog("close");
+                                    $('#TableContainer').jtable('reload');
+                                    return false;
+                                }
+                            });     
+                    },
+                    "Cancel" : function() {
+                      $(this).dialog("close");
+                    }
+                }
+            });
+
+            
+
+            return false;
+        });
+
+        $('body').on("click", 'a.removeuser', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+            alert(elementRecord);
+            $("#dialog-confirm").html('Delete this member and all his products and comments? ?').dialog({
+                autoOpen: true,
+                html: 'Delete this member and all his products and comments? ?',
+                width: 600,
+                modal: true,
+                buttons: {
+                     "Confirm" : function() {
+                            jQuery.ajax({
+                                data: {'member_id': elementRecord},
+                                url: '/backend/user/delete',
+                                type: 'post',
+                                error: function () {
+                                    alert("Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. Find out why you may have encountered this error.");
+                                    return false;
+                                },
+                                success: function (results) {
+                                    $("#dialog-confirm").dialog("close");
+                                    $('#TableContainer').jtable('reload');
+                                    return false;
+                                }
+                            });     
+                    },
+                    "Cancel" : function() {
+                      $(this).dialog("close");
+                    }
+                }
+            });
+
+            
+
+            return false;
+        });
+
+
+         //Re-load records when user click 'load records' button.
+         $('#filter_year').on('change',function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_year: $('#filter_year').val(),                
+            });
+        });
+    });
+</script>

@@ -1,0 +1,79 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+if($this->users->getTotalItemCount()>0)
+{
+?>
+<span class="commentTitle" style="margin:auto;display:table;padding:5px"> Community </span>
+<div class="prod-widget-box right newusers" style=" background-color: #fff" id="activeuserscontainer">
+<?php 
+$pageCount = $this->users->count();
+?>
+    <div id="active-users-content">
+
+    <div class="row" style="padding-bottom: 10px;">
+    	<div class="col-lg-1">
+    		
+    	</div>
+    	<div class="col-lg-7">
+    		<b>User</b>
+    	</div>
+    	<div class="col-lg-3">
+    		<span style="float: right; font-weight: bold;">Items</span>
+    	</div>
+    </div>	
+
+    <?php 
+    $this->rownum = (1 + (($this->page - 1) * 10));
+    $helpImage = new Default_View_Helper_Image();
+    $helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+    foreach ($this->users as $this->user): ?>
+            <div class="row" style="padding-bottom: 5px;">
+            	<div class="col-lg-1">
+                    <?=$this->rownum?>.
+            	</div>
+				<div class="col-lg-7" >
+                    <img src="<?php echo $helpImage->Image($this->user['profile_image_url'], array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" style="max-width: 22px; max-height:22px;margin-right: 10px; border-radius: 50%;float: left"/>
+				    <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->user['username']); ?>" style="vertical-align:middle;">
+                        <?php echo  $this->user['username']; ?>
+                    </a>
+				</div>
+				<div class="col-lg-3">
+					<span style="float: right">
+					<?=$this->user['cnt']?>
+					</span>
+				</div>
+			</div>
+			<?php
+				$this->rownum++;
+			?>
+    <?php endforeach;?>
+
+    <small class="pull-right">        
+        <?php if ($pageCount > 1) echo $this->paginationControl($this->users, 'Sliding', '/partials/paginationControlBootstrap.phtml',
+            array('params' => array(), 'dom_target' => 'div#active-users-content')); ?>
+    </small>  
+    </div>
+
+</div>
+
+<?php } ?>

@@ -1,0 +1,778 @@
+#product-browse-container {
+    width: 100%;
+    float: left;
+    padding: 0;
+
+    #product-browse-item-list {
+        padding: 10px 0 25px 0;
+        float: left;
+        margin-right: -7px;
+        margin-left: -7px;
+        width: 100%;
+
+        &.on-mobile {
+            margin: 0;
+        }
+        
+        .product-browse-item-row {
+            width: 100%;
+            float: left;
+
+            &.favorites-row {
+                padding: 10px 0;
+                font-size: 12px;
+                border-top: 1px solid #ccc;
+
+                &:first-of-type {
+                    border-top: 0;
+                }
+            }
+
+            &.skills-row {
+                margin: 0 -22px;
+                @media only screen and (max-width: 768px) {
+                    margin: 0;
+                }
+            }
+
+            &.standard-row {
+                border-bottom: 1px solid rgb(204, 204, 204);
+                margin-bottom: 10px;
+            }
+        }
+
+        .product-browse-item {
+            float:left;
+            margin-bottom:30px;
+            position: relative;
+            padding: 0 7px;
+
+            > a {
+               display: block;
+               width:100%;
+               height:auto;
+               text-decoration: none;
+
+               &:hover {
+                   text-decoration: none !important;
+               }
+            }
+
+            .product-browse-image {
+                width: 100%;
+                overflow: hidden;
+                box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                position: relative;
+
+                .product-browse-item-preview-music-player {
+                    position: absolute;
+                    top:0;
+                    left:0;
+                }
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            .product-browse-item-info {
+                font-size:14px;
+                font-weight: bold;
+                overflow: hidden;
+
+                h2 {
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    font-size: 18px;
+                    min-height: 22px;
+                    margin-top: 8px;
+                    margin-bottom: 4px;
+                }
+
+                span {
+                    width: 50%;
+                    float: left;
+                    display: block;
+                    font-weight: normal;
+                    color: black;
+                    font-size: 1.2rem;
+
+                    b {
+                       color:black;
+                        font-weight: normal;
+                    }
+                }
+
+                span + span {
+                    text-align: right;
+                }
+            }
+
+            .product-browse-music-item-info {
+                font-size: 14px;
+                padding: 5px;
+                float: left;
+                margin-bottom: 5px;
+                width:100%;
+
+                h2 {
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 5px 0;
+                    width:100%;
+                }
+
+                span {
+                    width: 100%;
+                    float: left;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: block;
+                    text-overflow: ellipsis;
+                    margin: 2px 0;
+                }
+            }
+
+            .likes-counter {
+                margin-top: 3px;
+                font-size: 12px;
+                font-weight: 400;
+                margin-bottom: 5px;
+
+                .hearts-container {
+                    
+                    .glyphicon {
+                        width: auto;
+                        font-size: 15px;
+                        color: #c1c1c1;
+                        font-weight: normal;
+                        margin-right: 5px;
+                        margin-top: 0px;
+
+                        &.glyphicon-heart {
+                            display: none;
+                        }
+                    }
+                    
+                    &:hover {
+                            .glyphicon {
+                                display: none;
+                            }
+                            .glyphicon-heart {
+                                display: block ;
+                                color:red;
+                            }
+                        
+                    }
+
+                }
+            }
+            
+            .info-container {
+                width:100%;
+                float:left;
+            }
+
+            .wrapper {
+                width:100%;
+                position: relative;
+            }
+
+            &.phone-pictures {
+                .product-browse-image {
+                    border-radius: 5px 5px 5px 5px;
+                }
+                h2, span {
+                    font-size: 13px;
+                    line-height: 14px;
+                    font-weight: 400;
+                }
+            }
+
+            &.comics {
+                .product-browse-item-info {
+                    h2 {
+                        font-size: 13px;
+                        line-height: 14px;
+                        font-weight: 400;
+                    }
+                    
+                    .score-container {
+                        margin-top: -10px;
+                    }
+                }
+            }
+
+            &.music, &.music-test {
+                
+                * {
+                    user-select: none;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    -ms-user-select: none;
+                }
+
+            }
+
+            &.music-test {
+                height: 150px;
+                .wrapper {
+                    a.product-browse-item-wrapper {
+                        // display: none;
+                    }
+                }
+            }
+
+            &.favorites {
+                margin-bottom: 0;
+                
+                &:first-of-type {
+                    border-top: 0;
+                }
+
+                span.index {
+                    width: 8.33333333%;
+                    display: block;
+                    float: left;
+                    text-align: center;
+                }
+                .product-browse-item-wrapper {
+                    width: 91.6666667%;
+                    display: block;
+                    float: left;
+
+                    .product-browse-image {
+                        width:15%;
+                        overflow: hidden;
+                        float: left;
+
+                        img {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                    }
+
+                    .product-browse-item-info {
+                        width: 85%;
+                        float: left;
+                        padding-left:15px;
+
+                        .info-container {
+                            width: 75%;
+                            float: left;
+
+                            span {
+                                width: auto;
+                                margin-right:10px;
+                            }
+                        }
+
+                        .score-container {
+                            float: left;
+                            width:25%;
+
+                            .rating {
+                                width:50%;
+                                margin-bottom: 10px;
+
+                                .rating-text {
+                                    margin-bottom: 5px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.books {
+                .wrapper {
+                    overflow: hidden;
+                    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+                    position: relative;
+
+                    .product-browse-image {
+                        box-shadow: none;
+                    }
+
+                    .product-browse-item-info {
+                        padding: 5px;
+                        height: 100px;
+
+                        > span {
+                            width: 100%;
+                        }
+                    }
+
+                    .likes-counter {
+                        margin-top: 3px;
+                        font-size: 12px;
+                        font-weight: 400;
+                        margin-bottom: 5px;
+                        position: absolute;
+                        left: 5px;
+                        bottom: 5px;
+                        width: 100%;
+                    }
+                }
+            }
+
+            &.skills {
+                box-shadow: none !important;
+                padding: 0 30px;
+
+                .wrapper {
+                    width: 100%;
+                    position: relative;
+                    padding: 15px;
+                    border: 1px solid #e8e8e8;
+                    transition: 0.2s;
+
+                    &:hover, &:active {
+                        border-color: darken(#e8e8e8,10%);
+                    }
+
+                    .product-browse-image {
+                        box-shadow: none !important;
+                    }
+                    .product-browse-item-info {
+                        
+                        h2 {
+                            color: #787878;
+                        } 
+
+                        span {
+                            width: 100%;
+                            float: left;
+                            display: block;
+                            font-weight: normal;
+                            color: black;
+                            font-size: 1.2rem !important;
+                            text-align: left !important;
+                            margin-top: 8px;
+                            height: 20px;
+                            line-height: 16px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            display: block;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+            }
+
+            &.standard {
+                font-size: 12px;
+                margin-bottom: 10px;
+
+                .product-browse-image {
+                    box-shadow: none;
+
+                    img {
+                        width: auto;
+                        max-height: 167px;
+                        max-width: 100%;
+                        display: table;
+                        margin: 0 auto;
+                        height: auto;
+                    }
+                }
+
+                .item-info-main {
+
+                    h3 {
+                        span.version {
+                            font-size: 18px;
+                            padding-left: 20px;
+                        }
+                    }
+
+                    .title {
+                        display: block;
+                        margin-bottom: 8px;
+
+                        .username {
+                            padding-left: 20px;
+                        }
+                    }
+
+                    .description {
+                        display: block;
+                        margin-bottom: 8px;
+                    }
+
+                    .packagetypes {
+                        display: block;
+                        float: left;
+                    }
+
+                    .productInfo {
+                        clear: left;
+                        padding-top: 5px;
+                    }
+                }
+
+                .description {
+                    p {
+                        > * {
+                            max-width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+
+        .product-browse-item-preview-music-player {
+            width:100%;
+            position: absolute;
+            top: 44px;
+            left: 0;
+            z-index: 10;
+
+            button {
+                padding: 0;
+                background-color: transparent;
+                border: 0;
+                outline: none !important;
+            }
+
+            .player {
+                top: -44px;
+                position: absolute;
+                width:100%;
+                left: 0;
+
+                .audio-player-controls, .track-counter {
+                    padding: 5px;
+                    height: 40px;
+                    background-color: rgba(0,0,0,0.5);
+                }
+
+                .audio-player-controls {
+                    float: left;
+                    transition: 0.2s;
+
+                    span {
+                        cursor: pointer;
+                    }
+
+                    svg {
+                        font-size: 28px;
+                        color:white;
+                        transition: 0.2s;
+                        vertical-align: middle;
+
+                        &:hover {
+                            color: #31c27c;
+                        }
+                    }
+                }
+
+                .track-counter {
+                    float: right;
+                    color: white;
+                    line-height: 30px;
+                }
+            }
+
+            &.mobile {
+                .player {
+                    .player-interface {
+                        .audio-player-controls {
+                            width:100%;
+                            height:100px;
+
+                            .play-icon,
+                            .pause-icon {
+                                font-size: 60px;
+                                top: 20px;
+                                position: absolute;
+                                left: 50%;
+                                margin-left: -30px;
+                            }
+
+                            .prev-icon {
+                                font-size: 50px;
+                                position: absolute;
+                                top: 25px;
+                                left: 0;
+                            }
+
+                            .next-icon {
+                                font-size: 50px;
+                                position: absolute;
+                                top: 25px;
+                                right: 0;
+                            }
+                        }
+                        .track-counter {
+                            position: absolute;
+                            left: 50%;
+                            bottom: 0;
+                            height: 27px;
+                            background: 0;
+                            margin-left: -25px;
+                            padding: 0;
+                            width: 50px;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            .music-player-counter {
+                position: absolute;
+                top: -44px;
+                background-color: rgba(0, 0, 0, 0.7);
+                right: 0;
+                display: block;
+                z-index: 100000;
+                height: 44px;
+                color: white;
+                line-height: 35px;
+                padding: 5px;
+                display: none;
+            }
+
+            .react-jinke-music-player-main .music-player-panel {
+                position: absolute;
+                height: 44px;
+                width: 38px;
+                overflow: hidden;
+                transition: 0.2s;
+
+                .play-mode-title {
+                    display: none;
+                }
+
+                .panel-content {
+                    padding:5px;
+                    height: 100%;
+                    position: relative;
+                    display: block;
+                
+                    .img-content,
+                    .audio-title,
+                    .progress-bar-content {
+                        display: none;
+                    }
+                
+                    .player-content {
+                        padding:0px;
+
+                        .group {
+                            padding:0;
+                            margin:0;
+
+
+                            &.prev-audio,
+                            &.next-audio,
+                            &.audio-lists-btn,
+                            &.play-sounds {
+                                display: none;
+                            }
+
+                            &.play-btn.play {
+                                margin-right:5px;
+                                margin-top: 3px;
+                            }
+
+                            &.loading {
+                                margin-top: 2px;
+                                margin-left: 42px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .react-jinke-music-player-mobile {
+                height: auto;
+                position: absolute;
+                top: -44px;
+                
+                .react-jinke-music-player-mobile-header,
+                .react-jinke-music-player-mobile-singer,
+                .react-jinke-music-player-mobile-switch,
+                .react-jinke-music-player-mobile-cover,
+                .react-jinke-music-player-mobile-progress,
+                .react-jinke-music-player-mobile-operation {
+                    display: none;
+                }
+
+                .react-jinke-music-player-mobile-toggle {
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+
+                    .play-btn {
+                        padding:0 20px;
+                    }
+                }
+
+                .group.prev-audio,
+                .group.next-audio {
+                    display: none;
+                    padding-top: 6px;
+                }
+            }
+
+            &.show-controls {
+
+                .music-player-counter {
+                    display: block;
+                }
+
+                .react-jinke-music-player-main .music-player-panel {
+                    width:110px;
+                }
+                
+                .group {
+                    &.prev-audio,
+                    &.next-audio {
+                        display: block !important;
+                    }
+                }
+
+
+            }
+        }
+    }
+
+    .pagination-container {
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+        float: left;
+
+        &.browse {
+            ul {
+                li {
+                    a {
+                        border: 0;
+                        color: #23527c;
+
+                        &:hover {
+                            background-color: transparent;
+                            text-decoration: underline;
+                        }
+                    }
+                    
+                    &.active {
+                        border-color: none;
+
+                        a {
+                            color: #23527c;
+                            background-color: white;
+                            font-weight: bold;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #product-browse-pagination {
+        text-align: center;
+        clear: both;
+
+        ul {
+            display: table;
+            margin: 10px auto;
+            padding: 0;
+            list-style-type: none;
+
+            li {
+                float: left;
+
+                a, span.no-link {
+                    display: block;
+                    padding: 5px 4px;
+                    cursor: pointer;
+                }
+                
+            }
+        }
+    }
+}
+
+#right-sidebar-container {
+    padding:0;
+}
+
+#app.mobile-view {
+    .pling-nav-tabs ul.nav-tabs > li:last-child {
+        float: left !important;
+        padding: 0 !important;
+        font-size: inherit !important;
+    }
+
+    #product-browse-item-list {
+        padding-top: 10px;
+    }
+
+    #product-browse-container {
+        padding: 0 !important;
+
+        .explore-product {
+            padding-right: 60px;
+            
+            > .col-xs-1 {
+                position: absolute;
+                top: 0px;
+                left: 10px;
+                padding: 0;
+            }
+        
+            .explore-product-imgcolumn {
+                width: 20%;
+            }
+            
+            .explore-product-details {
+                width: 80%;
+
+                h3 {
+                    word-break: break-word;
+                }
+            }
+
+            .explore-product-plings {
+                position: absolute;
+                top: 0;
+                right: 10px;
+                width: 50px;
+                padding: 0;
+
+                .score-circle-module {
+                    margin-top: 0;
+                }
+
+                .plings-display {
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    float: left;
+                    font-size: 11px;
+                }
+
+                .date-display {
+                    float: left;
+                    margin: 0;
+                    font-size: 11px;
+                    width: 200%;
+                    text-align: left;
+                    margin-left: -5px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,121 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$pageCount = $this->likes->count();
+
+?>
+<div  id="my-likes-tabs">
+    <div id="my-likes-tabs-content">
+    <div style="text-align:right">
+    <small>        
+        <?php
+        if ($pageCount > 1) {
+            echo $this->paginationControl(
+                // the paginator object
+                $this->likes,
+                // the scrolling style
+                'Sliding',
+                // the partial to use to render the control
+                'application/partials/paginatorAjax.phtml',
+                // the route to link to when a user clicks a control link
+                array(
+                      'route' => 'application_user'
+                      ,'username' => $this->member->username 
+                     ,'action' => 'morelikes'
+                     ,'dom_target' => 'div#my-likes-tabs-content'                                                           
+                )
+            ); 
+        }
+        ?>
+    </small>        
+    </div>
+<?php
+    foreach ($this->likes as $file): 
+                $file=(object)$file;
+        ?>
+      <div class="row smaller " >
+        <div class="col-lg-5 col-md-5">
+            <figure>
+                <img src="<?php echo $this->Image($file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
+            </figure>   
+            <div>
+                <a href="<?= $this->buildProductUrl($file->project_id) ?>"><?=$file->title?></a>
+                <p><?=$file->cat_title?> 
+                <br/>
+                by <a  href="<?php echo $this->buildMemberUrl($file->project_username); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$file->project_member_id?>">
+             <?=$file->project_username?></a>
+            </div>
+
+        </div>      
+                    
+        
+
+        <div class="col-lg-2 col-md-2">             
+            <div class="rating text-center" >               
+                <?php  
+                        echo $this->partial(
+                            'application/partials/circle.phtml', array(
+                                "r" => 40,
+                                "fontSize" =>Application\Model\Service\ConstCircle::small40,
+                                "score" => $file->laplace_score/10
+                            )
+                        ); 
+                        ?>
+                    
+            </div>            
+        </div>
+
+        <div class="col-lg-3" >                                       
+                    <i class="fa fa-heart" aria-hidden="true" style="color:#8e44ad;"></i>               
+                    <?=$this->printDate($file->created_at)?>
+        </div>
+
+      </div>
+
+ <?php endforeach; ?>
+
+ 
+ <div style="text-align:right">
+        <small >        
+            <?php
+            if ($pageCount > 1) {
+                echo $this->paginationControl(
+                    // the paginator object
+                    $this->likes,
+                    // the scrolling style
+                    'Sliding',
+                    // the partial to use to render the control
+                    'application/partials/paginatorAjax.phtml',
+                    // the route to link to when a user clicks a control link
+                    array(
+                          'route' => 'application_user'
+                          ,'username' => $this->member->username 
+                         ,'action' => 'morelikes'
+                         ,'dom_target' => 'div#my-likes-tabs-content'                                                           
+                    )
+                );            
+            }
+            ?>
+        </small>        
+        </div>
+
+    </div>
+</div>

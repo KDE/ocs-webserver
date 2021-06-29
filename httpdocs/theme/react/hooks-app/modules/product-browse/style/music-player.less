@@ -1,0 +1,308 @@
+
+.product-browse-music-player-wrapper {
+                    position: absolute;
+                    top: 0;
+                    left: 0; 
+                    width: 100%;
+                    height: 40px;
+                    z-index: 10;
+
+                    .music-player-controls-bar {
+
+                        .music-player-audio-control {
+                            float: left;
+                            background: rgba(0,0,0,0.5);
+                            height: 40px;
+                            transition:0.5s;
+    
+                            span {
+                                display: block;
+                                padding: 5px;
+                                float: left;
+                                
+                                svg {
+                                    font-size: 28px;
+                                    color: white;
+                                    transition:0.5s;
+    
+                                    &:hover {
+                                        color:#31c27c;
+                                    }
+                                }
+    
+                                &:first-child, &:last-child {
+                                    display: none;
+                                }
+                            }
+                        }
+    
+                        .track-number-display {
+                            opacity: 0;
+                            float: right;
+                            background: rgba(0,0,0,0.5);
+                            height: 40px;
+                            padding: 5px;
+                            color: white;
+                            font-size: 12px;
+                            line-height: 30px;
+                            transition:0.5s;
+                        }
+
+                    
+                        &.is-playing {
+
+                            .music-player-audio-control {
+        
+                                span {
+                                    &:first-child, &:last-child {
+                                        display: block;
+                                        padding: 5px 0;
+                                    }
+                                }
+                            }
+        
+                            .track-number-display {
+                                opacity: 1;
+                            }
+    
+                        }
+                    }
+}
+
+.product-browse-item-preview-music-player {
+    width:100%;
+    position: absolute;
+    top: 44px;
+    left: 0;
+    z-index: 10;
+
+    button {
+        padding: 0;
+        background-color: transparent;
+        border: 0;
+        outline: none !important;
+    }
+
+    .player {
+        top: -44px;
+        position: absolute;
+        width:100%;
+        left: 0;
+
+        .audio-player-controls, .track-counter {
+            padding: 5px;
+            height: 40px;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .audio-player-controls {
+            float: left;
+            transition:0.5s;
+
+            span {
+                cursor: pointer;
+            }
+
+            svg {
+                font-size: 28px;
+                color:white;
+                transition:0.5s;
+                vertical-align: middle;
+
+                &:hover {
+                    color: #31c27c;
+                }
+            }
+        }
+
+        .track-counter {
+            float: right;
+            color: white;
+            line-height: 30px;
+        }
+    }
+
+    &.mobile {
+        .player {
+            .player-interface {
+                .audio-player-controls {
+                    width:100%;
+                    height:100px;
+
+                    .play-icon,
+                    .pause-icon {
+                        font-size: 60px;
+                        top: 20px;
+                        position: absolute;
+                        left: 50%;
+                        margin-left: -30px;
+                    }
+
+                    .prev-icon {
+                        font-size: 50px;
+                        position: absolute;
+                        top: 25px;
+                        left: 0;
+                    }
+
+                    .next-icon {
+                        font-size: 50px;
+                        position: absolute;
+                        top: 25px;
+                        right: 0;
+                    }
+                }
+                .track-counter {
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    height: 27px;
+                    background: 0;
+                    margin-left: -25px;
+                    padding: 0;
+                    width: 50px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    .music-player-counter {
+        position: absolute;
+        top: -44px;
+        background-color: rgba(0, 0, 0, 0.7);
+        right: 0;
+        display: block;
+        z-index: 100000;
+        height: 44px;
+        color: white;
+        line-height: 35px;
+        padding: 5px;
+        display: none;
+    }
+
+    .react-jinke-music-player-main .music-player-panel {
+        position: absolute;
+        height: 44px;
+        width: 38px;
+        overflow: hidden;
+        transition:0.5s;
+
+        .play-mode-title {
+            display: none;
+        }
+
+        .panel-content {
+            padding:5px;
+            height: 100%;
+            position: relative;
+            display: block;
+        
+            .img-content,
+            .audio-title,
+            .progress-bar-content {
+                display: none;
+            }
+        
+            .player-content {
+                padding:0px;
+
+                .group {
+                    padding:0;
+                    margin:0;
+
+
+                    &.prev-audio,
+                    &.next-audio,
+                    &.audio-lists-btn,
+                    &.play-sounds {
+                        display: none;
+                    }
+
+                    &.play-btn.play {
+                        margin-right:5px;
+                        margin-top: 3px;
+                    }
+
+                    &.loading {
+                        margin-top: 2px;
+                        margin-left: 42px;
+                    }
+                }
+            }
+        }
+    }
+
+    .react-jinke-music-player-mobile {
+        height: auto;
+        position: absolute;
+        top: -44px;
+        
+        .react-jinke-music-player-mobile-header,
+        .react-jinke-music-player-mobile-singer,
+        .react-jinke-music-player-mobile-switch,
+        .react-jinke-music-player-mobile-cover,
+        .react-jinke-music-player-mobile-progress,
+        .react-jinke-music-player-mobile-operation {
+            display: none;
+        }
+
+        .react-jinke-music-player-mobile-toggle {
+            padding: 0;
+            display: flex;
+            justify-content: center;
+
+            .play-btn {
+                padding:0 20px;
+            }
+        }
+
+        .group.prev-audio,
+        .group.next-audio {
+            display: none;
+            padding-top: 6px;
+        }
+    }
+
+    &.show-controls {
+
+        .music-player-counter {
+            display: block;
+        }
+
+        .react-jinke-music-player-main .music-player-panel {
+            width:110px;
+        }
+        
+        .group {
+            &.prev-audio,
+            &.next-audio {
+                display: block !important;
+            }
+        }
+
+
+    }
+}
+
+.music-player-progress-bar {
+    height: 16px;
+    width: 100%;
+    /* background-color: rgba(0,0,0,0.3); */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+    overflow: hidden;
+    bottom: -137px;
+    cursor: pointer;
+
+    .rc-slider {
+        border-radius: 0 !important;
+        .rc-slider-step,
+        .rc-slider-track,
+        .rc-slider-rail {
+            border-radius: 0 !important;
+        }          
+    }
+  }

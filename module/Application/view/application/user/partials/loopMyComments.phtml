@@ -1,0 +1,123 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\Model\Service\HtmlPurifyService;
+use Application\Model\Service\Util;
+
+$pageCount = $this->comments->count();
+
+?>
+<div  id="my-comments-tabs">
+    <div id="my-comments-tabs-content">
+    <div style="text-align:right">
+    <small>        
+        <?php
+        if ($pageCount > 1) {
+            echo $this->paginationControl(
+                // the paginator object
+                $this->comments,
+                // the scrolling style
+                'Sliding',
+                // the partial to use to render the control
+                'application/partials/paginatorAjax.phtml',
+                // the route to link to when a user clicks a control link
+                array(
+                      'route' => 'application_user'
+                     ,'username' => $this->member->username                    
+                     ,'action' => 'morecomments'
+                     ,'dom_target' => 'div#my-comments-tabs-content'                                                           
+                )
+            ); 
+        }
+        ?>
+    </small>        
+    </div>
+
+
+    <?php foreach($this->comments as $file){ 
+            $file = Util::arrayToObject($file);            
+        ?>
+                <div class="productrow">
+
+                <div class="row smaller " >
+                  <div class="col-lg-5 col-md-5">
+                      <figure>
+                          <img src="<?php echo $this->Image($file->image_small, array('width' => 80, 'height' => 80)); ?>" class="project-image" />
+                      </figure>   
+                      <div>
+                          <a href="<?= $this->buildProductUrl($file->project_id) ?>"><?=$file->title?></a>
+                          <p><?=$file->cat_title?> 
+                          
+                          <span class="cntComments">
+                          by <a  href="<?php echo $this->buildMemberUrl($file->username); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$file->project_member_id?>">
+                        <?=$file->username?></a>
+                        
+                          <?php               
+                              $count_comments = $file->count_comments;                             
+                              echo ($count_comments>0 ? $count_comments.' comment':'').($count_comments>1?'s':'');            
+                          ?>
+                          
+                          </span>
+                      </div>
+                      
+                  </div>      
+                              
+                  <div class="col-lg-7 col-md-7" style="padding-top: 15px">         
+                        <?php 
+                                    $comment_text = HtmlPurifyService::purify($file->comment_text);
+                                ?>
+                                <?= nl2br($comment_text,true) ?>                                    
+                                
+                                <span class="createat"> - <?= $this->printDate($file->comment_created_at); ?> </span>
+                  </div>
+                                
+                </div>
+              
+            </div> 
+        <?php }?>
+
+        <div style="text-align:right">
+        <small >        
+            <?php
+            if ($pageCount > 1) {
+                echo $this->paginationControl(
+                    // the paginator object
+                    $this->comments,
+                    // the scrolling style
+                    'Sliding',
+                    // the partial to use to render the control
+                    'application/partials/paginatorAjax.phtml',
+                    // the route to link to when a user clicks a control link
+                    array(
+                        'route' => 'application_user'
+                        ,'action' => 'morecomments'
+                        ,'username' => $this->member->username                   
+                        ,'dom_target' => 'div#my-comments-tabs-content'                                                           
+                    )
+                );                
+            }
+            ?>
+        </small>        
+        </div>
+
+    </div>
+</div>

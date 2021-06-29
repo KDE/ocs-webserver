@@ -1,0 +1,111 @@
+.title-small-upper {
+    font-size: var(--text-xsmall);
+    text-transform: uppercase;
+    color: var(--color-dark-4);
+}
+
+.m0 {
+    margin: 0 !important;
+}
+.text-xsmall, .text-small, .text-normal, .text-medium, .text-large {
+    font-weight: var(--font-regular);
+    margin: var(--space-large) 0;
+}
+.font-bold {
+    font-weight: var(--font-bold) !important;
+}
+.text-large {
+    font-size: var(--text-large);
+}
+
+.pling-welcome {
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,.32);
+    padding: var(--space-large) 0;
+    position: relative;
+    z-index: 88;
+}
+
+.pling-welcome::before {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url(media/rounded-rain-cover.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: invert(0.06);
+    z-index: 0;
+}
+
+.pling-welcome .container-normal {
+    display: grid;
+    grid-template-columns: auto;
+    gap: 0;
+    align-items: center;
+}
+
+.pling-welcome, .pling-welcome a:hover {
+    color: #fff !important;
+}
+
+.pling-welcome .title-small-upper {
+    color: #d5d5d5;
+}
+
+.pling-welcome .pui-btn-round {
+    color: #f5f5f5;
+    background: #161616;
+    border: 1px solid #454545;
+}
+
+.pling-welcome-artwork {
+    color: rgba(255,255,255,.4) !important;
+    font-size: var(--text-xsmall);
+    top: var(--space-normal);
+    right: var(--space-normal);
+    position: absolute;
+    z-index: 96;
+}
+
+.pling-welcome-artwork a,
+.pling-welcome-artwork a:hover {
+    color: rgba(255,255,255,.4) !important;
+}
+
+.pling-welcome .container-normal {
+    grid-template-columns: 1fr;
+    margin: 0 auto;
+    max-width: 100%;
+    text-align: center;
+}
+
+
+@media screen and (min-width: 768px)
+{
+    .pling-welcome .container-normal {
+        grid-template-columns: 240px auto 260px;
+        padding: 0;
+        text-align: left;
+    }
+    .pling-welcome .container-normal div:nth-of-type(3){
+        text-align: center;
+    }
+}
+@media screen and (min-width: 2200px)
+{
+    .pling-welcome .container-normal {
+        grid-template-columns: 340px auto 360px;
+        text-align: left;
+    }
+}
+
+
+@media screen and (min-width: 1100px) {
+    
+    .pling-welcome .container-normal {
+        grid-template-columns: auto 166px;
+    }
+    
+}

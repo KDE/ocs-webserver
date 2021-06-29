@@ -1,0 +1,68 @@
+@CHARSET "UTF-8";
+
+.zend_form dt {
+	margin-bottom: 5px;
+}
+
+.zend_form dd {
+        margin-left: 0px;
+	margin-bottom: 10px;
+}
+
+.zend_form input[type=text] {
+	border: 1px solid #000;
+	padding: 2px;
+	width: 300px;
+}
+
+.zend_form input[type=file] {
+	border: 1px solid #000;
+	padding: 2px;
+	width: 300px;
+}
+
+.zend_form input[type=password] {
+	border: 1px solid #000;
+	padding: 2px;
+	width: 300px;
+}
+
+.zend_form textarea {
+	border: 1px solid #000;
+	padding: 2px;
+}
+
+.zend_form .errors {
+	margin: 0px;
+	padding: 0px;
+}
+
+.zend_form .errors li {
+	margin: 0px;
+	padding: 0px;
+	list-style-type: none;
+	background-color: red;
+	width: 400px;
+	text-align: center;
+	color: #fff;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-top: 10px;
+}
+
+.zend_form .catElements {
+	width: 700px;
+}
+
+.catelement {
+	float: left;
+	width: 150px;
+	border-bottom: 1px solid #dedede;
+	border-right: 1px solid #dedede;
+	margin-right: 2px;
+	margin-bottom: 2px;
+}
+
+.description {
+    margin-top: 3px; font-size: 10px;
+}

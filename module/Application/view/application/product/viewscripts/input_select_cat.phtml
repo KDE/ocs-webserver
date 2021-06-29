@@ -1,0 +1,64 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="form-group">
+    <div class="col-sm-4 margin-top-15">
+        <?php if ($this->element->getOption('required')) { ?>
+            <div class="small grey bold-font pull-left margin-right-5">*</div>
+        <?php } ?>
+        <label class="form-label" for="<?= $this->element->getName() ?>">Category</label>
+    </div>
+    <div class="col-sm-8 margin-top-15">
+        <div class="small grey bold-font pull-left margin-right-5">*</div>
+        <label class="form-label">Sub-Category</label>
+    </div>
+    <div class="col-sm-4">
+        <select data-target="wrap_project_subcategory_id"
+                data-sub-target="project_sub_subcategory_id"
+                class="required form-control product_select_cat"
+                id="<?= $this->element->getName() ?>"
+                name="<?= $this->element->getName() ?>">
+            <?php
+            // force $value to array so we can compare multiple values to multiple
+            // options; also ensure it's a string for comparison purposes.
+            $value = array_map('strval', (array)$this->element->getValue());
+            foreach ($this->element->getValueOptions() as $opt_value => $opt_label) {
+                // selected?
+                $opt = '';
+                if (in_array((string)$opt_value, $value)) {
+                    $opt .= ' selected="selected"';
+                }
+                ?>
+                <option <?= $opt ?> value="<?= $opt_value ?>"><?= $opt_label ?></option><?php
+            }
+            ?>
+        </select>
+        <?php if ($this->element->getMessages()) {
+            $errorHtml = '';
+            foreach ($this->element->getMessages() as $currentError) {
+                $errorHtml .= '<label id="' . $this->escape($this->element->getName()) . '-error" class="error" for="' . $this->escape($this->element->getName()) . '"><small>' . $currentError . '</small></label>';
+            }
+            ?>
+            <?php echo $errorHtml ?>
+        <?php } ?>
+    </div>
+</div>

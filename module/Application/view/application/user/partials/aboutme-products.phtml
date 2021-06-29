@@ -1,0 +1,75 @@
+<meta charset="utf-8" />
+
+<?php
+
+use Application\Model\Service\ConstCircle;
+
+if ($this->userProducts == null || count($this->userProducts) == 0)
+    return;
+if ($this->lastcatid) {
+    $cat_last = $this->lastcatid;
+} else {
+    $cat_last = '';
+}
+$title = '';
+foreach ($this->userProducts as $product):
+    $catid = $product['project_category_id'];
+    if ($catid != $cat_last) {
+        if (isset($product['catTitle'])) {
+            $title = $product['catTitle'];
+        }
+        echo '<div class="catgroupseperator">' . $title . '</div>';
+    }else{
+        if (isset($product['catTitle'])) {
+            $title = $product['catTitle'];
+        }
+    }
+    ?>
+    <div class="product mini-card col-lg-2 col-md-2 col-sm-3 col-xs-2">
+        <div class="u-wrap">
+            <a href="<?= $this->buildProductUrl($product['project_id'], '', null, true); ?>">
+                <figure>
+                    <img src="<?php echo $this->Image($product['image_small'], array('width' => 280, 'height' => 171)); ?>"
+                         class="explore-product-image" width="101" height="81" />
+                </figure>
+                <div class="u-content">
+                    <h3><?php echo $product['title']; ?></h3>
+                    <span class="productCategory"> <?php echo $title; ?> </span>
+
+                    <span class="productCategory" style="width: 100%; float: left;">
+    <?= $this->printDate($product['project_changed_at']) ?>
+                    </span>
+                </div>
+            </a>
+
+    <?php
+    if (isset($product['countplings']) && $product['countplings'] > 0) {
+        ?>
+                <div class="countplings"> <span class="num"><?= $product['countplings'] ?></span> <img src="/images/system/pling-btn-active.png"/> </div>
+                <?php
+            }
+            ?>
+
+            <?php
+                   
+            echo $this->partial(
+                'application/partials/circle.phtml', array(
+                    "r" => 40,
+                    "fontSize" =>Application\Model\Service\ConstCircle::small40,
+                    "score" => $product['laplace_score']/10
+                )
+            );   
+            ?>
+        </div>
+    </div>
+            <?php
+            $cat_last = $product['project_category_id'];
+        endforeach;
+        ?>
+
+<?php
+$total_pages = ceil($this->total_records / $this->pageLimit);
+if ($this->projectpage < $total_pages) {
+    echo '<button id="btnshowmoreproducts" data-page=' . ($this->projectpage + 1) . '>Show More</button>';
+}
+?>

@@ -1,0 +1,136 @@
+/* Set the width for product tabs - product page */
+/* Product tabs panel - container */
+.product-tabs-panel {
+    padding: var(--space-large) 0;
+}
+/* Product Files Table */
+.product-files-table-container {
+    overflow-x: auto;
+}
+
+.table-ocs-file thead {
+    color: var(--color-dark-4);
+    font-size: var(--text-small);
+}
+
+/* Fix last tdata border */
+.activerows td:last-of-type {
+    border-top: 1px solid;
+}
+
+.table-ocs-file .archived {
+    color: var(--color-dark-5);
+}
+
+.table-ocs-file .activerows a {
+    color: var(--color-primary-1);
+}
+
+.table-ocs-file .btn {
+    color: #fff !important;
+    background: var(--color-primary-1);
+    font-size: inherit;
+    padding: var(--space-xsmall) var(--space-normal);
+    width: 100%;
+}
+
+.table-ocs-file .opendownloadfile  img {
+    margin-top: -4px;
+}
+
+.glyphicon-question-sign {
+    background: var(--color-primary-1);
+    border-radius: var(--space-medium);
+    width: var(--space-medium);
+    height: var(--space-medium);
+    position: relative;
+    display: inline-block;
+    top: 2px;
+    left: 2px;
+}
+
+.glyphicon-question-sign:before {
+    content: "?";
+    color: #fff;
+    position: absolute;
+    top: 0px;
+    left: 6px;
+    font-size: var(--text-xsmall);
+}
+
+/* Product changelog, ratings-list, licensing, contain to 1000px */
+#product-changelog,
+#product-ratings-list,
+#product-licensing {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+/* Ratings list */
+#product-ratings-list {
+    padding: 0 var(--space-large);
+}
+
+#product-ratings-list .product-ratings-list-item .rating-container {
+    margin-bottom: var(--space-large);
+    max-width: 720px;
+}
+
+#product-ratings-list .product-ratings-list-item .rating-container .rating-header {
+    width: 100%;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+#product-ratings-list .product-ratings-list-item .rating-container .rating-header .rating-username {
+    font-size: var(--text-normal);
+    font-weight: var(--font-bold);
+}
+
+/* Product fans */
+.likes-list-container,
+.plings-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: var(--space-normal);
+    justify-content: center;
+}
+
+.pling-list-container .pling-list-item-container {
+    float: left;
+    padding: 0.3em;
+    border: 0.35em solid var(--color-light-3); /* original: #dee0e0 */
+    border-radius: var(--space-small);
+    height: 14em; /* duplicate height */
+    height: 200px; /* duplicate height */
+    margin-bottom: 0;
+    margin-right: 0;
+    background: white;
+    width: 116px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    position: relative;
+    text-align: center;
+    font-size: var(--text-small);
+}
+
+.pling-list-container .pling-list-item-container .pling-item-profile-image figure {
+    height: auto;
+    width: 100%;
+    margin: 0 0 1rem;
+}
+
+.pling-list-container .pling-list-item-container .pling-item-username {
+    font-weight: var(--font-bold);
+    line-height: 1.2;
+    max-width: 100px;
+    max-height: 50px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.pling-list-container .pling-list-item-container .pling-item-bottom .pling-item-created-at {
+    font-size: var(--text-xsmall);
+}

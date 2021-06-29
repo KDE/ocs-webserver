@@ -1,0 +1,83 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$form = $this->homepageform;
+$form->get('link_website')->setAttributes(array(   
+    'tabindex' => 19,
+    'class' =>'form-control',
+    'style' =>'width:92%;display:inline-block;'
+    ));
+
+
+?>
+
+<div class="panel-collapse " id="website-collapse">
+    <div class="panel-body">
+        <form class="standard-form well partial" action="<?=  $form->getAttribute('action'); ?>"
+              method="<?=  $form->getAttribute('method'); ?>" data-target="#form-website"
+              data-trigger="#website-trigger">
+              <?php echo $this->formElement($form->get('csrf')); ?>    
+            <div class="row">
+                <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+                <?php echo $this->formLabel($form->get('link_website')); ?> 
+                <?php echo $this->formElement($form->get('link_website')); ?> 
+                  <div class="image <?= $this->validated ?'checked':'unchecked'?>"></div>                
+                  <p class="help-block small">Insert the full URL for your website here.</p>
+                </div>
+            </div>
+            <!-- /.row-fluid -->
+            <?php
+            $linkWebsite = $form->get('link_website')->getValue();
+            if (false === empty($linkWebsite)) {
+                ?>
+                <hr>
+                <p class="italic">
+                    <?=
+                    $this->translate('Copy the meta tag below and paste it into your site home page.<br>
+                It should go in the <span class="lightblue">&lt;head&gt;</span> section, before the first <span
+                    class="lightblue">&lt;body&gt;</span> section.') ?>
+                </p>
+
+                <div class="clipboard-copy clearfix well embed-code" id="container-verification-code">
+                    <div class="left purple clipboard-code light"
+                         id="clipboard-code"><?= $form->get('html_verifier')->getValue() ?></div>
+                    <button class="btn btn-purple right" data-clipboard-target="#clipboard-code" onclick="return false;"
+                            tabindex="20"><?= $this->translate('COPY TO CLIPBOARD') ?></button>
+                </div>
+                <?php
+            }
+            ?>
+            <hr>
+            <div class="row">
+                <div class="box pull-left margin-left-15"  style="padding-left: 15px;"><?php echo $this->formResult($this->homepageform, $this->save); ?></div>
+                <button type="submit" class="btn btn-native pull-right"
+                        tabindex="21"><?= $this->translate('Save &amp; Update') ?></button>
+            </div>
+        </form>
+        <!-- /.standard-form -->
+    </div>
+    <!-- /.section-body -->
+</div>
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            ButtonCode.setupClipboardCopy(\'#container-verification-code\');
+        });
+    ');

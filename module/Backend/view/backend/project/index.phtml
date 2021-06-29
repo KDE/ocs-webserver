@@ -1,0 +1,391 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<div class="filtering">
+    <style>
+        #QuickImageLinks {
+            text-align: center;
+        }
+
+        #QuickImageLinks img {
+            border: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .child-opener-image {
+            cursor: pointer;
+        }
+
+        .child-opener-image {
+            opacity: 0.5;
+        }
+
+        .child-opener-image:hover {
+            opacity: 0.8;
+        }
+
+        .child-opener-image-column {
+            text-align: center;
+        }
+
+        .jtable-dialog-form {
+            min-width: 640px;
+        }
+
+        .jtable-dialog-form input[type="text"] {
+            min-width: 450px;
+        }
+
+        .jtable-dialog-form textarea {
+            min-width: 450px;
+        }
+
+    </style>
+    <form>
+        Title: <input type="text" name="filter_title" id="filter_title"/>
+        Project ID: <input type="text" name="filter_project_id" id="filter_project_id"/>
+        Member ID: <input type="text" name="filter_member_id" id="filter_member_id"/><br/>
+        <span style="margin-right: 0.9em;">claimable: <input type="checkbox" name="filter_claimable"
+                                                             id="filter_claimable" value="1"/></span>
+        <span style="margin-right: 0.9em;">show Project Pages: <input type="checkbox" name="filter_project_page"
+                                                                      id="filter_project_page" value="1"
+                                                                      checked="checked"/></span>
+        <span style="margin-right: 0.9em;">show About.me: <input type="checkbox" name="filter_personal_page"
+                                                                 id="filter_personal_page" value="0"/></span>
+        <span style="margin-right: 0.9em;">show Updates: <input type="checkbox" name="filter_updates"
+                                                                id="filter_updates" value="2"/></span>
+
+        <div style="display:inline-block; text-align: right;width: 95%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+</div>
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Member Info"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'mail asc',
+            title: 'Table of products',
+            actions: {
+                listAction: '/backend/project/list',
+                createAction: '/backend/project/create',
+                updateAction: '/backend/project/update',
+                deleteAction: '/backend/project/delete'
+            },
+            fields: {
+                project_id: {
+                    title: 'project_id',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '5%'
+                },
+                member_id: {
+                    title: 'member_id',
+                    width: '5%',
+                    list: true,
+                    create: true,
+                    edit: false,
+                    display: function (data) {
+                        if (data.record.member_id) {
+                            return data.record.member_id
+                                + ' <a role="button" title="show member info" class="btn btn-info btn-xs member-info pull-right" style="color:white;"  data-record="' + data.record.member_id + '"><span>info</span></a>'
+                                ;
+                        }
+                    }
+                },
+                content_type: {
+                    title: 'content_type',
+                    list: false,
+                    edit: false,
+                    create: true
+                },
+                project_category_id: {
+                    title: 'category_id',
+                    width: '5%',
+                    edit: true,
+                    create: true,
+                    sorting: false, //This column is not sortable!
+
+                    options: function (data) {
+                        return '/backend/categories/tree';
+                    }
+
+                },
+                status: {
+                    title: 'status',
+                    width: '7%',
+                    edit: false,
+                    sorting: false //This column is not sortable!
+                },
+                pid: {
+                    title: 'belongs to',
+                    list: true,
+                    edit: false,
+                    create: true,
+                    width: '5%'
+                },
+                type_id: {
+                    title: 'type_id',
+                    list: false,
+                    edit: false,
+                    create: false
+                },
+                title: {
+                    title: 'title',
+                    width: '20%',
+                    list: true,
+                    display: function (data) {
+                        if (data.record.title) {
+                            return data.record.title + ' <a href="/p/' + data.record.project_id + '/" class="btn btn-info btn-xs pull-right" role="button" style="color: white" target="_blank">show</a>';
+                        }
+                    }
+
+                },
+                description: {
+                    title: 'description',
+                    type: 'textarea',
+                    list: false
+                },
+                image_big: {
+                    title: 'image_big',
+                    list: false
+                },
+                image_small: {
+                    title: 'image_small',
+                    list: false
+                },
+                content_url: {
+                    title: 'content_url',
+                    list: false
+                },
+                created_at: {
+                    title: 'Created',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                changed_at: {
+                    title: 'Changed',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                deleted_at: {
+                    title: 'Deleted',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                creator_id: {
+                    title: 'creator_id',
+                    width: '5%',
+                    edit: false
+                },
+                facebook_code: {
+                    title: 'facebook_code',
+                    list: false
+                },
+                twitter_code: {
+                    title: 'twitter_code',
+                    list: false
+                },
+                google_code: {
+                    title: 'google_code',
+                    list: false
+                },
+                link_1: {
+                    title: 'link_1',
+                    list: false
+                },
+                embed_code: {
+                    title: 'embed_code',
+                    list: false
+                },
+                ppload_collection_id: {
+                    title: 'ppload_collection_id',
+                    list: false,
+                    edit: false,
+                    create: false
+                },
+                validated: {
+                    title: 'validated',
+                    width: '5%',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                validated_at: {
+                    title: 'validated_at',
+                    type: 'date',
+                    list: false,
+                    edit: false,
+                    create: false
+                },
+                featured: {
+                    title: 'featured',
+                    list: false,
+                    edit: false,
+                    create: false
+                },
+                amount: {
+                    title: 'amount',
+                    list: false,
+                    sorting: false //This column is not sortable!
+                },
+                claimed_by_member: {
+                    title: 'claimed_by',
+                    list: false,
+                    edit: false,
+                    create: false
+                },
+                claimable: {
+                    title: 'claimable',
+                    width: '5%',
+                    list: true,
+                    edit: true,
+                    options: {'1': 'Yes', '0': 'No'},
+                    defaultValue: '0',
+                    create: false
+                }
+            }
+        });
+
+        $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!confirm('This will toggle the active option for this product. Do you wish to proceed?')) {
+                return;
+            }
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'project_id': elementRecord},
+                url: '/backend/project/togglestatus/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.member-info', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'member_id': elementRecord},
+                url: '/backend/user/memberinfo/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').html(results.ViewRecord).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_title: $('#filter_title').val(),
+                filter_project_id: $('#filter_project_id').val(),
+                filter_member_id: $('#filter_member_id').val(),
+                filter_claimable: $('#filter_claimable:checked').val(),
+                filter_project_page: $('#filter_project_page:checked').val(),
+                filter_personal_page: $('#filter_personal_page:checked').val(),
+                filter_updates: $('#filter_updates:checked').val()
+
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_title: null,
+                filter_project_id: null,
+                filter_member_id: null,
+                filter_claimable: null,
+                filter_project_page: null,
+                filter_personal_page: null,
+                filter_updates: null
+            });
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_title: $('#filter_title').val(),
+            filter_project_id: $('#filter_project_id').val(),
+            filter_member_id: $('#filter_member_id').val(),
+            filter_claimable: $('#filter_claimable:checked').val(),
+            filter_project_page: $('#filter_project_page:checked').val(),
+            filter_personal_page: $('#filter_personal_page:checked').val(),
+            filter_updates: $('#filter_updates:checked').val()
+
+        });
+    });
+</script>

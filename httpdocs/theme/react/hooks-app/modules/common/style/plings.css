@@ -1,0 +1,82 @@
+.pling-list-container .pling-list-item-container {
+  float: left;
+  padding: 0.3em;
+  border: 0.35em solid #dee0e0;
+  border-radius: 5px;
+  height: 14em;
+  margin-bottom: 1em;
+  background: white;
+  width: 115px;
+  height: 200px;
+  margin-right: 10px;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  position: relative;
+  text-align: center;
+  font-size: small;
+}
+.pling-list-container .pling-list-item-container .pling-item-profile-image {
+  display: block;
+}
+.pling-list-container .pling-list-item-container .pling-item-profile-image figure {
+  height: auto;
+  width: 100%;
+}
+.pling-list-container .pling-list-item-container .pling-item-profile-image figure img {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #dbdbdb;
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+.pling-list-container .pling-list-item-container .pling-item-username {
+  max-width: 100px;
+  overflow: hidden;
+  padding: 5px;
+}
+.pling-list-container .pling-list-item-container .pling-item-bottom {
+  position: absolute;
+  right: 2px;
+  bottom: 3px;
+  width: 100%;
+}
+.pling-list-container .pling-list-item-container .pling-item-bottom .cntplings {
+  float: right;
+  margin-right: 5px;
+}
+.pling-list-container .pling-list-item-container .pling-item-bottom .pui-pling,
+.pling-list-container .pling-list-item-container .pling-item-bottom .pui-heart {
+  left: 5px;
+  bottom: 0px;
+}
+.pling-list-container .pling-list-item-container .pling-item-bottom .pling-item-pling-icon {
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  border: 1px solid #dbdbdb;
+  -webkit-border-radius: 999px;
+  -moz-border-radius: 999px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 1px;
+  margin-bottom: -5px;
+}
+.pling-list-container .pling-list-item-container .pling-item-bottom .pling-item-created-at {
+  padding: 2px;
+  float: right;
+}
+.pling-list-container .pling-list-item-container .pling-item-bottom .fa {
+  margin-right: 3px;
+}
+.pling-list-container .plinged-by .pling-item-username {
+  text-align: center;
+}
+.pling-list-container .plinged-by .pling-item-username a {
+  font-weight: bold;
+}

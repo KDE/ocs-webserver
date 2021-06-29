@@ -1,0 +1,372 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\Model\Service\HtmlPurifyService;
+use Application\Model\Service\ProjectService;
+
+//$plingData = $this->userPlings($this->project_id);
+$productFileInfos = $this->projectFiles($this->ppload_collection_id);
+$productUpdates = $this->projectUpdates($this->project_id);
+$loopProductId = 'product' . $this->project_id;
+//    $statusPayPal = $this->partialLoop()->view->member->paypal_mail;
+$object_text = (mb_strlen($this->description) < 300) ? $this->description : mb_substr($this->description, 0, 295, 'UTF-8') . ' ... ';
+$addedOnDate = $this->humanTiming($this->created_at);
+$addedOnText = $addedOnDate['age'] . ' ' . $addedOnDate['unit'];
+$updatedOnDate = $this->humanTiming($this->changed_at);
+$updatedOnText = $updatedOnDate['age'] . ' ' . $updatedOnDate['unit'];
+?>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-product-item" id="<?= $loopProductId ?>">
+    <!-- IMAGE -->
+    <figure class="col-lg-1 col-md-3 col-sm-3 col-xs-3">
+        <img src="<?php echo $this->Image($this->image_small, array('width' => 280, 'height' => 167)); ?>"
+             class="explore-product-image" width="101" height="81"/>
+    </figure>
+    <!-- /IMAGE -->
+    <!-- CONTENT -->
+    <article class="col-lg-11 col-md-9 col-sm-9 col-xs-9">
+        <!-- title -->
+        <div class="title">
+            <?php
+            $versionTextOnly = $version = HtmlPurifyService::purify($this->version);
+            $description = HtmlPurifyService::purify($object_text);
+            ?>
+            <h3>
+                <a href="<?= $this->buildProductUrl($this->project_id) ?>"><?php echo $this->title; ?> <?php echo $version; ?></a><span
+                    style="font-weight: normal; font-size: small; color: #4e4e4e"> added </span><span
+                    style="font-weight: 700; font-size: small; color: #4e4e4e"><?= $addedOnText ?> ago</span><span
+                    style="font-weight: 700; font-size: small; float: right; color: #4e4e4e"> <?= $updatedOnText ?> ago</span><span
+                    style="font-weight: normal; font-size: small; float: right; color: #4e4e4e">updated&nbsp;</span>
+            </h3>
+
+        </div>
+        <!-- /title -->
+        <div>
+        <span class="topics">
+            <span class="topicslink">
+            <?php
+            $tagsuser = $this->fetchTagsUserForProject($this->project_id);
+            $tagscat = $this->fetchTagsCategoryForProject($this->project_id);
+
+            if (false === empty($tagscat)) {
+                foreach (explode(',', $tagscat) as $tag) {
+                    ?>
+                    <a rel="nofollow" href="/find?search=<?= $tag ?>&t=<?= $tag ?>&f=tags"
+                       class="topic-tag topic-tag-link usertagslabelcat"><?= $tag ?></a>
+                    <?php
+                }
+            }
+
+            echo '<span class="topicsuser">';
+            if (false === empty($tagsuser)) {
+                foreach (explode(',', $tagsuser) as $tag) {
+                    ?>
+                    <a rel="nofollow" href="/find?search=<?= $tag ?>&t=<?= $tag ?>&f=tags"
+                       class="topic-tag topic-tag-link usertagslabel"><?= $tag ?></a>
+                    <?php
+                }
+            }
+            echo '</span>';
+            ?>
+            </span>                  
+            <span id="tagsuserselectpanel<?= $this->project_id ?>" class="tagsuserselectpanel" style="display: none">
+                    <select
+                        id="tagsuserselect<?= $this->project_id ?>"
+                        name="tagsuser"
+                        multiple="true"
+                        class="taggingSelect2"
+                        data-pid="<?php echo $this->project_id ?>"
+                    >
+                        <option value=""></option>
+                        <?php
+                        $element_value = $tagsuser;
+                        $value = empty($element_value) ? array() : explode(',', $element_value);
+                        foreach ($value as $v) {
+                            echo '<option value="' . $v . '" selected="selected">' . $v . '</option>';
+                        }
+                        ?>         
+                    </select>
+            </span>
+
+            <button id="topic-tags-btn<?= $this->project_id ?>" class="btn-link topic-tags-btn" type="button">Manage tags</button>
+            <span id="topic-tags-saved<?= $this->project_id ?>" class="topic-tags-saved" style="display: none"><i
+                    class="fa fa-check"></i> Saved </span>
+
+        </span>
+        </div>
+
+        <!-- info -->
+        <div class="info">
+            <ul>
+                <li><span>in</span><span><?php echo $this->catTitle; ?></span></li>
+
+                <?php /**<li><span><?= $this->translate('supporters') ?> </span><span><?= $plingData['plingers'] ?></span></li>
+                 * <li><span><?= $this->translate('collected') ?> </span><span><?= $plingData['plings'] ?></span></li>
+                 * **/ ?>
+            </ul>
+        </div>
+        <!-- /info -->
+        <!-- text -->
+        <div class="text">
+            <p><?= nl2br($description) ?></p>
+        </div>
+
+
+        <!-- /text -->
+        <!-- buttons -->
+        <div class="buttons">
+            <div class="embed-btns pull-left">
+                <!-- verification -->
+
+                <!-- /verification -->
+                <!-- embeded -->
+                <?php /*
+                <a href="#modal-button-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('Button') ?></a>
+                   */ ?>
+
+                <?php /*
+                <a href="#modal-list-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('List') ?></a>
+                <a href="#modal-widget-code-<?= $loopProductId ?>"
+                   rel="<?= $loopProductId ?>"
+                   class="btn btn-native widget-button"
+                   data-toggle="modal"><?= $this->translate('Widget') ?></a>
+                   */ ?>
+                <!-- /embeded -->
+            </div>
+
+            <!--  manage -->
+            <div class="manage-btns pull-right margin-left-20">
+                <a role="button" href="<?= $this->buildProductUrl($this->project_id, 'edit') ?>" class="btn btn-native">
+                    <?= $this->translate('Edit') ?>
+                </a>
+
+
+                <!-- ppload -->
+                <a role="button" class="btn btn-native" href="#modal-ppload"
+                   data-toggle="modal"
+                   data-ppload-collection-id="<?= $this->ppload_collection_id ?>"
+                   data-product-id="<?= $this->project_id ?>"
+                   data-product-cat-id="<?= $this->project_category_id ?>"
+                   data-product-title="<?= $this->title ?>"
+                   data-product-version="<?= $versionTextOnly ?>"
+                   data-addpploadfile-uri="<?= $this->buildProductUrl($this->project_id, 'addpploadfile') ?>"
+                   data-updatepploadfile-uri="<?= $this->buildProductUrl($this->project_id, 'updatepploadfile') ?>"
+                   data-updatefiletag-uri="<?= $this->buildProductUrl($this->project_id, 'updatefiletag') ?>"
+                   data-deletefiletag-uri="<?= $this->buildProductUrl($this->project_id, 'deletefiletag') ?>"
+                   data-deletepploadfile-uri="<?= $this->buildProductUrl($this->project_id, 'deletepploadfile') ?>"
+                   data-deletepploadfiles-uri="<?= $this->buildProductUrl($this->project_id, 'deletepploadfiles') ?>">
+                    <?= $this->translate('Files') ?> (<?= $productFileInfos['fileCount'] ?>)
+                </a>
+                <!-- /ppload -->
+                <!-- updates -->
+                <a role="button" class="btn btn-native" href="#modal-updates"
+                   data-toggle="modal"
+                   data-product-id="<?= $this->project_id ?>"
+                   data-product-title="<?= $this->title ?>"
+                ><?= $this->translate('Changelog') ?></a>
+
+                <?php /*20200618 ronald: TODO: rebuild validation process 
+                <?php if ($this->link_1) { ?>
+                    <a href="#msg-box-code-<?= $loopProductId ?>"
+                       class="btn btn-native margin-right-10"
+                       data-toggle="modal"><?= $this->translate('Verification') ?></a>
+                <?php } ?>
+                 * 
+                 */ ?>
+
+                <?php /*
+                 <a href="#modal-box-code-<?= $loopProductId ?>"
+                   class="btn btn-native"
+                   data-toggle="modal"><?= $this->translate('Box') ?></a>
+                  */
+                ?>
+
+
+                <!-- /updates -->
+                <span class="publish-product-wrapper">
+                    <?php $p_action = ($this->project_status == ProjectService::PROJECT_ACTIVE) ? 'unpublish' : 'publish' ?>
+                    <a href="<?= $this->buildProductUrl($this->project_id, $p_action, array('m' => $this->member_id)) ?>"
+                       class="btn btn-native <?= ($p_action == 'unpublish') ? 'btn-pling-green' : 'btn-pling-red' ?> "
+                       data-target="#<?= $loopProductId ?> .publish-product-wrapper">
+                        <?= ucfirst($p_action) ?>
+                    </a>
+                </span>
+                <form method="post"
+                      action="<?= $this->buildProductUrl($this->project_id, 'delete', array('m' => $this->member_id)) ?>"
+                      class="inline">
+                    <button data-title="Delete Confirmation" data-callback="defaultCallbackConfirmation"
+                            data-message="Do you really want to delete this product?<br>This is permanent and can not be undone!"
+                            aria-label="Delete" class="btn btn-native btn-pling-red remove"
+                            style="font-size: 12px;padding: 3px 6px;">
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+            <!-- /manage -->
+
+        </div>
+        <!-- /buttons -->
+    </article>
+    <!-- CONTENT -->
+    <!-- MODALS -->
+
+
+    <!-- button code modal -->
+    <?php /*
+    <div id="modal-button-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Button Code') ?></h3>
+                </div>
+                <div class="modal-body" id="support-button-<?= $loopProductId ?>">
+                    <div class="demo-code center"><?= $helperButton->externalPlingButton($this->project_id); ?></div>
+                    <textarea name="button-code"
+                              id="button-code-<?= $loopProductId ?>"
+                              class="code-text-area"><?= $helperButtonCode->externalPlingButtonSource($this->project_id, array('websiteAuthCode' => $websiteAuthCode)); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="get-support-btn-code"
+                            class="btn btn-min-width btn-native"
+                            data-clipboard-target="#button-code-<?= $loopProductId ?>">get the code!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>*/ ?>
+    <!-- /button code modal -->
+
+
+    <!-- box code modal -->
+
+    <?php /*
+    <div id="modal-box-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Box Code') ?></h3>
+                </div>
+                <div class="modal-body" id="support-box-<?= $loopProductId ?>">
+                    <div class="demo-code"><?= $this->externalSupporterBox($this->project_id); ?></div>
+                    <textarea name="box-code"
+                              id="box-code-<?= $loopProductId ?>"
+                              class="light"><?= $helperSupporterBoxSource->externalSupporterBoxSource($this->project_id); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="get-support-box-code"
+                            class="btn btn-min-width btn-native"
+                            data-clipboard-target="#box-code-<?= $loopProductId ?>">get the code!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    */
+    ?>
+    <!-- /box code modal -->
+
+
+    <!-- list code modal -->
+    <?php /*
+    <div id="modal-list-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('List Code') ?></h3>
+                </div>
+                <div class="modal-body" id="support-list-<?= $loopProductId ?>">
+                    <div class="demo-code"><?= $this->externalDonationList($this->project_id); ?></div>
+                    <textarea name="list-code"
+                              id="list-code-<?= $loopProductId ?>"
+                              class="light"><?= $helperDonationListSource->externalDonationListSource($this->project_id, array('websiteAuthCode' => $websiteAuthCode)); ?></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="get-support-list-code" class="btn btn-min-width btn-native"
+                            data-clipboard-target="#list-code-<?= $loopProductId ?>">get the code!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    */ ?>
+    <!-- /list code modal -->
+
+
+    <!-- widget code modal -->
+    <?php /*
+    <div id="modal-widget-code-<?= $loopProductId ?>" class="code-embed-modal modal fade">
+        <div class="modal-dialog content-modal" id="widget-code-modal">
+            <div class="modal-content">
+                <!-- dialog contents -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="center"><?= $this->translate('Widget Code') ?></h3>
+                </div>
+                <div class="modal-body" id="widget-code-<?= $loopProductId ?>">
+
+                    <iframe
+                        src="<?= $this->buildProductUrl($this->project_id, 'makerconfig'); ?>"
+                        height="300px"
+                        width="100%"
+                        frameBorder=0
+                        scrolling="no"
+                        allowTransparency="false"
+                        seamless
+                        ></iframe>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    */
+    ?>
+    <!-- /widget code modal -->
+
+    <!-- verification code -->
+    <?php
+    // TODO
+    //$verificationPopup = new Default_View_Helper_VerificationCodePopup();
+    //echo $verificationPopup->verificationCodePopup($this, $this->link_1, 'msg-box-code-' . $loopProductId, $this); ?>
+    <!-- /verification code -->
+
+    <?php $this->inlineScript()->appendScript(
+        '$(document).ready(function(){
+                    ButtonCode.setupClipboardCopy(\'div#modal-box-code-' . $loopProductId . '\');
+                    ButtonCode.setupClipboardCopy(\'div#modal-button-code-' . $loopProductId . '\');
+                    ButtonCode.setupClipboardCopy(\'div#modal-list-code-' . $loopProductId . '\');
+                });'
+    );
+    ?>
+    <!-- /MODALS -->
+</div>
+
+<div class="my-product-divider col-lg-12 col-md-12 col-sm-12 col-xs-12"></div>

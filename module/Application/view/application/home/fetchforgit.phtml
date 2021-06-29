@@ -1,0 +1,49 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+
+http_response_code(200);
+
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+header('Access-Control-Allow-Origin: '.$url_gitlab, true);
+header('Access-Control-Allow-Credentials: true', true);
+header('Access-Control-Max-Age: 1728000', true);
+
+if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+    header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+        'OPTIONS', 'HEAD', 'GET', 'POST',
+        strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
+    ])), true);
+}
+if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+    header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
+    header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+}
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit;
+}
+header('Content-Type: application/json; charset=UTF-8', true);
+
+
+echo Zend_Json::encode($this->viewdata);
+
+?>

@@ -1,0 +1,315 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$selectOptions = '';
+foreach ($this->hostnames as $element) {
+    $selectOptions .= '<option value='.$element['Value'].'>'.$element['DisplayText'].'</option>';
+}
+?>
+ <link href="/theme/flatui/css/select2.min.css" rel="stylesheet" type="text/css"/>
+ <link href="/theme/flatui/css/select2.custmized.css" rel="stylesheet" type="text/css"/>
+<script src="/theme/flatui/js/lib/select2.min.js"></script>
+
+                    
+
+<div id="dialog-edit-tag" title="Edit tag">
+                   
+    <form id="form-edit-tag" class="" action="/backend/storecategories/savetags" method="post">
+        <input type="hidden" value="" id="catid" name="c"/>
+        <input type="hidden" value="" id="storeid" name="s"/>
+        <table>
+            <tr>
+                <td> <label for="tags" >Tag IDs:</label>  </td>
+                <td> <input type="text" value="" id="tags" name="t" /> </td>
+                <td>    
+                     <select
+                                                id="tagselectsearch"
+                                                name="tagsname"                                                                                                
+                                                style="width: 200px;"                                                                                     
+                                            >                                                                                         
+                    </select>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>   <label for="tagsname" >Tag Names:</label>    </td>
+                <td colspan="2">  <input type="text" value="" id="tagsname" name="n" disabled/> </td>                
+            </tr>
+
+        </table>
+             
+    </form>
+   
+</div>
+
+<div class="filtering well" style="width: 95%;">
+    <form>
+        <span style="margin-right: 0.9em;">filter hostname: <select name="filter_hostname" id="filter_hostname" required="required">
+                <?php echo $selectOptions ?>
+            </select></span>
+        <div style="display:inline-block; text-align: right;width: 100%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_hostname: $('#filter_hostname').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_hostname: null,
+            });
+        });
+    </script>
+</div>
+<div id="TableContainer"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'store_id asc',
+            title: 'Table of category configuration for stores',
+            actions: {
+                listAction: '/backend/storecategories/list',
+                createAction: '/backend/storecategories/create',
+                updateAction: '/backend/storecategories/update',
+                deleteAction: '/backend/storecategories/delete'
+            },
+            fields: {
+                store_category_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                store_id: {
+                    title: 'store',
+                    width: '10%',
+                    list: false,
+                    create: true,
+                    options: function (data) {
+                        if (data.source == 'edit') {
+                            data.clearCache();
+                            return '/backend/store/hostnames';
+                        }
+                        return '/backend/store/hostnames';
+                    }
+                },
+                host: {
+                    title: 'store',
+                    width: '10%',
+                    list: true,
+                    create:false,
+                    edit:false,
+                },
+                project_category_id: {
+                    title: 'category',
+                    width: '10%',
+                    list: false,
+                    create: true,
+                    options: function (data) {
+                        if (data.source == 'edit') {
+                            data.clearCache();
+                            return '/backend/storecategories/tree?c=-1';
+                        }
+                        return '/backend/storecategories/tree?c=-1';
+                    }
+                },
+                cat_title: {
+                    title: 'category',
+                    width: '10%',
+                    list: true,
+                    create:false,
+                    edit:false,
+                },
+                tag_name: {
+                    title: 'tag',
+                    width: '10%',
+                    list: true,
+                    create:false,
+                    edit:false,
+                },
+                order: {
+                    title: 'display order',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    edit: true
+                },
+                edittag: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record) {
+                            return '<a title="edit tags" href="javascript:return false;" class="edit-tag" role="button" data-tagsname=\'' + data.record.tag_name + ' \' data-tags=\'' + data.record.tag_id + ' \'  data-storeid=\'' + data.record.store_id + ' \'  data-catid=\'' + data.record.project_category_id + ' \'><span class="glyphicon glyphicon-tags" aria-hidden="true"></span></a>';
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+        
+    });
+</script>
+<script>
+      
+    $('body').on("click", 'a.edit-tag', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        var catid = $(this).data("catid");
+        var storeid = $(this).data("storeid");
+        var tags = $(this).data("tags");
+        var tagsname = $(this).data("tagsname");
+        $('#form-edit-tag').find('#catid').val($(this).data("catid"));
+        $('#form-edit-tag').find('#storeid').val($(this).data("storeid"));         
+        $('#form-edit-tag').find('#tags').val($(this).data("tags")!='null '?$(this).data("tags").trim():'');
+        $('#form-edit-tag').find('#tagsname').val($(this).data("tagsname")!='null '?$(this).data("tagsname").trim():'');
+        
+        $('#dialog-edit-tag').dialog('open');
+        
+        return false;
+    });
+</script>
+
+<script>
+  
+var TagSelect2 = (function () {
+    return {
+        setup: function () {          
+            
+            var t = $("#tagselectsearch").select2({
+                placeholder: "Search tags please...", //placeholder                
+                minimumInputLength: 3,   
+                dropdownParent: $('#dialog-edit-tag'),                                           
+                ajax: {
+                    url: '/tag/filter',
+                    dataType: 'json',
+                    type: "GET",
+                    delay: 500, // wait 250 milliseconds before triggering the request
+                    processResults: function (data) {
+                        return {
+                            results: data.data.tags
+                        };
+                    }
+                }
+            });
+
+            // Bind an event
+            t.on('select2:select', function (e) {
+                var data = e.params.data;
+                
+                $oldTagids = $('#form-edit-tag').find('#tags').val().trim();
+                $oldTagname = $('#form-edit-tag').find('#tags').val();
+                if($oldTagids.length>0)
+                {
+                    $('#form-edit-tag').find('#tags').val($oldTagids+','+data.tag_id);
+                    //$('#form-edit-tag').find('#tagsname').val($oldTagname+','+data.tag_name);
+
+                }else{
+                    $('#form-edit-tag').find('#tags').val(data.tag_id);
+                    //$('#form-edit-tag').find('#tagsname').val(data.tag_name);
+                }                          
+            });
+
+            
+        }
+    }
+})();
+
+
+       
+
+        $(document).ready(function(){
+
+                    if ($.ui && $.ui.dialog && $.ui.dialog.prototype._allowInteraction) {
+                var ui_dialog_interaction = $.ui.dialog.prototype._allowInteraction;
+                $.ui.dialog.prototype._allowInteraction = function(e) {
+                    if ($(e.target).closest('.select2-dropdown').length) return true;
+                    return ui_dialog_interaction.apply(this, arguments);
+                };
+                }
+              
+                $("#dialog-edit-tag").dialog({
+                autoOpen: false,
+                height: 300,
+                width: 600,
+                modal: true,
+                open: function (event, ui) {
+                
+                },
+                buttons: {
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    },
+                    Save: function () {               
+                        $('#form-edit-tag').submit();
+                        $(this).dialog("close");
+                    }
+                },
+                close: function () {
+                }
+            });
+
+
+            TagSelect2.setup();
+
+            $('body').on("submit", '#form-edit-tag', function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+               
+                jQuery.ajax({
+                    data: $(this).serialize(),
+                    url: this.action,
+                    type: this.method,
+                    dataType: "json",
+
+                    error: function (jqXHR, textStatus, errorThrown) {
+                       alert('Failed!');
+                    },
+                    success: function (results) {
+                        $('#TableContainer').jtable('load', {
+                            filter_hostname: $('#filter_hostname').val()
+                        });
+                    }
+                });
+                return false;
+            });
+        });
+</script>
+

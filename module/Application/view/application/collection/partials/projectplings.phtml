@@ -1,0 +1,127 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+ // product detail pling single project button  
+$cntplings = $this->projectplings;
+$isPlinged = $this->isPlinged;
+
+$member_id = null;
+$isSupporter = false;
+if($this->authMember){
+    $member_id = $this->authMember->member_id;
+    $isSupporter = $this->isSupporter($member_id);
+}
+
+$heartatt = '';     
+$urlUserFollows = $this->buildCollectionUrl($this->project_id, 'plingproject');
+
+$heartatt = $heartatt. 'role="button" data-fragment=""  '
+        .' data-target="#container-pling'.$this->project_id.'"'
+        .' data-href="'.$urlUserFollows.'"'
+        .' data-issupporter="'.$isSupporter.'"'                         
+        .' data-auth="'.$member_id.'"';
+$out ='<div role="button" class="partialbuttonplingproject" '.$heartatt.' style="display:block; float:right">';
+
+if($cntplings==0)
+{
+    $out = $out. '<div class="plingbartext"><span class="plingnum">  Pling </span> </div>';  
+}
+else
+{
+    $out = $out. '<div class="plingbartext"><span class="plingnum"> '.$cntplings.' Plings</span> </div>';
+}
+
+ 
+ if ($isPlinged){             
+      $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-active.png" src="/images/system/pling-btn-active.png"/>';       
+ }else{                  
+      $out = $out.'<img id="plingbtn" data-src="/images/system/pling-btn-normal.png"  src="/images/system/pling-btn-normal.png"/>';       
+ }
+
+$out = $out.'</div>';
+
+echo $out;
+/**
+
+$pmodel = new  Default_Model_DbTable_ProjectPlings();
+$soll = $this->getCurrentMonthPlings($this->ppload_collection_id, $this->project_category_id);
+$pling = $cntplings;
+$score = 0;
+$left = 0;
+$right = 0;
+$plingcolor = '#EE6E09';
+$is_f = 0;
+$poshtml = '';
+if($soll > $pling){    
+    $is_f = 1;
+    $score = 100;
+    $left=100;
+    $right = 0;
+    if($soll == 0)
+    {
+        $rightlinepos = 0;  
+    }else{
+        $rightlinepos = $pling*200/$soll;
+    }
+    
+    $poshtml = '<div class="progress-bar" style="background-color:#fff;  width:2px; position:relative; left:'.$rightlinepos.'px "></div>';
+}else{
+    $is_f = 0;
+    if($pling==0){
+       $score = 1;
+    }else
+    {
+        $score = $soll/$pling;  
+    }
+    
+    $left = $score*100;
+    $right = 100-$left;
+}
+
+$solltxt = number_format($soll,2,'.','');
+$sollhtml = ' <div class="amountsoll" style="width:50px; padding-right:5px;text-align:right;">$'.$solltxt.'</div>';
+$out = $out.'<div style="display:flex;clear:both">'.$sollhtml.'<div class="plingbar" style="flex:1;padding-top:4px">                         
+                          <div class="progress" style="height: 12px; width: 200px;padding:2px;background-color: transparent; box-shadow: none;">
+                              <div class="progress-bar" style="background-color: '.$plingcolor.';width: '.$left.'%;">   '.$poshtml.'  </div> 
+                              <div class="progress-bar" style="background-color: #eeeeee;width: '.$right.'%;"> </div>                                              
+                          </div></div></div>';
+
+
+
+
+
+
+**/
+
+?>
+
+<style type="text/css"> 
+  
+     
+        div.plingbartext{        
+          padding-right: 15px;
+          float: left;
+          padding-top: 6px;
+          
+        }
+
+</style>

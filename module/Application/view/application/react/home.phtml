@@ -1,0 +1,43 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle, 'SET');
+$this->doctype(Laminas\View\Helper\Doctype::XHTML1_RDFA);
+$this->headMeta()->appendProperty('og:url', $_SERVER['HTTP_HOST'])->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $_SERVER['HTTP_HOST'])->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:site_name',$_SERVER['HTTP_HOST'])->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description','A community where developers and artists share applications, themes and other content')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image','https://www.pling.com/theme/react/assets/img/logo-pling.png')->setAutoEscape(false);         
+?>
+
+<link rel="stylesheet" href="/theme/react/lib/glider/glider.min.css">
+<script src="/theme/react/lib/glider/glider.min.js"></script>
+
+<div id="homepage-container">
+</div>
+<script type="application/javascript">
+  var page = "opendesktop";
+  var homePageData = <?php echo json_encode($this->homeData)?>;
+  var catTree = homePageData.categories;
+</script>
+
+<script type="text/javascript" src="/theme/react/bundle/homepage-bundle.js"></script>

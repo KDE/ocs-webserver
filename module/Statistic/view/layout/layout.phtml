@@ -1,0 +1,60 @@
+<?= $this->doctype() ?>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Statistics')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>   
+
+     <!-- Bootstrap -->
+     <link href="/theme/backend/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- JQuery-UI -->
+    <link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+    <!-- JTable -->
+    <link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+    <!-- OCS Backend Style Definitions -->
+    <link href="/theme/backend/css/backend.css" rel="stylesheet" type="text/css"/>
+
+
+    <script src="/theme/backend/lib/jquery-ui/external/jquery/jquery.js"></script>
+    <script src="/theme/backend/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+
+    <script src="/theme/backend/lib/jquery.cookie.js"></script>
+
+   
+    <link href="/theme/flatui/js/lib/jquerymonthpicker/MonthPicker.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"/></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="/theme/flatui/js/lib/d3pie.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/react/react.production.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/react-dom/react-dom.production.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/redux/redux.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/redux/react-redux.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/mdl/material.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/timeago/timeago.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/md5/md5.js"></script>
+    <script src="/theme/flatui/js/lib/jquerymonthpicker/MonthPicker.js"></script>
+    <script src="/theme/backend/js/backend_stati2.js"></script>
+    <script src="/theme/flatui/js/lib/multiline.js"></script>
+    <script src="/theme/flatui/js/lib/multiline_payoutamount.js"></script>
+
+   
+</head>
+
+<body style="padding:0" >
+    <div>
+        <div id="backend-statistic">
+        <?= $this->content ?>
+        </div>
+    </div>
+    <?= $this->inlineScript() ?>
+</body>
+
+</html>

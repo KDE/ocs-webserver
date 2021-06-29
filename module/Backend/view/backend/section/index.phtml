@@ -1,0 +1,196 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+
+<div id="TableContainer"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'order asc',
+            title: 'Table of Sections',
+            actions: {
+                listAction: '/backend/section/list',
+                createAction: '/backend/section/create',
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/section/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
+                deleteAction: '/backend/section/delete'
+            },
+            fields: {
+                section_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    title: 'Id',
+                    width: '5%',
+                },
+                name: {
+                    title: 'Section Name',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    inputTitle: 'Section Name <small style="font-weight:normal; font-size: 0.7em">(50 chars)</small>',
+                    input: function (data) {
+                        if (data.record) {
+                            return '<input type="text" name="name" style="width:200px" value="' + data.record.name + '" pattern="[-a-zA-Z0-9_\.]+" /> <span class="small light">[-a-zA-Z0-9_.]</span>';
+                        } else {
+                            return '<input type="text" name="name" style="width:200px" pattern="[-a-zA-Z0-9_\.]+" /> <span class="small">[-a-zA-Z0-9_.]</span> ';
+                        }
+                    }
+                },
+                description: {
+                    title: 'Description',
+                    width: '20%',
+                    list: true,
+                    create: true
+                },
+                goal_amount: {
+                    title: 'Goal',
+                    width: '10%',
+                    list: true,
+                    create: true
+                },
+                order: {
+                    title: 'Order',
+                    width: '10%',
+                    list: true,
+                    create: true
+                },
+                hide: {
+                    title: 'Hide',
+                    width: '10%',
+                    list: true,
+                    create: true,
+                    type:'radiobutton',
+                    options:{  
+                       1:'yes',
+                       0:'no'
+                    },
+                    defaultValue: 0
+                },
+              /**
+                sponsors: {
+                    title: 'Edit Sponsors',
+                    width: '10%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (jTableData) {
+                        //Create an image that will be used to open child table
+                        var $img = $('<a><span class="glyphicon glyphicon-tag" aria-hidden="true"></span></a>');
+                        //Open child table when user clicks the image
+                        $img.click(function () {
+                            $('#TableContainer').jtable('openChildTable',
+                                $img.closest('tr'),
+                                {
+                                    title: 'Table of Section-Sponsors',
+                                    actions: {
+                                        listAction: '/backend/section/childlist?SectionId=' + jTableData.record.section_id,
+                                        createAction: '/backend/section/childcreate',
+                                        updateAction: '/backend/section/childupdate',
+                                        deleteAction: '/backend/section/childdelete'
+                                    },
+                                    fields: {
+                                        section_sponsor_id: {
+                                            key: true,
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
+                                        section_id: {
+                                            type: 'hidden',
+                                            defaultValue: jTableData.record.section_id
+                                        },
+                                        sponsor_id: {
+                                            title: 'Sponsor',
+                                            type: 'multiselectddl',
+                                            create: true,
+                                            edit: true,
+                                            list: true,
+                                            options: function (data) {
+                                                data.clearCache();                        
+                                                return '/backend/sponsor/allsponsors';
+                                            }
+                                        },
+                                        sponsor_fullname: {
+                                            title: 'Full Name',
+                                            create: false,
+                                            edit: false,
+                                            list: true
+                                        },
+                                        sponsor_description: {
+                                            title: 'Description',
+                                            create: false,
+                                            edit: false,
+                                            list: true
+                                        },
+                                        sponsor_amount: {
+                                            title: 'Amount',
+                                            create: false,
+                                            edit: false,
+                                            list: true
+                                        },
+                                        percent_of_sponsoring: {
+                                            title: '% of the Sponsoring Amount',
+                                            width: '20%',
+                                            create: true,
+                                            edit: true,
+                                            list: true
+                                        }
+                                        
+                                    }
+                                }, function (data) { //opened handler
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+
+                } **/
+            }
+
+            
+        });
+        $('#TableContainer').jtable('load');
+    });
+</script>

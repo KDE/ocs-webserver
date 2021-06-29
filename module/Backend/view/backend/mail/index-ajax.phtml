@@ -1,0 +1,202 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<?php if (!count($this->paginator)): ?>
+    Keine Projekte vorhanden.
+    <?php
+else:
+    $lfdNr = 0;
+    ?>
+    <div id="infomsg" style="" class="ui-state-highlight ui-corner-all"></div>
+    <div id="dialog" style="display: none;"></div>
+    <div class="row">
+        <div id="title" class="title head">Titel</div>
+        <div id="member" class="status head" style="width: 100px;">Initiator</div>
+        <div id="status" class="status head" style="width: 75px;">Zielbetrag</div>
+        <div id="status" class="status head" style="width: 75px;">Dauer</div>
+        <div id="status" class="status head" style="width: 75px;">Start</div>
+        <div id="status" class="status head" style="width: 75px;">Restlaufzeit</div>
+        <div id="status" class="status head" style="width: 75px;">Summe</div>
+        <br style="clear: both;"/>
+    </div>
+
+    <?php foreach ($this->paginator as $item):
+    $lfdNr++;
+    ?>
+    <div id="row<?= $item->project_id; ?>" class="row">
+        <div id="title<?= $item->project_id; ?>"
+             class="title data <?= $this->evenOdd($lfdNr); ?>"><?= stripslashes($item->title); ?></div>
+        <div id="count<?= $item->project_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+             style="width: 100px;"><?= $item->username; ?></div>
+        <div id="status<?= $item->project_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+             style="width: 65px; text-align: right; padding-right: 15px;"><?= $item->fund_sum ?> &euro;</div>
+        <div id="status<?= $item->project_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+             style="width: 75px;"><?= $item->duration ?></div>
+        <div id="status<?= $item->project_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+             style="width: 75px;"><?= $item->start_date ?></div>
+        <div id="status<?= $item->project_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+             style="width: 75px;">
+            <?php if ($item->leftDays > 1): ?>
+                <?= $item->leftDays; ?> <?= $item->leftTime; ?>
+            <?php else: ?>
+                <?php if ($item->leftTime > 0): ?>
+                    noch <?= $item->leftTime; ?>
+                <?php else: ?>
+                    Beendet
+                <?php endif; ?>
+            <?php endif; ?>
+        </div>
+        <div id="status<?= $item->project_id; ?>" class="status data <?= $this->evenOdd($lfdNr); ?>"
+             style="width: 65px; text-align: right; padding-right: 15px;"><?= ($item->collectAmount) ? $item->collectAmount : "0"; ?> &euro;</div>
+        <a href="#" id="details_<?= $item->project_id; ?>"
+           class="ui-state-default ui-corner-all button_normal showDetails">Details anschauen</a>
+        <br style="clear: both;"/>
+    </div>
+    <div class="datatable_detailsarea details_<?= $item->project_id; ?>" style="width:500px;">
+        <div class="dataDetailsContent fleft" style="width:350px;">
+            <strong>Titel:</strong><br/><?= $item->title; ?><br/>
+            <br/><br/>
+            Erstellt am: <?= $item->created_at; ?><br/>
+            Zuletzt geändert: <?= $item->changed_at; ?><br/>
+        </div>
+        <div class="dataDetailsButtons fleft">
+            <a href="/backend/project/edit/id/<?= $item->project_id; ?>"
+               class="ui-state-default ui-corner-all button_normal">Bearbeiten</a><br/><br/>
+
+            <a href="#" id="delete_<?= $item->project_id; ?>"
+               class="ui-state-default ui-corner-all button_normal delete">Löschen</a><br/><br/>
+            <a href="/backend/fundstep/index/id/<?= $item->project_id; ?>"
+               class="ui-state-default ui-corner-all button_normal">Vergütungen</a><br/><br/>
+            <a href="/backend/project/backer/id/<?= $item->project_id; ?>"
+               class="ui-state-default ui-corner-all button_normal">Unterstützer</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+<?php endforeach; ?>
+
+    <br/><?php echo $this->paginator; ?><br/>
+<?php endif; ?>
+<br/><br/>
+<a href="/backend/project/add" class="ui-state-default ui-corner-all button_normal">Projekt anlegen</a><br/><br/>
+<!--
+<a href='/backend/project/categoryadd' class="ui-state-default ui-corner-all button_normal" id="4">Projekt-Kategorie hinzufügen</a>
+<a href='/backend/project' class="ui-state-default ui-corner-all button_normal" id="4">Zurück</a><br/><br/>
+-->
+<div class="legendArea">
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".showDetails").click(function () {
+            var elementId = $(this).attr("id");
+
+            $(".datatable_detailsarea." + elementId).slideToggle();
+        });
+
+        $(".activate").click(function () {
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+            var clickElement = $(this);
+
+            $.post('/backend/project/setstatuscategory/', {id: itemId, status: 1}, function (response) {
+                if (response) {
+                    $("#infomsg").html("Kategorie erfolgreich aktiviert");
+                } else {
+                    $("#infomsg").html("Konnte Kategorie nicht aktivieren");
+                }
+
+                $("#infomsg").fadeIn("normal");
+                $(clickElement).hide();
+                $("#deactivate_" + itemId).show();
+
+                $("#infomsg").fadeOut(4000);
+                $("#status" + itemId).html("Ja");
+            });
+        });
+
+        $(".deactivate").click(function () {
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+            var clickElement = $(this);
+
+            $.post('/backend/project/setstatuscategory/', {id: itemId, status: 0}, function (response) {
+                if (response) {
+                    $("#infomsg").html("Kategorie erfolgreich deaktiviert");
+                } else {
+                    $("#infomsg").html("Konnte Kategorie nicht deaktivieren");
+                }
+
+                $("#infomsg").fadeIn("normal");
+                $(clickElement).hide();
+
+                $("#activate_" + itemId).show();
+                $("#infomsg").fadeOut(4000);
+                $("#status" + itemId).html("");
+            });
+        });
+
+        $(".delete").click(function () {
+            var clickelement = $(this);
+            var itemId = $(this).attr("id");
+            var tmp = itemId.split("_");
+            itemId = tmp[1];
+
+
+            $("#dialog").html("Möchten Sie diese Kategorie wirklich löschen?");
+
+            $("#dialog").dialog(
+                {
+                    title: "Kategorie löschen",
+                    modal: true,
+                    resizable: false,
+                    buttons: {
+                        "Nein": function () {
+                            $("#dialog").dialog('close');
+                        }, "Ja": function () {
+                            $(this).dialog('close');
+                            var url = "/backend/project/deletecategory/id/" + itemId;
+
+                            $.post(url, function (data) {
+                                $('#infomsg').html("Kategorie gelöscht");
+                                $('#infomsg').show();
+                                $("#infomsg").fadeOut(4000);
+                                //$('.date #'+elementid).hide();
+                                $("#row" + itemId).remove();
+                                $(".details_" + itemId).remove();
+                            });
+                        }
+                    }
+                });
+
+
+            $("#dialog").dialog('open');
+
+        });
+    });
+
+</script>

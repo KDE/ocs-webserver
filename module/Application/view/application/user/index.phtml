@@ -1,0 +1,795 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+
+use Application\Model\Repository\MemberRepository;
+use Laminas\View\Helper\Doctype;
+
+
+$this->doctype(Doctype::XHTML1_RDFA);
+
+$desc=  isset($this->mainProject->description) ? nl2br(strip_tags($this->mainProject->description)): $this->member->username;
+$this->headMeta()->setName('description',
+    $this->truncate($desc, 200, '...', false, true))->setAutoEscape(false);
+$this->headMeta()->setName('title',
+    $this->member->username . ' - ' . $_SERVER['HTTP_HOST'])->setAutoEscape(false);
+
+$this->headMeta()->appendProperty('og:url', $this->buildMemberUrl($this->member->username))->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $this->member->username)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description',
+    $this->truncate($desc, 200, '...', false, true))->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image',
+    $this->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2)))->setAutoEscape(false);
+    
+$textCountryCity = $this->member->city;
+$textCountryCity .= $this->member->country ? ', ' . $this->member->country : '';
+
+$isSupporter = $this->stat['donationIssupporter'];
+$isSupporterSection = $this->stat['donationIssupporterSection'];
+$isSubscriber = $this->stat['subscriptionIssupporter'];
+$memberProfile = $this->Image($this->member->profile_image_url,array('width' => 110, 'height' => 110, 'crop' => 2));
+
+$isSupporterActive = false;
+
+?>
+<style type="text/css">
+/* ADD THIS TO CSS */
+div#preloaded-images {
+   position: absolute;
+   overflow: hidden;
+   left: -9999px;
+   top: -9999px;
+   height: 1px;
+   width: 1px;
+}
+
+.countplings 
+{
+    position: absolute;
+    bottom: 10px;
+    left: 8px;
+    font-size: 11px;
+
+}
+.countplings img
+{
+    width: 20px;
+    height: 20px;
+}
+.bmIcXH{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#my-rated-tabs .bmIcXH, #my-plings-tabs .bmIcXH, #my-likes-tabs .bmIcXH{
+    position: relative;
+    margin-top: 15px;
+}
+</style>
+<!-- ADD THIS TO XHTML -->
+<div id="preloaded-images">
+   <img src="<?php echo $memberProfile?>" width="1" height="1" alt="Image 01" />
+</div>
+
+    <main class="about-me-page">
+
+        <section class="head-wrap">
+
+            <!-- HEADER -->
+
+            <section class="wrapper">
+
+
+                <!-- banner -->
+
+                <section class="header">
+
+                    <!-- about me summary -->
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 summary" style=" padding-top:65px" >
+                        <article class="well" style="width: 100%;">
+                            <div class="about-title">
+                                <figure class="relative inline profile-image-container">
+                                    <?php if( $isSupporterSection || $isSubscriber ) {
+                                        $isSupporterActive = $this->isSupporterActive($this->member->member_id);
+                                        ?>
+                                        
+                                        <span class="supporter-badge <?=($isSupporterActive?'':'inactive')?>">S<?=$isSupporterSection?></span>
+                                    <?php }?>
+                                    <img src="<?php echo $memberProfile ; ?>"
+                                         alt="profile-image"
+                                         width="110"
+                                         height="110">
+
+                                     <?php if( $this->member->roleId==MemberRepository::ROLE_ID_MODERATOR) { ?>
+                                            <div class="mod-badge">MODERATOR</div>
+                                    <?php }?>
+                                </figure>
+
+                                <h1><span class="lightblue"><?php echo $this->member->username; ?></span>
+                               </h1>
+                                <?php if($this->member->firstname ) :?>
+                                <span class="glyphicon glyphicon-user"></span>
+                                <span class="text"><?php echo $this->member->firstname; ?>&nbsp;<?php echo $this->member->lastname; ?> </span>
+                                <?php endif; ?>
+
+                               <?php if($textCountryCity):?>
+                                <span class="glyphicon glyphicon-map-marker"></span>
+                                <span class="text"><?php echo $textCountryCity ?></span>
+                               <?php endif; ?>
+
+                               <?php if($this->member->paypal_mail){?>
+                                <div class="btnSupportMe">
+                                    <a class="btn btn-primary active" role="button" href="/support?creator_id=<?= $this->member->member_id ?>"> Support me </a>
+                                </div>
+                                <?php }?>
+                            </div>
+                            <div class="about-footer">
+
+
+
+                            <div class="col-container" >
+                                <div class="details info" >
+
+                                    <?php
+                                        echo $this->aboutmeUserInfo. ' '. $this->earnInfo;
+                                        if($isSupporterSection)
+                                        {
+                                            if($isSupporterActive)
+                                            {
+                                                echo " I'm an active supporter for ".$this->stat['donationActivemonths']['active_months'].' months.';    
+                                            }else{
+                                                echo " I have been a supporter for ".$this->stat['donationActivemonths']['active_months'].' months.';    
+                                            }                                            
+                                        }                                        
+                                    ?>
+
+                                </div>
+                            <div class="details stat" >
+
+                                <h3>Statistics</h3>
+                                <div  class="statContent" >
+                                    <div class="row ">
+                                       <span class="cnt"><?=$this->stat['cntProducts']?> </span> Products
+                                    </div>
+                                    <div class="row">
+                                       <span class="cnt"><?=$this->stat['cntComments']?> </span> Comments
+                                    </div>
+
+
+                                    <div class="row">
+                                       Plinged <span class="cnt"> <?=$this->stat['cntPlingsHeGave']?> </span>Products
+                                    </div>
+                                    <div class="row">
+                                       Got <span class="cnt"> <?=$this->stat['cntPlingsHeGot']?> </span><img  src="/images/system/pling-btn-active.png" style="width:20px; height:20px" />
+                                    </div>
+                                    
+                                    
+                                    <div class="row">
+                                        Has <span class="cnt"><?= count($this->affiliates) ?></span> Affiliates
+                                    </div>
+
+                                    <div class="row">
+                                       Fan of <span class="cnt"> <?=$this->stat['cntLikesHeGave']?> </span>Products
+                                    </div>
+                                    <div class="row">
+                                       Got <span class="cnt"> <?=$this->stat['cntLikesHeGot']?> </span>Fan-Likes <i class="fa fa-heart" style="color:#8e44ad" aria-hidden="true"></i>
+
+                                    </div>
+
+                                  <?php
+                                      if($this->stat['donationMax'] !=null && !$isSupporter){ // inactive supporter
+                                  ?>
+                                   <div class="row">
+                                     <span class="cnt">Supporter since: <?=$this->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMin'] )))?> (Inactive)</span>
+                                  </div>
+                                  <?php } ?>
+
+                                    <?php
+                                        if($isSupporter){
+                                    ?>
+                                     <div class="row">
+                                       <span>Supporter since: <?=$this->printDate($this->stat['donationMin'])?> </span>
+                                    </div>
+                                      <div class="row">
+                                       <span>Supporter until: <?=$this->printDate(date('Y-m-d H:i:s', strtotime($this->stat['donationMax'] )))?> </span>
+                                    </div>
+                                    <?php } ?>
+                                    
+                                    <?php
+                                        if($isSubscriber && 1 == 2){
+                                    ?>
+                                     <div class="row">
+                                       <span>Supporter since: <?=$this->printDate($this->stat['subscriptionStart'])?> </span>
+                                    </div>
+                                      <div class="row">
+                                       <span>Supporter with: $<?= $this->stat['subscriptionAmount'] ?> <?= $this->stat['subscriptionPeriodText'] ?> </span>
+                                    </div>
+                                    <?php } ?>
+                                    
+                                     <div class="row">
+                                       <span class="">Last time active : <?=$this->printDate($this->stat['userLastActiveTime'])?> </span>
+                                    </div>
+                                     <div class="row">
+                                        <span class="text">Joined : <?=$this->printDate($this->member->created_at);?></span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                            </div>
+                            
+
+                            <?php if ($this->isAdmin) : ?>
+                                <div class="pull-right " style="font-style: italic;">
+                                <span class="page-views">
+                                    <a id="linktohive" target="_blank" href="http://cp1.hive01.com/usermanager/search.php?username=<?= $this->member->username ?>"><i>link to hive</i></a>
+                                    <a id="delete-this" href="/backend/user/delete?member_id=<?= $this->member->member_id ?>"><i>delete user</i></a>
+                                </span>
+                                <br>
+                                <span class="page-views" style="color: red;">
+                                    <input type="checkbox" id="pling-excluded-checkbox" <?php echo $this->member->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  user-pling-excluded
+                                </span>
+                                <script>
+                                    $('#delete-this').on('click', function (event) {
+
+                                        event.stopPropagation();
+                                        var target = $(this).attr('href');
+
+                                        $.ajax({
+                                            url: target,
+                                            success: function (results) {
+                                                alert('User deleted successfully');
+                                            },
+                                            error: function() {
+                                                alert('Service is temporarily unavailable.');
+                                            }
+                                        });
+
+                                        return false;
+                                    });
+
+
+                                    $('#pling-excluded-checkbox').on('click', function (event) {
+                                        event.stopPropagation();
+                                        var status = 0;
+                                        if (this.checked) {
+                                            status = 1;
+                                        } else {
+                                            status = 0;
+                                        }
+
+                                        var target = "/backend/user/doexclude?member_id=<?= $this->member->member_id ?>&pling_excluded=" + status;
+                                        $.ajax({
+                                            url: target,
+                                            success: function (results) {
+                                                if (status == 0) {
+                                                    alert('Member was successfully included for plinging');
+                                                    $('#pling-excluded-checkbox').prop("checked", false);
+
+                                                } else {
+                                                    alert('Member was successfully excluded for plinging');
+                                                    $('#pling-excluded-checkbox').prop("checked", true);
+
+                                                }
+
+                                            },
+                                            error: function () {
+                                                alert('Service is temporarily unavailable.');
+                                            }
+                                        });
+
+                                        return false;
+                                    });
+                                </script>
+                                </div>
+                            <?php endif; ?>
+                        </article>
+                    </div>
+                    <!-- /about me summary -->
+
+                </section>
+
+                <!-- /banner -->
+
+            </section>
+
+            <!-- /HEADER -->
+
+        </section>
+
+        <section class="body-wrap">
+
+            <section class="wrapper">
+
+
+                <!-- PAGE BODY -->
+
+                <section class="product-page about-me full-width">
+
+                    <!-- page content -->
+
+                    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-12 about-me-details">
+
+                        <!-- tabs nav -->
+                        <div class="pling-nav-tabs">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#user-aboutme" data-toggle="tab" role="tab"  aria-controls="user-aboutme" >
+                                    Products<?=($this->stat['cntProducts']>0?' ('.$this->stat['cntProducts'].') ':'')?>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/showoriginal" 
+                                            href="#user-original-products" 
+                                            data-toggle="tab" 
+                                            role="tab"  
+                                            aria-controls="user-original-products" 
+                                            >
+                                    Originals<?=($this->stat['cntOrinalProducts']>0?' ('.$this->stat['cntOrinalProducts'].') ':'')?>
+                                </a>                               
+                            </li>
+                            <?php if($this->stat['cntFProducts']>0){ ?>
+                            <li role="presentation">
+                                <a href="#user-featuredproducts" data-toggle="tab" role="tab"  aria-controls="user-featuredproducts" >
+                                    Featured<?=' ('.$this->stat['cntFProducts'].') '?>
+                                </a>
+                            </li>
+                            <?php }?>
+                            
+                            <?php if($this->stat['cntCollections']>0){ ?>
+                            <li role="presentation">
+                                <a href="#user-collections" data-toggle="tab" role="tab"  aria-controls="user-collections" >
+                                    Collections<?=' ('.$this->stat['cntCollections'].') '?>
+                                </a>
+                            </li>
+                            <?php }?>
+
+                            <li>
+                                <a href="#user-comments" data-toggle="tab" role="tab"  aria-controls="user-comments">
+                                    Comments (<?=$this->comments->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                            <?php if(count($this->rated)>0){ ?>
+                            <li>
+                                <a href="#user-rated" data-toggle="tab" role="tab"  aria-controls="user-rated">
+                                    Rated (<?=$this->rated->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                            <?php } ?>
+                              <?php if( $this->plings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#user-plings" data-toggle="tab" role="tab"  aria-controls="user-plings">
+                                    Plinged (<?=$this->plings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
+                             <?php if($this->likes->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#user-favs" data-toggle="tab" role="tab"  aria-controls="user-favs">
+                                    Fan of (<?=$this->likes->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
+
+                        
+
+                          <?php if( $this->supportersplings->getTotalItemCount()>0){ ?>
+                            <li>
+                                <a href="#supporters-plings" data-toggle="tab" role="tab"  aria-controls="supporters-plings">
+                                Plinged by (<?=$this->supportersplings->getTotalItemCount()?>)
+                                </a>
+                            </li>
+                          <?php } ?>
+                            
+                            <li>
+                                <a href="#user-affiliates" data-toggle="tab" role="tab"  aria-controls="user-affiliates">
+                                    Affiliates (<?=count($affiliates)?>)
+                                </a>
+                            </li>
+
+                          <?php if($this->isAdmin && $this->stat['cntDuplicateSourceurl']>0) { ?>                          
+                            <li style="font-style: italic;">
+                                <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/duplicates"  href="#user-duplicates" data-toggle="tab" role="tab"  aria-controls="user-duplicates">
+                                    <i>Duplicates (<?=$this->stat['cntDuplicateSourceurl']?>)</i>
+                                </a>
+                            </li>                           
+                          <?php } ?>
+
+                          <?php if($this->isAdmin) { ?>                                                     
+                            <li style="font-style: italic;">
+                                <a class="aboutmetab font-italic" data-href="/u/<?php echo $this->member->username;?>/unpublished"  
+                                href="#user-unpublished" data-toggle="tab" role="tab"  aria-controls="user-unpublished">
+                                    <i>Unpublished (A:<?=$this->stat['cntUnpublished']?>)</i>
+                                </a>
+                            </li>
+                          <?php } ?>
+
+                          <?php if($this->isAdmin) { ?>                                                     
+                            <li style="font-style: italic;">
+                                <a class="aboutmetab" data-href="/u/<?php echo $this->member->username;?>/deleted"  href="#user-deleted" data-toggle="tab" role="tab"  aria-controls="user-deleted">
+                                    <i>Deleted (A:<?=$this->stat['cntDeleted']?>)</i>
+                                </a>
+                            </li>
+                          <?php } ?>
+                        </ul>
+                        </div>
+                        <!-- /tabs nav -->
+
+                        <!-- tab panels -->
+
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="user-aboutme">
+                                <?php if ($this->userProducts) { ?>
+                                     <div class="my-products-list" id="my-products-list">
+                                        <?php 
+                                         include __DIR__ . '/partials/aboutme-products.phtml';                                        
+                                        ?>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <div role="tabpanel" class="tab-pane " id="user-original-products">
+                               
+                            </div>
+                            
+                            <?php if($this->stat['cntFProducts']>0){ ?>
+                                <div role="tabpanel" class="tab-pane " id="user-featuredproducts">
+                                    <?php
+                                           $this->userProducts = $this->userFeaturedProducts;
+                                           $this->projectpage = 1;
+                                           $this->total_records=0;
+                                        if ($this->userProducts) { ?>
+                                         <div class="my-products-list" id="my-products-list">                                          
+                                            <?php 
+                                            include __DIR__ . '/partials/aboutme-featured.phtml';                                        
+                                            ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                             <?php } ?>
+                            
+                            <?php if($this->stat['cntCollections']>0){ ?>
+                                <div role="tabpanel" class="tab-pane " id="user-collections">
+                                    <?php
+                                           $this->userProducts = $this->userCollections;
+                                           $this->projectpage = 1;
+                                           $this->total_records=0;
+                                        if ($this->userCollections) { ?>
+                                         <div class="my-products-list" id="my-products-list">
+                                         <?php 
+                                            include __DIR__ . '/partials/aboutme-collections.phtml';                                        
+                                            ?>                                           
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                             <?php } ?>
+
+                            <div  role="tabpanel" class="tab-pane " id="user-comments">                                                                  
+                                  <?php include __DIR__ . '/partials/loopMyComments.phtml'; ?> 
+                            </div>
+
+                             <?php if($this->likes->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-favs">
+                                    <div class="my-fav-list">
+                                    <?php 
+                                            include __DIR__ . '/partials/aboutme-likes.phtml';                                        
+                                            ?>                                    
+                                  </div>
+                            </div>
+                            <?php } ?>
+
+                            <?php if( $this->plings->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-plings">
+                                    <div class="my-fav-list">
+                                    <?php 
+                                            include __DIR__ . '/partials/aboutme-plings.phtml';                                        
+                                            ?>                                  
+                                  </div>
+                            </div>
+                            <?php } ?>
+
+                            <?php if($this->supportersplings->getTotalItemCount()>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="supporters-plings">
+                                    <div class="my-fav-list">
+                                    <?php 
+                                            include __DIR__ . '/partials/aboutme-supporters.phtml';                                        
+                                            ?>                                      
+                                  </div>
+                            </div>
+                            <?php } ?>
+                            
+                            
+                            <div  role="tabpanel" class="tab-pane " id="user-affiliates">
+                                    <div class="my-fav-list">
+                                    <?php 
+                                            include __DIR__ . '/partials/aboutme-affiliates.phtml';                                        
+                                            ?>                                       
+                                  </div>
+                            </div>
+
+                            <?php if($this->isAdmin &&  $this->stat['cntDuplicateSourceurl']>0) { ?>
+                            <div  role="tabpanel" class="tab-pane" id="user-duplicates" style="font-style: italic;">
+                                 
+                            </div>                          
+                            <?php } ?>
+                            <?php if( $this->isAdmin  ) { ?>
+                            <div  role="tabpanel" class="tab-pane font-italic" id="user-unpublished" style="font-style: italic;">                                 
+                            </div>                          
+                            <?php } ?>
+                            <?php if( $this->isAdmin ) { ?>
+                            <div  role="tabpanel" class="tab-pane font-italic" id="user-deleted" style="font-style: italic;">                                 
+                            </div>                          
+                            <?php } ?>
+
+                             <?php if(count($this->rated)>0){ ?>
+                            <div  role="tabpanel" class="tab-pane " id="user-rated">
+                                <div class="my-fav-list">
+                                <?php include __DIR__ . '/partials/loopRated.phtml'; ?>                                                                                                                       
+                                  </div>
+                            </div>
+                            <?php } ?>
+
+                        </div>
+
+                        <!-- /tab panels -->
+
+                    </div>
+
+                    <!-- /page content -->
+
+                    <!-- side bar -->
+
+
+                    <aside class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
+                        <?php if($this->isAdmin ) { ?>
+                        <?php
+                            $scoreArray= $this->memberScore;
+                        ?>
+                        <div class="col-container font-italic" style="font-style: italic;">
+                            <div class="well details about">
+                                <div>
+                                    <span><i>Score: <?php echo $scoreArray['score']; ?> <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="Member Score" data-trigger="hover" data-html="true" data-content="The score is calculated from the following values:<br> <ul><li>Products: <?php echo $scoreArray['count_product'];?> * <?php echo $scoreArray['factor_prod'];?></li><li>Plings: <?php echo $scoreArray['count_pling'];?> * <?php echo $scoreArray['factor_pling'];?></li><li>Likes: <?php echo $scoreArray['count_like'];?> * <?php echo $scoreArray['factor_like'];?></li><li>Comments: <?php echo $scoreArray['count_comment'];?> * <?php echo $scoreArray['factor_comment'];?></li><li>Years of membership: <?php echo $scoreArray['count_years_membership'];?> * <?php echo $scoreArray['factor_year'];?></li><li>Spam-Reports: <?php echo $scoreArray['count_report_product_spam'];?> * <?php echo $scoreArray['factor_report_prod_spam'];?></li><li>Misuse-Reports: <?php echo $scoreArray['count_report_product_fraud'];?> * <?php echo $scoreArray['factor_report_prod_fraud'];?></li></ul>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div> </i></span>
+                                </div>
+
+                                <?php
+
+                                    if($this->stat['cntDuplicateSourceurl']>0)
+                                    {
+                                        echo '<span><i>Duplicates: '.$this->stat['cntDuplicateSourceurl'].'</i></span>';
+                                    }
+                                    echo '<br/><span><i>Member id: '.$this->member->member_id.' </i></span>';
+                                    echo '<br/><span><i>Email address: '.$this->member->mail.' </i></span>';
+                                    echo '<br/><span><i>Paypal address: '.$this->member->paypal_mail.' </i></span>';
+                                    if(false == empty($firstLoginData)) {
+                                        $ip = empty($this->firstLoginData['ip']) ? '' : $this->firstLoginData['ip'];
+                                        $ipv4 = empty($this->firstLoginData['ipv4']) ? '' : $this->firstLoginData['ipv4'];
+                                        $firstIpV4 = empty($ip) ? $ipv4 : $ip;
+                                        echo '<br/><span><i>First IPv4: '.$firstIpV4.'</i></span>';
+                                        $firstIpV6 = empty($this->firstLoginData['ipv6']) ? '' : $this->firstLoginData['ipv6'];
+                                        echo '<br/><span><i>First IPv6: '.$firstIpV6.'</i></span>';
+
+                                        $ip = empty($this->lastLoginData['ip']) ? '' : $this->lastLoginData['ip'];
+                                        $ipv4 = empty($this->lastLoginData['ipv4']) ? '' : $this->lastLoginData['ipv4'];
+                                        $lastIpV4 = empty($ip) ? $ipv4 : $ip;
+                                        echo '<br/><span><i>Last IPv4: '.$lastIpV4.'</i></span>';
+                                        $lastIpV6 = empty($this->lastLoginData['ipv6']) ? '' : $this->lastLoginData['ipv6'];
+                                        echo '<br/><span><i>Last IPv6: '.$lastIpV6.'</i></span>';
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <div class="col-container">
+                            <div class="well details about">
+                                <h3>About me</h3>
+
+                                <div>                                    
+                                 <?php  echo isset($this->mainProject->description) ? $this->bbcode2html($this->mainProject->description): ''; ?>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <?php if ($this->isAdmin) : ?>
+                        <div class="col-container font-italic" style="font-style: italic">
+                            <div class="well details">
+                                <h3><i>Computer Info</i></h3>                                
+                            
+                                <div class="box-content" style="font-style: italic">
+                                <?php                                     
+                                    $usertags = array();
+                                    foreach ($this->data2 as $t) {
+                                        $usertags[$t['tag_id']][] = $t;
+                                    }
+                                    $groups = array();
+                                    foreach ($this->data as $g) {
+                                        $groups[$g['group_id']][] = $g;
+                                    }
+                                    function custom_sort($a, $b) {
+                                            return $a['tag_name'] > $b['tag_name'] ;
+                                        }
+
+                                    foreach ($this->gids as $g) {  
+                                        $options = $groups[$g]; 
+                                        usort($options,"custom_sort");   
+                                ?>
+                                    <div class="row">
+                                        <div class="col-lg-6">                    
+                                            <?=$options[0]['group_display_name']?$options[0]['group_display_name']:$options[0]['group_name']?>:                    
+                                        </div>
+                                         <div class="col-lg-6">
+                                         <?php 
+                                        $selected = '';
+                                        foreach ($options as $o) {
+                                            $tag_id = $o['tag_id'];                                                
+                                            if(isset($usertags[$tag_id])){                                                    
+                                                $selected= $selected.', '.($o['tag_fullname']?$o['tag_fullname']:$o['tag_name']);
+                                            }
+                                        }
+                                        echo strlen($selected)>0 ? substr($selected,1):'';
+                                        ?>
+                                         </div>
+                                    </div>
+
+                                <?php 
+                                    }
+                                ?>
+                             </div>
+                             </div>
+                        </div>
+                    <?php endif; ?>
+                   
+
+                        <div class="col-container">
+                            <div class="well details">
+                                <h3>Connected Accounts</h3>
+
+                                <div class="box-content">
+
+                                    <div class="info-div">
+                                        <div class="label">
+                                            <img src="/images_sys/gitlab.png" class="accounts_icon">
+                                        </div>
+                                        <div class="text">
+
+                                            <a href="<?= $url_gitlab ?>/<?php echo $this->member->username;?>">
+                                            <span style="font-size: 16px; font-weight: normal;">
+                                                <?php                                                
+                                                $gittext = 'opencode.net/'.$this->member->username;
+                                                if($this->cntGitp>0){
+                                                    $gittext = $gittext.' ('.$cntGitp.')';
+                                                }
+                                                echo $gittext;
+                                                ?>
+                                            </span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <?php if (isset($this->member->link_github) && $this->member->link_github != ''): ?>
+                                        <div class="github">
+                                            <div class="label">
+                                                <img src="/theme/flatui/img/email5.png" class="accounts_icon">
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo 'https://github.com/'.$this->member->link_github; ?>" target="_blank"><?php echo $this->member->link_github; ?></a>
+                                            </diV>
+                                        </div>
+                                    <?php endif; ?>
+
+                                     <?php if (false === empty($this->member->link_website)): ?>
+                                        <div class="info-div">
+                                            <div class="label">
+                                                    <span class="glyphicon glyphicon-globe" style="color:#000"></span>
+                                            </div>
+                                            <div class="text">
+                                           <a
+                                                    href="<?php echo $this->addDefaultScheme($this->member->link_website); ?>"
+                                                    target="_NEW"
+                                                    title="<?php echo $this->addDefaultScheme($this->member->link_website); ?>"
+                                                ><?php echo $this->member->link_website; ?></a>
+                                                </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (isset($this->member->link_facebook) && $this->member->link_facebook != ''):                                        
+                                        $facebookLink = $this->facebookLink($this->member->link_facebook);
+                                        ?>
+                                        <div class="facebook">
+                                            <div class="label">
+
+                                                 <img src="/theme/flatui/img/email2.png" class="accounts_icon">
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo $facebookLink; ?>"><?php echo $this->truncate($this->member->link_facebook,
+                                                        50); ?></a>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if (isset($this->member->link_twitter) && $this->member->link_twitter != ''):                                        
+                                        $twitterLink = $this->twitterLink($this->member->link_twitter);
+                                        ?>
+                                        <div class="twitter">
+                                            <div class="label">
+
+                                                <img src="/theme/flatui/img/email3.png" class="accounts_icon">
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?php echo $twitterLink; ?>"
+                                                   target="_NEW"><?php echo $this->truncate($this->member->link_twitter, 50); ?></a>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                        <div class="email">
+                                            <div class="label">
+
+                                                <img src="/theme/flatui/img/email.png" class="accounts_icon">
+                                            </div>
+                                            <div class="text">
+                                                <a href="<?= $url_forum ?>/u/<?=$this->member->username?>/">Send DM</a>
+                                            </diV>
+                                        </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </aside>
+
+                    <!-- side bar -->
+
+                </section>
+
+                <!-- /PAGE BODY -->
+
+            </section>
+
+        </section>
+
+          <div class="tooltip_templates" style="display: none">
+            <span id="tooltip_content">
+                <i class="fa fa-spinner"></i>
+            </span>
+        </div>
+    </main>
+
+    <script type="text/javascript">
+      var userProfileData = <?php echo json_encode($this->memberData)?>;
+        console.log(userProfileData);
+    </script>
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            AboutmeTab.setup();
+            InitActiveHashTab.setup();
+            AboutMeMyProjectsPagingNew.setup();            
+            TooltipUser.setup("tooltipuser","right");
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');

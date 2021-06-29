@@ -1,0 +1,115 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * */
+
+    use Application\Model\Service\HtmlPurifyService;
+    use Laminas\Json\Encoder;
+    use Laminas\Uri\Uri;
+    use Laminas\View\Helper\Doctype;
+
+    $this->headTitle($this->headTitle);
+
+    $uri = $_SERVER['REQUEST_URI'];
+    $redirect = new Uri($_SERVER['REQUEST_URI']);
+    $redirect->setHost(null)->setScheme(null);
+  
+    $this->product->title = strip_tags(HtmlPurifyService::purify($this->product->title));
+    $this->product->description = Application\Model\Service\BbcodeService::renderHtml(HtmlPurifyService::purify($this->product->description));
+    $description_meta = strip_tags(HtmlPurifyService::purify($this->product->description));
+    $this->product->version = strip_tags(HtmlPurifyService::purify($this->product->version));    
+    $this->product->link_1 = HtmlPurifyService::purify($this->addDefaultScheme($this->product->link_1), HtmlPurifyService::ALLOW_URL);
+    $this->product->source_url = HtmlPurifyService::purify($this->product->source_url, HtmlPurifyService::ALLOW_URL);
+    $this->product->facebook_code = HtmlPurifyService::purify($this->product->facebook_code, HtmlPurifyService::ALLOW_URL);
+    $this->product->twitter_code = HtmlPurifyService::purify($this->product->twitter_code, HtmlPurifyService::ALLOW_URL);
+    $this->product->google_code = HtmlPurifyService::purify($this->product->google_code, HtmlPurifyService::ALLOW_URL);
+
+    $this->doctype(Doctype::XHTML1_RDFA);
+
+    $this->headMeta()->setName('description', $this->truncate($description_meta, 200, '...', false, true))->setAutoEscape(false);
+    $this->headMeta()->setName('title', $this->truncate($this->product->title, 200, '...', false, true))->setAutoEscape(false);
+    $this->headMeta()
+        ->appendProperty('og:url', $this->buildProductUrl($this->product->project_id, '', null, true))
+        ->setAutoEscape(false);
+    $this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+    $this->headMeta()->appendProperty('og:title', $this->product->title)->setAutoEscape(false);
+    $this->headMeta()
+        ->appendProperty('og:description', $this->truncate($description_meta, 200, '...', false, true))
+        ->setAutoEscape(false);
+    $this->headMeta()
+        ->appendProperty('og:image', $this->Image($this->product->image_small, array('width' => 400, 'height' => 400)))
+        ->setAutoEscape(false);
+
+   
+    
+    $jsonTree = json_encode($this->categories);
+   
+
+?>
+            
+    <main style="width100%;float:left;">
+        <div id="product-view-container"></div>
+    </main>    
+    
+    <script type="text/javascript">       
+        
+        var productViewData = <?php echo json_encode($this->productViewData); ?>;   
+        // cat tree vars
+        var catTree = <?= json_encode($this->categories) ?>;
+        var tagCloud = <?= json_encode($this->tagCloud); ?>;
+        <?php
+            $catIdExists = isset($this->product) ?$this->product->project_category_id : "null";
+            echo "var categoryId = {$catIdExists};";
+            
+            $store_config = $GLOBALS['ocs_store']->config;
+            $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
+            echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
+            echo "var cat_tree_filter = '$this->filter_mode';";
+            
+            $tagGroupFilter  = $GLOBALS['ocs_config_store_taggroups'];
+            $tagGroupHelper = new \Application\View\Helper\FetchTagsForTagGroup($this->db);
+            
+            if(!empty($tagGroupFilter)) {
+                $tagGroupArray = array();
+                
+                foreach ($tagGroupFilter as $tagGroup ) {
+                    $tags = $tagGroupHelper->fetchList($tagGroup);
+                    $select = $this->tag_group_filter[$tagGroup];
+                    $tagGroupArray[$tagGroup]['tags'] = $tags;
+                    $tagGroupArray[$tagGroup]['selected_tag'] = $select;
+                }
+                echo "var tag_group_filter = " . json_encode($tagGroupArray) . ";";
+            } else {
+                echo "var tag_group_filter = null;";
+            }
+        ?>
+
+    </script>
+
+    <script type="application/javascript" src="/theme/react/bundle/category-tree-bundle.js"></script>
+
+    <script type="text/javascript" src="/theme/react/lib/jszip/jszip.min.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/epub/epub.min.js"></script>
+
+    <script type="text/javascript" src="/theme/react/lib/bookblock/js/modernizr.custom.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/bookblock/js/jquerypp.custom.js"></script>
+    <script type="text/javascript" src="/theme/react/lib/bookblock/js/jquery.bookblock.min.js"></script>
+
+    <script type="application/javascript" src="/theme/react/bundle/product-view-bundle.js"></script>

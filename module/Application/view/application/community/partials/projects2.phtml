@@ -1,0 +1,65 @@
+ <?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<div class="col-lg-12">
+  <div class="col-lg-1">
+      <span class="rank">#<?=$this->partialLoop()->view->nr++?></span>
+  </div>
+  <div class="col-lg-11">
+    <div class="user" >
+        <div class="u-wrap" style=" background-repeat: no-repeat; background-image: url('<?php echo $this->Image($this->image_small, array('width' => '115', 'height' => '75', 'crop' => 2)); ?>');">                
+            <a href="<?php echo $this->buildProductUrl($this->project_id); ?>" style="" >
+                <div  class="product-thumbnail-startpage " style="height: 50px;width: 115px;"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-html="true"
+                         data-placement="top"
+                        data-content="<div class='profile-img-product center'>
+                             <img class='imgpopover'  src='<?php echo $this->Image($this->image_small, array('width' => '200', 'height' => '160', 'crop' => 1)); ?>'/>
+                             </div>
+                               <div class='content'>
+                                   <div class='title'>
+                                   <p><?= Application\Model\Service\HtmlPurifyService::purify($this->truncate($this->title,20).' - '.$this->truncate($this->catTitle,20) )?></p>
+                                   </div>                                                             
+                               </div>">         
+                </div>         
+                <figure style="">                            
+                    <img class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->member_id?>" 
+                            src="<?php echo $this->Image($this->profile_image_url, array('width' => '50', 'height' => '50', 'crop' => 2)); ?>" 
+                            style="width:40px; height: 40px"                                   
+                            />
+                </figure>
+                <h3 class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo Application\Model\Service\HtmlPurifyService::purify($this->username); ?></h3>
+                                                          
+            </a>
+            
+                   
+             <span class="small created_at" >
+                <a class="tooltipuserplings" data-tooltip-content="#tooltip_content" data-user="<?=$this->project_id?>" >
+                    <img src="/images/system/pling-btn-active.png" style="width: 15px; height: 15px" /> </a>
+                <?=$this->sum_plings; ?>
+             </span>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,94 @@
+
+.dummy-item-list {
+    padding-top: 10px;
+    
+    .dummy-product-wrapper {
+        width:100%;
+        float:left;
+        font-size: 12px;
+        color:  #f3f0f0;
+
+        .product-browse-item {
+            width:100%;
+            margin-bottom: 5px !important;
+            padding: 0 !important;
+
+            .product-browse-item-wrapper {
+                text-align: center;
+            }
+
+            .dummy-product-browse-item {
+                width: 100%;
+                height: auto;
+
+                .dummy-fill {
+
+                    &.img-placeholder {
+                        width: 100%;
+                        padding-top: 100%; /* 1:1 Aspect Ratio */
+                        position: relative; /* If you want text inside of it */
+                    }
+                    
+                    &.title {
+                        height: 1.4em;
+                        width: 40%;
+                        margin-bottom: 1em;
+                        margin-top: 0.35em;
+                    }
+
+                    &.category {
+                        width: 10%;
+                        margin-right: 5px;
+                        margin-bottom: 0.6em;
+                        height: 0.8em;
+                        float: left;
+                    }
+
+                    &.text {
+                        width: 100%;
+                        height: 1em;
+                        margin-bottom: 0.5em;
+                        clear: both;
+                    }
+
+                    &.half-text {
+                        width: 50%;
+                        min-width: 50px;
+                        height: 1em;
+                        margin-bottom: 0.5em;
+                    }
+
+                    &.dummy-circle {
+                        border-radius: 100%;
+                        margin-bottom: 10px !important;
+                    }
+
+                    &.date-display {
+                        margin: 0 auto;
+                    }
+                }
+            }
+
+            span.glyphicon-picture {
+                font-size: 11em;
+                margin: -10px auto;
+            }
+        }
+
+        &.first {
+            .product-browse-item {
+                margin-top: 0;
+            }
+        }
+    }
+
+    hr {
+        height: 1px;
+        border: 0 !important;
+        width: 100%;
+        float: left;
+        margin: 5px 0 10px 0;
+    }
+
+    
+}

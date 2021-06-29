@@ -1,0 +1,183 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\Model\Service\StatDownloadService;
+
+?>
+<style>
+    .cell-default {
+        line-height: 4em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = new StatDownloadService($this->db);
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+
+$section_id = null;
+if(isset($this->section_id)) {
+    $section_id = $this->section_id;
+}
+?>
+
+<div class="tab-content">
+<?php
+
+$css_active = ' in active';
+$has_paypal = false;
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new \DateTime($currentDate.'01');
+
+$printMonth = new \DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+if(null != $section_id) {
+    $allDownloads = $modelDownload->getUserAffiliatesForMonthAndSection($this->member->member_id, $yearmonth, $section_id);
+} else {
+    $allDownloads = $modelDownload->getUserAffiliatesForMonth($this->member->member_id, $yearmonth);
+}
+
+$countDownloadsOverall = count($allDownloads);
+
+if ($countDownloadsOverall > 0) {
+    $firstProduct = $allDownloads[0];
+    if ($firstProduct) {
+        $printMonth = new \DateTime($firstProduct['yearmonth'].'01');
+        $printCurrentMonth = new \DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        $sum_total_month = 0;
+        $sum_total_text = '';
+        ?>
+    
+        <div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0;">
+            <div class="row">
+                <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap; min-width: 140px;max-width: 180px; "><strong>Affiliate</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Donation</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Percent</strong></div>
+                <div class="col-md-2 text-right text-uppercase nowrap" style="white-space: nowrap;min-width: 140px;max-width: 180px; "><strong>Sum Payout</strong></div>
+            </div>
+        </div>
+    
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$firstProduct['yearmonth']?>">
+            <?php
+            $css_active = '';
+
+            foreach ($allDownloads as $product) { 
+                ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 10px;">
+                    <div class="col-md-2 text-left cell-default" style="min-width: 140px;max-width: 180px;">
+                        <a href="<?= $this->buildMemberUrl($product['supporter_username']) ?>">
+                            <span style="line-height: 3em;"><?= $product['supporter_username']; ?></span>
+                        </a>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?php print($this->currencyFormat($product['sum_donations'], "USD", "en_US")); ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?= $product['affiliate_percent'] ?></span>
+                    </div>
+                    <div class="col-md-2 text-right cell-default" style="min-width: 140px;max-width: 180px;">
+                        <span><?php print($this->currencyFormat($product['sum_donations']*$product['affiliate_percent'], "USD", "en_US")); ?></span>
+                    </div>
+                </div>
+                <?php
+                $sum_total_text = 'Summaries:';
+                $sum_total_month += $product['sum_donations']*$product['affiliate_percent'];
+            }
+
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><?=$sum_total_text?></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong></strong></div>
+                <div class='col-md-2 text-right' style="min-width: 140px;max-width: 180px;"><strong><?php print($this->currencyFormat($sum_total_month, "USD", "en_US")); ?></strong></div>
+            </div>
+            
+            
+            
+            <?php 
+
+
+            $currentDate = date("Ym",time());
+            $viewDate = $firstProduct['yearmonth']."";
+?>
+            
+        </div>
+<?php
+    }
+} else {
+    
+    echo '<div class="tab-pane fade in active" id="'.$printDate.'">';
+    echo '    <div style="text-align: center;" class="row margin-bottom-12"><div class="col-md-8 cell-default">No Data</div></div>';
+    echo '    <div class="row row-total">';
+    echo '        <div class="col-md-1 text-right" style="min-width: 150px;"></div><div class="col-md-4 text-right"></div><div class="col-md-3 text-right" style="min-width: 570px;">Possible payout for this month (<span style="font-size: smaller;">*</span>):</div><div class="col-md-1 text-right" style="min-width: 190px;"><strong>$0.00</strong></div>';
+    echo '    </div>';
+    echo '</div>';
+}
+    
+    
+?>
+
+</div>    
+    
+
+
+<?php $this->inlineScript()->appendScript(
+    '    $(document).ready(function(){
+            $(\'[data-toggle="popover"]\').popover();
+        });
+    ');

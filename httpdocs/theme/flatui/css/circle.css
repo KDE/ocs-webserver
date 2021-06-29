@@ -1,0 +1,70 @@
+.gHryTq {
+    position: absolute;
+    z-index: 2;
+    right: 0px;
+    bottom: 0px;
+    padding: 4px;
+    transition: background-color 0.5s ease 0s;
+    background: 
+    rgb(255, 255, 255) none repeat scroll 0% 0%;
+    pointer-events: none;
+    transform: translate(22%, 22%);
+    border-radius: 50%;
+}
+.bmIcXH {
+    position: relative;   
+    overflow: hidden;
+    border-radius: 50%;
+   
+   
+}
+.donMiK {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    cursor: default;
+    transform: rotate(-90deg);
+    transform-origin: center center 0px;
+}
+.cnGKWN {
+    transition-property: stroke-dashoffset, stroke;
+    transition-duration: 0.3s, 0.1s;
+    transition-delay: 0s, 0s;
+    transition-timing-function: linear;
+    will-change: stroke-dashoffset;
+    
+}
+.kaLHBk {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    line-height: 0;
+    transform: translate(-50%, -50%);
+}
+.wf-active .kkSWyw, html[amp] .kkSWyw {
+    font-family: Oswald, sans-serif;
+    font-stretch: normal;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+.kkSWyw {
+    font-family: Arial, Helvetica, sans-serif;
+    font-stretch: condensed;
+    font-weight: 800;
+    letter-spacing: -0.004em;
+    position: relative;
+    top: -0.05em;
+    transition: color 0.1s linear 0s;    
+    line-height: 0.9;
+    text-align: center;
+    white-space: nowrap;   
+}
+.jdsHLZ {
+    font-size: 58%;
+}
+.kkSWyw::after {
+    content: " ";
+    font-size: 0px;
+}
+

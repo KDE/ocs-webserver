@@ -1,0 +1,137 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Created: 31.05.2017
+ */
+$this->headTitle('Watchlist - Product Moderation'); 
+?>
+<link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+<link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+<script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+<link href="/theme/flatui/css/jtable.extra.css" rel="stylesheet">
+
+<main id="explore-content">
+  <section class="wrapper" id="products-wrapper" >
+<h1>
+    Moderation
+</h1>    
+    <div id="TableContainer"></div>    
+    </section>
+
+</main>
+<div class="tooltip_templates" style="display: none">
+    <span id="tooltip_content">
+        <i class="fa fa-spinner"></i>
+    </span>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var actions;
+        actions = {
+                listAction: '/watchlist-productmoderation/listmoderation'                 
+            };
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,                     
+            actions: actions,
+            recordsLoaded: function (event, data) {
+                TooltipUser.setup("tooltipuser","right");        
+            },
+            fields: {
+                
+                    title: {
+                        title: 'Project ',                         
+                        create: false,
+                        edit: false,
+                        list: true,    
+                        width:'15%',                    
+                        display: function (data) {
+                            if (data.record.image_small) {
+                                var html =   ' <a href="/p/' + data.record.project_id
+                                        + '/" target="_blank"><img  class="pimage" src='+data.record.image_small+' /></a><div class="ptitle"><span class="title">'
+                                        +data.record.title
+                                        +'</span><span class="catTitle">'+data.record.cat_title+'  </span><span class="username">by '+data.record.product_username
+                                        +'</span></div>' ;                                                             
+                                return html;
+                            }
+                        }
+                    },
+                    comment_text: {
+                        title: 'Comment',                                                   
+                        type: 'textarea',
+                        list: true                        
+                    },  
+                    username:{
+                         title: 'Moderator',
+                          width:'5%', 
+                         list:true,
+                         edit: false,
+                         display:function(data){                        
+                            var html = '<a  class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="'+data.record.member_id+'" >'+data.record.username+'</a>';
+                             return html;
+                        }
+                    },                       
+                    comment_created_at: {
+                        title: 'comment_created_at',                                              
+                         width:'5%',
+                          edit: false,                    
+                        list: true
+                    },
+                       
+                      
+                    
+            }
+        });
+
+       
+
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_member_id: $('#filter_member_id').val(),              
+            },function(){
+              //TooltipUser.setup("tooltipuser","right");        
+            });
+        });
+
+       
+
+          $('#TableContainer').jtable('load', {           
+                      
+        },function(){
+             
+        });
+
+       
+      
+
+                
+    
+    });
+</script>
+
+     

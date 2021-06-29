@@ -1,0 +1,194 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/template.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/css/validationEngine.jquery.css">
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/js/jquery.validationEngine.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.validationengine/2.6.4/languages/jquery.validationEngine-en.js"></script>
+<style>
+    .highlight {
+        background-color: #fefff3;
+    }
+</style>
+<div class="messages">
+  
+    <div class="alert alert-danger alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='error'>Operation not possible.</span>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissible fade in"
+         role="alert"
+         style="width: 95%; display: none;">
+        <button aria-label="Close" class="close" type="button"><span aria-hidden="true">×</span></button>
+        <div class="alert-body">
+            <span class='success'>Operation successfully completed.</span>
+        </div>
+    </div>
+
+</div>
+
+<div class="filtering">
+    <form>
+        <span style="margin-right: 0.9em;">hide deleted records: <input type="checkbox" name="filter_deleted"
+                                                                        id="filter_deleted" value="1" checked="checked"/></span>
+        <div style="display:inline-block; text-align: right;width: 95%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+          
+        </div>
+    </form>
+</div>
+
+<div id="TableContainer"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of Categories',
+            actions: {
+                 listAction: '/backend/categorytag/list',
+                                       
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        $.ajax({
+                            url: '/backend/categorytag/update',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: postData,
+                            success: function (data) {
+                                $dfd.resolve(data);
+                                $('#TableContainer').jtable('reload');
+                            },
+                            error: function () {
+                                $dfd.reject();
+                            }
+                        });
+                    });
+                },
+               
+            },
+            fields: {
+                project_category_id: {
+                    title: 'Cat ID',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    width: '5%'
+                },
+                lft: {
+                    title: 'left',
+                    create: false,
+                    edit: false,
+                    list: false,
+                    width: '3%'
+                },
+                rgt: {
+                    title: 'right',
+                    create: false,
+                    edit: false,
+                    list: false,
+                    width: '3%'
+                },               
+                title: {
+                    title: 'Title',
+                    type: 'input',
+                    list: false,
+                    width: '30%',
+                    inputClass: 'validate[required]'
+                },
+                title_show: {
+                    title: 'Title_Show',
+                    type: 'textarea',
+                    create: false,
+                    edit: false,
+                    width: '30%'
+                },                
+                
+                tags_name: {
+                    title: 'Tags Name',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    width: '30%'
+                },                
+                tags_id: {
+                    title: 'Tags ID',
+                    type: 'textarea',
+                    create: true,
+                    edit: true,
+                    list:false,
+                    width: '30%'
+                }
+                ,
+                tags_all: {
+                    title: 'Tags Helper Click to Select',
+                    create: false,
+                    edit: true,
+                    list: false,
+                    options: function (data) {
+                        data.clearCache();                        
+                        return '/backend/categorytag/tagsall';
+                    }
+                }
+                                                        
+            },
+            //Initialize validation logic when a form is created
+            formCreated: function (event, data) {
+                data.form.validationEngine();
+                $('#jtable-create-form').attr('style', 'padding:5%');
+                $('#jtable-edit-form').find('#Edit-tags_name').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-title').prop("disabled", true);
+                $('#jtable-edit-form').find('#Edit-parent').prop("disabled", true);                    
+                $('#jtable-edit-form').find('#Edit-tags_all').change(function () {
+                    var str = "";
+                    $( "select#Edit-tags_all option:selected" ).each(function() {
+                      str = $( this ).val() ;
+                    });
+
+                    var t = $('#jtable-edit-form').find('#Edit-tags_id').val();
+                    var tids ='';
+                    if($.trim(t)){
+                        tids = t+','+str;
+                    }else{
+                        tids = str;
+                    }
+                    
+                     $('#jtable-edit-form').find('#Edit-tags_id').val(tids);
+                  })
+                  ;
+            },
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_deleted: $('#filter_deleted').is(':checked') ? $('#filter_deleted').val() : 0
+        });
+
+      
+
+    });
+</script>

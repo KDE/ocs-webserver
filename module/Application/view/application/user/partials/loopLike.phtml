@@ -1,0 +1,42 @@
+
+
+<div class="row smaller header" >
+	<div class="col-lg-5 col-md-5">
+		<figure>
+		    <img src="<?php echo $this->Image($this->file->image_small, array('width' => 80, 'height' => 80)); ?>" class="downloadhistory-image" />
+		</figure>	
+		<div>
+			<a href="<?= $this->buildProductUrl($this->file->project_id) ?>"><?=$this->file->title?></a>
+			<p><?=$this->file->cat_title?> 
+		</div>
+	</div>		
+
+	<div class="col-lg-2 col-md-2" style="white-space: nowrap; padding-top: 20px">			
+		 by <a  href="<?php echo $this->buildMemberUrl($this->file->project_username); ?>" class="tooltipuser" data-tooltip-content="#tooltip_content" data-user="<?=$this->file->project_member_id?>">
+		 <?=$this->file->project_username?></a>
+	</div>
+		    	
+	<div class="col-lg-2 col-md-2">			
+		<div class="rating text-center" >				
+			<?php   
+			
+					echo $this->partial(
+						'application/partials/circle.phtml', array(
+							"r" => 40,
+							"fontSize" => Application\Model\Service\ConstCircle::small40,
+							"score" => $this->file->laplace_score/10
+						)
+					); 
+					?>
+
+		      
+		</div>		
+	</div>
+	
+	
+	<div class="col-lg-3" >		
+		<i class="fa fa-heart myfav" aria-hidden="true" ></i>        		
+		<?=$this->printDate($this->file->created_at)?> 
+	</div>
+</div>
+

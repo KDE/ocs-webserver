@@ -1,0 +1,51 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$tags = $this->systemTags;
+?>
+<div class="prod-widget-box right details">
+
+    <span class="title"> System Tags </span>
+
+    <span class="row">
+        <?php if (false === empty($tags)) {
+            foreach ($tags as $tag) {
+                $filterfield = 'tags';
+                if ($tag['tag_group_id'] == \Application\Model\Service\TagConst::TAG_LICENSE_GROUPID) {
+                    $filterfield = 'license_names';
+                }
+                if ($tag['tag_group_id'] == \Application\Model\Service\TagConst::TAG_ARCHITECTURE_GROUPID) {
+                    $filterfield = 'arch_names';
+                }
+                if ($tag['tag_group_id'] == \Application\Model\Service\TagConst::TAG_PACKAGETYPE_GROUPID) {
+                    $filterfield = 'package_names';
+                }
+
+                $searchurl = 'find?search=' . $tag['tag_name'] . '&f=' . $filterfield;
+                ?>
+                <a href="<?= $this->buildSearchUrl($searchurl) ?>" class="tag-element">
+                    <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> <?= $tag['tag_name'] ?>
+                </a>
+            <?php }
+        } ?>
+    </span>
+</div>

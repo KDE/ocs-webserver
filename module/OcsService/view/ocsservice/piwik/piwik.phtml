@@ -1,0 +1,77 @@
+<?php
+/**
+ *   ocs-webserver
+ *
+ *   Copyright 2016 by pling GmbH.
+ *
+ *     This file is part of ocs-webserver.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// this token is used to authenticate your API request.
+// You can get the token on the API page inside your Matomo interface
+$token_auth = '8f95949e2549d259780334e549334790';#
+//$page_url = urlencode('/p/'.$project_id.'/');
+$id_site = $this->currentStore()->config->piwik_id;
+
+// we call the REST API and request the 100 first keywords for the last month for the idsite=62
+$url = "https://piwik.pling.com/";
+$url .= "?module=API";
+$url .= "&method=Actions.getPageUrls";
+//$url .= "&pageUrl=$page_url";
+$url .= "&label=p > $project_id";
+$url .= "&idSite=$id_site";
+$url .= "&period=day";
+$url .= "&date=today";
+$url .= "&format=JSON";
+$url .= "&token_auth=$token_auth";
+
+$client = new Laminas\Http\Client($url,[
+    'adapter' => 'Laminas\Http\Client\Adapter\Curl',
+]);
+$fetched = $client->send();
+
+$content = json_decode($fetched->getBody(),true);
+$row = array_shift($content);
+?>
+<div class="prod-widget-box right details">
+
+    <span class="title"> Piwik statistic (experimental) </span>
+
+<?php
+// case error
+if ((!$row) OR (!is_array($row))) {
+    print("<span class='col-sm'>No data found</span>");
+} else {
+?>
+    <div class="container">
+    <div class="row"><div class="col-sm-2"><strong>Today</strong></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Number of Visits (30 min of inactivity considered a new visit)">nb_visits</div><div class="col-sm-1"><?=$row['nb_visits']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Number of views on this page">nb_hits</div><div class="col-sm-1"><?=$row['nb_hits']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Total time spent on this page, in seconds">sum_time_spent</div><div class="col-sm-1"><?=$row['sum_time_spent']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="The number of hits that included generation time information.">nb_hits_with_time_generation</div><div class="col-sm-1"><?=$row['nb_hits_with_time_generation']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="The minimum amount of time a server spent serving this action.">min_time_generation</div><div class="col-sm-1"><?=$row['min_time_generation']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="The maximum amount of time a server spent serving this action.">max_time_generation</div><div class="col-sm-1"><?=$row['max_time_generation']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="The average amount of time it takes to generate a page.">avg_time_generation</div><div class="col-sm-1"><?=$row['avg_time_generation']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Number of visits that started on this page">entry_nb_visits</div><div class="col-sm-1"><?=$row['entry_nb_visits']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Number of page views for visits that started on this page">entry_nb_actions</div><div class="col-sm-1"><?=$row['entry_nb_actions']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Time spent, in seconds, by visits that started on this page">entry_sum_visit_length</div><div class="col-sm-1"><?=$row['entry_sum_visit_length']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Number of visits that started on this page, and bounced (viewed only one page)">entry_bounce_count</div><div class="col-sm-1"><?=$row['entry_bounce_count']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Average time spent, in seconds, on this page">avg_time_on_page</div><div class="col-sm-1"><?=$row['avg_time_on_page']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Ratio of visits leaving the website after landing on this page">bounce_rate</div><div class="col-sm-1"><?=$row['bounce_rate']?></div></div>
+    <div class="row"><div class="col-sm-2 piwikpopi" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="Ratio of visits that do not view any other page after this page">exit_rate</div><div class="col-sm-1"><?=$row['exit_rate']?></div></div>
+    </div>
+</div>
+<?php } ?>

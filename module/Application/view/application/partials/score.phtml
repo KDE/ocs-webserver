@@ -1,0 +1,76 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$cssNoVotes = (($this->product->count_likes+$this->product->count_dislikes) == 0) ? ';opacity:0.5;' : '';
+$score2 =  $this->score2/10;
+
+$userScore=0;
+if($this->ratingOfUser)
+{
+    $userScore = $this->ratingOfUser['score'];
+}
+
+$userrate ="data-userrate='-1'";
+$comment="data-comment=''";
+if($this->ratingOfUser){
+    $userrate ="data-userrate='".$this->ratingOfUser['score']."'";        
+    $comment="data-comment='".$this->ratingOfUser['comment_text']."'";        
+}       
+$formproject="data-project='".$this->product->project_id."'";
+$creator="data-creator='".$this->product->member_id."'";
+$attrhistory = $userrate.' '.$comment.' '.$formproject.' '.$creator;
+
+$options = array(1 => 'ugh', 2=>'really bad',3=>'bad',4=>'soso',5=>'average', 6=>'okay',7=>'good', 8=>'great', 9=>'excellent',10=>'the best');
+krsort($options);
+
+?>
+<div id="widget-rating" class="prod-widget-box right" style="border:0px !important">    
+    <!-- new score start -->    
+    <?php
+        echo $this->partial(
+                'application/partials/circle.phtml', array(
+                    "r" => 50,
+                    "score" => $score2
+                )
+        );
+        ?>
+    <!-- new score end -->
+
+    <div style="text-align: center;">               
+         <select <?=$attrhistory ?> name="ratingoptions" id="ratingoptions" class="rating-select">
+            <?php
+             if($userScore){
+                echo '<option value="-1" >Remove Rating</option>';
+             }else{
+                echo '<option value="0">Add Rating</option>';
+             }
+             foreach ($options as $key => $value) {
+                $selected = '';                
+                if($userScore==$key){
+                  $selected='selected="selected"';                  
+                } 
+                echo '<option value="'.$key.'" '.$selected.'>'.$key.' '.$value.'</option>';                
+            } ?>         
+        </select> 
+    </div>
+</div>
+

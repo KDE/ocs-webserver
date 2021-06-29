@@ -1,0 +1,42 @@
+.about-me-page .head-wrap .header .summary {
+  padding-top: 65px;
+}
+.about-me-page .head-wrap .header .summary article.well {
+  width: 100%;
+}
+.about-me-page .body-wrap aside .member-score-tooltip-container #user-profile-score-tooltip {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 10px;
+  font-style: italic;
+  width: 255px;
+  padding: 0;
+  line-height: 20px;
+}
+.about-me-page .body-wrap .tab-panel-container .tool-tip-container {
+  display: inline-block;
+  margin-right: 5px;
+}
+.about-me-page .body-wrap .tab-panel-container #my-comments-tabs,
+.about-me-page .body-wrap .tab-panel-container .my-fav-list {
+  float: left;
+  width: 100%;
+}
+.about-me-page .body-wrap .tab-panel-container #my-comments-tabs .pagination-container,
+.about-me-page .body-wrap .tab-panel-container .my-fav-list .pagination-container {
+  text-align: right;
+}
+.about-me-page .body-wrap .tab-panel-container #my-comments-tabs .score-circle-module,
+.about-me-page .body-wrap .tab-panel-container .my-fav-list .score-circle-module {
+  margin-top: 5px;
+  width: auto;
+}
+.about-me-page .body-wrap .tab-panel-container #my-comments-tabs .rating-text,
+.about-me-page .body-wrap .tab-panel-container .my-fav-list .rating-text {
+  padding: 5px 0 0 5px;
+  margin: 0;
+}
+#app.mobile-view .user-product-activity-list-item .list-item-title {
+  margin-bottom: 5px;
+}
+#app.mobile-view aside {
+  margin-top: 10px;
+}

@@ -1,0 +1,229 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .inline {
+        display: inline-block;
+    }
+    
+    .cell-default {
+        line-height: 2em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+<ul class="nav nav-tabs margin-bottom-10">
+<?php
+    
+$isCurrentMonth = false;
+$modelDownload = $this->sectionService;
+$modelInfo = $this->infoService;
+$yearmonth = null;
+
+if(isset($this->yearmonth)) {
+    $yearmonth = $this->yearmonth;
+}
+
+?>
+
+<div class="tab-content">
+<?php
+
+
+
+$isForAdmin = $this->isAdmin;
+
+$css_active = ' in active';
+$has_paypal = false;
+
+$currentDate = date("Ym",time());
+$printCurrentMonth = new \DateTime($currentDate.'01');
+
+$printMonth = new \DateTime($yearmonth.'01');
+$printDate = $printMonth->format('M Y');
+
+$allSections = $this->allSections;
+$countDownloadsOverall = count($allSections);
+
+$countIncome = 0;
+$countPayout = 0;
+$countPayout2 = 0;
+
+if ($countDownloadsOverall > 0) {
+    $firstProduct = $allSections[0];
+    if ($firstProduct) {
+        $printMonth = new \DateTime($yearmonth.'01');
+        $printCurrentMonth = new \DateTime($currentDate.'01');
+        
+        if($printMonth == $printCurrentMonth) {
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        
+        
+        ?>
+        <div class="tab-pane fade <?=$css_active?>" id="<?=$yearmonth?>">
+            <?php
+            $css_active = '';
+            
+            foreach ($allSections as $section) { 
+                $sectionStats = $modelDownload->fetchSectionStats($yearmonth, $section['section_id'], $isForAdmin);
+                if(!$sectionStats) {
+                    $sectionStats = $modelDownload->fetchSectionSupportStats($yearmonth, $section['section_id'], $isForAdmin);
+                }
+                $supporters = $modelInfo->getNewActiveSupportersForSectionAndMonth($sectionStats['section_id'], $yearmonth);
+                
+            ?>
+                <div class="row margin-bottom-12"  style="padding-left: 0; padding-right: 0; margin-bottom: 25px;">
+                    
+                    <div class="col-md-2 cell-default" style="" id="<?=$section['section_id']?>"><?=$section['name']?></div>
+                    <div class="col-md-1 text-right cell-default" style=""><?= $sectionStats['num_supporter'] ?></div>
+
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($this->currencyFormat($sectionStats['sum_support'] + $sectionStats['sum_sponsor'], "USD", "en_US")); ?></strong></div>
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls']?></div>-->
+                    <?php if ($isForAdmin) : ?>
+                    <div class="col-md-1 text-right cell-default font-italic" style=""><?php print($this->currencyFormat($sectionStats['sum_amount'], "USD", "en_US"));?></div>
+                    <?php endif; ?>
+
+
+                    <!--<div class="col-md-1 text-right cell-default" style=""><?=$sectionStats['sum_dls_payout']?></div>-->
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php print($this->currencyFormat($sectionStats['sum_amount_payout'], "USD", "en_US"));?></strong></div>
+                    
+                    <div class="col-md-1 text-right cell-default" style=""><strong><?php 
+                        #if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) < $sectionStats['sum_amount_payout']) {
+                        if(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) == 0 || $sectionStats['sum_amount_payout'] == 0) {
+                            echo "1.00";
+                        } else { 
+                            echo round(($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount_payout'], 2);
+                        }
+                        #} else {
+                        #    echo "1.00";
+                        #}
+                    ?></strong></div>
+                    
+                    <?php /*
+                    <div class="col-md-1 text-right cell-default" style="">
+                        <?php 
+                            if($sectionStats['sum_support']>0 && $sectionStats['sum_amount']>0) {
+                                $percentFactor = ($sectionStats['sum_support'] + $sectionStats['sum_sponsor']) / $sectionStats['sum_amount'] * 100;
+                            } else {
+                                $percentFactor = 0;
+                            }
+                            if($percentFactor>100) {
+                                $percentFactor = 100;
+                            } 
+                           
+                        ?>
+                        <div style="height: 20px;border: 1px solid gray;width: 100px;padding: 0;margin: 0;">
+                            <div style="padding: 0;margin: 0;background-color: green;height: 10px;width: <?= round($percentFactor, 2) ?>px;"></div>
+                            <div style="padding: 0;margin: 0;background-color: red;height: 10px;width: 100px;"></div>
+                        </div>
+                        
+                    </div>
+                     * 
+                     */?>
+                    <div class="col-md-4 text-left cell-default">
+                        <div style="">
+                    <?php 
+                    $i=0;
+                        foreach ($supporters as $user) {                                                      
+                    ?>   
+                            <div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="This month <b><?= $user['username']?></b> supports this section with $<?= $user['sum_tier'] ?>." >
+                                <a href="<?php echo $this->buildMemberUrl($user['username']); ?>" class="tooltipuserleft" data-user="<?=$user['member_id']?>" data-amaount="<?=$user['sum_tier']?>">                   
+                                    <img height="25" width="25" src="<?php echo $this->Image($user['profile_image_url'], array('width' => '25', 'height' => '25', 'crop' => 2)); ?>" class="supporterx" />                   
+                                </a>
+                            </div>
+                    <?php 
+                        } 
+                    ?>
+                        </div>
+                    </div>
+                </div>
+            <?php
+                $countIncome += $sectionStats['sum_support'] + $sectionStats['sum_sponsor'];
+                $countPayout += $sectionStats['sum_amount'];
+                $countPayout2 += $sectionStats['sum_amount_payout'];
+            }
+            ?>
+            <div class='row row-total'>
+                <div class='col-md-2' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""><strong><?php print($this->currencyFormat($countIncome, "USD", "en_US")); ?></strong></div>
+                <?php if ($isForAdmin) : ?>
+                <div class='col-md-1 text-right font-italic' style=""><?php print($this->currencyFormat($countPayout, "USD", "en_US")); ?></div>
+                <?php endif; ?>
+                <!--<div class='col-md-1 text-right' style=""></div>-->
+                <div class='col-md-1 text-right' style=""><strong><?php print($this->currencyFormat($countPayout2, "USD", "en_US")); ?></strong></div>
+                
+                <div class='col-md-1 text-right' style=""></div>
+                <div class='col-md-1 text-right' style=""></div>
+                
+                
+            </div>
+            
+        </div>
+<?php
+    }
+}
+?>
+
+</div> 
+<script>
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover();
+});
+</script>
+
+    
+<script>
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+</script> 
+

@@ -1,0 +1,141 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+use Application\Model\Service\HtmlPurifyService;
+
+$this->tab = 'activities';
+
+?>
+<main class="user-admin-page">
+<?php include __DIR__.'/partials/userHeader_top.phtml';?>
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <!-- NAVIGATION -->
+                <?php include __DIR__.'/partials/userHeader.phtml';?>          
+                <!-- /NAVIGATION -->
+                <?php
+                    if((count($this->comments)+count($this->votes)+count($this->donations)+count($this->featured))==0){ 
+                    ?>
+               <div class="my-products-heading">
+                    <h1 class="page-title left"><?= $this->translate('no activities yet') ?></h1>                   
+                </div>
+                <?php }
+                    else
+                    {
+                ?>
+                <div class="my-products-heading">
+                <h1 class="page-title left"> <?= $this->translate('Activities') ?> </h1>    
+                </div>   
+                <?php }?>
+
+                <div class="my-products-list">  
+                <div class="row">
+                        <div class="col-lg-12 title"><?php  if(count($this->featured)>0) { echo count($this->featured). ' featured product'.(count($this->featured)>1?'s':'');}?> </div>
+                </div>
+                <?php  foreach ($this->featured as $f) { ?>
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <span>                           
+                            <?php 
+                            echo $f['title'].' is featured';
+                            ?>
+                            </span>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+
+
+                <div class="row">
+                        <div class="col-lg-12 title"><?php  if(count($this->comments)>0) { echo count($this->comments). ' Comment'.(count($this->comments)>1?'s':'');}?> </div>
+                </div>
+                <?php  foreach ($this->comments as $comment) { ?>
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <span>
+                            <?php 
+				              	$comment_text = HtmlPurifyService::purify($comment['comment_text']);
+				              	$comment_title = HtmlPurifyService::purify($comment['title']);
+				           	?>
+                            <?php 
+                            echo $comment['username'].' comments on <span class="projecTitle"><a href="'.$this->buildProductUrl($comment['project_id']).'">'. $comment_title . '</a></span> : <span class="commentText"> '.$comment_text.' </span> <span class="commentTime"> '.$this->printDate($comment['comment_created_at']).'</span>';
+                            ?>
+                            </span>
+                        </div>
+                    </div>
+
+                <?php
+                }
+                ?>
+
+                <div class="row">
+                        <div class="col-lg-12 title"><?php  if(count($this->votes)>0) { echo count($this->votes). ' vote'.(count($this->votes)>1?'s':'');}?> </div>
+                </div>
+                <?php  foreach ($this->votes as $vote) { ?>
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                        <span>
+                            <?php
+                            echo '1 '.($vote['user_like']==1?' upvote':' downvote').'  on <span class="projecTitle"><a href="'.$this->buildProductUrl($vote['project_id']).'">'. $vote['title'] . '</a></span><span class="commentTime"> '.$this->printDate($vote['created_at']).'</span>';
+                            ?>
+                        </span>
+                        </div>
+                    </div>
+
+                <?php
+                }
+                ?>
+
+                <div class="row">
+                        <div class="col-lg-12 title"><?php  if(count($this->donations)>0) { echo count($this->donations). ' donation'.(count($this->donations)>1?'s':'');}?> </div>
+                </div>
+                <?php  foreach ($this->donations as $donation) { ?>
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                        <span>
+                            <?php 
+                            echo $donation['username'].' donates on <span class="projecTitle"><a href="'.$this->buildProductUrl($donation['project_id']).'">'. $donation['title'] . '</a></span> : <span class="commentText"> '.$donation['comment'].' </span><span class="commentTime"> '.$this->printDate($donation['create_time']).'</span>';
+                            ?>
+                        </span>
+                        </div>
+                    </div>
+
+                <?php
+                }
+                ?>
+                </div>
+
+                <section style="text-align: center;">
+                </section>
+
+            </section>
+
+            <!-- /PAGE BODY -->
+
+        </section>
+
+    </section>
+
+</main>

@@ -1,0 +1,85 @@
+<?php
+        /** @deprcated */
+        throw new Exception(__FILE__ . ' is deprcated');
+/** @var Zend_Controller_Request_Http $request */
+$request = Zend_Controller_Front::getInstance()->getRequest();
+$http_scheme = $request->getScheme();
+
+$baseurl = Zend_Registry::get('config')->settings->client->default->baseurl;
+$url_forum = Zend_Registry::get('config')->settings->client->default->url_forum;
+$url_gitlab = Zend_Registry::get('config')->settings->client->default->url_gitlab;
+$url_myopendesktop = Zend_Registry::get('config')->settings->client->default->url_myopendesktop;
+$url_nextcloud = Zend_Registry::get('config')->settings->client->default->url_cloudopendesktop;
+$config = Zend_Registry::get('config')->settings->domain;
+
+$getAuthUser = new Default_View_Helper_GetAuthUser();
+$member = $getAuthUser->getAuthUser();
+$phash = null;
+$ltat = '';
+if (Zend_Auth::getInstance()->hasIdentity()) {
+    $sess = new Zend_Session_Namespace('ocs_meta');
+    $phash = $sess->phash;
+    $ltat = $sess->openid;
+}
+
+$info = new Default_Model_Info();
+$domains = $info->getActiveStoresForCrossDomainLogin();
+
+?><!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function loadComplete() {
+            document.location.href = "<?= $this->redirect ?>";
+        }
+
+        function loadSubSys() {
+            var img = document.getElementById('f-login');
+            var img_src = img.getAttribute('data-src');
+            img.setAttribute('src', img_src);
+
+            var img_g = document.getElementById('g-login');
+            var img_src_g = img_g.getAttribute('data-src');
+            img_g.setAttribute('src', img_src_g);
+
+            var img_h = document.getElementById('h-login');
+            var img_src_h = img_h.getAttribute('data-src');
+            img_h.setAttribute('src', img_src_h);
+
+            return true;
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait...
+</p>
+<?php
+foreach ($domains as $domain) {
+    if ($domain == $_SERVER['HTTP_HOST']) {
+        continue;
+    }
+    $cookie_name = Zend_Registry::get('config')->settings->session->remember_me->name;
+    $remember_me = isset($_COOKIE[$cookie_name]) ? unserialize($_COOKIE[$cookie_name]) : null;
+    $id = crc32($domain.Zend_Session::getId());
+    $data = array('domain' => Zend_Registry::get('config')->resources->session->name, 'id' => Zend_Session::getId(), 'remember_me' => $remember_me);
+    Zend_Registry::get('cache')->save($data, $id);
+    $cookie = Local_LoginCookie::createJwt($id, 120);
+//        $url = sprintf('%s://%s/l/settheme?k=%s', $http_scheme, $domain, $cookie);
+//        echo('<link type="text/css" rel="stylesheet" href="'.$url.'" />'.PHP_EOL);
+    $url = sprintf('%s://%s/l/set?k=%s', $http_scheme, $domain, $cookie);
+    echo '<img src="'.$url.'" height="1" width="1" style="display:none;" >' . PHP_EOL;
+}
+?>
+<img src="<?= $http_scheme?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>" height="0" width="0" onload="loadSubSys();"/>
+<img data-src="<?=$http_scheme?>://<?= $config->forum->host ?>/session/sso?return_path=%2F" height="0" width="0" id="f-login" />
+<img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop" height="0" width="0" id="g-login"/>
+
+<?php /*
+    if(!empty($url_nextcloud)) {?>
+<img data-src="<?= $url_nextcloud ?>/index.php/apps/sociallogin/custom_oidc/OpendesktopID" height="0" width="0" id="h-login"/>
+<?php
+    } */
+?>
+</body>
+</html>

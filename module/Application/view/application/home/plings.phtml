@@ -1,0 +1,98 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+
+?>
+ <link rel="stylesheet" href="/theme/flatui/css/bootstrap/bootstrap.min.css" type="text/css"  crossorigin="anonymous">
+   
+<main id="plings-page" class="container-fluid">   
+     <section class="head-wrap">
+      <section class="wrapper">
+      <p><h3>FAQ</h3>
+        <p>Contributors to any part of the Opendesktop platform get a compensation each time their contribution/product is downloaded. Download-clicks are converted into monetary value based on the following terms:</p>
+        <p></p>
+        <p>Payout = Number of Downloads * Pling-Factor * 1 $-cent,</p>
+        <p></p>
+        <p>where each product category is valued by a so-called “Pling-Factor”.</p>
+        <p></p>
+        <p>You can see the value of each category in the list below.</p>
+        <p></p>
+        <p>Based on the actual amount of content and downloads, we may adjust these values at any time, even during a month.</p>
+        <p></p>
+        <p>Payouts are voluntary and we reserve the right to cancel any single product or payout or all payouts without any reason.</p>
+        <p></p>
+        <!--<p>We are currently evaluating using Bitcoin as a payout method in the future.-->
+        <p>Any product to be paid out requires a libre license. Certain products also require a link to the online source repository (see list below), like e.g. cgit.kde.org or github. This is different from just providing the source-code, but to provide an easy setup for collaboration and transparent changes.</p>
+        <p></p>
+        <p>In order to receive any payouts, you need to provide a valid PayPal option under your OpenDesktop account settings.</p>
+        <p></p>
+        <p>We hope this form of compensation values those who put time and effort into creating free and open source software & content and leads to an ever increase of quality and sustainability.        </p>
+            
+            
+            
+    </section>
+    </section>
+    <section class="body-wrap" id="cat-list">
+        <section class="wrapper">
+            <div class="row title">
+        	<div class="col-md-6">
+                    <span class="label lable-default left">
+                            Category
+                    </span>
+                </div>
+                <div class="col-md-3">    
+                    <span class="label lable-default right" >
+                            Pling Factor
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <span class="label lable-default right" >
+                            Source-Link required
+                    </span>
+                    
+        	</div>
+            </div>            
+            <?php
+            $categories = $this->listCategories;
+            foreach ($categories as $key => $element) {                                	                                    
+                $depth = (int)$element['depth'];
+                $cls = 'depth'.$depth;
+                $countSubCat = (int)$element['rgt'] - (int)$element['lft'] - 1;
+                $plingFactor='';
+                $sourceRequired='';
+                if($countSubCat==0){
+                	$plingFactor = '<span class="right factor">'. $element['dl_pling_factor'].'</span>';  
+                        $sourceRequired = ($element['source_required']?'Yes':'No');
+                }
+               
+                echo '<div class="row" style="padding-left: 15px; padding-right: 15px;">';
+                echo '    <div class="col-md-6 cell-default '.$cls.'">'. $this->translate($element['title']).'</div>';
+                echo '    <div class="col-md-3 text-right cell-default">'.$plingFactor.'</div>';
+                echo '    <div class="col-md-3 text-right cell-default">'.$sourceRequired.'</div>';
+                echo '</div>   ';
+                
+            }
+            ?>
+                          
+        </section>
+    </section>
+</main>

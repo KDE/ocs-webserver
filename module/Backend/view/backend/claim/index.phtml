@@ -1,0 +1,361 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH. 
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+ ?>
+
+<div class="filtering">
+    <form>
+        Title: <input type="text" name="filter_title" id="filter_title"/>
+        Project ID: <input type="text" name="filter_project_id" id="filter_project_id"/>
+        Member ID: <input type="text" name="filter_member_id" id="filter_member_id"/><br/>
+
+        <div style="display:inline-block; text-align: right;width: 95%;">
+            <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+            <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+        </div>
+    </form>
+</div>
+<div id="TableContainer"></div>
+
+<div id="dialog-form" title="Member Info"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'mail asc',
+            title: 'Table for claimed products',
+            actions: {
+                listAction: '/backend/claim/list'
+
+            },
+            fields: {
+                project_id: {
+                    title: 'project_id',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    width: '5%'
+                },
+                member_id: {
+                    title: 'member_id',
+                    width: '5%',
+                    list: true,
+                    create: true
+                },
+                content_type: {
+                    title: 'content_type',
+                    list: false
+                },
+                project_category_id: {
+                    title: 'category_id',
+                    list: false,
+                    sorting: false //This column is not sortable!
+                },
+                status: {
+                    title: 'status',
+                    width: '5%',
+                    sorting: false //This column is not sortable!
+                },
+                pid: {
+                    title: 'pid',
+                    list: false
+                },
+                type_id: {
+                    title: 'type_id',
+                    list: false
+                },
+                title: {
+                    title: 'title',
+                    width: '15%',
+                    list: true,
+                    display: function (data) {
+                        if (data.record.title) {
+                            return data.record.title + ' <a href="/p/' + data.record.project_id + '/" class="btn btn-info btn-xs" role="button" style="color: white" target="_blank">show</a>';
+                        }
+                    }
+
+                },
+                description: {
+                    title: 'description',
+                    list: false
+                },
+                image_big: {
+                    title: 'image_big',
+                    list: false
+                },
+                image_small: {
+                    title: 'image_small',
+                    list: false
+                },
+                content_url: {
+                    title: 'content_url',
+                    list: false
+                },
+                created_at: {
+                    title: 'Created',
+                    width: '7%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                changed_at: {
+                    title: 'Changed',
+                    width: '12%',
+                    type: 'date',
+                    list: false,
+                    create: false,
+                    edit: false
+                },
+                deleted_at: {
+                    title: 'Deleted',
+                    width: '12%',
+                    type: 'date',
+                    list: false,
+                    create: false,
+                    edit: false
+                },
+                creator_id: {
+                    title: 'creator_id',
+                    width: '5%'
+                },
+                facebook_code: {
+                    title: 'facebook_code',
+                    list: false
+                },
+                twitter_code: {
+                    title: 'twitter_code',
+                    list: false
+                },
+                google_code: {
+                    title: 'google_code',
+                    list: false
+                },
+                link_1: {
+                    title: 'link_1',
+                    list: false
+                },
+                embed_code: {
+                    title: 'embed_code',
+                    list: false
+                },
+                ppload_collection_id: {
+                    title: 'ppload_collection_id',
+                    list: false
+                },
+                validated: {
+                    title: 'validated',
+                    list: false
+                },
+                validated_at: {
+                    title: 'validated_at',
+                    type: 'date',
+                    list: false
+                },
+                featured: {
+                    title: 'featured',
+                    list: false
+                },
+                amount: {
+                    title: 'amount',
+                    width: '5%',
+                    list: false,
+                    sorting: false //This column is not sortable!
+                },
+                claimed_by_member: {
+                    title: 'claimed_by_member',
+                    width: '10%',
+                    list: true,
+                    display: function (data) {
+                        if (data.record.claimed_by_member) {
+                            return data.record.claimed_by_member
+                                + ' <a role="button" title="show member info" class="btn btn-info btn-xs member-info" style="color:white;"  data-record="' + data.record.claimed_by_member + '"><span>info</span></a>'
+                                + ' <a role="button" title="delete claim request" class="btn btn-warning btn-xs remove-claim" style="color:white;" data-record="' + data.record.project_id + '">delete</a>'
+                                + ' <a role="button" title="transfer product" class="btn btn-warning btn-xs transfer-claim" style="color:white;" data-record="' + data.record.project_id + '">transfer</a>'
+                                ;
+                        }
+                    }
+                },
+                claimable: {
+                    title: 'claimable',
+                    width: '5%',
+                    list: true,
+                    display: function (data) {
+                        if (data.record.claimable == 1) {
+                            return data.record.claimable
+                                + ' <a role="button" title="remove claimable" class="btn btn-warning btn-xs toggle-claim" style="color:white" data-record="' + data.record.project_id + '">remove</a>';
+                        } else {
+                            return data.record.claimable;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        $('body').on("click", 'a.remove-claim', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!confirm('This will delete the claim request. There is no way back. Do you wish to proceed?')) {
+                return;
+            }
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'project_id': elementRecord},
+                url: '/backend/claim/removeclaim/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.toggle-claim', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!confirm('This will remove claim option for this product. Do you wish to proceed?')) {
+                return;
+            }
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'project_id': elementRecord},
+                url: '/backend/claim/toggleclaim/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.member-info', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'member_id': elementRecord},
+                url: '/backend/claim/memberinfo/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').html(results.ViewRecord).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.transfer-claim', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (!confirm('This will finalize transfer to the member who has claimed the product. Do you wish to proceed?')) {
+                return;
+            }
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'project_id': elementRecord},
+                url: '/backend/user/transfer/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_title: $('#filter_title').val(),
+                filter_project_id: $('#filter_project_id').val(),
+                filter_member_id: $('#filter_member_id').val()
+
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_title: null,
+                filter_project_id: null,
+                filter_member_id: null
+            });
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_title: $('#filter_title').val(),
+            filter_project_id: $('#filter_project_id').val(),
+            filter_member_id: $('#filter_member_id').val()
+        });
+    });
+</script>

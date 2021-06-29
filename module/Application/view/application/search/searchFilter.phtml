@@ -1,0 +1,120 @@
+<?php
+    if (false === empty($this->result['facet_fields'])) :
+        
+        $mapFields = array('project_category_id' => 'Category', 'tags' => 'Tags', 'package_names' => 'Package', 'arch_names' => 'Architecture', 'license_names' => 'License', 'laplace_score' => 'Score');
+        $mapUrlIdent = array('project_category_id' => 'pci', 'tags' => 't', 'package_names' =>'pkg','arch_names' =>'arch','license_names' =>'lic', 'laplace_score' => 'ls');
+        $mapCurrentParam = array('project_category_id' => $this->pci
+                                ,'tags' => $this->t
+                                ,'package_names' => $this->pkg
+                                ,'arch_names' => $this->arch
+                                ,'license_names' => $this->lic
+                                ,'laplace_score' => $this->ls);
+        $currentCat = $this->pci;
+        $currentScore = $this->ls;
+        $currentTag = $this->t;
+        $currentPkg = $this->pkg;
+        $currentArch = $this->arch;
+        $currentLic= $this->lic;
+        
+        ?>
+    
+<div class="panel-group">
+    <div class="panel panel-default refine-search-header">
+        <h4 style="font-weight: 600;padding:10px 15px;">Choose Filter:</h4>
+        <div class="current-search">
+        <?php if ($currentCat) : ?>
+        <a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, 'pci' => null))),true)?>" class="btn btn-default btn-xs" role="button">
+            <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $mapCategories[intval($currentCat)]?> </span>
+        </a>
+        <?php endif; ?>
+        <?php if ($currentTag) : ?>
+            <a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array( 'page'=>1, 't' => null))),true)?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentTag?>
+            </a>
+        <?php endif; ?>
+        <?php if ($currentPkg) : ?>
+            <a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, 'pkg' => null))),true)?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentPkg?>
+            </a>
+        <?php endif; ?>
+
+         <?php if ($currentArch) : ?>
+            <a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, 'arch' => null))),true)?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentArch?>
+            </a>
+        <?php endif; ?>
+
+         <?php if ($currentLic) : ?>
+            <a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, 'lic' => null))),true)?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= $currentLic?>
+            </a>
+        <?php endif; ?>
+
+        <?php if ($currentScore) : ?>
+            <a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, 'ls' => null))),true)?>" class="btn btn-default btn-xs" role="button">
+                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span><?= number_format($currentScore/100, 1)?>
+            </a>
+        <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <?php       
+        foreach ($this->result['facet_fields'] as $field_name => $facet_field) {?>
+        <div class="panel-body">
+         <div class="dropdown refine-search-group">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><?=$mapFields[$field_name]?> <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <?php if (count((array)$facet_field) == 0) :?>
+                        <li><span class="no-tags-msg"> no <?=$mapFields[$field_name]?> found </span></li>
+                    <?php endif; ?>
+                <?php 
+                    foreach ($facet_field as $key =>$count) { ?>
+                    <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                        <li><a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, $mapUrlIdent[$field_name] => null))),true)?>" class="active">
+                                <span class="glyphicon glyphicon-remove text-danger" aria-hidden="true" style="margin-right: 2px;top:2px;"></span>
+                                <?= ($mapFields[$field_name]=='Category' ?$mapCategories[intval($key)]:$key)?> <span class="badge"><?=$count?></span>
+                            </a></li>
+                    <?php else : ?>
+                        <li><a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params,array('page'=>1, $mapUrlIdent[$field_name] => $key))),true)?>" >
+                                <?= ($mapFields[$field_name]=='Category' ?$mapCategories[intval($key)]:$key)?> <span class="badge"><?=$count?></span>
+                            </a></li>
+                    <?php endif; ?>
+                    <?php } ?>                
+            </ul>
+         </div>
+        </div>
+        <?php
+        }
+        ?>
+    <?php
+    
+    foreach ($this->result['facet_ranges'] as $field_name => $facet_field) {?>
+    <div class="panel-body">
+      <div class="dropdown refine-search-group">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><?=$mapFields[$field_name]?> <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+        <?php foreach ($facet_field->counts as $key =>$count) { ?>
+                <?php if ($key == $mapCurrentParam[$field_name]) : ?>
+                <li><a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params, array('page'=>1, 'ls' => null))),true)?>" class="active">
+                    <span class="glyphicon glyphicon-remove text-danger pull-left" aria-hidden="true" style="margin-right: 2px;top:3px;color:white;"></span><?=number_format($key/100, 1)?><span class="badge"><?=$count?></span>
+                </a></li>
+                <?php else :?>
+                <li><a rel="nofollow" href="<?=$this->url('application_search_query',array(),array('query' => array_merge($this->params, array('page'=>1, 'ls' =>intval($key)))),true)?>" >
+                    <?=number_format($key/100, 1)?><span class="badge"><?=$count?></span>
+                </a></li>
+                <?php endif; ?>
+
+        <?php } ?>
+        </ul>
+      </div>
+    </div>
+    <?php
+     }
+    ?>
+    </div>
+</div>
+<?php
+    endif;

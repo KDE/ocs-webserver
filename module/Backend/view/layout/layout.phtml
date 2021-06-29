@@ -1,0 +1,119 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Application\Model\Repository\MemberRoleRepository;
+use Application\View\Helper\CurrentUserHelperTrait;
+use Application\View\Helper\MemberSettingItemHelperTrait;
+use Laminas\View\Renderer\PhpRenderer;
+use Laminas\Mvc\Plugin\FlashMessenger\View\HelperTrait as FlashMessengerHelperTrait;
+
+/**
+ * @var PhpRenderer|FlashMessengerHelperTrait    $this
+ * @var PhpRenderer|CurrentUserHelperTrait       $this
+ * @var PhpRenderer|MemberSettingItemHelperTrait $this
+ */
+
+$currentUser = $this->currentUser();
+$userRoleName = $currentUser->roleName;
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>ocs-webserver :: Backend</title>
+
+    <!-- Bootstrap -->
+    <link href="/theme/backend/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- JQuery-UI -->
+    <link href="/theme/backend/lib/jquery-ui/themes/smoothness/jquery-ui.min.css" rel="stylesheet">
+    <!-- JTable -->
+    <link href="/theme/backend/lib/jtable/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet">
+    <!-- OCS Backend Style Definitions -->
+    <link href="/theme/backend/css/backend.css" rel="stylesheet" type="text/css"/>
+
+
+    <script src="/theme/backend/lib/jquery-ui/external/jquery/jquery.js"></script>
+    <script src="/theme/backend/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/theme/backend/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/theme/backend/lib/jtable/jquery.jtable.min.js"></script>
+
+    <script src="/theme/backend/lib/jquery.cookie.js"></script>
+
+    <script type="text/javascript" src="/theme/backend/js/backendFunctions.js"></script>
+    
+    <?= $this->partial('/backend/partials/yui.phtml'); ?>
+    <?php if (MemberRoleRepository::ROLE_NAME_STAFF == $userRoleName) : ?>
+        <script src="/theme/backend/js/backend_nav_staff.js" type="text/javascript" charset="utf-8"></script>
+    <?php endif; ?>
+    <?php if (MemberRoleRepository::ROLE_NAME_ADMIN == $userRoleName) : ?>
+        <script src="/theme/backend/js/backend_nav_admin2.js" type="text/javascript" charset="utf-8"></script>
+    <?php endif; ?>
+   
+</head>
+<body>
+<div class="messages">
+<?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer|Laminas\Mvc\Plugin\FlashMessenger\View\HelperTrait $this
+ */
+//echo $this->flashMessenger()->renderCurrent('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+//echo $this->flashMessenger()->renderCurrent('info',    array('alert', 'alert-dismissible', 'alert-info'));
+//echo $this->flashMessenger()->renderCurrent('warning', array('alert', 'alert-dismissible', 'alert-warning'));
+//echo $this->flashMessenger()->renderCurrent('success', array('alert', 'alert-dismissible', 'alert-success'));
+//$this->flashMessenger()->getPluginFlashMessenger()->clearMessages();
+?>
+</div>
+<div id="parent">
+    <?php $auth =$currentUser;
+        
+    ?>
+    <?php if ($auth->hasIdentity()): ?>
+       
+        <div id="mainarea" class="ui-corner-all">         
+            <?php if ($this->pageTitle): ?><h3><?= $this->escapeHtml($this->pageTitle); ?></h3><?php endif; ?>
+            <?php echo $this->layout()->content; ?>
+        </div>
+    <?php else: ?>
+        <div id="loginArea" class="ui-corner-all">
+            <?php echo $this->layout()->content; ?>
+        </div>
+    <?php endif; ?>
+    <div id="footer" style="clear: both;" class=""><span>&copy;
+            <?=$_SERVER['SERVER_NAME']?></span><span>|</span><span>Zend FW Version: <?php echo zend_version(); ?></span></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#logout, #portal").hover(
+            function () {
+                $(this).addClass("ui-state-hover");
+            },
+            function () {
+                $(this).removeClass("ui-state-hover");
+            }
+        );
+
+    });
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,57 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<div class="form-group">
+    <div class="col-sm-12">
+        <?php
+        // force $value to array so we can compare multiple values to multiple
+        // options; also ensure it's a string for comparison purposes.
+        $value = array_map('strval', (array)$this->element->getValue());
+        $separator = $this->element->getSeparator();
+        foreach ($this->element->getMultiOptions() as $opt_value => $opt_label) {
+            // checked?
+            $opt = '';
+            if (in_array((string)$opt_value, $value)) {
+                $opt .= ' checked="checked"';
+            }
+            ?>
+            <div class="col-sm-6"><label><input type="radio"
+                                                style="margin-top: 15px;" <?= $opt ?>
+                                                value="<?= $this->escape($opt_value) ?>"
+                                                name="<?= $this->escape($this->element->getName()) ?>"><?= $this->escape($opt_label) ?>
+                </label></div>
+            <?php
+        }
+        ?>
+        <?php if ($this->element->getMessages()) {
+            $errorHtml = '';
+            foreach ($this->element->getMessages() as $currentError) {
+                $errorHtml .= '<label id="' . $this->escape($this->element->getName()) . '-error" class="error" for="' . $this->escape($this->element->getName()) . '"><small>' . $currentError . '</small></label>';
+            }
+            ?>
+            <?php echo $errorHtml ?>
+        <?php } ?>
+    </div>
+</div>
+<?php /*
+ <label><input type="radio" value="yearly" id="amount_period-yearly" name="amount_period">yearly</label>&nbsp;<label><input type="radio" value="one-time" id="amount_period-one-time" name="amount_period">one-time</label>
+ */

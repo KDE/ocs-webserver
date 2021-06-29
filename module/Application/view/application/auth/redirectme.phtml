@@ -1,0 +1,75 @@
+<?php
+use Application\Model\Entity\CurrentUser;
+use Application\Model\Service\JwtService;
+use Library\LoginCookie;
+use Laminas\Cache\Storage\Adapter\AbstractAdapter;
+use Laminas\Session\Container;
+
+$http_scheme = $this->plugin('serverUrl')->getScheme();
+
+$baseurl = $this->configHelp()->ocs_config->settings->client->default->baseurl;
+$url_forum = $this->configHelp()->ocs_config->settings->client->default->url_forum;
+$url_gitlab = $this->configHelp()->ocs_config->settings->client->default->url_gitlab;
+$url_myopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_myopendesktop;
+$url_nextcloud = $this->configHelp()->ocs_config->settings->client->default->url_cloudopendesktop;
+$config = $this->configHelp()->ocs_config->settings->domain;
+
+/** @var CurrentUser $current_user */
+$current_user = $this->currentUser();
+$ltat = $current_user->hasIdentity() ? JwtService::encode($current_user->member_id) : '';
+
+?><!DOCTYPE html>
+<html>
+<head>
+    <script>
+        function loadComplete() {
+            setTimeout("document.location.href = \"<?= $this->redirect ?>\";",3000);
+        }
+
+        function loadSubSys() {
+            var img = document.getElementById('f');
+            var img_src = img.getAttribute('data-src');
+            //img.setAttribute('src', img_src);
+            img.src = img_src;
+
+            var img_g = document.getElementById('g');
+            var img_src_g = img_g.getAttribute('data-src');
+            //img_g.setAttribute('src', img_src_g);
+            img_g.src = img_src_g;
+
+            return true;
+        }
+    </script>
+</head>
+<body onload="loadComplete()">
+<p>
+    Please Wait . . .
+    <?php
+    foreach ($this->domains as $domain) {
+        if ($domain == $_SERVER['HTTP_HOST']) {
+            continue;
+        }
+        $session_id = Container::getDefaultManager()->getId();
+        $id = crc32($domain . $session_id);
+        $cookie_params = session_get_cookie_params();
+        $data = array('name' => $this->configHelp()->session_config->options->name,
+            'id' => $session_id,
+            'lifetime' => $cookie_params['lifetime'],
+        );
+        /** @var AbstractAdapter $cache */
+        $cache = $GLOBALS['ocs_cache'];
+        $cache->setItem($id, $data);
+        $cookie = LoginCookie::createJwt($id, 120);
+        $url = sprintf('%s://%s/l/set?k=%s&s=%s', $http_scheme, $domain, $cookie, microtime());
+        echo '<img src="' . $url . '" height="1" width="1" style="background-color: black" />' . PHP_EOL . '    ';
+    }
+    ?>
+    <img src="<?= $http_scheme ?>://<?= $config->openid->host ?>/login/setsession?ltat=<?= $ltat ?>&s=<?= microtime() ?>" height="1" width="1" onload="loadSubSys();" style="background-color: black" />
+    <img data-src="<?= $http_scheme ?>://<?= $config->forum->host ?>/session/sso?return_path=%2F&s=<?= microtime() ?>" height="1" width="1" id="f" style="background-color: black" />
+    <img data-src="<?= $url_gitlab ?>/users/auth/oauth_opendesktop?s=<?= microtime() ?>" height="1" width="1" id="g" style="background-color: black"/>
+    <br>
+    <small>or click here if the redirect not work: <a href="<?= $this->redirect ?>">Bring me to the treasure</a></small>
+</p>
+
+</body>
+</html>

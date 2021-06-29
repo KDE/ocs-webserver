@@ -1,0 +1,82 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+$modelCategory = $this->projectCategoryRepository;
+$serviceCategory = $this->projectCategoryService;
+
+$isTagGroupFilter = false;
+$filter = $GLOBALS['ocs_config_store_tags'];
+
+if(isset($this->tag_group_filter)) {
+    foreach ($this->tag_group_filter as $key => $value) {
+        if($value != null && $value != "0") {
+            $isTagGroupFilter = true;
+        }
+    }
+}
+
+if($isTagGroupFilter == true) {
+    $this->categories = $serviceCategory->fetchTreeForViewForProjectTagGroupTags(null, $filter, $this->tag_group_filter);
+} else if($this->filter_mode=='filter_favourites')
+{
+    $this->categories = $serviceCategory->fetchTreeForViewForProjectFavourites();
+}else{
+    $this->categories = $modelCategory->fetchTreeForView();
+}
+$jsonTree = json_encode($this->categories);
+$userRoleName = $this->ocs_user->roleName;
+?>
+
+<div id="category-tree-container"></div>
+<script type="application/javascript">
+    var catTree = <?= $jsonTree ?>;
+    var tagCloud = <?= json_encode($this->tagCloud); ?>;
+    <?php
+    $catIdExists = isset($this->cat_id) ? $this->cat_id : "null";
+    echo "var categoryId = {$catIdExists};";
+   
+    $store_config = $GLOBALS['ocs_store']->config;
+    $is_show_real_domain_as_url = $store_config->is_show_real_domain_as_url;
+    echo "var is_show_real_domain_as_url = $is_show_real_domain_as_url;";
+    echo "var cat_tree_filter = '$this->filter_mode';";
+    
+    $tagGroupFilter  = $GLOBALS['ocs_config_store_taggroups'];
+    $tagGroupHelper = new \Application\View\Helper\FetchTagsForTagGroup($this->db);
+    
+    if(!empty($tagGroupFilter)) {
+        $tagGroupArray = array();
+        
+        foreach ($tagGroupFilter as $tagGroup ) {
+            $tags = $tagGroupHelper->fetchList($tagGroup);
+            $select = $this->tag_group_filter[$tagGroup];
+            $tagGroupArray[$tagGroup]['tags'] = $tags;
+            $tagGroupArray[$tagGroup]['selected_tag'] = $select;
+        }
+        echo "var tag_group_filter = " . json_encode($tagGroupArray) . ";";
+    } else {
+        echo "var tag_group_filter = null;";
+    }
+    
+    ?>
+</script>
+<script type="application/javascript" src="/theme/react/bundle/category-tree-bundle.js"></script>
+

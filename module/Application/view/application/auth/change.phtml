@@ -1,0 +1,258 @@
+<?php
+/**
+ *   ocs-webserver
+ *
+ *   Copyright 2016 by pling GmbH.
+ *
+ *     This file is part of ocs-webserver.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+use Application\Model\Service\ReviewProfileDataService;
+
+$form->get('username')->setAttributes([
+                                          'class'       => 'form-control',
+                                          'placeholder' => 'Username',
+                                          'required'    => false,
+                                          'autofocus'   => true,
+                                      ])->setLabelAttributes([
+                                                                 'class' => 'sr-only',
+                                                             ]);
+if ($this->errorCode < 20) {
+    $form->get('username')->setAttributes(['required' => true]);
+}
+
+$form->get('mail')->setAttributes([
+                                      'class'       => 'form-control',
+                                      'placeholder' => 'Email',
+                                      'required'    => false,
+                                  ])->setLabelAttributes([
+                                                             'class' => 'sr-only',
+                                                         ]);
+if ($this->errorCode >= 20) {
+    $form->get('mail')->setAttributes(['required' => true]);
+}
+
+?>
+<style>
+    /* style for form errors */
+    form ul {
+        list-style-type: none;
+        padding: 0px;
+        margin: 0px 5px;
+    }
+
+    form ul li {
+        color: red;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+</style>
+<!-- new code -->
+<main id="reg-page">
+
+    <section class="wrapper" id="register-wrap">
+        <div id="register" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+            <div id="register-box">
+
+                <div id="login-form-box" class="well" style="width:100%;">
+                    <h3><?= $this->translate('Please change your profile.') ?></h3>
+
+                    <div id="help-block" class="help-block">
+                        <?php
+                        $errCode = $this->errorCode;
+                        if ($errCode == ReviewProfileDataService::INVALID_USERNAME_DEACTIVATED) {
+                            print_r("Due to a rare username conflict your account has been temp. deactivated. To activate again please choose a new valid username.");
+                        } else if ($errCode == ReviewProfileDataService::INVALID_USERNAME_NOT_ALLOWED) {
+                            print_r("Some characters in your username are no longer supported. Please correct it or choose another one.");
+                        } else if ($errCode == ReviewProfileDataService::INVALID_USERNAME_NOT_UNIQUE) {
+                            print_r("Due to a switch to LDAP, there is a rare username conflict. Please make your username unique to continue.");
+                        } else if ($errCode == ReviewProfileDataService::INVALID_EMAIL_DEACTIVATED) {
+                            print_r("Due to a rare email conflict your account has been temp. deactivated. To activate again please choose a new valid email address.");
+                        }
+                        ?>
+                    </div>
+                    <div id="error" class="center text-error help-block">
+                        <?php if ($this->error && isset($this->errorText)): ?>
+                            <p class="errors">
+                                <?= $this->translate($this->errorText) ?>
+                            </p>
+                        <?php endif; ?>
+                    </div>
+                    <form id="usernameForm" class="standard-form row-fluid center" method="post" role="form"
+                          data-toggle="validator">
+                        <?php if (($this->errorCode == ReviewProfileDataService::INVALID_USERNAME_DEACTIVATED || $this->errorCode == ReviewProfileDataService::INVALID_USERNAME_NOT_ALLOWED || $this->errorCode == ReviewProfileDataService::INVALID_USERNAME_NOT_UNIQUE)) : ?>
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('username')); ?>
+                                <?= $this->formElement($form->get('username')); ?>
+                                <?= $this->formElementErrors($form->get('username')); ?>
+                            </div>
+                        <?php endif ?>
+
+                        <?php if ($this->errorCode == ReviewProfileDataService::INVALID_EMAIL_DEACTIVATED || $this->errorCode == ReviewProfileDataService::INVALID_EMAIL) : ?>
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('mail')); ?>
+                                <?= $this->formElement($form->get('mail')); ?>
+                                <?= $this->formElementErrors($form->get('mail')); ?>
+                            </div>
+                        <?php endif ?>
+
+                        <?= $this->formElement($form->get('redirect')); ?>
+                        <?= $this->formElement($form->get('csrf')) ?>
+                        <?= $this->formElementErrors($form->get('csrf')); ?>
+                        <button name="change_it" id="change_it" type="submit" class="btn btn-min-width btn-native">Save Changes <i
+                                    id="load-state" class="fa fa-spinner fa-pulse hidden" aria-hidden="true"></i></button>
+
+                        <br><br>
+                        <p>We are sorry for the inconvenience.</p>
+
+                    </form>
+
+                </div>
+
+            </div>
+            <!-- END #login-box -->
+        </div>
+    </section>
+
+    <section id="thumbs">
+
+        <?php /* foreach ($users as $key => $user) { ?>
+
+                <div class="thumb">
+                    <a href="<?php echo $buildMemberUrl->buildMemberUrl($user['member_id']); ?>">
+                        <span></span>
+                        <img src="<?php echo $helperImage->Image($user['profile_image_url'],array('width' => 110, 'height' => 110, 'crop' => 2)); ?>"/>
+                    </a>
+                </div>
+
+            <?php } */ ?>
+
+    </section>
+
+</main>
+<!-- /new code -->
+
+<script>
+    $('document').ready(function () {
+
+        var ValidateAjax = {
+            isClean: {},
+            initialize: function (formid, endpoint) {
+                end_url = endpoint;
+                form_id = '#' + formid;
+
+                $(form_id + ' input[name=username],input[name=mail]').blur(function () {
+                    var formElementID = $(this).attr('name');
+                    var formElementValue = $(this).val();
+                    ValidateAjax.doValidate(formElementID, formElementValue);
+                    return false;
+                });
+                $(form_id).on('submit', function (e) {
+                    var target = $(this).attr("data-target");
+                    var loadState = $(this).attr('data-load-state');
+
+                    $(target).find(loadState).prop('disabled', true);
+                    $(target).find(loadState).find('i').removeClass('hidden');
+
+                    var validateValues = ValidateAjax.isClean;
+                    for (var k in validateValues) {
+                        if (validateValues.hasOwnProperty(k)) {
+                            if (!validateValues[k]) {
+                                e.preventDefault();
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                });
+            },
+
+            doValidate: function (id, value) {
+                $.fn.capitalize = function () {
+                    $.each(this, function () {
+                        var caps = this.value;
+                        caps = caps.charAt(0).toUpperCase() + caps.slice(1);
+                        this.value = caps;
+                    });
+                    return this;
+                };
+
+                var url = end_url;
+                var data = {'name': id, 'value': value};
+                $.post(url, data, function (response) {
+                    var element = $('input[name=' + id + ']');
+                    element.parent().find('.form-control-feedback').remove();
+                    element.parent().removeClass('has-error');
+
+                    if (!response['status']) {
+                        ValidateAjax.isClean[id] = false;
+                        $('#login').attr("disabled", "disabled");
+
+                        element.parent().addClass('has-error');
+                        if (response[id]) {
+                            element.parent().append('<i class="glyphicon glyphicon-remove form-control-feedback"></i>');
+                            element.parent().find('.errors').remove();
+
+                            $msgArray = response[id];
+                            $msgString = "";
+                            $msgString += '<ul class="errors" style="text-align: left;">';
+                            if (id == 'mail') {
+                                $msgString += '<li class="errors">Email is invalid or already taken</li>';
+                            } else {
+                                $.each($msgArray, function (key, value) {
+                                    if (key == 'regexNotMatch') {
+                                        $msgString += '<li class="errors">Username may only contain lower case alphanumeric characters or single hyphens, and cannot begin or end with a hyphen</li>';
+                                    } else {
+                                        $msgString += '<li class="errors">' + value + '</li>';
+                                    }
+                                });
+
+                            }
+                            $msgString += '</ul>';
+                            element.parent().append($msgString);
+                            if ($msgString == '<ul class="errors" style="text-align: left;"></ul>') {
+                                element.parent().append('<ul class="errors" style="text-align: left;"><li class="errors">This ' + id + ' is already taken</li></ul>');
+                            }
+                        }
+                    } else {
+                        ValidateAjax.isClean[id] = true;
+                        $('#login').removeAttr("disabled");
+                        element.parent().addClass('has-success');
+                        element.parent().append('<i class="glyphicon glyphicon-ok form-control-feedback"></i>');
+                        element.parent().find('.errors').remove();
+                        element.parent().append('<ul class="errors" style="visibility: hidden;"><li></li></ul>');
+                    }
+                }, 'json');
+
+            },
+
+            getHTML: function (errArray) {
+                var o = '<ul class="errors">';
+                $.each(errArray, function (key, value) {
+                    o += '<li>' + value + '</li>';
+                });
+                o += '</ul>';
+
+                return o;
+            }
+        };
+
+        ValidateAjax.initialize('usernameForm', '/register/validate');
+    });
+</script>

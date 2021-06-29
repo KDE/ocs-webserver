@@ -1,0 +1,427 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+
+$isGhnsExcluded = $this->isGhnsExcluded;
+
+$countDownloadsToday = $this->countDownloadsToday;
+$countMediaViewsAlltime = $this->countMediaViewsAlltime;
+$countDownloadsTodayUk = $this->countDownloadsTodayUk;
+$countMediaViewsToday = $this->countMediaViewsToday;
+
+$countPageviews = $this->projectDetailCounts($this->product->project_id);
+$countPageviewsTotal = 0;
+$countPageviewsToday = $countPageviews[0]['count_views'];
+if(sizeof($countPageviews)==2) $countPageviewsTotal = $countPageviews[1]['count_views'];
+
+
+
+// $heute = date("Y-m-d H:i:s");
+$today = (new \DateTime())->modify('-1 day');
+$filterDownloadToday = $today->format("Y-m-d H:i:s");
+
+/** @var \Application\Model\Entity\CurrentUser $ocs_user */
+$ocs_user = $this->currentUser();
+?>
+<style>
+    .font-italic{
+        font-style: italic;
+    }
+    .font-italic span{
+        font-style: italic;
+    }
+</style>
+<div class="prod-widget-box right details">
+    <span class="title"> Details </span>
+
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">license</span>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <span class="value">
+            <?= $this->product->project_license_title; ?> </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">version</span>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <span class="value">
+            <?= \Application\Model\Service\HtmlPurifyService::purify($this->product->project_version); ?> </span>
+        </div>
+    </div>
+
+    <?php if ($this->product->project_changed_at) { ?>
+        <div class="row">
+            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">updated</span>
+            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_changed_at) ?></span>
+        </div>
+    <?php } ?>
+
+    <?php if ($ocs_user->isAdmin()) : ?>
+        <div class="row font-italic">
+            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">major updated</span>
+            <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_major_updated_at) ?></span>
+        </div>
+    <?php endif; ?>
+
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">added</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->printDate($this->product->project_created_at) ?></span>
+    </div>
+
+    <?php if ($ocs_user->isAdmin()) : ?>
+    <div class="row font-italic">
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads 24h old</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb"><?= $countDownloadsToday ?> 
+            <button id="loadMe"><span class="font-italic">Load</span></button></div></span>
+            <script>
+                 $('#loadMe').on('click', function (event) {
+                    event.stopPropagation();
+                    var spin = $('<span class="glyphicon glyphicon-refresh spinning" style="position: relative; left: 0;top: 0px;"></span>');
+                    $('#loadMe').append(spin);                                                           
+                    $.ajax({
+                        url: '/p/<?= $this->product->project_id ?>/loadAdminInfo',
+                        success: function (results) {                                   
+                            $('#downloadscntdb').text(results.cntDlToday);
+                            $('#mediaviewsAlltime').text(results.cntMediaViewsAlltime);
+                        }                        
+                    });                    
+                    return false;
+            });
+            </script>
+    </div>
+    <?php endif; ?>
+    
+    <div class="row">
+        <span class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">downloads 24h</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="downloadscntdb2"><?= $countDownloadsTodayUk ?></div></span>
+    </div>
+    
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews 24h </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countMediaViewsToday ?></span>
+    </div>
+    
+    <?php if ($ocs_user->isAdmin()) : ?>
+
+    <div class="row font-italic">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">mediaviews total </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <div id="mediaviewsAlltime"><?= $countMediaViewsAlltime ?></div></span>
+    </div>
+
+    <?php endif; ?>    
+    
+    <div class="row">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">pageviews 24h </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsToday ?></span>
+    </div>
+
+    
+    <?php if ($ocs_user->isAdmin()) : ?>
+
+    <div class="row font-italic">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">pageviews total </span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $countPageviewsTotal ?></span>
+    </div>
+
+    <div class="row font-italic">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">spam reports</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsSpamCnt($this->product->project_id) ?></span>
+    </div>
+
+    <div class="row font-italic">
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6">misuse reports</span>
+        <span class="col-lg-6 col-md-6 col-sm-6 col-xs-6 value"> <?= $this->fetchReportsMisuseCnt($this->product->project_id)?></span>
+    </div>
+     <?php endif; ?>
+        <div class="row" style="padding-top: 5px">
+            <div class="col-lg-12">
+                <div class="small " id="product-actions">
+
+                      <span style="padding-right: 20px;">
+                            <?php if ($ocs_user->hasIdentity()) {  ?>
+                                <a data-toggle="modal" data-target="#report-product-fraud-<?= $this->product->project_id ?>" role="button"
+                                   href="#report-product-fraud-<?= $this->product->project_id ?>">
+                                    <span class="glyphicon glyphicon-alert"></span> Report Misuse </a>
+                            <?php }else{ ?>
+                                    <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                                  <span class="glyphicon glyphicon-alert"></span> Report Misuse
+                                    </a>
+                            <?php } ?>
+                    </span>
+
+
+
+                    <?php if ($ocs_user->hasIdentity()) {  ?>
+                           <a data-toggle="modal" data-target="#report-product-<?= $this->product->project_id ?>" role="button"
+                           href="#report-product-<?= $this->product->project_id ?>">
+                            <span class="glyphicon glyphicon-alert"></span> Report SPAM </a>
+                    <?php }else{ ?>
+                            <a data-toggle="modal" data-target="#like-product-modal" role="button">
+                                   <span class="glyphicon glyphicon-alert"></span> Report SPAM
+                            </a>
+                    <?php } ?>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    <?php if ($ocs_user->isAdmin()) : ?>
+        <span class="page-views font-italic">
+            <a target="_NEW" href="http://cp1.hive01.com/content/show.php?content=<?= $this->product->project_source_pk ?>">link to hive</a>
+        </span>
+        <span class="page-views font-italic">
+            <a id="delete-this" href="/backend/project/delete?project_id=<?= $this->product->project_id ?>">delete product</a>
+        </span>
+
+        <div style="clear: both" class="small">(remember the cache) after you change some value below and refresh the page you may encounter some differences to your changes</div>
+        <span class="page-views font-italic">
+            <input type="checkbox" id="spam-checked-checkbox" autocomplete="off" <?php echo $this->product->spam_checked == 1 ? ' checked=\'checked\' ' : ''; ?> />  spam checked (<?php echo $this->product->spam_checked == 1 ? '1' : '0'; ?>)
+        </span>
+        <span class="page-views font-italic">
+          <input type="checkbox" id="feature-this-checkbox" autocomplete="off" <?php echo $this->product->featured == 1 ? ' checked=\'checked\' ' : ''; ?> />  featured (<?php echo $this->product->featured == 1 ? '1':'0'; ?>)
+        </span>
+        <span class="page-views font-italic" style="color: red;">
+            <input type="checkbox" id="ghns_excluded-this-checkbox" autocomplete="off" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded (<?php echo $isGhnsExcluded == 1 ? '1' : '0'; ?>)
+        </span>
+        <span class="page-views font-italic" style="color: red;">
+            <input type="checkbox" id="pling-excluded-checkbox" autocomplete="off" <?php echo $this->product->pling_excluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  pling-excluded (<?php echo $this->product->pling_excluded == 1 ? '1' : '0'; ?>)
+        </span>
+        
+
+        <script>
+            $('#delete-this').on('click', function (event) {
+                event.stopPropagation();
+                var result = confirm("Delete Product?");
+                if (result) {
+                    var target = $(this).attr('href');
+                    $.ajax({
+                        url: target,
+                        success: function (results) {
+                            alert('Product deleted successfully');
+                        },
+                        error: function () {
+                            alert('Service is temporarily unavailable.');
+                        }
+                    });
+                }
+
+                return false;
+            });
+
+            $('#spam-checked-checkbox').on('click', function (event) {
+                event.stopPropagation();
+                var feature = 0;
+                if (this.checked) {
+                    feature = 1;
+                } else {
+                    feature = 0;
+                }
+
+                var target = "/backend/project/dospamchecked?project_id=<?= $this->product->project_id ?>&checked=" + feature;
+                $.ajax({
+                    url: target,
+                    success: function (results) {
+                        if (0 == results.spam_checked) {
+                            $('#spam-checked-checkbox').prop("checked", false);
+                        } else {
+                            $('#spam-checked-checkbox').prop("checked", true);
+
+                        }
+
+                    },
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    }
+                });
+
+                return false;
+
+            });
+
+            $('#feature-this-checkbox').on('click', function (event) {
+                event.stopPropagation();
+                var feature = 1;
+                if (this.checked) {
+                    feature = 1;
+                } else {
+                    feature = 0;
+                }
+
+                var target = "/backend/project/dofeature?project_id=<?= $this->product->project_id ?>&featured=" + feature;
+                $.ajax({
+                    url: target,
+                    success: function (results) {
+                        if (feature == 0) {
+                            alert('Project remove featured successfully');
+                            $('#feature-this-checkbox').prop("checked", false);
+
+                        } else {
+                            alert('Project set featured successfully');
+                            $('#feature-this-checkbox').prop("checked", true);
+
+                        }
+
+                    },
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    }
+                });
+
+                return false;
+
+            });
+
+
+
+
+            $('#pling-excluded-checkbox').on('click', function (event) {
+                event.stopPropagation();
+                var status = 0;
+                if (this.checked) {
+                    status = 1;
+                } else {
+                    status = 0;
+                }
+
+                var target = "/backend/project/doexclude?project_id=<?= $this->product->project_id ?>&pling_excluded=" + status;
+                $.ajax({
+                    url: target,
+                    success: function (results) {
+                        if (status == 0) {
+                            alert('Project was successfully included for plinging');
+                            $('#pling-excluded-checkbox').prop("checked", false);
+
+                        } else {
+                            alert('Project was successfully excluded for plinging');
+                            $('#pling-excluded-checkbox').prop("checked", true);
+
+                        }
+
+                    },
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    }
+                });
+
+                return false;
+            });
+            
+            
+            $(window).bind("load", function() { 
+                // Featured.
+                var php_status = <?php echo $this->product->featured == 1 ? '1':'0'; ?>;
+                var ischecked = document.getElementById("feature-this-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("feature-this-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("feature-this-checkbox").checked = false;
+                    } else {
+                        document.getElementById("feature-this-checkbox").checked = true;
+                    }
+                }
+                // spam_checked.
+                php_status = <?php echo $this->product->spam_checked == 1 ? '1':'0'; ?>;
+                ischecked = document.getElementById("spam-checked-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("spam-checked-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("spam-checked-checkbox").checked = false;
+                    } else {
+                        document.getElementById("spam-checked-checkbox").checked = true;
+                    }
+                }
+                // ghns_excluded
+                php_status = <?php echo $isGhnsExcluded == 1 ? '1':'0'; ?>;
+                ischecked = document.getElementById("ghns_excluded-this-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("ghns_excluded-this-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("ghns_excluded-this-checkbox").checked = false;
+                    } else {
+                        document.getElementById("ghns_excluded-this-checkbox").checked = true;
+                    }
+                }
+                // pling-excluded.
+                php_status = <?php echo $this->product->pling_excluded == 1 ? '1':'0'; ?>;
+                ischecked = document.getElementById("pling-excluded-checkbox").checked;
+                if(ischecked != php_status) {
+                    console.log("pling-excluded-checkbox is Checked but should not! PHP-Staus: " + php_status + " - HTML-Status: " + ischecked);
+                    if(php_status == 0) {
+                        document.getElementById("pling-excluded-checkbox").checked = false;
+                    } else {
+                        document.getElementById("pling-excluded-checkbox").checked = true;
+                    }
+                }
+            });
+            
+        </script>
+
+        <span class="page-views"><input style="width: 40px;" type="text" id="project_category_id"
+                                        value="<?php echo $this->product->project_category_id; ?>"> <button id="change_cat"
+                                                                                                            data-href="/backend/project/changecat?project_id=<?= $this->product->project_id ?>&project_category_id=">change category</button></span>
+        <script>
+            $('#change_cat').on('click', function (event) {
+
+                event.stopPropagation();
+                var target = $(this).attr('data-href');
+                var newCat = $('#project_category_id').val();
+
+                $.ajax({
+                    url: target + newCat,
+                    success: function (results) {
+                        alert('Project updated successfully');
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('Service is temporarily unavailable.');
+                    }
+                });
+
+                return false;
+            });
+        </script>
+
+    <?php elseif ($ocs_user->isModerator()) : ?>
+ 
+        <span class="page-views " style="color: red;">
+            
+             <input type="checkbox" id="ghns_excluded-this-checkbox" <?php echo $isGhnsExcluded == 1 ? ' checked=\'checked\' ' : ''; ?> />  ghns-excluded
+        </span>
+
+       
+    <?php endif; ?>
+ 
+</div>
+
+<?php
+if($ocs_user->isModerator() || $ocs_user->isAdmin()
+    ){
+            $this->inlineScript()->appendScript(
+                '    $(document).ready(function(){
+                        GhnsExcludedClick.setup('.$this->product->project_id.');
+                    });
+                ');
+}

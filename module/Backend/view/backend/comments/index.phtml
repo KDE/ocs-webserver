@@ -1,0 +1,236 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+<style>
+    .jtable-toolbar-item-add-record {
+        display: none !important;
+    }
+</style>
+
+<div class="panel panel-default" style="width:95%;">
+    <div class="panel-body" style="background: rgba(200,200,200,0.3);">
+        <form class="form-inline">
+            <div class="form-group form-group-sm">
+                <label for="comment_target_id">project_id</label>
+                <input type="text" class="form-control" id="filter_comment_target_id" placeholder="">
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="comment_member_id">member_id</label>
+                <input type="text" class="form-control" id="filter_comment_member_id" placeholder="">
+            </div>
+            <div class="form-group form-group-sm">
+                <label for="comment_type">type_id</label>
+                <input type="text" class="form-control" id="filter_comment_type" placeholder="">
+            </div>
+            <button type="submit" class="btn btn-default btn-sm" id="LoadRecordsButton">Load records</button>
+            <button type="reset" class="btn btn-default btn-sm" id="RemoveFilterButton">Remove filter</button>
+        </form>
+    </div>
+</div>
+
+<div id="TableContainer"></div>
+<div id="dialog-form" title="Object Details"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            title: 'Table of comments',
+            actions: {
+                listAction: '/backend/comments/list',
+                createAction: '/backend/comments/create',
+                updateAction: '/backend/comments/update',
+                deleteAction: '/backend/comments/delete'
+            },
+            fields: {
+                comment_id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    title: 'id',
+                    width: '5%'
+                },
+                comment_type: {
+                    title: 'type',
+                    width: '5%',
+                    edit: false
+                },
+                comment_parent_id: {
+                    title: 'parent id',
+                    width: '5%',
+                    edit: false
+                },
+                comment_target_id: {
+                    title: 'project id',
+                    width: '5%',
+                    edit: false
+                },
+                comment_member_id: {
+                    title: 'member id',
+                    width: '5%',
+                    edit: false
+                },
+                comment_text: {
+                    title: 'text',
+                    width: '50%',
+                    input: function (data) {
+                        if (data.record) {
+                            return '<textarea name="comment_text" rows="10" cols="50">' + data.record.comment_text + '</textarea>';
+                        } else {
+                            return '<input type="text" name="comment_text" style="width:200px" value="enter text here" />';
+                        }
+                    }
+                },
+                comment_created_at: {
+                    title: 'created',
+                    width: '10%',
+                    type: 'date',
+                    create: false,
+                    edit: false
+                },
+                comment_active: {
+                    title: 'active',
+                    width: '5%',
+                    create: false,
+                    edit: false
+                },
+                source_id: {
+                    title: 'source id',
+                    width: '5%',
+                    create: false,
+                    edit: false
+                },
+                hide: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    display: function (data) {
+                        if (data.record.comment_active) {
+                            if (data.record.comment_active == 0) {
+                                btn_title = 'activate';
+                            } else {
+                                btn_title = 'deactivate';
+                            }
+                            return '<a role="button" title="' + btn_title + ' this comment" class="btn btn-warning btn-xs toggle-status pull-right" style="color:white;"  data-record="' + data.record.comment_id + '"><span>' + btn_title + '</span></a>'
+                                ;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            //height: 350,
+            width: 600,
+            modal: true,
+            buttons: {
+                Close: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $('body').on("click", 'a.member-info', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'member_id': elementRecord},
+                url: '/backend/user/memberinfo/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#dialog-form').html(results.ViewRecord).dialog('open');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        $('body').on("click", 'a.toggle-status', function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            var elementRecord = $(this).data("record");
+
+            jQuery.ajax({
+                data: {'c': elementRecord},
+                url: '/backend/comments/status/',
+                type: 'post',
+                error: function () {
+                    alert("<span class='error'>Service is temporarily unavailable. Our engineers are working quickly to resolve this issue. <br/>Find out why you may have encountered this error.</span>");
+                    return false;
+                },
+                success: function (results) {
+                    $('#TableContainer').jtable('reload');
+                    return false;
+                }
+            });
+
+            return false;
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+                filter_comment_target_id: $('#filter_comment_target_id').val(),
+                filter_comment_member_id: $('#filter_comment_member_id').val(),
+                filter_comment_type: $('#filter_comment_type').val()
+
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#filter_comment_target_id').val('');
+            $('#filter_comment_member_id').val('');
+            $('#filter_comment_type').val();
+            $('#TableContainer').jtable('load', {
+                filter_comment_target_id: null,
+                filter_comment_member_id: null,
+                filter_comment_type: null
+            });
+        });
+
+        $('#TableContainer').jtable('load', {
+            filter_comment_target_id: $('#filter_comment_target_id').val(),
+            filter_comment_member_id: $('#filter_comment_member_id').val(),
+            filter_comment_type: $('#filter_comment_type').val()
+        });
+    });
+</script>

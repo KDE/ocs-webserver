@@ -1,0 +1,222 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$this->headTitle($this->headTitle);
+
+$this->tab = 'payout';
+$this->countDownloadsOverall = 0;
+
+$currentDate = date("Ym",time());
+$currentYear = date("Y",time());
+
+$downloadYears = $this->downloadYears;
+$baseurlStore = $this->baseurlStore;
+?>
+
+
+<main class="user-admin-page">
+    <section class="body-wrap">
+        <section class="wrapper product-page">
+            <!-- PAGE BODY -->
+            <section class="my-products-page">
+                <div class="my-products-heading" style="border-bottom: none; padding-bottom: 0px;">
+                    <h1 class="page-title left"><?= $this->translate('Public Funding') ?></h1>
+                    <br><br><br><br><div>To support any section, click <a href="<?= $baseurlStore ?>/support">here</a>.</div>
+                </div>
+                
+                <!-- year tabs nav -->
+                <div class="pling-nav-tabs" style="padding-bottom: 20px;">
+                    <ul class="nav nav-tabs" id="yeartablist">
+                        <?php
+                            if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                                //Current year
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$currentYear.'" data-toggle="yeartabajax" href="/funding/plingsajax?year='.$currentYear.'" data-target="#my-payout-list" id="tab_year_'.$currentYear.'">'.$currentYear.'</a>';
+                                echo '</li>';
+                            }
+
+                            foreach ($downloadYears as $yearobj) {
+                                echo '<li role="presentation" class="yeartabs">';
+                                echo '    <a style="font-size: 18px;" data-year="'.$yearobj['year'].'" data-toggle="yeartabajax" href="/funding/plingsajax?year='.$yearobj['year'].'" data-target="#my-payout-list" id="tab_year_'.$yearobj['year'].'">'.$yearobj['year'].'</a>';
+                                echo '</li>';
+                            }
+                        ?>
+                    </ul>
+                </div>
+                
+                <?php
+                    echo "<script>";
+                    echo "var yearList = new Array();";
+
+                    if(count($downloadYears) == 0 ||  $downloadYears[0]['year'] != $currentYear) {
+                        //Current year
+                        echo "var yearListObj = new Array();";
+                        echo "yearListObj['maxMonth'] = '".$currentDate."';";
+                        echo "yearListObj['sum'] = '0';";
+                        echo "yearList['".$currentYear."'] = yearListObj;";
+                    }
+
+                    foreach ($downloadYears as $yearobj) {
+                        echo "var yearListObj = new Array();";
+                        echo "yearListObj['maxMonth'] = '".$yearobj['max_yearmonth']."';";
+                        echo "yearListObj['sum'] = '0';";
+                        echo "yearList['".$yearobj['year']."'] = yearListObj;";
+                    }
+                    echo "</script>";
+                ?>  
+                <div class="my-products-list" id="my-payout-list">
+                    <div id="plingsyear">
+                        <i class="fa fa-spinner"></i>
+                    </div>
+                </div>
+            </section>
+            <!-- /PAGE BODY -->
+        </section>
+    </section>
+</main>
+
+<script>
+$(document).ready(function(){
+    
+    
+    //Load pling for year
+    $('[data-toggle="yeartabajax"]').click(function(e) {
+               
+        var $this = $(this);
+        var year = $this.attr('data-year');
+        var loadurl = $this.attr('href');
+        var targ = $('#plingsyear');
+        
+        $('.yeartabs').removeClass('active');
+        $this.parent().addClass('active');
+        
+        $(targ).html('<i class="fa fa-spinner"></i>');
+
+        $.get(loadurl, function(data) {
+            
+            $('#plingsyear').html(data);
+            $('[data-toggle="popover"]').popover();
+            
+            
+            //Init tabs
+            $('[data-toggle="tabajax"]').click(function(e) {
+                var $this = $(this),
+                    loadurl = $this.attr('href'),
+                    targ = $this.attr('data-target');
+                $(targ).html('<i class="fa fa-spinner"></i>');
+
+                $.get(loadurl, function(data) {
+                    $(targ).html(data);
+                });
+
+                $this.tab('show');
+                return false;
+            });
+            
+            //Load first Tab
+            var month = yearList[year]['maxMonth'];
+            var $this = $('#tab_'+month),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+
+            $this.tab('show');
+            
+        });
+
+        $(targ).show();
+        return false;
+    });
+         
+    //Init View on first load     
+    var year = <?= $currentYear ?>;
+    var currentyeartab = $('#tab_year_'+year);
+    $('.yeartabs').removeClass('active');
+    
+    currentyeartab.parent().addClass('active');
+    
+    var loadurl = currentyeartab.attr('href');
+    $.get(loadurl, function(data) {
+        $('#plingsyear').html(data);
+        $('[data-toggle="popover"]').popover();
+        
+        
+        //Init tabs
+        $('[data-toggle="tabajax"]').click(function(e) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target');
+            $(targ).html('<i class="fa fa-spinner"></i>');
+
+            $.get(loadurl, function(data) {
+                $(targ).html(data);
+            });
+
+            $this.tab('show');
+            return false;
+        });
+        
+        
+        var $this = $('#tab_' + yearList[year]['maxMonth']),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+
+        $.get(loadurl, function(data) {
+            $(targ).html(data);
+        });
+
+        $this.tab('show');
+        
+
+        return false;
+    });
+    
+    
+    $('[data-toggle="tabajax"]').click(function(e) {
+               
+        var $this = $(this),
+            loadurl = $this.attr('href'),
+            targ = $this.attr('data-target');
+        $(targ).html('<i class="fa fa-spinner"></i>');
+
+        $.get(loadurl, function(data) {
+            $(targ).html(data);
+        });
+
+        $this.tab('show');
+        return false;
+    });
+            
+});
+
+    $('#payout_info').click(function (event ) {
+        event.preventDefault();
+        $('#le-alert').addClass('in'); // shows alert with Bootstrap CSS3 implem
+    });
+
+    $('.close').click(function () {
+        $(this).parent().removeClass('in'); // hides alert with Bootstrap CSS3 implem
+    });
+    
+</script> 

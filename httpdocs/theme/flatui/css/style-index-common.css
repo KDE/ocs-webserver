@@ -1,0 +1,157 @@
+ .new-products .num
+    {
+        display: block;
+        float: left;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 10px;
+    }
+    .wrapper-kde-store h3
+    {
+       padding-left: 8px;
+       padding-top: 10px;
+    }
+    .new-products .row
+    {
+        margin-top: 10px;
+    }
+
+     .new-products .rating
+    {
+        width: 180px;
+    }
+    .new-products .time
+    {
+        font-size: smaller;
+    }
+    .new-products .cntComments
+    {
+        font-size: smaller;
+    }
+    .new-products .productimg
+    {
+        width:50px;
+        height:50px;
+    }
+    .new-products .productrow
+    {
+        padding-bottom: 5px;
+        padding-top: 5px;
+        border-bottom: 1px solid #ccd4d8;
+    }
+    .new-products .productrow:last-child {
+            border-bottom: none;
+        }   
+    .newusers .u-wrap {
+    float: left;
+    width: 100%;
+    padding: 0.3em;
+    border: 0.35em solid #dee0e0;
+    border-radius: 5px;
+    height: 14em;
+    margin-bottom: 1em;
+    background: white;
+    width: 115px;
+    height: 200px;
+    margin-right: 10px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    }
+          
+    .newusers .u-wrap figure img {
+    width: 100%;
+    border: 1px solid #dbdbdb;
+    -webkit-border-radius: 999px;
+    -moz-border-radius: 999px;
+    border-radius: 999px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    }
+
+    .newusers .u-wrap h3 {
+    font-size: 13px;
+    font-weight: bold;
+    word-wrap: break-word;
+    line-height: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    }
+    .newusers .u-wrap span.small {    
+   font-size: 13px;
+    text-align: right;
+    color: #444;
+    margin-top: 50px;
+    float: right;
+    }
+
+    .prod-widget-box
+    {
+        width: 100% !important;
+
+    }
+    div.latestcomments
+    {
+    	width: 100%;
+        /*width: 300px;
+        float: left; 
+        margin-left: 50px;*/
+    }
+    div.newestproducts
+    {
+    	width: 100%;        
+        float: left ;
+    }
+  
+  div.newestproducts
+  {
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }
+
+  div.mostdownloadedproducts
+  {
+    
+  }
+
+  div.mostdownloadedproducts span.title
+  {
+    font-size: 20px; 
+    padding-left: 6px;
+  }
+
+  div.newestproducts span.title
+  {
+    font-size: 20px; 
+    padding-left: 6px;
+  }
+
+  div.latestcomments
+  {
+     margin-top: 30px;
+     margin-bottom: 50px;   
+  }
+
+  div.latestcomments span.title
+  {
+   font-size: 20px; 
+   
+   padding-left: 6px;
+  }
+
+  .noborder
+  {
+    border:0px !important;
+  }
+  .containerbox
+  {
+
+  }
+
+  .aside
+  {
+    padding-top:60px;
+  }

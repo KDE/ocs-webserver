@@ -1,0 +1,164 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+?>
+<style>
+    .inline {
+        display: inline-block;
+    }
+    
+    .cell-default {
+        line-height: 2em;
+        vertical-align: middle;
+    }
+    .row-total {
+        border-top: #1595ee solid thin;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        line-height: 30px;
+    }
+    
+    .popover {
+        min-width:350px;
+    }
+    
+    .popover-title { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+    
+    .popover-content { 
+        text-transform: none;
+        font-size: 11pt;
+    }
+</style>
+
+<ul class="nav nav-tabs margin-bottom-10 tabs-up" id="plingtabs">
+<?php
+
+$isForAdmin = $this->isAdmin;
+    
+$isCurrentMonth = false;
+$currentYear = date("Y",time());
+
+if($this->year) {
+    $currentYear = $this->year;
+}
+
+
+$currentDate = date("Ym",time());
+$currentMonth = '';
+$monthlyDownload = null;
+$allSections = array();
+$css_active = 'active';
+
+$printCurrentMonth = new \DateTime($currentDate.'01');
+
+$downloadMonths = $this->downloadMonths;
+$countDownloadsOverall = count($downloadMonths);
+$minDate = null;
+
+if ($countDownloadsOverall > 0) {  
+    foreach ($downloadMonths as $download) {
+        $printMonth = new \DateTime($download['yearmonth'].'01');
+        if($minDate == null) {
+            $minDate = $download['yearmonth'];
+        }
+        
+        $printDate = $printMonth->format('M Y');
+        $printDateNow = $printCurrentMonth->format('M Y');
+        
+        if($printDateNow == $printDate) {
+            $printDate = 'Current month';
+            $isCurrentMonth = true;
+        } else {
+            $isCurrentMonth = false;
+        }
+        
+        if ($printDate != $currentMonth) {
+            $monthlyDownload = array();
+            $currentMonth = $printDate;
+        
+    ?>
+    
+    <?php if($isCurrentMonth) {?>
+    
+    <li class="media_node span <?=$css_active?> ">
+        <a href="/funding/plingsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?></a>
+    </li>
+    
+    <?php } else { ?>
+    
+    <li class="media_node span <?=$css_active?> ">
+        <a href="/funding/plingsmonthajax?yearmonth=<?= $download['yearmonth'] ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $download['yearmonth'] ?>"><?= $printDate ?></a>
+    </li>
+    
+    <?php } ?>
+    
+    <?php
+        }
+        $css_active = '';
+        $monthlyDownload[] = $download;
+        $allSections[$download['yearmonth']] = $monthlyDownload;
+    }
+     
+} else {
+    $currentMonth = '';
+    $currentDate = date("Ym",time());
+    $printMonth = new \DateTime($currentDate.'01');
+    
+    $printDate = $printMonth->format('M Y');
+    $printDate = 'Current month';
+    
+    $minDate = $currentDate;
+    
+    ?>
+    <li class="in active">
+        <a href="/funding/plingsmonthajax?yearmonth=<?= $currentDate  ?>" data-toggle="tabajax" data-target="#pling-tab-content" id="tab_<?= $currentDate  ?>"><?= $printDate ?></a>
+    </li>
+<?php
+}
+?>
+</ul>
+
+
+
+<div class="container-fluid margin-bottom-12" style="padding-left: 0; padding-right: 0; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-md-2 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Section</strong></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Supporters</strong></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Donations</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Sum of all supporter donations for this month." data-original-title="Donations"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <?php if ($isForAdmin) : ?>
+        <div class="col-md-1 text-right text-uppercase nowrap font-italic" style="white-space: nowrap;"><strong>Potential (A)</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Potential Payout Amount for this month." data-original-title="Potential Payout"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <?php endif; ?> 
+        <!--<div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Downloads</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Sum of all downloads of all files (active or archived) within this month." data-original-title="Downloads"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>-->
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Payout</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Real Payout Amount for this month." data-original-title="Payout"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Pling-Factor</strong><div class="inline" style="margin-left:.2em;" data-placement="top" data-toggle="popover" title="" data-trigger="hover" data-html="true" data-content="Donations/Payout = Pling-Factor" data-original-title="Pling-Factor"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></div></div>
+        <?php /*<div class="col-md-1 text-right text-uppercase nowrap" style="white-space: nowrap;"><strong>Target</strong></div>*/ ?>
+        <div class="col-md-4 text-left text-uppercase nowrap" style="white-space: nowrap;"><strong>Supporters</strong></div>
+        
+    </div>
+</div>
+
+
+
+<div class="tab-content" id="pling-tab-content"><i class="fa fa-spinner"></i></div>

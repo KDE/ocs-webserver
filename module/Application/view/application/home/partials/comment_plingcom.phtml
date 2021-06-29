@@ -1,0 +1,53 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+$helpCategories = new Default_View_Helper_FetchCategoriesForProductAsString();
+$helpProductUrl = new Default_View_Helper_BuildProductUrl();
+$helpTruncate = new Default_View_Helper_Truncate();
+$helpPrintDate = new Default_View_Helper_PrintDate();
+$helpMemberUrl = new Default_View_Helper_BuildMemberUrl();
+?><div class="productrow">
+    <div  class="row">
+      <div class="col-lg-9">
+          <?= \Application\Model\Service\HtmlPurifyService::purify($this->comment['title']) ?>
+          <br>
+          <span style="font-size: smaller;">
+              <?php echo $helpCategories->fetchCategoriesForProductAsString($this->comment['project_id']) ?>
+          </span>
+          <div class="small" style="line-height:1.3">
+              <a href="<?= $helpProductUrl->buildProductUrl($this->comment['project_id']) ?>">
+                  <?=$helpTruncate->truncate(\Application\Model\Service\HtmlPurifyService::purify($this->comment['comment_text']), 200, '...', false, true)?>
+              </a>
+          </div>
+         <span class="time"><?= $helpPrintDate->printDate($this->comment['comment_created_at'])?></span>
+      </div>
+
+      <div class="col-lg-3 text-center">
+         <div class="userinfo" style="overflow: hidden">
+            <a href="<?php echo $helpMemberUrl->buildMemberUrl($this->comment['username']) ?>">
+            <img src="<?= $this->Image($this->comment['profile_image_url'],
+                        array('width' => 120, 'height' => 120)) ?>"  style="margin:10px; width: 40px; height:40px; border-radius: 50%"/>
+                <span style="display: block"><?= $this->comment['username'] ?></span>
+            </a>
+        </div>
+      </div>
+    </div >
+</div>

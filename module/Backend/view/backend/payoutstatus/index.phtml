@@ -1,0 +1,110 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<?php
+$lastMonth = date("Ym", strtotime("first day of previous month"));
+?>
+
+<div id="TableContainer"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'amount asc',
+            title: 'Table of payout stati',
+            actions: {
+                listAction: '/backend/payoutstatus/list',
+                createAction: '/backend/payoutstatus/create',
+                updateAction: '/backend/payoutstatus/update',
+                //deleteAction: '/backend/payoutstatus/delete'
+            },
+            fields: {
+                id: {
+                    title: 'Id',
+                    key: true,
+                    create: true,
+                    edit: true,
+                    list: true
+                },
+                type: {
+                    title: 'Type',
+                    list: true,
+                    create: true,
+                    edit: true,
+                    options: {'info': 'Info', 'warning': 'Warning', 'danger': 'Error', 'success': 'Success'}
+                },
+                title: {
+                    title: 'Title',
+                    list: true,
+                    create: true,
+                    edit: true
+                },
+                description: {
+                    title: 'Description',
+                    list: true,
+                    create: true,
+                    edit: true
+                },
+                color: {
+                    title: 'Color',
+                    list: true,
+                    create: true,
+                    edit: true,
+                    defaultValue: '#31708f;'
+                },
+                icon: {
+                    title: 'Icon',
+                    list: true,
+                    create: true,
+                    edit: true,
+                    defaultValue: 'glyphicon-info-sign'
+                },
+                is_active: {
+                    title: 'Active',
+                    width: '5%',
+                    list: true,
+                    edit: true,
+                    create: true,
+                    options: {'0': 'Inactive', '1': 'Active'},
+                    optionsSorting: 'id'
+                }
+            },
+            recordsLoaded: function (event, data) {
+                for (var i in data.records) {
+                    $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:" + data.records[i].color + " !important; color:white !important;");
+                }
+            },
+            recordUpdated: function (event, data) {
+                $('#TableContainer').jtable('load');
+            },
+            rowUpdated: function (event, data) {
+                $('#TableContainer').jtable('load');
+            }
+        });
+
+        $('#TableContainer').jtable('load');
+        
+    });
+</script>

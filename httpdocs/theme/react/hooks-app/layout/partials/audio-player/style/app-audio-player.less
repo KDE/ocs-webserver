@@ -1,0 +1,133 @@
+@import "./../../../../assets/less/elements.less";
+
+#app-audio-player {
+    padding: 0 65px 0 65px;
+    background-color: #fafafa;
+    border-top: 1px solid #e4e5e5;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    height: 56px;
+    z-index: 20;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    perspective: 1000;
+    transform: translateZ(0);
+    font-size: 12px;
+    font-weight: 600;
+    color: #605f68;
+
+    &.hide-player {
+        bottom: -60px;
+    }
+
+    .play-button {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 65px;
+        text-align: center;
+        padding: 20px 0;
+        cursor: pointer;
+    }
+
+    .icon-pause {
+        fill:#545454;
+        cursor: pointer;
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .close-player {
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 17px;
+        fill: #acacac;
+    }
+
+    .track-player {
+        width: 71%;
+        height: 56px;
+        padding: 0 50px;
+        float: left;
+        position: relative;
+
+        .player-time {
+            position: absolute;
+            width: 50px;
+            text-align: center;
+            vertical-align: middle;
+            top: 21px;
+            font-weight: bold;
+
+            &.time-total {
+                right: 0;
+            }
+
+            &.time-elapsed {
+                left: 0;
+            }
+        }
+
+        .slider-wrapper {
+            width: 100%;
+            padding-top: 22px;
+
+            .rc-slider-step {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .track-info {
+        width: 29%;
+        height: 56px;
+        padding: 0 0 0 50px;
+        float: left;
+
+        .info-wrapper {
+            width: 100%;
+            position: relative;
+            padding-left: 40px;
+            height: 56px;
+            padding-top: 12px;
+
+            img {
+                display: block;
+                position: absolute;
+                top: 12px;
+                left: 0;
+                width: 34px;
+                height: 34px;
+                box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+                border: 1px solid #ccc;
+                z-index: 1;
+            }
+
+            span {
+                display: block;
+                height: 16px;
+                float: left;
+                width: 100%;
+
+                &.title {
+                    font-size: 13px;
+                    color: #2d3339;
+                    font-weight: bold;
+                }
+            }
+        }
+    }   
+}

@@ -1,0 +1,297 @@
+<?php 
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+?>
+
+<?php
+$lastMonth = date("Ym", strtotime("first day of previous month"));
+?>
+
+<div class="filtering">
+    <form>
+        Month: 
+            <select name="filter_yearmonth" id="filter_yearmonth">
+                <option value="201704" <?php if($lastMonth == '201704') echo 'selected=1'; ?> >2017 Apr</option>
+                <option value="201705" <?php if($lastMonth == '201705') echo 'selected=1'; ?> >2017 May</option>
+                <option value="201706" <?php if($lastMonth == '201706') echo 'selected=1'; ?> >2017 Jun</option>
+                <option value="201707" <?php if($lastMonth == '201707') echo 'selected=1'; ?> >2017 Jul</option>
+                <option value="201708" <?php if($lastMonth == '201708') echo 'selected=1'; ?> >2017 Aug</option>
+                <option value="201709" <?php if($lastMonth == '201709') echo 'selected=1'; ?> >2017 Sep</option>
+                <option value="201710" <?php if($lastMonth == '201710') echo 'selected=1'; ?> >2017 Oct</option>
+                <option value="201711" <?php if($lastMonth == '201711') echo 'selected=1'; ?> >2017 Nov</option>
+                <option value="201712" <?php if($lastMonth == '201712') echo 'selected=1'; ?> >2017 Dec</option>
+                
+                <option value="201801" <?php if($lastMonth == '201801') echo 'selected=1'; ?> >2018 Jan</option>
+                <option value="201802" <?php if($lastMonth == '201802') echo 'selected=1'; ?> >2018 Feb</option>
+                <option value="201803" <?php if($lastMonth == '201803') echo 'selected=1'; ?> >2018 Mar</option>
+                <option value="201804" <?php if($lastMonth == '201804') echo 'selected=1'; ?> >2018 Apr</option>
+                <option value="201805" <?php if($lastMonth == '201805') echo 'selected=1'; ?> >2018 May</option>
+                <option value="201806" <?php if($lastMonth == '201806') echo 'selected=1'; ?> >2018 Jun</option>
+                <option value="201807" <?php if($lastMonth == '201807') echo 'selected=1'; ?> >2018 Jul</option>
+                <option value="201808" <?php if($lastMonth == '201808') echo 'selected=1'; ?> >2018 Aug</option>
+                <option value="201809" <?php if($lastMonth == '201809') echo 'selected=1'; ?> >2018 Sep</option>
+                <option value="201810" <?php if($lastMonth == '201810') echo 'selected=1'; ?> >2018 Oct</option>
+                <option value="201811" <?php if($lastMonth == '201811') echo 'selected=1'; ?> >2018 Nov</option>
+                <option value="201812" <?php if($lastMonth == '201812') echo 'selected=1'; ?> >2018 Dec</option>
+
+                <option value="201901" <?php if($lastMonth == '201901') echo 'selected=1'; ?> >2019 Jan</option>
+                <option value="201902" <?php if($lastMonth == '201902') echo 'selected=1'; ?> >2019 Feb</option>
+                <option value="201903" <?php if($lastMonth == '201903') echo 'selected=1'; ?> >2019 Mar</option>
+                <option value="201904" <?php if($lastMonth == '201904') echo 'selected=1'; ?> >2019 Apr</option>
+                <option value="201905" <?php if($lastMonth == '201905') echo 'selected=1'; ?> >2019 May</option>
+                <option value="201906" <?php if($lastMonth == '201906') echo 'selected=1'; ?> >2019 Jun</option>
+                <option value="201907" <?php if($lastMonth == '201907') echo 'selected=1'; ?> >2019 Jul</option>
+                <option value="201908" <?php if($lastMonth == '201908') echo 'selected=1'; ?> >2019 Aug</option>
+                <option value="201909" <?php if($lastMonth == '201909') echo 'selected=1'; ?> >2019 Sep</option>
+                <option value="201910" <?php if($lastMonth == '201910') echo 'selected=1'; ?> >2019 Oct</option>
+                <option value="201911" <?php if($lastMonth == '201911') echo 'selected=1'; ?> >2019 Nov</option>
+                <option value="201912" <?php if($lastMonth == '201912') echo 'selected=1'; ?> >2019 Dec</option>
+
+                <option value="202001" <?php if($lastMonth == '202001') echo 'selected=1'; ?> >2020 Jan</option>
+                <option value="202002" <?php if($lastMonth == '202002') echo 'selected=1'; ?> >2020 Feb</option>
+                <option value="202003" <?php if($lastMonth == '202003') echo 'selected=1'; ?> >2020 Mar</option>
+                <option value="202004" <?php if($lastMonth == '202004') echo 'selected=1'; ?> >2020 Apr</option>
+                <option value="202005" <?php if($lastMonth == '202005') echo 'selected=1'; ?> >2020 May</option>
+                <option value="202006" <?php if($lastMonth == '202006') echo 'selected=1'; ?> >2020 Jun</option>
+                <option value="202007" <?php if($lastMonth == '202007') echo 'selected=1'; ?> >2020 Jul</option>
+                <option value="202008" <?php if($lastMonth == '202008') echo 'selected=1'; ?> >2020 Aug</option>
+                <option value="202009" <?php if($lastMonth == '202009') echo 'selected=1'; ?> >2020 Sep</option>
+                <option value="202010" <?php if($lastMonth == '202010') echo 'selected=1'; ?> >2020 Oct</option>
+                <option value="202011" <?php if($lastMonth == '202011') echo 'selected=1'; ?> >2020 Nov</option>
+                <option value="202012" <?php if($lastMonth == '202012') echo 'selected=1'; ?> >2020 Dec</option>
+
+                <option value="202101" <?php if($lastMonth == '202001') echo 'selected=1'; ?> >2021 Jan</option>
+                <option value="202102" <?php if($lastMonth == '202002') echo 'selected=1'; ?> >2021 Feb</option>
+                <option value="202103" <?php if($lastMonth == '202003') echo 'selected=1'; ?> >2021 Mar</option>
+                <option value="202104" <?php if($lastMonth == '202004') echo 'selected=1'; ?> >2021 Apr</option>
+                <option value="202105" <?php if($lastMonth == '202005') echo 'selected=1'; ?> >2021 May</option>
+                <option value="202106" <?php if($lastMonth == '202006') echo 'selected=1'; ?> >2021 Jun</option>
+                <option value="202107" <?php if($lastMonth == '202007') echo 'selected=1'; ?> >2021 Jul</option>
+                <option value="202108" <?php if($lastMonth == '202008') echo 'selected=1'; ?> >2021 Aug</option>
+                <option value="202109" <?php if($lastMonth == '202009') echo 'selected=1'; ?> >2021 Sep</option>
+                <option value="202110" <?php if($lastMonth == '202010') echo 'selected=1'; ?> >2021 Oct</option>
+                <option value="202111" <?php if($lastMonth == '202011') echo 'selected=1'; ?> >2021 Nov</option>
+                <option value="202112" <?php if($lastMonth == '202012') echo 'selected=1'; ?> >2021 Dec</option>
+
+            </select>
+            
+        Status:
+
+            <select name="filter_status" id="filter_status">
+        		<option value=""></option>
+	        <?php 
+		        $optionString = "'':'',";	            
+	            $list = $this->payoutStatusList;
+	            foreach ($list as $key => $value) {
+	    	        $optionString= "<option value=".$key.">".$key." - ".$value."</option>";
+	    	        echo $optionString;
+	            }
+	        ?>
+        
+        	</select>
+        
+        Member Id: <input type="text" name="filter_member_id" id="filter_member_id"/>
+        PayPal-Mail: <input type="text" name="filter_paypal_mail" id="filter_paypal_mail"/>
+        e-mail: <input type="text" name="filter_mail" id="filter_mail"/>
+        <button type="submit" id="LoadRecordsButton"><?= $this->translate('Load records'); ?></button>
+        <button type="reset" id="RemoveFilterButton"><?= $this->translate('Remove filter'); ?></button>
+    </form>
+</div>
+<div id="TableContainer"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TableContainer').jtable({
+            jqueryuiTheme: true,
+            paging: true,
+            sorting: true,
+            defaultSorting: 'amount asc',
+            title: 'Table of member payouts',
+            toolbar: {
+                items: [{
+                    Tooltip: 'Click here to export this table to excel',
+                    //icon: '/images/paginate.gif',
+                    text: 'Export to Excel',
+                    click: function () {
+                    	url = '/backend/memberpayout/export?filter_status=';
+                    	url += $('#filter_status').val();
+                    	url += '&filter_yearmonth=';
+                    	url += $('#filter_yearmonth').val();
+                    	url += '&filter_member_id=';
+                    	url += $('#filter_member_id').val();
+                    	url += '&filter_paypal_mail=';
+                    	url += $('#filter_paypal_mail').val();
+                    	url += '&filter_mail=';
+                    	url += $('#filter_mail').val();
+                    	window.location = url;
+                        e.preventDefault();
+                    }
+                }]
+            },
+            actions: {
+                listAction: '/backend/memberpayout/list',                
+                updateAction: '/backend/memberpayout/update',                
+            },
+            fields: {
+                id: {
+                    title: 'Id',
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                yearmonth: {
+                    title: 'YearMonth',
+                    list: true,
+                    create: false,
+                    edit: false
+                },
+                member_id: {
+                    title: 'Member Id',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                mail: {
+                    title: 'Mail',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                paypal_mail: {
+                    title: 'PayPal Mail',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                num_downloads: {
+                    title: '#DL',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                amount: {
+                    title: 'Amount',
+                    list: true,
+                    edit: false,
+                    create: false
+                },
+                payment_transaction_id: {
+                    title: 'Paypal Transaction Id',
+                    list: true,
+                    edit: true,
+                    create: true
+                },
+                payment_status: {
+                    title: 'Paypal Status',
+                    list: false,
+                    edit: false,
+                    create: false
+                },
+                status: {
+                    title: 'Our Payment Status',
+                    <?php echo $this->payoutStatusOption;?>                    
+                    list: true,
+                    edit: true
+                },
+            },
+            recordsLoaded: function (event, data) {
+                
+                for (var i in data.records) {
+                    $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:" + data.records[i].color + " !important; color:white !important;");
+                }
+                
+                /*
+                for (var i in data.records) {
+                    
+                    if (data.records[i].status > 0 && data.records[i].status < 99) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#31708f; !important; color:white !important;");
+                    } else
+                    if (data.records[i].status == 100) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#3c763d; !important; color:white !important;");
+                    } else
+                    if (data.records[i].status > 900 && data.records[i].status < 930) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#bd8614; !important; color:black !important;");
+                    } else
+                    if (data.records[i].status == 900) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#0f2573; !important; color:white !important;");
+                    } else
+                    if (data.records[i].status >= 930) {
+                        $('#TableContainer').find(".jtable tbody tr:eq(" + i + ")").css("cssText", "background-color:#a94442; !important; color:white !important;");
+                    }
+                }
+                */
+            },
+            recordUpdated: function (event, data) {
+                if (data.record) {
+                    $('#TableContainer').jtable('load', {
+                    	filter_status: $('#filter_status').val(),
+                        filter_yearmonth: $('#filter_yearmonth').val(),
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_paypal_mail: $('#filter_paypal_mail').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
+                }
+                
+            },
+            rowUpdated: function (event, data) {
+                /*
+                if (data.record) {
+                    $('#TableContainer').jtable('load', {
+                    	filter_status: $('#filter_status').val(),
+                        filter_yearmonth: $('#filter_yearmonth').val(),
+                        filter_member_id: $('#filter_member_id').val(),
+                        filter_paypal_mail: $('#filter_paypal_mail').val(),
+                        filter_mail: $('#filter_mail').val()
+                    });
+                }
+                */
+            }
+        });
+
+        //Re-load records when user click 'load records' button.
+        $('#LoadRecordsButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+            	filter_status: $('#filter_status').val(),
+                filter_yearmonth: $('#filter_yearmonth').val(),
+                filter_member_id: $('#filter_member_id').val(),
+                filter_paypal_mail: $('#filter_paypal_mail').val(),
+                filter_mail: $('#filter_mail').val()
+            });
+        });
+
+        //Re-load records when user click 'remove filter' button.
+        $('#RemoveFilterButton').click(function (e) {
+            e.preventDefault();
+            $('#TableContainer').jtable('load', {
+            	filter_status: null,
+                filter_yearmonth: null,
+                filter_member_id: null,
+                filter_paypal_mail: null,
+                filter_mail: null
+            });
+        });
+
+        $('#TableContainer').jtable('load');
+        
+        
+    });
+</script>

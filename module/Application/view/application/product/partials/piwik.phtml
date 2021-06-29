@@ -1,0 +1,9 @@
+<?php
+if ($this->currentUser()->isAdmin()) { ?>
+<script>
+    $.get( "/st/pi/<?=$this->product->project_id?>", function( data ) {
+        $( ".result" ).html( data ).find( ".piwikpopi" ).popover();
+    });
+</script>
+<span class="result"></span>
+<?php } ?>

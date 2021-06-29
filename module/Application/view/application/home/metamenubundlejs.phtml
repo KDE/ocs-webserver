@@ -1,0 +1,209 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+use Laminas\Json\Encoder;
+
+http_response_code(200);
+
+if (!empty($_SERVER['HTTP_ORIGIN'])) {
+    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN'], true);
+    header('Access-Control-Allow-Credentials: true', true);
+    header('Access-Control-Max-Age: 1728000', true);
+}
+
+if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+    header('Access-Control-Allow-Methods: ' . implode(', ', array_unique([
+        'OPTIONS', 'HEAD', 'GET', 'POST',
+        strtoupper($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])
+    ])), true);
+}
+
+if (!empty($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+    header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'], true);
+    header('Access-Control-Expose-Headers: Authorization, Content-Type, Accept', true);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit;
+}
+
+header('Content-Type: application/json; charset=UTF-8', true);
+
+//Change from opendesktop to pling
+$baseurl = $this->configHelp()->ocs_config->settings->client->default->baseurl;
+$baseurlStore = $this->configHelp()->ocs_config->settings->client->default->baseurl_store;
+//for extern
+//$searchbaseurl = $this->buildSearchBaseUrl();
+$searchbaseurl = $this->configHelp()->ocs_config->settings->client->default->baseurl_store.'/find';
+$url_forum = $this->configHelp()->ocs_config->settings->client->default->url_forum;
+$url_blog = $this->configHelp()->ocs_config->settings->client->default->url_blog;
+$url_gitlab = $this->configHelp()->ocs_config->settings->client->default->url_gitlab;
+$url_riot = $this->configHelp()->ocs_config->settings->client->default->url_riot;
+$url_myopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_myopendesktop;
+$url_cloudopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_cloudopendesktop;
+$url_musicopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_musicopendesktop;
+$url_mastodon = $this->configHelp()->ocs_config->settings->client->default->url_mastodon;
+$url_docsopendesktop = $this->configHelp()->ocs_config->settings->client->default->url_docsopendesktop;
+
+
+$url_login;
+$url_logout;
+
+$target = 'opendesktop';
+if(isset($_GET['target'])) {
+    $target = $_GET['target'];
+}
+
+$thisurl = "/";
+if(isset($_GET['url'])) {
+    $thisurl = $_GET['url'];
+}
+
+
+$isExternal = 'var isExternal = true;';
+$is_external = true;
+$targetObject = array();
+$targetObject['target'] = $target;
+$targetObject['logo'] = "opendesktop";
+$targetObject['logoLabel'] = "OpenDesktop";
+$targetObject['link'] = $baseurl;
+if($target == 'opendesktop') {
+    $url_login = "/login/redirect/".$this->urlEncrypt($thisurl);
+    $url_logout = "/logout/redirect/".$this->urlEncrypt($thisurl);
+    $isExternal = 'var isExternal = false;';
+    $is_external = false;
+} else if($target == 'gitlab') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_gitlab);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_gitlab);
+    $targetObject['logo'] = "opencode";
+    $targetObject['link'] = $url_gitlab;
+    $targetObject['logoLabel'] = "Opencode";
+
+} else if($target == 'riot') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_riot);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_riot);
+    $targetObject['link'] = $url_riot;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Chat";
+}
+else if($target == 'forum') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_forum);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_forum);
+    $targetObject['link'] = $url_forum;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Forum";
+} else if($target == 'myopendesktop') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_myopendesktop);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_myopendesktop);
+    $targetObject['link'] = $url_myopendesktop;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "My";
+} else if($target == 'cloudopendesktop') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_cloudopendesktop);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_cloudopendesktop);
+    $targetObject['link'] = $url_cloudopendesktop;
+    $targetObject['logo'] = "cloudopendesktop";
+    $targetObject['logoLabel'] = "Cloud";
+} else if($target == 'musicopendesktop') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_musicopendesktop);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_musicopendesktop);
+    $targetObject['link'] = $url_musicopendesktop;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Music";
+} else if($target == 'mastodon') {
+    $url_login = $baseurl."/login/redirect/".$this->urlEncrypt($url_mastodon);
+    $url_logout = $baseurl."/logout/redirect/".$this->urlEncrypt($url_mastodon);
+    $targetObject['link'] = $url_mastodon;
+    $targetObject['logo'] = "opendesktop";
+    $targetObject['logoLabel'] = "Mastodon";
+}
+
+/** @var \Application\Model\Entity\CurrentUser $currentUser */
+$currentUser = $this->currentUser();
+$isAdmin = false;
+if ($currentUser->isAdmin()) {
+    $isAdmin = true;
+}
+
+$user = null;
+$metamenuTheme = '';
+$contentTheme = '';
+if ($this->currentUser()->hasIdentity()) {
+    $identity = $this->currentUser();
+    $avatar = $this->image($identity->profile_image_url,array('width' => 100, 'height' => 100, 'crop' => 2));
+    $isSupporter = $this->isSupporter($identity->member_id);
+    $user = array(
+        "username" => $identity->username,
+        "member_id" => $identity->member_id,
+        "mail" => $identity->mail,
+        "avatar" => $avatar,
+        "roleName" =>$identity->roleName,
+        "isSupporter" => $isSupporter
+    );
+
+    $headerThemeVar = $this->fetchMemberSettingItem($identity->member_id, 1);
+    if ($headerThemeVar && $headerThemeVar['value'] == 1) {
+        $metamenuTheme = 'metamenu-theme-dark';
+    }
+    
+    $contentThemeVar = $this->fetchMemberSettingItem($identity->member_id, 2);
+    if ($contentThemeVar && $contentThemeVar['value'] == 1) {
+        $contentTheme = 'content-theme-dark';
+    }
+
+   
+}
+
+if(!$is_external) {
+    $storeConfig = $this->currentStore();
+    $sname = $storeConfig->getConfig->host;
+} else {
+    $sname = '';
+}
+
+$response = array(
+    "json_isAdmin" => $isAdmin,
+    "isExternal" => $is_external,
+    "user" => $user,
+    "baseUrl" => $baseurl,
+    "baseUrlStore" => $baseurlStore,
+    "searchbaseurl" => $searchbaseurl,
+    "blogUrl" => $url_blog,
+    "forumUrl" => $url_forum,
+    "mastodonUrl" => $url_mastodon,
+    "gitlabUrl" => $url_gitlab,
+    "myopendesktopUrl" => $url_myopendesktop,
+    "cloudopendesktopUrl" => $url_cloudopendesktop,
+    "musicopendesktopUrl" => $url_musicopendesktop,
+    "docsopendesktopUrl" => $url_docsopendesktop,
+    "riotUrl" => $url_riot,
+    "loginUrl" => $url_login,
+    "logoutUrl" => $url_logout,
+    "sName" => $sname,
+    "metamenuTheme" => $metamenuTheme,
+    "contentTheme" => $contentTheme,
+    "target" => $targetObject,
+    "store" => null
+);
+
+echo Encoder::encode($response);
+?>

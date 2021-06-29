@@ -1,0 +1,110 @@
+.fancybox-iframe {
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Modal background overlay */
+.custom-modal-overlay {
+    background: rgba(0,0,0,.3);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.custom-fancybox-close,
+.custom-modal-x-close-button {
+    position: absolute;
+    background: url(https://netroid.net/pling2021/media/ui-icons/modal-close.svg);
+    border-radius: var(--space-xlarge);
+    width: var(--space-xlarge);
+    height: var(--space-xlarge);
+    display: block;
+    right: -10px;
+    top: -10px;
+    z-index: 99;
+}
+
+.custom-fancybox-close:hover,
+.custom-modal-x-close-button:hover {
+    transform: rotate(180deg);
+    transition: .3s ease-in-out;
+}
+
+.custom-modal {
+    background: var(--color-light-2);
+    border-radius: var(--space-small);
+    box-shadow: 0px -4px 32px rgba(0,0,0,0.25);
+    color: var(--color-dark-1);
+    margin: calc(2*var(--space-xlarge)) auto 0 auto;
+    max-width: 600px;
+    position: relative;
+    width: 90%;
+}
+
+@media screen and (min-width: 768px) {
+.custom-modal { width: 100% };
+}
+
+/* Modal content */
+.custom-modal-body {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 var(--space-medium);
+}
+
+.custom-modal-body .custom-modal-body {
+    padding: 0;
+}
+
+.custom-modal-body .form-row {
+    margin: 0;
+}
+
+.custom-modal-header {
+    font-size: var(--text-normal);
+    font-weight: 600;
+    padding: var(--space-medium);
+}
+
+.custom-modal-footer {
+    padding: var(--space-normal) 0;
+}
+
+/* Footer first-of-type button clear left margin */
+.custom-modal-footer .footer-button:first-of-type {
+    margin-left: 0;
+}
+
+/* Textarea */
+.custom-modal-body textarea {
+    margin: 0;
+    border: 1px solid var(--color-light-5);
+    box-shadow: 0 0 0 3px rgba(255,255,255,.0);
+    outline: none;
+    outline-style: none;
+}
+
+.custom-modal-body textarea:focus,
+.custom-modal-body textarea:focus-within {
+    border: 1px solid var(--color-primary-1);
+    box-shadow: 0 0 0 3px rgba(85,82,255,.2);
+    outline: none;
+    outline-style: none;
+}
+
+.rel-modal {
+    max-width: 1000px;
+}
+
+.rel-modal .custom-modal-body {
+    max-width: 1000px;
+}
+
+.custom-modal-x-close-button {
+    cursor: pointer;
+}

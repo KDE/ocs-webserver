@@ -1,0 +1,89 @@
+<?php
+/**
+ *  ocs-webserver
+ *
+ *  Copyright 2016 by pling GmbH.
+ *
+ *    This file is part of ocs-webserver.
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as
+ *    published by the Free Software Foundation, either version 3 of the
+ *    License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ **/
+
+/** the following lines are an example. you don't need the use statements
+ * I wrote it down here for the "type hinting" of the IDE
+ * So, the IDE can you show the features of the currentStore helper.
+ * You can delete it if you want.
+ */
+use Application\Model\Entity\CurrentStore;
+use Application\View\Helper\ConfigHelperTrait;
+use Application\View\Helper\CurrentStoreHelperTrait;
+use Laminas\View\Renderer\PhpRenderer;
+
+/**
+ * @var PhpRenderer|CurrentStoreHelperTrait $this
+ */
+$store_categories = $this->currentStore()->getCategories();
+$store_config_host = $this->currentStore()->getConfig()->host;
+/** example end */
+
+$this->headTitle($this->headTitle, 'SET');
+$catTitle = '';
+if($this->cat_id) {
+  $catTitle = $this->cat_title;
+} 
+$store_config = $GLOBALS['ocs_store']->config;
+$host = $store_config->host;
+$site_name = $store_config->name;
+/** @var \Laminas\View\Helper\ServerUrl $serverUrlPlugin */
+$serverUrlPlugin = $this->plugin('serverUrl')->setUseProxy(true);
+$og_server = $serverUrlPlugin->getScheme() . '://' . $serverUrlPlugin->getHost() . $_SERVER['REQUEST_URI'];
+
+if($this->filters['order'] == 'latest'){
+  $og_title = 'Browse '.$catTitle.' Latest | '.$og_server;
+}else if($this->filters['order'] == 'top'){
+  $og_title = 'Browse '.$catTitle.' Top | '.$og_server;
+}else{
+  $og_title='Browse '.$catTitle.' | '.$og_server;
+}
+$og_description = $og_title .' | A community for free and open source software and libre content';
+$this->templateConfigData = $GLOBALS['ocs_store']->template;
+$og_image = 'https://' . $_SERVER['HTTP_HOST'] .$this->templateConfigData['header-logo']['image-src'];
+$this->doctype(\Laminas\View\Helper\Doctype::XHTML1_RDFA);
+
+if($this->headMeta){
+  foreach ($this->headMeta as $key => $value) {
+      $this->headMeta()->appendProperty($key, $value)->setAutoEscape(false);
+  }
+}
+$this->headMeta()->appendProperty('og:type', 'website')->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:url', $og_server)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:title', $og_title)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:description',$og_description)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:image',$og_image)->setAutoEscape(false);
+$this->headMeta()->appendProperty('og:site_name',$og_server)->setAutoEscape(false);
+?>
+
+<!-- PRODUCT MEDIA SLIDER CSS -->
+    
+<div id="product-browse-container"></div>
+
+<script type="text/javascript">
+    var productBrowseData = <?php echo json_encode($this->productBrowseData)?>; /** that's the line where the PHP dies. I think the productBrowseData is to complex for this method */
+    var catTree = productBrowseData.categories;
+    var categoryId = productBrowseData.cat_id;
+    var tagCloud = productBrowseData.categoriesTopTags;
+</script>
+
+
+<script type="text/javascript" src="/theme/react/bundle/product-browse-bundle.js"></script>
